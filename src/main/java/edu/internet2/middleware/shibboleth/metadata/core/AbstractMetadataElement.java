@@ -60,10 +60,4 @@ public abstract class AbstractMetadataElement<MetadataType> implements MetadataE
         // TODO Auto-generated method stub
 
     }
-
-    /** {@inheritDoc} */
-    public MetadataElement<MetadataType> clone() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

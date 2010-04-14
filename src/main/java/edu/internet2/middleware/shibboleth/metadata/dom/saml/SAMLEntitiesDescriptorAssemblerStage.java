@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.dom.stage;
+package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 
 import java.util.Map;
 
@@ -24,9 +24,9 @@ import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
 /**
- * A pipeline stage which validates the XML digital signature found on the metadata elements.
+ *
  */
-public class XMLSignatureValidationStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent implements Stage<DomMetadataElement> {
 
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
@@ -34,5 +34,4 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
         // TODO Auto-generated method stub
         return null;
     }
-
 }

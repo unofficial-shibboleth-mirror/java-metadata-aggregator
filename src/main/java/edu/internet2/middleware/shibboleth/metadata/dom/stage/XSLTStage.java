@@ -20,7 +20,7 @@ import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
 /**

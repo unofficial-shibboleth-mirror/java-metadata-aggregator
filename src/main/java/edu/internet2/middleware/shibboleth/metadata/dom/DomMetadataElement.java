@@ -19,6 +19,7 @@ package edu.internet2.middleware.shibboleth.metadata.dom;
 import org.w3c.dom.Element;
 
 import edu.internet2.middleware.shibboleth.metadata.core.AbstractMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 
 /** A metadata element whose data is a DOM, version 3, {@link Element}. */
 public class DomMetadataElement extends AbstractMetadataElement<Element> {
@@ -34,5 +35,11 @@ public class DomMetadataElement extends AbstractMetadataElement<Element> {
     public DomMetadataElement(Element metadata) {
         super();
         setEntityMetadata(metadata);
+    }
+
+    /** {@inheritDoc} */
+    public <T extends MetadataElement<Element>> T copy() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

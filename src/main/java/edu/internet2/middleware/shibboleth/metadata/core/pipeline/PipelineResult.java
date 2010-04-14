@@ -21,24 +21,24 @@ import java.util.Map;
 /** Indicates the result of a {@link Pipeline} execution. */
 public interface PipelineResult {
 
-    /** 
+    /**
      * Gets whether the pipeline execution was successful.
      * 
      * @return true if the execution was successful, false if not
      */
     public boolean wasSuccessful();
-    
+
     /**
      * Gets the parameters, if any, passed in at execution time.
      * 
      * @return the per-invocation parameters given at execution time
      */
     public Map<String, Object> getExecutionParameters();
-    
+
     /**
      * Gets the exception that caused the error.
      * 
      * @return exception that caused the error
      */
-    public Exception getExecutionException();
+    public PipelineProcessingException getProcessingException();
 }

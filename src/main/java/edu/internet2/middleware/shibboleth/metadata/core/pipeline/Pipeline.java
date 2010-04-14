@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.Sink;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 
 import net.jcip.annotations.ThreadSafe;
 
@@ -37,7 +40,7 @@ import net.jcip.annotations.ThreadSafe;
  * @param <ElementType> type of metadata element which is produced by this source
  */
 @ThreadSafe
-public interface Pipeline<ElementType extends MetadataElement<?>> extends Component {
+public interface Pipeline<ElementType extends MetadataElement<?>, ResultType extends PipelineResult> extends Component {
 
     /**
      * Gets the list of Stages within the pipeline.
@@ -55,7 +58,7 @@ public interface Pipeline<ElementType extends MetadataElement<?>> extends Compon
      * 
      * @return the result of the execution
      */
-    public PipelineResult execute(Source<ElementType> source, Sink<ElementType> sink);
+    public ResultType execute(Source<ElementType> source, Sink<ElementType> sink);
 
     /**
      * Executes the pipeline by pulling information from the {@link Source}, executing the registered {@link Stages},
@@ -71,5 +74,5 @@ public interface Pipeline<ElementType extends MetadataElement<?>> extends Compon
      * 
      * @return the result of the execution
      */
-    public PipelineResult execute(Map<String, Object> parameters, Source<ElementType> source, Sink<ElementType> sink);
+    public ResultType execute(Map<String, Object> parameters, Source<ElementType> source, Sink<ElementType> sink);
 }

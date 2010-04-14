@@ -61,10 +61,12 @@ public interface MetadataElement<MetadataType> extends Serializable {
     public void addElementInfo(MetadataElementInfo info) throws IllegalArgumentException;
 
     /**
-     * Performs a clone of the element. All member fields, except {@link MetadataElementInfo}, should be deep cloned.
+     * Performs a copy of the element. All member fields, except {@link MetadataElementInfo}, should be deep cloned.
      * {@link MetadataElementInfo} objects must be shared between the clone and the original.
+     * 
+     * @param <T> the type of metadata element returned
      * 
      * @return the clone of this element
      */
-    public MetadataElement<MetadataType> clone();
+    public <T extends MetadataElement<MetadataType>> T copy();
 }

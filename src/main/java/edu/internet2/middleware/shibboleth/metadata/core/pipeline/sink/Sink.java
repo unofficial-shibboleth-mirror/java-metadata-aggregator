@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink;
 
 import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
 
 /**
- * A stage in a {@link Pipeline} that transforms data in a particular manner.
+ * A component of a {@link Pipeline} that receives the final result of the pipeline.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
-public interface Stage<ElementType extends MetadataElement<?>> extends Component {
+public interface Sink<ElementType extends MetadataElement<?>> {
 
     /**
-     * Transforms the given input data.
+     * Processes the output of a {@link Pipeline}.
      * 
      * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
      *            for this invocation
-     * @param metadata the data to be transformed
+     * @param metadata the data to be processed
      * 
-     * @return the output of the transformation
+     * @throws PipelineSinkException thrown if there is a problem dealing with the final result of the pipeline
      */
-    public MetadataElementCollection<ElementType> execute(Map<String, Object> parameters,
-            MetadataElementCollection<ElementType> metadata);
+    public void execute(Map<String, Object> parameters, MetadataElementCollection<ElementType> metadata)
+            throws PipelineSinkException;
 }

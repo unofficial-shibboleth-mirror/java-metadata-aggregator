@@ -19,14 +19,11 @@ package edu.internet2.middleware.shibboleth.metadata.core;
 import java.io.Serializable;
 import java.util.Collection;
 
-import net.jcip.annotations.ThreadSafe;
-
 /**
  * A collection of {@link MetadataElement}.
  * 
  * @param <ElementType> types of {@link MetadataElement} objects within the collection
  */
-@ThreadSafe
 public interface MetadataElementCollection<ElementType extends MetadataElement<?>> extends Collection<ElementType>,
         Serializable {
 
@@ -35,5 +32,5 @@ public interface MetadataElementCollection<ElementType extends MetadataElement<?
      * 
      * @return clone of this collection
      */
-    public MetadataElementCollection<ElementType> clone();
+    public MetadataElementCollection<ElementType> copy();
 }

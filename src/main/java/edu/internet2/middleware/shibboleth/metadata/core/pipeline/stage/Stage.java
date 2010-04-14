@@ -14,27 +14,34 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage;
 
 import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Component;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineStageException;
 
 /**
- * A component of a {@link Pipeline} which produces the input to the pipeline.
+ * A stage in a {@link Pipeline} that transforms data in a particular manner.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
-public interface Source<ElementType extends MetadataElement<?>> extends Component {
+public interface Stage<ElementType extends MetadataElement<?>> extends Component {
 
     /**
-     * Produces the input to the {@link Pipeline}.
+     * Transforms the given input data.
      * 
      * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
      *            for this invocation
+     * @param metadata the data to be transformed
      * 
-     * @return the information produced by the source
+     * @return the output of the transformation
+     * 
+     * @throws PipelineStageException thrown if there is a problem running this stage on the given input
      */
-    public MetadataElementCollection<ElementType> execute(Map<String, Object> parameters);
+    public MetadataElementCollection<ElementType> execute(Map<String, Object> parameters,
+            MetadataElementCollection<ElementType> metadata) throws PipelineStageException;
 }

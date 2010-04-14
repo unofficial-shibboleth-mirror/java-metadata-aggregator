@@ -2,10 +2,16 @@
 
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>mdx</groupId>
-    <artifactId>mdx</artifactId>
+    <groupId>edu.internet2.middleware.shibboleth.metadata</groupId>
+    <artifactId>metadta-aggregator</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.groupId>org.slf4j</slf4j.groupId>
+        <slf4j.version>1.5.8</slf4j.version>
+    </properties>
 
     <distributionManagement>
         <repository>
@@ -14,27 +20,32 @@
         </repository>
     </distributionManagement>
 
-    <!-- Compile Dependencies -->
     <dependencies>
+        <!-- Compile Dependencies -->
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>${slf4j.groupId}</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.8</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>${slf4j.groupId}</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.5.8</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>${slf4j.groupId}</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.5.8</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>${slf4j.groupId}</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.5.8</version>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.18</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -46,8 +57,16 @@
             <artifactId>jcip-annotations</artifactId>
             <version>1.0</version>
         </dependency>
-    </dependencies>
 
+        <!--  Test Dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.9</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -92,28 +111,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>-Xmx256m</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <index>true</index>
-                        <manifestEntries>
-                            <Main-Class>org.opensaml.xml.Version</Main-Class>
-                        </manifestEntries>
-                        <manifestSections>
-                            <manifestSection>
-                                <name>org/opensaml/xml/</name>
-                                <manifestEntries>
-                                    <Implementation-Title>${pom.artifactId}</Implementation-Title>
-                                    <Implementation-Version>${pom.version}</Implementation-Version>
-                                    <Implementation-Vendor>TODO</Implementation-Vendor>
-                                </manifestEntries>
-                            </manifestSection>
-                        </manifestSections>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>

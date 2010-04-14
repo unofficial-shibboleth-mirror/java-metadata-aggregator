@@ -16,24 +16,72 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.source;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
+import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Source;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.PipelineSourceException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
-/** 
+/**
  * A source which reads XML information from the filesystem and optionally caches it in memory.
  * 
- * When caching is enabled the collection of metadata produced is always a clone of the DOM element
- * that is cached.
+ * When caching is enabled the collection of metadata produced is always a clone of the DOM element that is cached.
  */
 public class DomFilesystemSource extends AbstractComponent implements Source<DomMetadataElement> {
 
+    /** Pool of DOM parsers used to parse the XML file in to a DOM. */
+    private ParserPool parser;
+
+    /** The XML file parsed in to the DOM. */
+    private File xmlFile;
+
+    /**
+     * Constructor.
+     * 
+     * @param parserPool pool of parsers used to parse the xml file
+     * @param filePath filesystem path to an XML metadata file
+     */
+    public DomFilesystemSource(ParserPool parserPool, String filePath) {
+        parser = parserPool;
+        xmlFile = new File(filePath);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param parserPool pool of parsers used to parse the xml file
+     * @param file an XML metadata file
+     */
+    public DomFilesystemSource(ParserPool parserPool, File file) {
+        parser = parserPool;
+        xmlFile = file;
+    }
+
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters) {
-        // TODO Auto-generated method stub
-        return null;
-    }   
+    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters)
+            throws PipelineSourceException {
+        try {
+            FileInputStream xmlIn = new FileInputStream(xmlFile);
+            Document doc = parser.parse(xmlIn);
+            xmlIn.close();
+
+            BasicMetadataElementCollection<DomMetadataElement> mec = 
+                new BasicMetadataElementCollection<DomMetadataElement>();
+            mec.add(new DomMetadataElement(doc.getDocumentElement()));
+            return mec;
+
+        } catch (IOException e) {
+            throw new PipelineSourceException("Unable to read XML input file", e);
+        } catch (XMLParserException e) {
+            throw new PipelineSourceException("Unable to parse XML input file", e);
+        }
+    }
 }

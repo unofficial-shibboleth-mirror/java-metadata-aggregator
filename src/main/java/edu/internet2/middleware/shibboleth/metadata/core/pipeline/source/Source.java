@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline.source;
 
 import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Component;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
 
 /**
- * A component of a {@link Pipeline} that receives the final result of the pipeline.
+ * A component of a {@link Pipeline} which produces the input to the pipeline.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
-public interface Sink<ElementType extends MetadataElement<?>> {
+public interface Source<ElementType extends MetadataElement<?>> extends Component {
 
     /**
-     * Processes the output of a {@link Pipeline}.
+     * Produces the input to the {@link Pipeline}.
      * 
      * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
      *            for this invocation
-     * @param metadata the data to be processed
+     * 
+     * @return the information produced by the source
+     * 
+     * @throws PipelineSourceException thrown if there is a problem producing the initial metadata element collection
      */
-    public void execute(Map<String, Object> parameters, MetadataElementCollection<ElementType> metadata);
+    public MetadataElementCollection<ElementType> execute(Map<String, Object> parameters)
+            throws PipelineSourceException;
 }
