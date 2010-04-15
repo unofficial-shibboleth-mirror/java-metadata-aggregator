@@ -20,17 +20,17 @@ import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
 
 /**
- * A component of a {@link Pipeline} that receives the final result of the pipeline.
+ * A component of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} that receives the final
+ * result of the pipeline.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
 public interface Sink<ElementType extends MetadataElement<?>> {
 
     /**
-     * Processes the output of a {@link Pipeline}.
+     * Processes the output of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline}.
      * 
      * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
      *            for this invocation

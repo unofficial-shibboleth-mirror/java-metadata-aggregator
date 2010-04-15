@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage;
 
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineProcessingException;
 
 /** Exception indicating that a {@link Stage} of the pipeline encountered an error. */
 public class PipelineStageException extends PipelineProcessingException {

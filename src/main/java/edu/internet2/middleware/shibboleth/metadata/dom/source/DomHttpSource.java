@@ -29,6 +29,15 @@ import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
  */
 public class DomHttpSource extends AbstractComponent implements Source<DomMetadataElement> {
 
+    /**
+     * Constructor.
+     * 
+     * @param sourceId unique ID of this source
+     */
+    public DomHttpSource(String sourceId) {
+        super(sourceId);
+    }
+
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters) {
         // TODO Auto-generated method stub

@@ -27,7 +27,11 @@ import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.Sink;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 
-/** A simple, synchronous, implementation of {@link Pipeline}. */
+/**
+ * A simple, synchronous, implementation of {@link Pipeline}.
+ * 
+ * @param <ElementType> type of metadata element upon which the pipeline operates
+ */
 public class BasicPipeline<ElementType extends MetadataElement<?>> extends AbstractComponent implements
         Pipeline<ElementType, PipelineResult> {
 
@@ -37,9 +41,11 @@ public class BasicPipeline<ElementType extends MetadataElement<?>> extends Abstr
     /**
      * Constructor.
      * 
+     * @param pipelineId the ID of the pipeline
      * @param pipelineStages the list of stages for the pipeline in execution order
      */
-    public BasicPipeline(List<Stage<ElementType>> pipelineStages) {
+    public BasicPipeline(String pipelineId, List<Stage<ElementType>> pipelineStages) {
+        super(pipelineId);
         stages = new ArrayList<Stage<ElementType>>(pipelineStages);
     }
 
@@ -65,9 +71,9 @@ public class BasicPipeline<ElementType extends MetadataElement<?>> extends Abstr
 
             sink.execute(parameters, metadataCollection);
 
-            return new BasicPipelineResults(parameters);
+            return new BasicPipelineResult(parameters);
         } catch (PipelineProcessingException e) {
-            return new BasicPipelineResults(parameters, e);
+            return new BasicPipelineResult(parameters, e);
         }
     }
 }

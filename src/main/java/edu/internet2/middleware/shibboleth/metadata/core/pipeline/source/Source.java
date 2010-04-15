@@ -21,17 +21,17 @@ import java.util.Map;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Component;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
 
 /**
- * A component of a {@link Pipeline} which produces the input to the pipeline.
+ * A component of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} which produces the input
+ * to the pipeline.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
 public interface Source<ElementType extends MetadataElement<?>> extends Component {
 
     /**
-     * Produces the input to the {@link Pipeline}.
+     * Produces the input to the {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline}.
      * 
      * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
      *            for this invocation

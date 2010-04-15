@@ -24,27 +24,36 @@ import org.joda.time.chrono.ISOChronology;
 
 /** Base implementation for pipeline components. */
 public abstract class AbstractComponent implements Component {
-    
+
     /** Unique ID for the component. */
     private String id;
-    
+
     /** Instant when the component was initialized. */
     private DateTime initInstant;
-    
+
     /** Parameters used to initialize the component. */
     private Map<String, Object> initParams;
+
+    /**
+     * Constructor.
+     * 
+     * @param componentId the ID of the component
+     */
+    public AbstractComponent(String componentId) {
+        id = componentId;
+    }
 
     /** {@inheritDoc} */
     public String getId() {
         return id;
     }
-    
+
     /**
      * Sets the ID of this component.
      * 
      * @param componentId ID of the component, may not be null or empty
      */
-    protected void setId(String componentId){
+    protected void setId(String componentId) {
         id = componentId;
     }
 
@@ -67,5 +76,24 @@ public abstract class AbstractComponent implements Component {
     /** {@inheritDoc} */
     public boolean isInitialized() {
         return initInstant != null;
+    }
+    
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return id.hashCode();
+    }
+    
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        
+        if(obj instanceof AbstractComponent){
+            AbstractComponent otherComponent = (AbstractComponent) obj;
+            return id.equals(otherComponent.getId());
+        }
+        
+        return false;
     }
 }

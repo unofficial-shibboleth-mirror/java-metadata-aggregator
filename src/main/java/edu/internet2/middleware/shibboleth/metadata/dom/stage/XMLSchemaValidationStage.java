@@ -28,6 +28,15 @@ import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
  */
 public class XMLSchemaValidationStage extends AbstractComponent implements Stage<DomMetadataElement> {
 
+    /**
+     * Constructor.
+     * 
+     * @param stageId unique stage ID
+     */
+    public XMLSchemaValidationStage(String stageId) {
+        super(stageId);
+    }
+    
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
             MetadataElementCollection<DomMetadataElement> metadata) {

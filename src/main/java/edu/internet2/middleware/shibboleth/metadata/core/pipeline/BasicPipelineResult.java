@@ -18,24 +18,35 @@ package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
 import java.util.Map;
 
-/**
- *
- */
-public class BasicPipelineResults implements PipelineResult {
+/** Basic implementation of {@link PipelineResult}. */
+public class BasicPipelineResult implements PipelineResult {
 
+    /** Parameters given when the pipeline was executed. */
     private Map<String, Object> parameters;
 
+    /** Exception that caused the failure in the pipeline. */
     private PipelineProcessingException exception;
 
-    public BasicPipelineResults() {
-
+    /** Constructor. */
+    public BasicPipelineResult() {
     }
 
-    public BasicPipelineResults(Map<String, Object> executionParameters) {
+    /**
+     * Constructor.
+     * 
+     * @param executionParameters parameters given when the pipeline was executed
+     */
+    public BasicPipelineResult(Map<String, Object> executionParameters) {
         parameters = executionParameters;
     }
 
-    public BasicPipelineResults(Map<String, Object> executionParameters, PipelineProcessingException processingException) {
+    /**
+     * Constructor.
+     * 
+     * @param executionParameters parameters given when the pipeline was executed
+     * @param processingException exception that caused the failure of the pipeline
+     */
+    public BasicPipelineResult(Map<String, Object> executionParameters, PipelineProcessingException processingException) {
         parameters = executionParameters;
         exception = processingException;
     }

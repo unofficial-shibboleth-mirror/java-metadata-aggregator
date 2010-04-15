@@ -38,6 +38,7 @@ import net.jcip.annotations.ThreadSafe;
  * Pipelines are reusable and threadsafe.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
+ * @param <ResultType> type of result returned by the pipeline
  */
 @ThreadSafe
 public interface Pipeline<ElementType extends MetadataElement<?>, ResultType extends PipelineResult> extends Component {

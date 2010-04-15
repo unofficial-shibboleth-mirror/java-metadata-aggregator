@@ -21,11 +21,10 @@ import java.util.Map;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Component;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineStageException;
 
 /**
- * A stage in a {@link Pipeline} that transforms data in a particular manner.
+ * A stage in a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} that transforms data in a
+ * particular manner.
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */

@@ -46,10 +46,12 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     /**
      * Constructor.
      * 
+     * @param sourceId unique ID of this source
      * @param parserPool pool of parsers used to parse the xml file
      * @param filePath filesystem path to an XML metadata file
      */
-    public DomFilesystemSource(ParserPool parserPool, String filePath) {
+    public DomFilesystemSource(String sourceId, ParserPool parserPool, String filePath) {
+        super(sourceId);
         parser = parserPool;
         xmlFile = new File(filePath);
     }
@@ -57,10 +59,12 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     /**
      * Constructor.
      * 
+     * @param sourceId unique ID of this source
      * @param parserPool pool of parsers used to parse the xml file
      * @param file an XML metadata file
      */
-    public DomFilesystemSource(ParserPool parserPool, File file) {
+    public DomFilesystemSource(String sourceId, ParserPool parserPool, File file) {
+        super(sourceId);
         parser = parserPool;
         xmlFile = file;
     }
@@ -73,8 +77,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
             Document doc = parser.parse(xmlIn);
             xmlIn.close();
 
-            BasicMetadataElementCollection<DomMetadataElement> mec = 
-                new BasicMetadataElementCollection<DomMetadataElement>();
+            BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
             mec.add(new DomMetadataElement(doc.getDocumentElement()));
             return mec;
 
