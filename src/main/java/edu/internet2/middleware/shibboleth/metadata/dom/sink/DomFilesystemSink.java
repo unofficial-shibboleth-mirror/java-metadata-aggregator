@@ -19,16 +19,9 @@ package edu.internet2.middleware.shibboleth.metadata.dom.sink;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Map;
 
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSOutput;
-import org.w3c.dom.ls.LSSerializer;
-import org.w3c.dom.ls.LSSerializerFilter;
+import org.opensaml.util.xml.Serialize;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.PipelineSinkException;
@@ -65,45 +58,11 @@ public class DomFilesystemSink implements Sink<DomMetadataElement> {
         DomMetadataElement metadataElement = metadata.iterator().next();
         try {
             FileOutputStream out = new FileOutputStream(xmlFile);
-            writeNode(metadataElement.getEntityMetadata(), out);
+            Serialize.writeNode(metadataElement.getEntityMetadata(), out);
             out.flush();
             out.close();
         } catch (IOException e) {
             throw new PipelineSinkException("Unable to write XML to file", e);
         }
-    }
-
-    /**
-     * Writes a Node out to a Writer using the DOM, level 3, Load/Save serializer. The written content is encoded using
-     * the encoding specified in the writer configuration.
-     * 
-     * @param node the node to write out
-     * @param output the output stream to write the XML to
-     */
-    protected void writeNode(Node node, OutputStream output) {
-        DOMImplementation domImpl;
-        if (node instanceof Document) {
-            domImpl = ((Document) node).getImplementation();
-        } else {
-            domImpl = node.getOwnerDocument().getImplementation();
-        }
-
-        DOMImplementationLS domImplLS = (DOMImplementationLS) domImpl.getFeature("LS", "3.0");
-        LSSerializer serializer = domImplLS.createLSSerializer();
-        serializer.setFilter(new LSSerializerFilter() {
-
-            public short acceptNode(Node arg0) {
-                return FILTER_ACCEPT;
-            }
-
-            public int getWhatToShow() {
-                return SHOW_ALL;
-            }
-        });
-
-        LSOutput serializerOut = domImplLS.createLSOutput();
-        serializerOut.setByteStream(output);
-
-        serializer.write(node, serializerOut);
     }
 }

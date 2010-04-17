@@ -23,6 +23,11 @@
     <dependencies>
         <!-- Compile Dependencies -->
         <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>util</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>${slf4j.groupId}</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
@@ -52,10 +57,13 @@
             <artifactId>joda-time</artifactId>
             <version>1.6</version>
         </dependency>
+        
+        <!-- Provided Dependencies -->
         <dependency>
             <groupId>net.jcip</groupId>
             <artifactId>jcip-annotations</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--  Test Dependencies -->

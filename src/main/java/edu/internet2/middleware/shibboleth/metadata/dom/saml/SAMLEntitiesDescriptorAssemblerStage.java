@@ -18,6 +18,7 @@ package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 
 import java.util.Map;
 
+import org.opensaml.util.xml.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,7 +52,7 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
         Element entitiesDescriptor = buildEntitiesDescriptor(owningDocument);
 
         for (DomMetadataElement metadataElement : metadata) {
-            addEntityDescriptor(entitiesDescriptor, metadataElement.getEntityMetadata());
+            Elements.appendChildElement(entitiesDescriptor, metadataElement.getEntityMetadata());
         }
 
         BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
@@ -68,29 +69,11 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
      * @return the constructed EntitiesDescriptor element
      */
     protected Element buildEntitiesDescriptor(Document owningDocument) {
-        Element entitiesDescriptor = owningDocument.createElementNS(SAMLConstants.MD_NS,
-                SAMLConstants.ENTITIES_DESCRIPTOR_LOCAL_NAME);
+        Element entitiesDescriptor = Elements.constructElement(owningDocument, SAMLConstants.ENTITIES_DESCRIPTOR_NAME);
 
         // TODO namespace decl, name
 
-        Element documentRoot = owningDocument.getDocumentElement();
-        owningDocument.replaceChild(entitiesDescriptor, documentRoot);
+        Elements.setDocumentElement(owningDocument, entitiesDescriptor);
         return entitiesDescriptor;
-    }
-
-    /**
-     * Adds the given EntityDescriptor element to the given EntitiesDescriptor element. If the EntityDescriptor element
-     * is not owned by the same Document as the EntitiesDescriptor element it is adopted.
-     * 
-     * @param entitiesDescriptor EntitiesDescriptor element that will contain the EntityDescriptor element
-     * @param entityDescriptor EntityDescriptor element contained by the EntitiesDescriptor element
-     */
-    protected void addEntityDescriptor(Element entitiesDescriptor, Element entityDescriptor) {
-        Document owningDocument = entitiesDescriptor.getOwnerDocument();
-        if (!owningDocument.isSameNode(entityDescriptor.getOwnerDocument())) {
-            owningDocument.adoptNode(entityDescriptor);
-        }
-
-        entitiesDescriptor.appendChild(entityDescriptor);
     }
 }

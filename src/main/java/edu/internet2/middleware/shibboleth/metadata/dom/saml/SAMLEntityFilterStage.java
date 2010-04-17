@@ -18,13 +18,16 @@ package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.opensaml.util.Objects;
+import org.opensaml.util.xml.Elements;
+import org.opensaml.util.xml.QNames;
+import org.opensaml.util.xml.Types;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
@@ -35,6 +38,32 @@ import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
  * A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria.
  */
 public class SAMLEntityFilterStage extends AbstractComponent implements Stage<DomMetadataElement> {
+
+    /** QName of the RoleDescriptor element. */
+    public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "RoleDescriptor");
+
+    /** QName of the IDPSSODescriptor element. */
+    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "IDPSSODescriptor");
+
+    /** QName of the SPSSODescriptor element. */
+    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "SPSSODescriptor");
+
+    /** QName of the AuthnAuthorityDescriptor element. */
+    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS,
+            "AuthnAuthorityDescriptor");
+
+    /** QName of the AttributeAuthorityDescriptor element. */
+    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS,
+            "AttributeAuthorityDescriptor");
+
+    /** QName of the PDPDescriptor element. */
+    public static final QName PDP_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "PDPDescriptor");
+
+    /** QName of the Organization element. */
+    private static final QName ORGANIZTION_NAME = new QName(SAMLConstants.MD_NS, "Organization");
+
+    /** QName of the ContactPerson element. */
+    private static final QName CONTACT_PERSON_NAME = new QName(SAMLConstants.MD_NS, "ContactPerson");
 
     // TODO remove binding, services, white/blacklist extensions
 
@@ -63,36 +92,80 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         removeOrganization = true;
         removeContactPerson = true;
     }
-    
-    public boolean getRemoveRolelessEntities(){
+
+    /**
+     * Gets whether EntityDescriptor elements without roles (after filtering) should be removed altogether.
+     * 
+     * @return true if roleless EntityDescriptors should be removed, false otherwise
+     */
+    public boolean getRemoveRolelessEntities() {
         return removeRolelessEntities;
     }
-    
-    public void setRemoveRolelessEntities(boolean remove){
+
+    /**
+     * Sets whether EntityDescriptor elements without roles (after filtering) should be removed altogether.
+     * 
+     * @param remove whether EntityDescriptor elements without roles (after filtering) should be removed altogether
+     */
+    public void setRemoveRolelessEntities(boolean remove) {
         removeRolelessEntities = remove;
     }
-    
-    public Collection<QName> getWhitelistedRoles(){
+
+    /**
+     * Gets the list of whitelisted roles. This collection should include either the qualified tag names for IDP and SP
+     * SSO descriptors, Authn and Attribute authority descriptors, or a PDP descriptor or the schema type for any
+     * RoleDescriptor elements.
+     * 
+     * @return whitelisted roles
+     */
+    public Collection<QName> getWhitelistedRoles() {
         return whitelistedRoles;
     }
-    
-    public void setWhitelistedRoles(Collection<QName> roles){
-        whitelistedRoles = roles;
+
+    /**
+     * Sets the list of whitelisted roles. This collection should include either the qualified tag names for IDP and SP
+     * SSO descriptors, Authn and Attribute authority descriptors, or a PDP descriptor or the schema type for any
+     * RoleDescriptor elements.
+     * 
+     * @param roles whitelisted roles
+     */
+    public void setWhitelistedRoles(Collection<QName> roles) {
+        whitelistedRoles = new ArrayList<QName>(roles);
     }
-    
-    public boolean getRemoveOrganizations(){
+
+    /**
+     * Gets whether Organization elements should be removed from EntityDescriptor elements.
+     * 
+     * @return true if the elements should be removed, false otherwise
+     */
+    public boolean getRemoveOrganizations() {
         return removeOrganization;
     }
-    
-    public void setRemoveOrganization(boolean remove){
+
+    /**
+     * Sets whether Organization elements should be removed from EntityDescriptor elements.
+     * 
+     * @param remove whether Organization elements should be removed from EntityDescriptor elements
+     */
+    public void setRemoveOrganization(boolean remove) {
         removeOrganization = remove;
     }
-    
-    public boolean getRemoveContactPerson(){
+
+    /**
+     * Gets whether ContactPerson elements should be removed from EntityDescriptor elements.
+     * 
+     * @return true if the elements should be removed, false otherwise
+     */
+    public boolean getRemoveContactPerson() {
         return removeContactPerson;
     }
-    
-    public void setRemoveContactPerson(boolean remove){
+
+    /**
+     * Sets whether ContactPerson elements should be removed from EntityDescriptor elements.
+     * 
+     * @param remove whether ContactPerson elements should be removed from EntityDescriptor elements
+     */
+    public void setRemoveContactPerson(boolean remove) {
         removeContactPerson = remove;
     }
 
@@ -105,22 +178,18 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         for (DomMetadataElement metadataElement : metadata) {
             descriptor = metadataElement.getEntityMetadata();
 
-            NodeList children = descriptor.getChildNodes();
-            Element child;
-            for (int i = 0; i < children.getLength(); i++) {
-                if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    child = (Element) children.item(i);
-                    removeRoleDescriptor(descriptor, child);
-                    removeOrganization(descriptor, child);
-                    removeContactPerson(descriptor, child);
-                }
+            List<Element> children = Elements.getChildElements(descriptor);
+            for (Element child : children) {
+                filterRoleDescriptor(descriptor, child);
+                filterOrganization(descriptor, child);
+                filterContactPerson(descriptor, child);
             }
 
             if (shouldRemoveEntityDescriptor(descriptor)) {
                 markedForRemoval.add(metadataElement);
             }
         }
-        
+
         metadata.removeAll(markedForRemoval);
 
         return metadata;
@@ -132,24 +201,25 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
      * @param entityDescriptor the entity descriptor from which the role elements are to be removed
      * @param childElement a child element of the entity descriptor
      */
-    protected void removeRoleDescriptor(Element entityDescriptor, Element childElement) {
+    protected void filterRoleDescriptor(Element entityDescriptor, Element childElement) {
         if (whitelistedRoles.isEmpty()) {
             return;
         }
 
-        if (!isRole(childElement)) {
-            return;
+        QName elementName = QNames.getNodeQName(childElement);
+        boolean removeRole = false;
+
+        if (Elements.isElementNamed(childElement, ROLE_DESCRIPTOR_NAME)) {
+            QName type = Types.getXSIType(childElement);
+            if (type != null && !whitelistedRoles.contains(type)) {
+                removeRole = true;
+            }
         }
 
-        boolean removeRole = false;
-        if (SAMLConstants.MD_NS.equals(childElement.getNamespaceURI())) {
-            if ("RoleDescriptor".equals(childElement.getLocalName())) {
-                // TODO
-            } else {
-                QName roleQName = new QName(SAMLConstants.MD_NS, childElement.getLocalName());
-                if (!whitelistedRoles.contains(roleQName)) {
-                    removeRole = true;
-                }
+        if (Objects.equalsAny(elementName, IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
+                AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME)) {
+            if (!whitelistedRoles.contains(elementName)) {
+                removeRole = true;
             }
         }
 
@@ -159,38 +229,17 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
     }
 
     /**
-     * Checks whether the given element is a role descriptor.
-     * 
-     * @param element the element to be checked
-     * 
-     * @return true if the element is a role descriptor, false otherwise
-     */
-    protected boolean isRole(Element element) {
-        if (SAMLConstants.MD_NS.equals(element.getNamespaceURI())) {
-            String localName = element.getLocalName();
-            if ("RoleDescriptor".equals(localName) || "IDPSSODescriptor".equals(localName)
-                    || "SPSSODescriptor".equals(localName) || "AuthnAuthorityDescriptor".equals(localName)
-                    || "AttributeAuthorityDescriptor".equals(localName) || "PDPDescriptor".equals(localName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Removes the Organization element, if {@link #removeOrganization} is true, from an EntityDescriptor element.
      * 
      * @param entityDescriptor the entity descriptor from which the organization element is to be removed
      * @param childElement a child element of the entity descriptor
      */
-    protected void removeOrganization(Element entityDescriptor, Element childElement) {
+    protected void filterOrganization(Element entityDescriptor, Element childElement) {
         if (!removeOrganization) {
             return;
         }
 
-        if ("Organization".equals(childElement.getLocalName())
-                && SAMLConstants.MD_NS.equals(childElement.getNamespaceURI())) {
+        if (Elements.isElementNamed(childElement, ORGANIZTION_NAME)) {
             entityDescriptor.removeChild(childElement);
         }
     }
@@ -201,13 +250,12 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
      * @param entityDescriptor the entity descriptor from which the contact person element is to be removed
      * @param childElement a child element of the entity descriptor
      */
-    protected void removeContactPerson(Element entityDescriptor, Element childElement) {
+    protected void filterContactPerson(Element entityDescriptor, Element childElement) {
         if (!removeContactPerson) {
             return;
         }
 
-        if ("ContactPerson".equals(childElement.getLocalName())
-                && SAMLConstants.MD_NS.equals(childElement.getNamespaceURI())) {
+        if (Elements.isElementNamed(childElement, CONTACT_PERSON_NAME)) {
             entityDescriptor.removeChild(childElement);
         }
     }
@@ -225,20 +273,12 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
             return false;
         }
 
-        NodeList children = entityDescriptor.getChildNodes();
-        Element child;
-        String localName;
-        for (int i = 0; i < children.getLength(); i++) {
-            if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                child = (Element) children.item(i);
-                if (SAMLConstants.MD_NS.equals(child.getNamespaceURI())) {
-                    localName = child.getLocalName();
-                    if ("RoleDescriptor".equals(localName) || "IDPSSODescriptor".equals(localName)
-                            || "SPSSODescriptor".equals(localName) || "AuthnAuthorityDescriptor".equals(localName)
-                            || "AttributeAuthorityDescriptor".equals(localName) || "PDPDescriptor".equals(localName)) {
-                        return false;
-                    }
-                }
+        List<Element> children = Elements.getChildElements(entityDescriptor);
+        for (Element child : children) {
+            if (Objects.equalsAny(QNames.getNodeQName(child), ROLE_DESCRIPTOR_NAME, IDP_SSO_DESCRIPTOR_NAME,
+                    SP_SSO_DESCRIPTOR_NAME, AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME,
+                    PDP_DESCRIPTOR_NAME)) {
+                return false;
             }
         }
 

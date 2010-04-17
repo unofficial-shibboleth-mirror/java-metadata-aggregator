@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import org.opensaml.util.xml.ParserPool;
+import org.opensaml.util.xml.XMLParserException;
 import org.w3c.dom.Document;
 
 import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;

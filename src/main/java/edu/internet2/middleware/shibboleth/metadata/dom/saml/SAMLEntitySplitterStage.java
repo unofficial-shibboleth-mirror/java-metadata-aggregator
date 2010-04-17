@@ -16,11 +16,14 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 
+import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.opensaml.util.xml.Attributes;
+import org.opensaml.util.xml.Elements;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
@@ -73,13 +76,14 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
             MetadataElementCollection<DomMetadataElement> metadata) {
         BasicMetadataElementCollection<DomMetadataElement> metadataCollection = new BasicMetadataElementCollection<DomMetadataElement>();
 
-        Element descriptor = metadata.iterator().next().getEntityMetadata();
-        if (SAMLConstants.MD_NS.equals(descriptor.getNamespaceURI())) {
-            if (SAMLConstants.ENTITIES_DESCRIPTOR_LOCAL_NAME.equals(descriptor.getLocalName())) {
-                processEntitiesDescriptor(metadataCollection, descriptor, null, null);
-            } else {
-                metadataCollection.add(new DomMetadataElement(descriptor));
-            }
+        Element metadataElement = metadata.iterator().next().getEntityMetadata();
+
+        if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITIES_DESCRIPTOR_NAME)) {
+            processEntitiesDescriptor(metadataCollection, metadataElement, null, null);
+        }
+
+        if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITY_DESCRIPTOR_NAME)) {
+            metadataCollection.add(new DomMetadataElement(metadataElement));
         }
 
         return metadataCollection;
@@ -98,38 +102,29 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
             Element entitiesDescriptor, String validUntil, String cacheDuration) {
         String desciptorValidUntil = null;
         if (pushValidUntil) {
-            if (entitiesDescriptor.hasAttributeNS(null, SAMLConstants.VALID_UNTIL_ATTIB_LOCAL_NAME)) {
-                desciptorValidUntil = entitiesDescriptor.getAttributeNS(null,
-                        SAMLConstants.VALID_UNTIL_ATTIB_LOCAL_NAME);
-            } else {
+            desciptorValidUntil = Attributes
+                    .getAttributeValue(entitiesDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME);
+            if (desciptorValidUntil == null) {
                 desciptorValidUntil = validUntil;
             }
         }
 
         String descriptorCacheDuration = null;
         if (pushCacheDuration) {
-            if (entitiesDescriptor.hasAttributeNS(null, SAMLConstants.CACHE_DURATION_ATTRIB_LOCAL_NAME)) {
-                descriptorCacheDuration = entitiesDescriptor.getAttributeNS(null,
-                        SAMLConstants.CACHE_DURATION_ATTRIB_LOCAL_NAME);
-            } else {
+            descriptorCacheDuration = Attributes.getAttributeValue(entitiesDescriptor,
+                    SAMLConstants.CACHE_DURATION_ATTRIB_NAME);
+            if (descriptorCacheDuration == null) {
                 descriptorCacheDuration = cacheDuration;
             }
         }
 
-        NodeList children = entitiesDescriptor.getChildNodes();
-        Node child;
-        for (int i = 0; i < children.getLength(); i++) {
-            child = children.item(i);
-            if (child.getNodeType() == Node.ELEMENT_NODE) {
-                if (SAMLConstants.MD_NS.equals(child.getNamespaceURI())) {
-                    if (SAMLConstants.ENTITIES_DESCRIPTOR_LOCAL_NAME.equals(child.getLocalName())) {
-                        processEntitiesDescriptor(metadataCollection, (Element) child, desciptorValidUntil,
-                                descriptorCacheDuration);
-                    } else {
-                        metadataCollection.add(buildMetadataElement((Element) child, desciptorValidUntil,
-                                descriptorCacheDuration));
-                    }
-                }
+        List<Element> children = Elements.getChildElements(entitiesDescriptor);
+        for(Element child : children){
+            if(Elements.isElementNamed(child, SAMLConstants.ENTITIES_DESCRIPTOR_NAME)){
+                processEntitiesDescriptor(metadataCollection, child, desciptorValidUntil, descriptorCacheDuration);
+            }
+            if(Elements.isElementNamed(child, SAMLConstants.ENTITY_DESCRIPTOR_NAME)){
+                metadataCollection.add(buildMetadataElement(child, desciptorValidUntil, descriptorCacheDuration));
             }
         }
     }
@@ -148,13 +143,13 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
      * @return the constructed metadata element
      */
     protected DomMetadataElement buildMetadataElement(Element entityDescriptor, String validUntil, String cacheDuration) {
-        if (validUntil != null && !entityDescriptor.hasAttributeNS(null, SAMLConstants.VALID_UNTIL_ATTIB_LOCAL_NAME)) {
-            entityDescriptor.setAttributeNS(null, SAMLConstants.VALID_UNTIL_ATTIB_LOCAL_NAME, validUntil);
+        if (validUntil != null && !Attributes.hasAttribute(entityDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME)) {
+            Attributes.appendAttribute(entityDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME, validUntil);
         }
 
         if (cacheDuration != null
-                && !entityDescriptor.hasAttributeNS(null, SAMLConstants.CACHE_DURATION_ATTRIB_LOCAL_NAME)) {
-            entityDescriptor.setAttributeNS(null, SAMLConstants.CACHE_DURATION_ATTRIB_LOCAL_NAME, cacheDuration);
+                && !Attributes.hasAttribute(entityDescriptor, SAMLConstants.CACHE_DURATION_ATTRIB_NAME)) {
+            Attributes.appendAttribute(entityDescriptor, SAMLConstants.CACHE_DURATION_ATTRIB_NAME, cacheDuration);
         }
 
         return new DomMetadataElement(entityDescriptor);

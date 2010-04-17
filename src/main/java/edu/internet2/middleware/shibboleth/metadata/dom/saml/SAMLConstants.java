@@ -16,23 +16,28 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 
+import javax.xml.namespace.QName;
+
 /** SAML related constants. */
 public final class SAMLConstants {
 
-    /** SAML Metadata Namespace URI. */
+    /** SAML Metadata namespace URI. */
     public static final String MD_NS = "urn:oasis:names:tc:SAML:2.0:metadata";
-
-    /** EntitiesDescriptor element local (tag) name. */
-    public static final String ENTITIES_DESCRIPTOR_LOCAL_NAME = "EntitiesDescriptor";
-
-    /** EntityDescriptor element local (tag) name. */
-    public static final String ENTITY_DESCRIPTOR_LOCAL_NAME = "EntityDescriptor";
     
-    /** validUntil attribute local name. */
-    public static final String VALID_UNTIL_ATTIB_LOCAL_NAME = "validUntil";
+    /** Default SAML Metadata namespace prefix. */
+    public static final String MD_PREFIX = "md:";
+
+    /** EntitiesDescriptor element name. */
+    public static final QName ENTITIES_DESCRIPTOR_NAME = new QName(MD_NS, "EntitiesDescriptor", MD_PREFIX);
     
-    /** cacheDuration attribute local name. */
-    public static final String CACHE_DURATION_ATTRIB_LOCAL_NAME = "cacheDuration";
+    /** EntityDescriptor element name. */
+    public static final QName ENTITY_DESCRIPTOR_NAME = new QName(MD_NS, "EntityDescriptor", MD_PREFIX);
+    
+    /** validUntil attribute name. */
+    public static final QName VALID_UNTIL_ATTIB_NAME = new QName("validUntil");
+    
+    /** cacheDuration attribute name. */
+    public static final QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");
 
     /** Constructor. */
     private SAMLConstants() {
