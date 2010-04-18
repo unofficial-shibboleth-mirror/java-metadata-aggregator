@@ -20,6 +20,7 @@ import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
@@ -44,4 +45,9 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
         return null;
     }
 
+    /** {@inheritDoc} */
+    protected void doInitialize() throws PipelineInitializationException {
+        // TODO Auto-generated method stub
+        
+    }
 }

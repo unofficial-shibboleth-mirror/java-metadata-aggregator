@@ -18,16 +18,21 @@ package edu.internet2.middleware.shibboleth.metadata.dom.source;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Map;
 
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.Closeables;
 import org.opensaml.util.xml.ParserPool;
-import org.opensaml.util.xml.XMLParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 import org.w3c.dom.Document;
 
 import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.PipelineSourceException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
@@ -37,7 +42,11 @@ import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
  * 
  * When caching is enabled the collection of metadata produced is always a clone of the DOM element that is cached.
  */
+@ThreadSafe
 public class DomFilesystemSource extends AbstractComponent implements Source<DomMetadataElement> {
+
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(DomFilesystemSource.class);
 
     /** Pool of DOM parsers used to parse the XML file in to a DOM. */
     private ParserPool parser;
@@ -71,22 +80,48 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
         xmlFile = file;
     }
 
+    /**
+     * Gets the filesystem path to the XML file.
+     * 
+     * @return filesystem path to the XML file
+     */
+    public String getXmlFile() {
+        return xmlFile.getPath();
+    }
+
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters)
             throws PipelineSourceException {
+        FileInputStream xmlIn = null;
+
         try {
-            FileInputStream xmlIn = new FileInputStream(xmlFile);
+            log.debug("{} pipeline source parsing XML file {}", getId(), xmlFile.getPath());
+            xmlIn = new FileInputStream(xmlFile);
             Document doc = parser.parse(xmlIn);
-            xmlIn.close();
 
             BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
             mec.add(new DomMetadataElement(doc.getDocumentElement()));
             return mec;
+        } catch (Exception e) {
+            String errMsg = MessageFormatter.format("{} pipeline source unable to parse XML input file {}", getId(),
+                    xmlFile.getPath());
+            log.error(errMsg, e);
+            throw new PipelineSourceException(errMsg, e);
+        } finally {
+            Closeables.closeQuiety(xmlIn);
+        }
+    }
 
-        } catch (IOException e) {
-            throw new PipelineSourceException("Unable to read XML input file", e);
-        } catch (XMLParserException e) {
-            throw new PipelineSourceException("Unable to parse XML input file", e);
+    /** {@inheritDoc} */
+    protected void doInitialize() throws PipelineInitializationException {
+        if (parser == null) {
+            log.error("Unable to initialize " + getId() + ", parser pool may not be null");
+            throw new PipelineInitializationException("ParserPool may not be null");
+        }
+
+        if (!xmlFile.exists() || !xmlFile.canRead()) {
+            log.error("Unable to initialize " + getId() + ", XML file " + xmlFile.getPath() + " can not be read");
+            throw new PipelineInitializationException("Unable to read XML file " + xmlFile.getPath());
         }
     }
 }

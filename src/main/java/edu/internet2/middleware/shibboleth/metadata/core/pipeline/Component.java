@@ -16,17 +16,15 @@
 
 package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
-import java.util.Map;
-
 import org.joda.time.DateTime;
 
 /**
  * Base interface for all the components of a {@link Pipeline}, including the pipeline itself.
  */
 public interface Component {
-    
-    /** 
-     * Gets a unique identifier for the component. 
+
+    /**
+     * Gets a unique identifier for the component.
      * 
      * @return unique identifier for the component
      */
@@ -44,19 +42,12 @@ public interface Component {
      * 
      * Once a component has been initialized this method will throw an {@link IllegalStateException}.
      * 
-     * @param parameters component initialization parameters
+     * @throws PipelineInitializationException thrown if there is a problem initializing the component for use
      */
-    public void initialize(Map<String, Object> parameters);
-    
+    public void initialize() throws PipelineInitializationException;
+
     /**
-     * Gets the parameters used to initialized the component.
-     * 
-     * @return unmodifiable map of parameters used to initialize the component
-     */
-    public Map<String, Object> getInitializationParameters();
-    
-    /**
-     * Gets the instant the component was initialized.  All instants are given in UTC time.
+     * Gets the instant the component was initialized. All instants are given in UTC time.
      * 
      * @return instant the component was initialized
      */

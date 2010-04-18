@@ -21,6 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.jcip.annotations.ThreadSafe;
+
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.Sink;
@@ -32,8 +37,12 @@ import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
  * 
  * @param <ElementType> type of metadata element upon which the pipeline operates
  */
+@ThreadSafe
 public class BasicPipeline<ElementType extends MetadataElement<?>> extends AbstractComponent implements
         Pipeline<ElementType, PipelineResult> {
+    
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(BasicPipeline.class);
 
     /** The stages for the pipeline. */
     private ArrayList<Stage<ElementType>> stages;
@@ -63,17 +72,38 @@ public class BasicPipeline<ElementType extends MetadataElement<?>> extends Abstr
     /** {@inheritDoc} */
     public PipelineResult execute(Map<String, Object> parameters, Source<ElementType> source, Sink<ElementType> sink) {
         try {
+            if(!source.isInitialized()){
+                log.debug("{} pipeline initializing source {}", getId(), source.getId());
+                source.isInitialized();
+            }
+            log.debug("{} pipeline getting metadata data from source {}", getId(), source.getId());
             MetadataElementCollection<ElementType> metadataCollection = source.execute(parameters);
-
+            
             for (Stage<ElementType> stage : stages) {
+                log.debug("{} pipeline executing {}", getId(), stage.getId());
                 metadataCollection = stage.execute(parameters, metadataCollection);
             }
 
+            if(!sink.isInitialized()){
+                log.debug("{} pipeline initializing sink {}", getId(), sink.getId());
+                sink.initialize();
+            }
+            log.debug("{} pipeline sending metadata to sink {}", getId(), sink.getId());
             sink.execute(parameters, metadataCollection);
 
             return new BasicPipelineResult(parameters);
-        } catch (PipelineProcessingException e) {
+        } catch (PipelineException e) {
+            log.error("Error occured while executing pipeline " + getId(), e);
             return new BasicPipelineResult(parameters, e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws PipelineInitializationException {
+        for (Stage<ElementType> stage : stages) {
+            if (!stage.isInitialized()) {
+                stage.initialize();
+            }
         }
     }
 }

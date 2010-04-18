@@ -20,6 +20,7 @@ import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
@@ -42,5 +43,11 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters) {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    /** {@inheritDoc} */
+    protected void doInitialize() throws PipelineInitializationException {
+        // TODO Auto-generated method stub
+        
     }
 }

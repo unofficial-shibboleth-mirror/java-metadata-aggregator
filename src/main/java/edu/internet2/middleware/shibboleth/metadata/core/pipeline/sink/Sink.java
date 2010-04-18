@@ -20,6 +20,7 @@ import java.util.Map;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Component;
 
 /**
  * A component of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} that receives the final
@@ -27,7 +28,7 @@ import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollecti
  * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
-public interface Sink<ElementType extends MetadataElement<?>> {
+public interface Sink<ElementType extends MetadataElement<?>> extends Component{
 
     /**
      * Processes the output of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline}.

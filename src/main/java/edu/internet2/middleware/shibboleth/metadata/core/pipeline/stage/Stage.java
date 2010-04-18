@@ -35,12 +35,12 @@ public interface Stage<ElementType extends MetadataElement<?>> extends Component
      * 
      * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
      *            for this invocation
-     * @param metadata the data to be transformed
+     * @param metadataCollection the data to be transformed
      * 
      * @return the output of the transformation
      * 
      * @throws PipelineStageException thrown if there is a problem running this stage on the given input
      */
     public MetadataElementCollection<ElementType> execute(Map<String, Object> parameters,
-            MetadataElementCollection<ElementType> metadata) throws PipelineStageException;
+            MetadataElementCollection<ElementType> metadataCollection) throws PipelineStageException;
 }

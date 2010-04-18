@@ -25,7 +25,7 @@ public final class SAMLConstants {
     public static final String MD_NS = "urn:oasis:names:tc:SAML:2.0:metadata";
     
     /** Default SAML Metadata namespace prefix. */
-    public static final String MD_PREFIX = "md:";
+    public static final String MD_PREFIX = "md";
 
     /** EntitiesDescriptor element name. */
     public static final QName ENTITIES_DESCRIPTOR_NAME = new QName(MD_NS, "EntitiesDescriptor", MD_PREFIX);

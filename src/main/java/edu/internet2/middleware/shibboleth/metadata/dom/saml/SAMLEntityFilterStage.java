@@ -23,20 +23,26 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.opensaml.util.Objects;
 import org.opensaml.util.xml.Elements;
 import org.opensaml.util.xml.QNames;
 import org.opensaml.util.xml.Types;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
 /**
  * A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria.
  */
+@ThreadSafe
 public class SAMLEntityFilterStage extends AbstractComponent implements Stage<DomMetadataElement> {
 
     /** QName of the RoleDescriptor element. */
@@ -64,6 +70,9 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
 
     /** QName of the ContactPerson element. */
     private static final QName CONTACT_PERSON_NAME = new QName(SAMLConstants.MD_NS, "ContactPerson");
+    
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(SAMLEntityFilterStage.class);
 
     // TODO remove binding, services, white/blacklist extensions
 
@@ -171,12 +180,12 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
 
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadata) {
-
+            MetadataElementCollection<DomMetadataElement> metadataCollection) {
         ArrayList<DomMetadataElement> markedForRemoval = new ArrayList<DomMetadataElement>();
+
         Element descriptor;
-        for (DomMetadataElement metadataElement : metadata) {
-            descriptor = metadataElement.getEntityMetadata();
+        for (DomMetadataElement metadata : metadataCollection) {
+            descriptor = metadata.getEntityMetadata();
 
             List<Element> children = Elements.getChildElements(descriptor);
             for (Element child : children) {
@@ -186,13 +195,15 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
             }
 
             if (shouldRemoveEntityDescriptor(descriptor)) {
-                markedForRemoval.add(metadataElement);
+                log.debug("{} pipeline stage removing roleless EntityDescriptor {}", getId(), descriptor
+                        .getAttributeNS(null, "entityID"));
+                markedForRemoval.add(metadata);
             }
         }
 
-        metadata.removeAll(markedForRemoval);
+        metadataCollection.removeAll(markedForRemoval);
 
-        return metadata;
+        return metadataCollection;
     }
 
     /**
@@ -206,12 +217,16 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
             return;
         }
 
+        log.debug("{} pipeline stage filtering roles from EntityDescriptor {}", getId(), entityDescriptor
+                .getAttributeNS(null, "entityID"));
+
         QName elementName = QNames.getNodeQName(childElement);
         boolean removeRole = false;
 
         if (Elements.isElementNamed(childElement, ROLE_DESCRIPTOR_NAME)) {
             QName type = Types.getXSIType(childElement);
             if (type != null && !whitelistedRoles.contains(type)) {
+                log.debug("{} pipeline stage marked RoleDescriptor of type {} for removal", getId(), type);
                 removeRole = true;
             }
         }
@@ -219,12 +234,18 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         if (Objects.equalsAny(elementName, IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
                 AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME)) {
             if (!whitelistedRoles.contains(elementName)) {
+                log.debug("{} pipeline stage marked {} role for removal", getId(), elementName);
                 removeRole = true;
             }
         }
 
         if (removeRole) {
+            log.debug("{} pipeline stage removing marked role from EntityDescriptor {}", getId(), entityDescriptor
+                    .getAttributeNS(null, "entityID"));
             entityDescriptor.removeChild(childElement);
+        } else {
+            log.debug("{} pipeline did not remove any role from EntityDescriptor {}", getId(), entityDescriptor
+                    .getAttributeNS(null, "entityID"));
         }
     }
 
@@ -240,6 +261,8 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         }
 
         if (Elements.isElementNamed(childElement, ORGANIZTION_NAME)) {
+            log.debug("{} pipeline stage removing Organization from EntityDescriptor {}", getId(), entityDescriptor
+                    .getAttributeNS(null, "entityID"));
             entityDescriptor.removeChild(childElement);
         }
     }
@@ -256,6 +279,8 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         }
 
         if (Elements.isElementNamed(childElement, CONTACT_PERSON_NAME)) {
+            log.debug("{} pipeline stage removing ContactPerson from EntityDescriptor {}", getId(), entityDescriptor
+                    .getAttributeNS(null, "entityID"));
             entityDescriptor.removeChild(childElement);
         }
     }
@@ -283,5 +308,10 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         }
 
         return true;
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws PipelineInitializationException {
+        // nothing to do here
     }
 }

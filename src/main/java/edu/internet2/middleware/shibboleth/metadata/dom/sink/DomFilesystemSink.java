@@ -22,14 +22,22 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.opensaml.util.xml.Serialize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.PipelineSinkException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.Sink;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
 
 /** A pipeline {@link Sink} which writes an {@link org.w3c.dom.Element} to a file. */
-public class DomFilesystemSink implements Sink<DomMetadataElement> {
+public class DomFilesystemSink extends AbstractComponent implements Sink<DomMetadataElement> {
+
+    /** Class logger. */
+    private Logger log = LoggerFactory.getLogger(DomFilesystemSink.class);
 
     /** File to which resultant XML is written. */
     private File xmlFile;
@@ -37,19 +45,12 @@ public class DomFilesystemSink implements Sink<DomMetadataElement> {
     /**
      * Constructor.
      * 
+     * @param id ID of this stage
      * @param filePath path to file to which resultant XML is written
      */
-    public DomFilesystemSink(String filePath) {
+    public DomFilesystemSink(String id, String filePath) {
+        super(id);
         xmlFile = new File(filePath);
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param file file to which resultant XML is written
-     */
-    public DomFilesystemSink(File file) {
-        xmlFile = file;
     }
 
     /** {@inheritDoc} */
@@ -63,6 +64,27 @@ public class DomFilesystemSink implements Sink<DomMetadataElement> {
             out.close();
         } catch (IOException e) {
             throw new PipelineSinkException("Unable to write XML to file", e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws PipelineInitializationException {
+        if (!xmlFile.canWrite()) {
+            String errMsg = MessageFormatter.format("{} pipeline sink unable to write to output file {}", getId(),
+                    xmlFile.getPath());
+            log.error(errMsg);
+            throw new PipelineInitializationException(errMsg);
+        }
+
+        if (!xmlFile.exists()) {
+            try {
+                xmlFile.createNewFile();
+            } catch (Exception e) {
+                String errMsg = MessageFormatter.format("{} pipeline sink unable to create output file {}", getId(),
+                        xmlFile.getPath());
+                log.error(errMsg);
+                throw new PipelineInitializationException(errMsg);
+            }
         }
     }
 }

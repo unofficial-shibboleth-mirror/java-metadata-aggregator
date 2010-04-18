@@ -16,14 +16,20 @@
 
 package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
-import java.util.Collections;
-import java.util.Map;
+import net.jcip.annotations.ThreadSafe;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
+import org.opensaml.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Base implementation for pipeline components. */
+@ThreadSafe
 public abstract class AbstractComponent implements Component {
+    
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(AbstractComponent.class);
 
     /** Unique ID for the component. */
     private String id;
@@ -31,16 +37,13 @@ public abstract class AbstractComponent implements Component {
     /** Instant when the component was initialized. */
     private DateTime initInstant;
 
-    /** Parameters used to initialize the component. */
-    private Map<String, Object> initParams;
-
     /**
      * Constructor.
      * 
      * @param componentId the ID of the component
      */
     public AbstractComponent(String componentId) {
-        id = componentId;
+        id = Strings.trimOrNull(componentId);
     }
 
     /** {@inheritDoc} */
@@ -63,37 +66,50 @@ public abstract class AbstractComponent implements Component {
     }
 
     /** {@inheritDoc} */
-    public Map<String, Object> getInitializationParameters() {
-        return initParams;
-    }
-
-    /** {@inheritDoc} */
-    public void initialize(Map<String, Object> parameters) {
-        initParams = Collections.unmodifiableMap(parameters);
+    public synchronized void initialize() throws PipelineInitializationException {
+        if(isInitialized()){
+            throw new IllegalStateException("Pipeline component already initialized");
+        }
+        
+        if (id == null) {
+            throw new PipelineInitializationException("Pipeline component may not have a null or empty ID");
+        }
+        
+        log.debug("Initializing pipeline component {}", getId());
+        doInitialize();
+        
         initInstant = new DateTime(ISOChronology.getInstanceUTC());
+        log.debug("Pipeline component {} initialized", getId());
     }
 
     /** {@inheritDoc} */
     public boolean isInitialized() {
         return initInstant != null;
     }
-    
+
     /** {@inheritDoc} */
     public int hashCode() {
         return id.hashCode();
     }
-    
+
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if(obj == null) {
+        if (obj == null) {
             return false;
         }
-        
-        if(obj instanceof AbstractComponent){
+
+        if (obj instanceof AbstractComponent) {
             AbstractComponent otherComponent = (AbstractComponent) obj;
             return id.equals(otherComponent.getId());
         }
-        
+
         return false;
     }
+
+    /**
+     * Do the initialization of the component.
+     * 
+     * @throws PipelineInitializationException throw if there is a problem initializing the component
+     */
+    protected abstract void doInitialize() throws PipelineInitializationException;
 }

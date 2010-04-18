@@ -40,5 +40,5 @@ public interface PipelineResult {
      * 
      * @return exception that caused the error
      */
-    public PipelineProcessingException getProcessingException();
+    public PipelineException getException();
 }

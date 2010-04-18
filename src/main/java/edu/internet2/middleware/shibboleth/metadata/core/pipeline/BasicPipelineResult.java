@@ -25,7 +25,7 @@ public class BasicPipelineResult implements PipelineResult {
     private Map<String, Object> parameters;
 
     /** Exception that caused the failure in the pipeline. */
-    private PipelineProcessingException exception;
+    private PipelineException exception;
 
     /** Constructor. */
     public BasicPipelineResult() {
@@ -44,15 +44,15 @@ public class BasicPipelineResult implements PipelineResult {
      * Constructor.
      * 
      * @param executionParameters parameters given when the pipeline was executed
-     * @param processingException exception that caused the failure of the pipeline
+     * @param pipelineException exception that caused the failure of the pipeline
      */
-    public BasicPipelineResult(Map<String, Object> executionParameters, PipelineProcessingException processingException) {
+    public BasicPipelineResult(Map<String, Object> executionParameters, PipelineException pipelineException) {
         parameters = executionParameters;
-        exception = processingException;
+        exception = pipelineException;
     }
 
     /** {@inheritDoc} */
-    public PipelineProcessingException getProcessingException() {
+    public PipelineException getException() {
         return exception;
     }
 

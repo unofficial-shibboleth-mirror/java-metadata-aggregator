@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-<project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.internet2.middleware.shibboleth.metadata</groupId>
     <artifactId>metadta-aggregator</artifactId>
@@ -11,6 +12,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.groupId>org.slf4j</slf4j.groupId>
         <slf4j.version>1.5.8</slf4j.version>
+        <spring.groupId>org.springframework</spring.groupId>
+        <spring.version>3.0.2.RELEASE</spring.version>
     </properties>
 
     <distributionManagement>
@@ -26,6 +29,17 @@
             <groupId>org.opensaml</groupId>
             <artifactId>util</artifactId>
             <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${slf4j.groupId}</groupId>
@@ -73,6 +87,12 @@
             <version>5.9</version>
             <classifier>jdk15</classifier>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
