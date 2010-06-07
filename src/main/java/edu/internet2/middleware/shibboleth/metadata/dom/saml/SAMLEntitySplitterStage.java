@@ -23,6 +23,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.opensaml.util.xml.Attributes;
 import org.opensaml.util.xml.Elements;
+import org.opensaml.util.xml.QNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -120,24 +121,24 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
 
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadataCollection) {
-        BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
+            MetadataElementCollection<DomMetadataElement> sourceCollection) {
 
-        Element metadataElement = metadataCollection.iterator().next().getEntityMetadata();
+        BasicMetadataElementCollection<DomMetadataElement> destinationCollection = new BasicMetadataElementCollection<DomMetadataElement>();
 
-        log
-                .debug("{} pipeline stage splitting EntityDescriptor into individuals metadata collection elements",
-                        getId());
-
-        if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITIES_DESCRIPTOR_NAME)) {
-            processEntitiesDescriptor(mec, metadataElement, null, null);
+        Element metadataElement;
+        for (DomMetadataElement sourceMetadata : sourceCollection) {
+            metadataElement = sourceMetadata.getEntityMetadata();
+            if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITIES_DESCRIPTOR_NAME)) {
+                processEntitiesDescriptor(destinationCollection, metadataElement, null, null);
+            } else if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITY_DESCRIPTOR_NAME)) {
+                destinationCollection.add(new DomMetadataElement(metadataElement));
+            } else {
+                log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(), QNames
+                        .getNodeQName(metadataElement));
+            }
         }
 
-        if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITY_DESCRIPTOR_NAME)) {
-            mec.add(new DomMetadataElement(metadataElement));
-        }
-
-        return mec;
+        return destinationCollection;
     }
 
     /**
@@ -197,6 +198,7 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
         if (validUntil != null && !Attributes.hasAttribute(entityDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME)) {
             log.debug("{} pipeline stage add validUntil attribute to EntityDescriptor {}", getId(), entityDescriptor
                     .getAttributeNS(null, "entityID"));
+            log.debug("Adding valid until of {} to entity descriptor {}", validUntil, entityDescriptor.getAttributeNS(null, "entityID"));
             Attributes.appendAttribute(entityDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME, validUntil);
         }
 

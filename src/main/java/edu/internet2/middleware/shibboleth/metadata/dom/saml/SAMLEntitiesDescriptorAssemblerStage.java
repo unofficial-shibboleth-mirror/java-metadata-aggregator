@@ -21,6 +21,8 @@ import java.util.Map;
 import net.jcip.annotations.ThreadSafe;
 
 import org.opensaml.util.xml.Elements;
+import org.opensaml.util.xml.ParserPool;
+import org.opensaml.util.xml.XMLParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -43,20 +45,31 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SAMLEntitiesDescriptorAssemblerStage.class);
 
+    ParserPool parserPool;
+    
     /**
      * Constructor.
      * 
      * @param stageId unique stage ID
      */
-    public SAMLEntitiesDescriptorAssemblerStage(String stageId) {
+    public SAMLEntitiesDescriptorAssemblerStage(String stageId, ParserPool pool) {
         super(stageId);
+        parserPool = pool;
     }
 
     /** {@inheritDoc} */
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
             MetadataElementCollection<DomMetadataElement> metadataCollection) {
         log.debug("{} pipeline stage fetching owning for metadata element", getId());
-        Document owningDocument = metadataCollection.iterator().next().getEntityMetadata().getOwnerDocument();
+        
+        //Document owningDocument = metadataCollection.iterator().next().getEntityMetadata().getOwnerDocument();
+        Document owningDocument = null;
+        try{
+        owningDocument = parserPool.newDocument();
+        }catch(XMLParserException e){
+            e.printStackTrace();
+            return null;
+        }
 
         Element entitiesDescriptor = buildEntitiesDescriptor(owningDocument);
 

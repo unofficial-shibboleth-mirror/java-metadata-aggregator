@@ -69,13 +69,6 @@ public class DomFilesystemSink extends AbstractComponent implements Sink<DomMeta
 
     /** {@inheritDoc} */
     protected void doInitialize() throws PipelineInitializationException {
-        if (!xmlFile.canWrite()) {
-            String errMsg = MessageFormatter.format("{} pipeline sink unable to write to output file {}", getId(),
-                    xmlFile.getPath());
-            log.error(errMsg);
-            throw new PipelineInitializationException(errMsg);
-        }
-
         if (!xmlFile.exists()) {
             try {
                 xmlFile.createNewFile();
@@ -85,6 +78,13 @@ public class DomFilesystemSink extends AbstractComponent implements Sink<DomMeta
                 log.error(errMsg);
                 throw new PipelineInitializationException(errMsg);
             }
+        }
+        
+        if (!xmlFile.canWrite()) {
+            String errMsg = MessageFormatter.format("{} pipeline sink unable to write to output file {}", getId(),
+                    xmlFile.getPath());
+            log.error(errMsg);
+            throw new PipelineInitializationException(errMsg);
         }
     }
 }
