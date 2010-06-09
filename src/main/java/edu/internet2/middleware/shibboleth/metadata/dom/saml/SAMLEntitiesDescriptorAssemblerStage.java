@@ -46,7 +46,7 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
     private final Logger log = LoggerFactory.getLogger(SAMLEntitiesDescriptorAssemblerStage.class);
 
     ParserPool parserPool;
-    
+
     /**
      * Constructor.
      * 
@@ -61,12 +61,11 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
     public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
             MetadataElementCollection<DomMetadataElement> metadataCollection) {
         log.debug("{} pipeline stage fetching owning for metadata element", getId());
-        
-        //Document owningDocument = metadataCollection.iterator().next().getEntityMetadata().getOwnerDocument();
+
         Document owningDocument = null;
-        try{
-        owningDocument = parserPool.newDocument();
-        }catch(XMLParserException e){
+        try {
+            owningDocument = parserPool.newDocument();
+        } catch (XMLParserException e) {
             e.printStackTrace();
             return null;
         }
