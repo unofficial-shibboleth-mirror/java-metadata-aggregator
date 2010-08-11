@@ -18,6 +18,8 @@ package edu.internet2.middleware.shibboleth.metadata.core;
 
 import java.io.Serializable;
 
+import edu.internet2.middleware.shibboleth.metadata.util.ClassToInstanceMultiMap;
+
 /**
  * A piece of metadata with associated processing information.
  * 
@@ -37,28 +39,7 @@ public interface MetadataElement<MetadataType> extends Serializable {
      * 
      * @return processing data attached to this element
      */
-    public MetadataElementInfo[] getElementInfo();
-
-    /**
-     * Gets an {@link MetadataElementInfo} of a specific type.
-     * 
-     * @param <T> class type of element info
-     * @param infoType class instance of the element info type
-     * 
-     * @return the typed element info
-     */
-    public <T extends MetadataElementInfo> T getElementInfo(Class<T> infoType);
-
-    /**
-     * Adds a given {@link MetadataElementInfo} to this element. Only {@link MetadataElementInfo} of any given type may
-     * be added.
-     * 
-     * @param info info to be added
-     * 
-     * @throws IllegalArgumentException thrown if an {@link MetadataElementInfo} of that type is already attached to
-     *             this element
-     */
-    public void addElementInfo(MetadataElementInfo info) throws IllegalArgumentException;
+    public ClassToInstanceMultiMap<MetadataElementInfo> getElementInfo();
 
     /**
      * Performs a copy of the element. All member fields, except {@link MetadataElementInfo}, should be deep cloned.

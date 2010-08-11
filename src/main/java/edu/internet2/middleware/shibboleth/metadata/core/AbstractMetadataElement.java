@@ -16,6 +16,7 @@
 
 package edu.internet2.middleware.shibboleth.metadata.core;
 
+import edu.internet2.middleware.shibboleth.metadata.util.ClassToInstanceMultiMap;
 import net.jcip.annotations.ThreadSafe;
 
 /**
@@ -28,6 +29,14 @@ public abstract class AbstractMetadataElement<MetadataType> implements MetadataE
 
     /** The actual metadata. */
     private MetadataType metadata;
+
+    /** Additional information associated with the metadata. */
+    private ClassToInstanceMultiMap<MetadataElementInfo> elementInfo;
+
+    /** Constructor. */
+    protected AbstractMetadataElement() {
+        elementInfo = new ClassToInstanceMultiMap<MetadataElementInfo>(true);
+    }
 
     /** {@inheritDoc} */
     public MetadataType getEntityMetadata() {
@@ -44,20 +53,7 @@ public abstract class AbstractMetadataElement<MetadataType> implements MetadataE
     }
 
     /** {@inheritDoc} */
-    public MetadataElementInfo[] getElementInfo() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    public <T extends MetadataElementInfo> T getElementInfo(Class<T> infoType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    public void addElementInfo(MetadataElementInfo info) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
-
+    public ClassToInstanceMultiMap<MetadataElementInfo> getElementInfo() {
+        return elementInfo;
     }
 }
