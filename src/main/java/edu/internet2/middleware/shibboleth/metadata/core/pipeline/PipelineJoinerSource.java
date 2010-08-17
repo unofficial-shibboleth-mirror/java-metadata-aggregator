@@ -117,7 +117,7 @@ public class PipelineJoinerSource extends AbstractComponent implements Source<Me
 
         compInfo.setCompleteInstant();
         MetadataInfoHelper.addToAll(sourceCollection, compInfo);
-        return null;
+        return sourceCollection;
     }
 
     /** Factory used to create the {@link MetadataCollection} that will contain the output of the source. */

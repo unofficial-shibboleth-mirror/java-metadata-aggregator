@@ -18,15 +18,18 @@ package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Hex;
 import org.opensaml.util.Assert;
-import org.opensaml.util.codec.Base64;
 import org.springframework.core.convert.converter.Converter;
 
 import edu.internet2.middleware.shibboleth.metadata.core.EntityIdInfo;
 import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /**
  * A pipeline stage that, if present, takes each {@link EntityIdInfo} associated with a metadata element, transforms it
@@ -36,7 +39,7 @@ import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 public class EntityIdTransformStage extends AbstractComponent implements Stage<Metadata<?>> {
 
     /** Transformers used on IDs. */
-    public List<Converter<String, String>> idTransformers;
+    private List<Converter<String, String>> idTransformers;
 
     /**
      * Constructor.
@@ -47,6 +50,7 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
         super(stageId);
 
         Assert.isNotEmpty(transformers, "Identity transformers may not be null or empty");
+        idTransformers = Collections.unmodifiableList(new ArrayList<Converter<String, String>>(transformers));
     }
 
     /** {@inheritDoc} */
@@ -55,15 +59,17 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
         ComponentInfo compInfo = new ComponentInfo(this);
 
         List<EntityIdInfo> ids;
+        List<EntityIdInfo> transformedIds = new ArrayList<EntityIdInfo>();
         String transformedId;
         for (Metadata<?> element : metadataCollection) {
             ids = element.getMetadataInfo().get(EntityIdInfo.class);
             for (EntityIdInfo id : ids) {
                 for (Converter<String, String> idTransform : idTransformers) {
                     transformedId = idTransform.convert(id.getEntityId());
-                    element.getMetadataInfo().put(new EntityIdInfo(transformedId));
+                    transformedIds.add(new EntityIdInfo(transformedId));
                 }
             }
+            MetadataInfoHelper.addToAll(element, transformedIds.toArray(new EntityIdInfo[]{}));
             element.getMetadataInfo().put(compInfo);
         }
 
@@ -84,7 +90,7 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
         public String convert(String source) {
             try {
                 MessageDigest shaDigester = MessageDigest.getInstance("SHA-1");
-                String target = Base64.encodeBytes(shaDigester.digest(source.getBytes()));
+                String target = Hex.encodeHexString(shaDigester.digest(source.getBytes()));
                 return "{sha1}" + target;
             } catch (NoSuchAlgorithmException e) {
                 // nothing to do, this is required to be supported by the JVM
@@ -100,7 +106,7 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
         public String convert(String source) {
             try {
                 MessageDigest shaDigester = MessageDigest.getInstance("MD5");
-                String target = Base64.encodeBytes(shaDigester.digest(source.getBytes()));
+                String target = Hex.encodeHexString(shaDigester.digest(source.getBytes()));
                 return "{md5}" + target;
             } catch (NoSuchAlgorithmException e) {
                 // nothing to do, this is required to be supported by the JVM

@@ -44,12 +44,28 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
 
     /** {@inheritDoc} */
     public boolean add(ElementType o) {
+        if(o == null){
+            return false;
+        }
+        
         return delegate.add(o);
     }
 
     /** {@inheritDoc} */
     public boolean addAll(Collection<? extends ElementType> c) {
-        return delegate.addAll(c);
+        if(c == null){
+            return false;
+        }
+        
+        boolean hasChanged = false;
+        for(ElementType element : c){
+            if(element != null){
+                delegate.add(element);
+                hasChanged = true;
+            }
+        }
+        
+        return hasChanged;
     }
 
     /** {@inheritDoc} */
@@ -59,6 +75,9 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
 
     /** {@inheritDoc} */
     public boolean contains(Object o) {
+        if(o == null){
+            return false;
+        }
         return delegate.contains(o);
     }
 
@@ -79,16 +98,34 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
 
     /** {@inheritDoc} */
     public boolean remove(Object o) {
+        if(o == null){
+            return false;
+        }
         return delegate.remove(o);
     }
 
     /** {@inheritDoc} */
     public boolean removeAll(Collection<?> c) {
-        return delegate.removeAll(c);
+        if(c == null){
+            return false;
+        }
+        
+        boolean hasChanged = false;
+        for(Object element : c){
+            if(element != null){
+                delegate.remove(element);
+                hasChanged = true;
+            }
+        }
+        
+        return hasChanged;
     }
 
     /** {@inheritDoc} */
     public boolean retainAll(Collection<?> c) {
+        if(c == null){
+            return false;
+        }
         return delegate.retainAll(c);
     }
 

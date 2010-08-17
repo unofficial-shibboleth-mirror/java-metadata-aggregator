@@ -16,8 +16,11 @@
 
 package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.opensaml.util.Assert;
 
 import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
@@ -42,6 +45,15 @@ public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractCo
      */
     public SimplePipeline(String id, Source<MetadataType> pipelineSource, List<Stage<MetadataType>> pipelineStages) {
         super(id);
+        
+        Assert.isNotNull(pipelineSource, "Pipeline source may not be null");
+        source = pipelineSource;
+        
+        if(pipelineStages == null){
+            stages = Collections.emptyList();
+        }else{
+            stages = Collections.unmodifiableList(new ArrayList<Stage<MetadataType>>(pipelineStages));
+        }
     }
 
     /** {@inheritDoc} */
@@ -51,18 +63,20 @@ public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractCo
 
     /** {@inheritDoc} */
     public List<Stage<MetadataType>> getStages() {
-        return Collections.unmodifiableList(stages);
+        return stages;
     }
 
     /** {@inheritDoc} */
     public MetadataCollection<MetadataType> execute() throws PipelineProcessingException {
+        ComponentInfo compInfo = new ComponentInfo(this);
         MetadataCollection<MetadataType> metadataCollection = source.execute();
 
         for (Stage<MetadataType> stage : stages) {
             metadataCollection = stage.execute(metadataCollection);
         }
 
-        MetadataInfoHelper.addToAll(metadataCollection, new ComponentInfo(this));
+        compInfo.setCompleteInstant();
+        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
         return metadataCollection;
     }
 
