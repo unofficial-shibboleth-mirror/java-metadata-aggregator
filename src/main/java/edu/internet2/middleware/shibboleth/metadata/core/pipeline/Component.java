@@ -42,9 +42,9 @@ public interface Component {
      * 
      * Once a component has been initialized this method will throw an {@link IllegalStateException}.
      * 
-     * @throws PipelineInitializationException thrown if there is a problem initializing the component for use
+     * @throws ComponentInitializationException thrown if there is a problem initializing the component for use
      */
-    public void initialize() throws PipelineInitializationException;
+    public void initialize() throws ComponentInitializationException;
 
     /**
      * Gets the instant the component was initialized. All instants are given in UTC time.

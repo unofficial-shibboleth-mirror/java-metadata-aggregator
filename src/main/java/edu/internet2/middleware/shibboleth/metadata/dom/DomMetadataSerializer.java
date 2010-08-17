@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata.dom;
 
-import java.io.Serializable;
+import java.io.OutputStream;
 
-import net.jcip.annotations.ThreadSafe;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataSerializer;
 
 /**
- * Processing information about a given {@link MetadataElement}. To overload the term, this is metadata about the
- * metadata element.
- * 
- * Implementations of this class <strong>MUST</strong> be immutable. When an {@link MetadataElement} is cloned, the
- * clone will reference the same {@link MetadataElementInfo} objects as the original.
+ *
  */
-@ThreadSafe
-public interface MetadataElementInfo extends Serializable {
+public class DomMetadataSerializer implements MetadataSerializer<DomMetadata> {
 
+    /** {@inheritDoc} */
+    public void serialize(MetadataCollection<DomMetadata> metadataCollection, OutputStream output) {
+        // TODO Auto-generated method stub
+
+    }
 }

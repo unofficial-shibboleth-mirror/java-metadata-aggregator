@@ -25,29 +25,29 @@ import edu.internet2.middleware.shibboleth.metadata.util.ClassToInstanceMultiMap
  * 
  * @param <MetadataType> type of metadata element
  */
-public interface MetadataElement<MetadataType> extends Serializable {
+public interface Metadata<MetadataType> extends Serializable {
 
     /**
-     * Gets the metadata that describes the entity.
+     * Gets the metadata.
      * 
-     * @return the metadata that describes the entity
+     * @return the metadata
      */
-    public MetadataType getEntityMetadata();
+    public MetadataType getMetadata();
 
     /**
      * Gets all of the processing data attached to this element.
      * 
      * @return processing data attached to this element
      */
-    public ClassToInstanceMultiMap<MetadataElementInfo> getElementInfo();
+    public ClassToInstanceMultiMap<MetadataInfo> getMetadataInfo();
 
     /**
-     * Performs a copy of the element. All member fields, except {@link MetadataElementInfo}, should be deep cloned.
-     * {@link MetadataElementInfo} objects must be shared between the clone and the original.
+     * Performs a copy of the element. All member fields, except {@link MetadataInfo}, should be deep cloned.
+     * {@link MetadataInfo} objects must be shared between the clone and the original.
      * 
      * @param <T> the type of metadata element returned
      * 
      * @return the clone of this element
      */
-    public <T extends MetadataElement<MetadataType>> T copy();
+    public Metadata<MetadataType> copy();
 }

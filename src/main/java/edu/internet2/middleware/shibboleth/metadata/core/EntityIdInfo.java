@@ -20,7 +20,7 @@ import org.opensaml.util.Assert;
 import org.opensaml.util.Strings;
 
 /** Carries a unique identifier of the entity described by a piece of metadata. */
-public class EntityIdInfo implements MetadataElementInfo {
+public class EntityIdInfo implements MetadataInfo {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -3907907112463674533L;

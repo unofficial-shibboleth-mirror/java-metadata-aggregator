@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.jcip.annotations.ThreadSafe;
 
@@ -31,13 +30,13 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 import org.w3c.dom.Document;
 
-import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.PipelineSourceException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Source;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.SourceProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A source which reads XML information from the filesystem and optionally caches it in memory.
@@ -45,7 +44,7 @@ import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
  * When caching is enabled the collection of metadata produced is always a clone of the DOM element that is cached.
  */
 @ThreadSafe
-public class DomFilesystemSource extends AbstractComponent implements Source<DomMetadataElement> {
+public class DomFilesystemSource extends AbstractComponent implements Source<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DomFilesystemSource.class);
@@ -138,10 +137,9 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters)
-            throws PipelineSourceException {
+    public MetadataCollection<DomMetadata> execute() throws SourceProcessingException {
 
-        BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
+        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         ArrayList<File> sourceFiles = new ArrayList<File>();
         getSourceFiles(sourceFile, sourceFiles);
@@ -151,7 +149,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
             return mec;
         }
 
-        DomMetadataElement dme;
+        DomMetadata dme;
         for (File source : sourceFiles) {
             dme = processSourceFile(source);
             if (dme != null) {
@@ -201,30 +199,30 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     }
 
     /**
-     * Reads in an XML source file, parses it, and creates the appropriate {@link DomMetadataElement} for the data.
+     * Reads in an XML source file, parses it, and creates the appropriate {@link DomMetadata} for the data.
      * 
      * @param source XML file to read in
      * 
      * @return the resultant metadata element, may be null if there was an error parsing the data and
      *         {@link #errorCausesSourceFailure} is false
      * 
-     * @throws PipelineSourceException thrown if there is a problem reading in the metadata and
+     * @throws SourceProcessingException thrown if there is a problem reading in the metadata and
      *             {@link #errorCausesSourceFailure} is true
      */
-    protected DomMetadataElement processSourceFile(File source) throws PipelineSourceException {
+    protected DomMetadata processSourceFile(File source) throws SourceProcessingException {
         FileInputStream xmlIn = null;
 
         try {
             log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
             xmlIn = new FileInputStream(source);
             Document doc = parser.parse(xmlIn);
-            return new DomMetadataElement(doc.getDocumentElement());
+            return new DomMetadata(doc.getDocumentElement());
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
                 String errMsg = MessageFormatter.format("{} pipeline source unable to parse XML input file {}",
                         getId(), source.getPath());
                 log.error(errMsg, e);
-                throw new PipelineSourceException(errMsg, e);
+                throw new SourceProcessingException(errMsg, e);
             } else {
                 log.warn(MessageFormatter.format(
                         "{} pipeline source: unable to parse XML source file {}, ignoring it bad file", getId(), source
@@ -237,16 +235,16 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         if (parser == null) {
             log.error("Unable to initialize " + getId() + ", parser pool may not be null");
-            throw new PipelineInitializationException("ParserPool may not be null");
+            throw new ComponentInitializationException("ParserPool may not be null");
         }
 
         if (!sourceFile.exists() || !sourceFile.canRead()) {
             log.error("Unable to initialize " + getId() + ", source file/directory " + sourceFile.getPath()
                     + " can not be read");
-            throw new PipelineInitializationException("Unable to read source file/directory " + sourceFile.getPath());
+            throw new ComponentInitializationException("Unable to read source file/directory " + sourceFile.getPath());
         }
     }
 }

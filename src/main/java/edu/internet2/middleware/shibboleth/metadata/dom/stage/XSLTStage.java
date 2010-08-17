@@ -17,7 +17,6 @@
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -34,18 +33,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.PipelineStageException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.StageProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A pipeline stage which applies and XSLT to each element in the metadata collection.
  */
-public class XSLTStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XSLTStage.class);
@@ -77,10 +76,10 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadataEle
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadataCollection) throws PipelineStageException {
+    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
+            throws StageProcessingException {
 
-        BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
+        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         try {
             Transformer transform = xslTemplate.newTransformer();
@@ -88,8 +87,8 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadataEle
             Element metadataElement;
             DOMResult result;
             List<Element> transformedElements;
-            for (DomMetadataElement metadata : metadataCollection) {
-                metadataElement = metadata.getEntityMetadata();
+            for (DomMetadata metadata : metadataCollection) {
+                metadataElement = metadata.getMetadata();
                 // we put things in a doc fragment, instead of new documents, because down the line
                 // there is a good chance that at least some elements will get mashed together and this
                 // may eliminate the need to adopt them in to other documents, an expensive operation
@@ -99,23 +98,23 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadataEle
 
                 transformedElements = Elements.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
-                    mec.add(new DomMetadataElement(transformedElement));
+                    mec.add(new DomMetadata(transformedElement));
                 }
             }
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException("XSL transofrmation engine misconfigured", e);
         } catch (TransformerException e) {
-            throw new PipelineStageException("Unable to transform metadata element", e);
+            throw new StageProcessingException("Unable to transform metadata element", e);
         }
 
         return mec;
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         String trimmedXslFile = Strings.trimOrNull(xslFile);
         if (trimmedXslFile == null) {
-            throw new PipelineInitializationException("XSL file path may not be null or empty");
+            throw new ComponentInitializationException("XSL file path may not be null or empty");
         }
 
         TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -125,7 +124,7 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadataEle
             log.debug("{} pipeline stage compiling XSL file {}", getId(), xslFile);
             xslTemplate = tfactory.newTemplates(new StreamSource(xslFile));
         } catch (TransformerConfigurationException e) {
-            throw new PipelineInitializationException("XSL transformation engine misconfigured", e);
+            throw new ComponentInitializationException("XSL transformation engine misconfigured", e);
         }
     }
 }

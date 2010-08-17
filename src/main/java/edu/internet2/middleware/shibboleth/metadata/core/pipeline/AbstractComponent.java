@@ -66,13 +66,13 @@ public abstract class AbstractComponent implements Component {
     }
 
     /** {@inheritDoc} */
-    public synchronized void initialize() throws PipelineInitializationException {
+    public synchronized void initialize() throws ComponentInitializationException {
         if(isInitialized()){
             throw new IllegalStateException("Pipeline component already initialized");
         }
         
         if (id == null) {
-            throw new PipelineInitializationException("Pipeline component may not have a null or empty ID");
+            throw new ComponentInitializationException("Pipeline component may not have a null or empty ID");
         }
         
         log.debug("Initializing pipeline component {}", getId());
@@ -109,7 +109,7 @@ public abstract class AbstractComponent implements Component {
     /**
      * Do the initialization of the component.
      * 
-     * @throws PipelineInitializationException throw if there is a problem initializing the component
+     * @throws ComponentInitializationException throw if there is a problem initializing the component
      */
-    protected abstract void doInitialize() throws PipelineInitializationException;
+    protected abstract void doInitialize() throws ComponentInitializationException;
 }

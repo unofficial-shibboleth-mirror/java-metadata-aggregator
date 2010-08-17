@@ -16,19 +16,17 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.source;
 
-import java.util.Map;
-
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Source;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A pipeline source which reads an XML document from an HTTP source, parses the document, and returns the resultant
  * document (root) element as the metadata within the returned collection.
  */
-public class DomHttpSource extends AbstractComponent implements Source<DomMetadataElement> {
+public class DomHttpSource extends AbstractComponent implements Source<DomMetadata> {
 
     /**
      * Constructor.
@@ -40,14 +38,14 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters) {
+    public MetadataCollection<DomMetadata> execute() {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         // TODO Auto-generated method stub
-        
+
     }
 }

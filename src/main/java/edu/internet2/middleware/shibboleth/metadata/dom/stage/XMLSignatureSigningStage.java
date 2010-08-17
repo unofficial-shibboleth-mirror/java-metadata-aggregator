@@ -24,7 +24,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.security.auth.x500.X500Principal;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -55,20 +54,20 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.PipelineStageException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.StageProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A {@link Pipeline} stage that creates, and adds, an enveloped signature for each element in the given metadata
  * collection.
  */
-public class XMLSignatureSigningStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class XMLSignatureSigningStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** The variant of SHA to use in the various signature algorithms. */
     public static enum ShaVariant {
@@ -547,7 +546,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         xmlSigFactory = XMLSignatureFactory.getInstance();
         keyInfoFactory = xmlSigFactory.getKeyInfoFactory();
 
@@ -589,24 +588,24 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadataCollection) throws PipelineStageException {
+    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
+            throws StageProcessingException {
 
-        BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
+        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         Element element;
         XMLSignature signature;
-        for (DomMetadataElement metadata : metadataCollection) {
-            element = metadata.getEntityMetadata();
+        for (DomMetadata metadata : metadataCollection) {
+            element = metadata.getMetadata();
 
             signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
             try {
                 signature.sign(new DOMSignContext(privKey, element));
             } catch (Exception e) {
                 log.error("Unable to create signature for element", e);
-                throw new PipelineStageException("Unable to create signature for element", e);
+                throw new StageProcessingException("Unable to create signature for element", e);
             }
-            mec.add(new DomMetadataElement(element));
+            mec.add(new DomMetadata(element));
         }
 
         return mec;
@@ -619,9 +618,9 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @return signed content descriptor
      * 
-     * @throws PipelineStageException thrown if there is a problem create the signed content descriptor
+     * @throws StageProcessingException thrown if there is a problem create the signed content descriptor
      */
-    protected SignedInfo buildSignedInfo(Element target) throws PipelineStageException {
+    protected SignedInfo buildSignedInfo(Element target) throws StageProcessingException {
         C14NMethodParameterSpec c14nMethodSpec = null;
         if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
                 && !inclusivePrefixList.isEmpty()) {
@@ -633,7 +632,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         } catch (Exception e) {
             String errMsg = MessageFormatter.format("Unable to create transform {}", c14nAlgo);
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         }
 
         SignatureMethod sigMethod;
@@ -642,7 +641,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         } catch (Exception e) {
             String errMsg = MessageFormatter.format("Unable to create signature method {}", sigAlgo);
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         }
 
         List<Reference> refs = Collections.singletonList(buildSignatureReference(target));
@@ -657,9 +656,9 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @return reference to signed content
      * 
-     * @throws PipelineStageException thrown if there is a problem creating the reference to the element
+     * @throws StageProcessingException thrown if there is a problem creating the reference to the element
      */
-    protected Reference buildSignatureReference(Element target) throws PipelineStageException {
+    protected Reference buildSignatureReference(Element target) throws StageProcessingException {
         String id = getElementId(target);
         String refUri;
         if (id == null) {
@@ -675,7 +674,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         } catch (Exception e) {
             String errMsg = MessageFormatter.format("Unable to create digest method {}", digestAlgo);
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         }
 
         TransformParameterSpec transformSpec;
@@ -687,7 +686,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         } catch (Exception e) {
             String errMsg = MessageFormatter.format("Unable to create transform {}", TRANSFORM_ENVELOPED_SIGNATURE);
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         }
 
         try {
@@ -699,7 +698,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         } catch (Exception e) {
             String errMsg = MessageFormatter.format("Unable to create transform {}", c14nAlgo);
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         }
 
         return xmlSigFactory.newReference(refUri, digestMethod, transforms, null, null);
@@ -754,9 +753,9 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @return KeyInfo element to be included in the signature
      * 
-     * @throws PipelineStageException thrown if there is a problem creating the KeyInfo descriptor
+     * @throws StageProcessingException thrown if there is a problem creating the KeyInfo descriptor
      */
-    protected KeyInfo buildKeyInfo() throws PipelineStageException {
+    protected KeyInfo buildKeyInfo() throws StageProcessingException {
         ArrayList<Object> keyInfoItems = new ArrayList<Object>();
 
         addKeyNames(keyInfoItems);
@@ -771,9 +770,9 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param keyInfoItems collector for KeyInfo children
      * 
-     * @throws PipelineStageException thrown if there is a problem creating the KeyName content
+     * @throws StageProcessingException thrown if there is a problem creating the KeyName content
      */
-    protected void addKeyNames(ArrayList<Object> keyInfoItems) throws PipelineStageException {
+    protected void addKeyNames(ArrayList<Object> keyInfoItems) throws StageProcessingException {
         if (!includeKeyNames) {
             return;
         }
@@ -794,9 +793,9 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param keyInfoItems collector for KeyInfo children
      * 
-     * @throws PipelineStageException thrown if there is a problem creating the KeyValue content
+     * @throws StageProcessingException thrown if there is a problem creating the KeyValue content
      */
-    protected void addKeyValue(ArrayList<Object> keyInfoItems) throws PipelineStageException {
+    protected void addKeyValue(ArrayList<Object> keyInfoItems) throws StageProcessingException {
         if (!includeKeyValue) {
             return;
         }
@@ -813,7 +812,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
                 keyInfoItems.add(keyInfoFactory.newKeyValue(pubKey));
             } catch (Exception e) {
                 log.error("Unable to create KeyValue", e);
-                throw new PipelineStageException("Unable to create KeyValue", e);
+                throw new StageProcessingException("Unable to create KeyValue", e);
             }
         }
     }
@@ -823,9 +822,9 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param keyInfoItems collector for KeyInfo children
      * 
-     * @throws PipelineStageException thrown if there is a problem creating the X509Data content
+     * @throws StageProcessingException thrown if there is a problem creating the X509Data content
      */
-    protected void addX509Data(ArrayList<Object> keyInfoItems) throws PipelineStageException {
+    protected void addX509Data(ArrayList<Object> keyInfoItems) throws StageProcessingException {
         ArrayList<Object> x509Data = new ArrayList<Object>();
 
         if (certificates != null && !certificates.isEmpty()) {

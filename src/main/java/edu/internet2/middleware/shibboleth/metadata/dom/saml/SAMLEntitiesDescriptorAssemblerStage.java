@@ -16,8 +16,6 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 
-import java.util.Map;
-
 import net.jcip.annotations.ThreadSafe;
 
 import org.opensaml.util.xml.Elements;
@@ -28,23 +26,24 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A {@link Stage} capable of assembling a collection of EntityDescriptor elements in to a single EntitiesDescriptor
  * element.
  */
 @ThreadSafe
-public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SAMLEntitiesDescriptorAssemblerStage.class);
 
+    /** Pool of DOM parsers used to construct new {@link Document} objects to hold the assembled metadata. */
     ParserPool parserPool;
 
     /**
@@ -58,8 +57,7 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadataCollection) {
+    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
         log.debug("{} pipeline stage fetching owning for metadata element", getId());
 
         Document owningDocument = null;
@@ -73,15 +71,15 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
         Element entitiesDescriptor = buildEntitiesDescriptor(owningDocument);
 
         Element entityDescriptor;
-        for (DomMetadataElement metadata : metadataCollection) {
-            entityDescriptor = metadata.getEntityMetadata();
+        for (DomMetadata metadata : metadataCollection) {
+            entityDescriptor = metadata.getMetadata();
             log.debug("{} pipeline stage adding EntityDescriptor {} to EntitiesDescriptor", getId(), entityDescriptor
                     .getAttributeNS(null, "entityID"));
             Elements.appendChildElement(entitiesDescriptor, entityDescriptor);
         }
 
-        BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
-        mec.add(new DomMetadataElement(entitiesDescriptor));
+        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
+        mec.add(new DomMetadata(entitiesDescriptor));
         return mec;
     }
 
@@ -103,7 +101,7 @@ public class SAMLEntitiesDescriptorAssemblerStage extends AbstractComponent impl
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         // nothing to do here
     }
 }

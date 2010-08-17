@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.core;
 
-import java.util.concurrent.Future;
+import java.io.OutputStream;
 
-/** A {@link PipelineResult} returned by {@link Pipeline}s which execute asynchronously. */
-public interface FuturePipelineResult extends PipelineResult, Future<PipelineResult> {
+/** Serializers convert a collection of {@link Metadata} in to an octet stream. */
+public interface MetadataSerializer<MetadataType extends Metadata<?>> {
 
+    /**
+     * Serializes the metadata to the given output stream.
+     * 
+     * @param metadataCollection collection of metadata
+     * @param output output stream to which metadata will be written
+     */
+    public void serialize(MetadataCollection<MetadataType> metadataCollection, OutputStream output);
 }

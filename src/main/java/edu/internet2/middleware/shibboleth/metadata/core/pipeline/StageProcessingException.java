@@ -16,14 +16,15 @@
 
 package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
-/** Base exception for all pipeline issues. */
-public class PipelineException extends Exception {
+
+/** Exception indicating that a {@link Stage} of the pipeline encountered an error. */
+public class StageProcessingException extends PipelineProcessingException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 6892206203449846566L;
+    private static final long serialVersionUID = -2850816217820464959L;
 
     /** Constructor. */
-    public PipelineException() {
+    public StageProcessingException() {
 
     }
 
@@ -32,7 +33,7 @@ public class PipelineException extends Exception {
      * 
      * @param message exception message
      */
-    public PipelineException(String message) {
+    public StageProcessingException(String message) {
         super(message);
     }
 
@@ -41,7 +42,7 @@ public class PipelineException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public PipelineException(Exception wrappedException) {
+    public StageProcessingException(Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -51,7 +52,7 @@ public class PipelineException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public PipelineException(String message, Exception wrappedException) {
+    public StageProcessingException(String message, Exception wrappedException) {
         super(message, wrappedException);
     }
 }

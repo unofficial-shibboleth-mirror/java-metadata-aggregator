@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -37,19 +36,19 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import edu.internet2.middleware.shibboleth.metadata.core.BasicMetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.PipelineStageException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.StageProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A pipeline stage that XML schema validates the elements within the metadata collection.
  */
 @ThreadSafe
-public class XMLSchemaValidationStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class XMLSchemaValidationStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
@@ -82,22 +81,22 @@ public class XMLSchemaValidationStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadataCollection) throws PipelineStageException {
+    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
+            throws StageProcessingException {
         log.debug("{} pipeline stage schema validating metadata collection elements", getId());
-        BasicMetadataElementCollection<DomMetadataElement> mec = new BasicMetadataElementCollection<DomMetadataElement>();
+        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         Validator validator = validationSchema.newValidator();
         DOMResult result;
-        for (DomMetadataElement metadata : metadataCollection) {
+        for (DomMetadata metadata : metadataCollection) {
             try {
                 result = new DOMResult();
-                validator.validate(new DOMSource(metadata.getEntityMetadata()), result);
-                mec.add(new DomMetadataElement((Element) result.getNode()));
+                validator.validate(new DOMSource(metadata.getMetadata()), result);
+                mec.add(new DomMetadata((Element) result.getNode()));
             } catch (SAXException e) {
-                throw new PipelineStageException("Metadata failed validation", e);
+                throw new StageProcessingException("Metadata failed validation", e);
             } catch (IOException e) {
-                throw new PipelineStageException("Metadata failed validation", e);
+                throw new StageProcessingException("Metadata failed validation", e);
             }
         }
 
@@ -105,12 +104,12 @@ public class XMLSchemaValidationStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         try {
             log.debug("{} pipeline stage building validation schema from files {}", getId(), schemaFiles);
             validationSchema = SchemaBuilder.buildSchema(SchemaLanguage.XML, schemaFiles);
         } catch (SAXException e) {
-            throw new PipelineInitializationException("Unable to generate schema", e);
+            throw new ComponentInitializationException("Unable to generate schema", e);
         }
     }
 }

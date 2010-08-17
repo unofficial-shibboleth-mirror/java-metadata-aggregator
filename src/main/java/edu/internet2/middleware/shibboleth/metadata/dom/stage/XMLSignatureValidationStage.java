@@ -16,18 +16,16 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
-import java.util.Map;
-
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A pipeline stage which validates the XML digital signature found on the metadata elements.
  */
-public class XMLSignatureValidationStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class XMLSignatureValidationStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /**
      * Constructor.
@@ -37,17 +35,16 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
     public XMLSignatureValidationStage(String stageId) {
         super(stageId);
     }
-    
+
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadata) {
+    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadata) {
         // TODO Auto-generated method stub
         return null;
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         // TODO Auto-generated method stub
-        
+
     }
 }

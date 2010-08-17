@@ -17,7 +17,7 @@
 package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
 /** Base exception for errors that occur within the pipeline execution. */
-public class PipelineProcessingException extends PipelineException {
+public class PipelineProcessingException extends ComponentException {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -8313183972495091212L;

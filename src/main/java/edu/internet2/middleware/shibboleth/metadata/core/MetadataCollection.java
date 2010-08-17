@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
-/** Classes related to the processing steps which make up a pipeline. */
+package edu.internet2.middleware.shibboleth.metadata.core;
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage;
+import java.io.Serializable;
+import java.util.Collection;
+
+/**
+ * A collection of {@link Metadata}.
+ * 
+ * @param <ElementType> types of {@link Metadata} objects within the collection
+ */
+public interface MetadataCollection<ElementType extends Metadata<?>> extends Collection<ElementType>,
+        Serializable {
+
+    /**
+     * Clones this collection. This clone must be a deep copy.
+     * 
+     * @return clone of this collection
+     */
+    public MetadataCollection<ElementType> copy();
+}

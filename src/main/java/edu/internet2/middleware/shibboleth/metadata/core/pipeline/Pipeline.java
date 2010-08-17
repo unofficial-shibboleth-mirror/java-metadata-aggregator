@@ -17,38 +17,38 @@
 package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
 import java.util.List;
-import java.util.Map;
-
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.Sink;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
 
 import net.jcip.annotations.ThreadSafe;
+import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 
 /**
- * A pipeline represents a set of configurable {@link Stage}s which takes transform input from either a {@link Source}
- * (if it's the first stage in the pipeline) or other {@link Stage}s. The result of the pipeline is given to the
- * {@link Sink}.
+ * A pipeline represents an ordered list of {@link Stage}s which takes transform input from either a {@link Source}.
  * 
- * Each pipeline must be initialized, via the {@link #initialize(Map)} method, before use. After a pipeline has been
+ * Each pipeline must be initialized, via the {@link #initialize()} method, before use. After a pipeline has been
  * initialized it may never be re-initialized. A pipeline is not considered initialized until all of its {@link Stages},
  * have been initialized.
  * 
  * Pipelines are reusable and threadsafe.
  * 
- * @param <ElementType> type of metadata element which is produced by this source
- * @param <ResultType> type of result returned by the pipeline
+ * @param <MetadataType> type of metadata element which is produced by this source
  */
 @ThreadSafe
-public interface Pipeline<ElementType extends MetadataElement<?>, ResultType extends PipelineResult> extends Component {
+public interface Pipeline<MetadataType extends Metadata<?>> extends Component {
+
+    /**
+     * Gets the source of data operated upon by this pipeline.
+     * 
+     * @return source of data operated upon by this pipeline
+     */
+    public Source<MetadataType> getSource();
 
     /**
      * Gets the list of Stages within the pipeline.
      * 
      * @return unmodifiable list of stages within the pipeline
      */
-    public List<Stage<ElementType>> getStages();
+    public List<Stage<MetadataType>> getStages();
 
     /**
      * Executes the pipeline by pulling information from the {@link Source}, executing all the registered {@link Stages}
@@ -59,21 +59,5 @@ public interface Pipeline<ElementType extends MetadataElement<?>, ResultType ext
      * 
      * @return the result of the execution
      */
-    public ResultType execute(Source<ElementType> source, Sink<ElementType> sink);
-
-    /**
-     * Executes the pipeline by pulling information from the {@link Source}, executing the registered {@link Stages},
-     * and giving the final result to the {@link Sink}.
-     * 
-     * This method allows additional configuration parameters to be passed in. These parameters <strong>may</strong>
-     * override the initialization parameters provided to the {@link Source}, {@link Stage}s, or {@link Sink}. Not all
-     * initialization parameters may be overridden.
-     * 
-     * @param parameters configuration parameters which may override the initialization configuration parameters
-     * @param source source of data to be processed by the pipeline
-     * @param sink object to which the processed data is given
-     * 
-     * @return the result of the execution
-     */
-    public ResultType execute(Map<String, Object> parameters, Source<ElementType> source, Sink<ElementType> sink);
+    public MetadataCollection<MetadataType> execute() throws PipelineProcessingException;
 }

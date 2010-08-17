@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -35,13 +34,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 
 /** A pipeline stage that computes that transforms the collection of metadata via a script. */
-public class ScriptletStage extends AbstractComponent implements Stage<MetadataElement<?>> {
+public class ScriptletStage extends AbstractComponent implements Stage<Metadata<?>> {
 
     /** Name of the scriptlet attribute, {@value} , containing the metadata collection to be transformed. */
     public static final String METADATA = "metadata";
@@ -80,7 +77,7 @@ public class ScriptletStage extends AbstractComponent implements Stage<MetadataE
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         ScriptEngineManager sem = new ScriptEngineManager();
         scriptEngine = sem.getEngineByName(scriptLanguage);
 
@@ -92,23 +89,20 @@ public class ScriptletStage extends AbstractComponent implements Stage<MetadataE
             String errMsg = MessageFormatter.format(
                     "{} unable to compile even though the scripting engine supports this functionality.", getId());
             log.error(errMsg, e);
-            throw new PipelineInitializationException(errMsg, e);
+            throw new ComponentInitializationException(errMsg, e);
         } catch (IOException e) {
             String errMsg = MessageFormatter.format("{} unable to read script file {}", getId(), scriptFile.getPath());
             log.error(errMsg, e);
-            throw new PipelineInitializationException(errMsg, e);
+            throw new ComponentInitializationException(errMsg, e);
         }
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public MetadataElementCollection<MetadataElement<?>> execute(Map<String, Object> parameters,
-            MetadataElementCollection<MetadataElement<?>> metadataCollection) throws PipelineStageException {
+    public MetadataCollection<Metadata<?>> execute(MetadataCollection<Metadata<?>> metadataCollection)
+            throws StageProcessingException {
 
         Bindings bindings = scriptEngine.createBindings();
-        if (parameters != null) {
-            bindings.putAll(parameters);
-        }
         bindings.put(METADATA, metadataCollection);
 
         try {
@@ -118,16 +112,16 @@ public class ScriptletStage extends AbstractComponent implements Stage<MetadataE
                 scriptEngine.eval(new FileReader(scriptFile), bindings);
             }
 
-            return (MetadataElementCollection<MetadataElement<?>>) bindings.get(METADATA);
+            return (MetadataCollection<Metadata<?>>) bindings.get(METADATA);
         } catch (ScriptException e) {
             String errMsg = MessageFormatter.format("{} pipeline stage unable to execut script", getId());
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         } catch (FileNotFoundException e) {
             String errMsg = MessageFormatter.format("{} pipeline stage unable to read script file {}", getId(),
                     scriptFile.getPath());
             log.error(errMsg, e);
-            throw new PipelineStageException(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
         }
     }
 }

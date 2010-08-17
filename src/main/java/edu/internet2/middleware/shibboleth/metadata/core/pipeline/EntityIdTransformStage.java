@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Map;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.codec.Base64;
 import org.springframework.core.convert.converter.Converter;
 
 import edu.internet2.middleware.shibboleth.metadata.core.EntityIdInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 
 /**
  * A pipeline stage that, if present, takes each {@link EntityIdInfo} associated with a metadata element, transforms it
  * value using a set of registered transformers, and associates an additional {@link EntityIdInfo} (whose value is the
  * result of the transform) with the element.
  */
-public class EntityIdTransformStage extends AbstractComponent implements Stage<MetadataElement<?>> {
+public class EntityIdTransformStage extends AbstractComponent implements Stage<Metadata<?>> {
 
     /** Transformers used on IDs. */
     public List<Converter<String, String>> idTransformers;
@@ -54,21 +50,21 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<MetadataElement<?>> execute(Map<String, Object> parameters,
-            MetadataElementCollection<MetadataElement<?>> metadataCollection) throws PipelineStageException {
+    public MetadataCollection<Metadata<?>> execute(MetadataCollection<Metadata<?>> metadataCollection)
+            throws StageProcessingException {
         ComponentInfo compInfo = new ComponentInfo(this);
 
         List<EntityIdInfo> ids;
         String transformedId;
-        for (MetadataElement<?> element : metadataCollection) {
-            ids = element.getElementInfo().get(EntityIdInfo.class);
+        for (Metadata<?> element : metadataCollection) {
+            ids = element.getMetadataInfo().get(EntityIdInfo.class);
             for (EntityIdInfo id : ids) {
                 for (Converter<String, String> idTransform : idTransformers) {
                     transformedId = idTransform.convert(id.getEntityId());
-                    element.getElementInfo().put(new EntityIdInfo(transformedId));
+                    element.getMetadataInfo().put(new EntityIdInfo(transformedId));
                 }
             }
-            element.getElementInfo().put(compInfo);
+            element.getMetadataInfo().put(compInfo);
         }
 
         compInfo.setCompleteInstant();
@@ -77,7 +73,7 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         // nothing to do
     }
 

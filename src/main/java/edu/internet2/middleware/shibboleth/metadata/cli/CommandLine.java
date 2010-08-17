@@ -16,13 +16,15 @@
 
 package edu.internet2.middleware.shibboleth.metadata.cli;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataSerializer;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineResult;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.sink.Sink;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.source.Source;
 
 /**
  *
@@ -36,16 +38,12 @@ public final class CommandLine {
 
         ApplicationContext springContext = buildApplicationContext(args);
 
-        Source source = springContext.getBean(Source.class);
-        Sink sink = springContext.getBean(Sink.class);
         Pipeline pipeline = springContext.getBean(Pipeline.class);
+        MetadataSerializer serializer = springContext.getBean(MetadataSerializer.class);
+        File outputFile = springContext.getBean(File.class);
 
-        PipelineResult result = pipeline.execute(source, sink);
-        if (result.wasSuccessful()) {
-            System.out.println("sucess");
-        } else {
-            result.getException().printStackTrace(System.err);
-        }
+        MetadataCollection metadataCollection = pipeline.execute();
+        serializer.serialize(metadataCollection, new FileOutputStream(outputFile));
     }
 
     private static ApplicationContext buildApplicationContext(String[] contextFiles) {

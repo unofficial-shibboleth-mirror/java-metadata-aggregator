@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline.source;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
-import java.util.Map;
-
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Component;
+import net.jcip.annotations.ThreadSafe;
+import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 
 /**
  * A component of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} which produces the input
  * to the pipeline.
  * 
+ * Sources must be thread safe and reusable. They may cache some or all of their state between requests but if an
+ * implementations does so it must ensure proper thread safety.
+ * 
  * @param <ElementType> type of metadata element which is produced by this source
  */
-public interface Source<ElementType extends MetadataElement<?>> extends Component {
+@ThreadSafe
+public interface Source<ElementType extends Metadata<?>> extends Component {
 
     /**
      * Produces the input to the {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline}.
      * 
-     * @param parameters parameters which <strong>may</strong> may be used to override initialization time parameters
-     *            for this invocation
-     * 
      * @return the information produced by the source
      * 
-     * @throws PipelineSourceException thrown if there is a problem producing the initial metadata element collection
+     * @throws SourceProcessingException thrown if there is a problem producing the initial metadata element collection
      */
-    public MetadataElementCollection<ElementType> execute(Map<String, Object> parameters)
-            throws PipelineSourceException;
+    public MetadataCollection<ElementType> execute() throws SourceProcessingException;
 }

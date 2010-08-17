@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage;
+package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
 
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineProcessingException;
-
-/** Exception indicating that a {@link Stage} of the pipeline encountered an error. */
-public class PipelineStageException extends PipelineProcessingException {
+/** Exception that occurs when initializing pipeline components. */
+public class ComponentInitializationException extends ComponentException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -2850816217820464959L;
+    private static final long serialVersionUID = -3053986427596885440L;
 
     /** Constructor. */
-    public PipelineStageException() {
+    public ComponentInitializationException() {
 
     }
 
@@ -34,7 +32,7 @@ public class PipelineStageException extends PipelineProcessingException {
      * 
      * @param message exception message
      */
-    public PipelineStageException(String message) {
+    public ComponentInitializationException(String message) {
         super(message);
     }
 
@@ -43,7 +41,7 @@ public class PipelineStageException extends PipelineProcessingException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public PipelineStageException(Exception wrappedException) {
+    public ComponentInitializationException(Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -53,7 +51,7 @@ public class PipelineStageException extends PipelineProcessingException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public PipelineStageException(String message, Exception wrappedException) {
+    public ComponentInitializationException(String message, Exception wrappedException) {
         super(message, wrappedException);
     }
 }

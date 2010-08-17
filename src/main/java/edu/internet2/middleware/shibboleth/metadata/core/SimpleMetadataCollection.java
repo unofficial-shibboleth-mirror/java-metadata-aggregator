@@ -28,8 +28,8 @@ import net.jcip.annotations.NotThreadSafe;
  * @param <ElementType> type of elements in the collection
  */
 @NotThreadSafe
-public class BasicMetadataElementCollection<ElementType extends MetadataElement<?>> implements
-        MetadataElementCollection<ElementType> {
+public class SimpleMetadataCollection<ElementType extends Metadata<?>> implements
+        MetadataCollection<ElementType> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 6445721225558015497L;
@@ -38,7 +38,7 @@ public class BasicMetadataElementCollection<ElementType extends MetadataElement<
     private Collection<ElementType> delegate;
 
     /** Constructor. */
-    public BasicMetadataElementCollection() {
+    public SimpleMetadataCollection() {
         delegate = new ArrayList<ElementType>();
     }
 
@@ -109,8 +109,8 @@ public class BasicMetadataElementCollection<ElementType extends MetadataElement<
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public MetadataElementCollection<ElementType> copy() {
-        BasicMetadataElementCollection<ElementType> copy = new BasicMetadataElementCollection<ElementType>();
+    public MetadataCollection<ElementType> copy() {
+        SimpleMetadataCollection<ElementType> copy = new SimpleMetadataCollection<ElementType>();
         for (ElementType element : delegate) {
             copy.add((ElementType) element.copy());
         }

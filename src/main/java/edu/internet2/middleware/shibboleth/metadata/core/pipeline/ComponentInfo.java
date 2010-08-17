@@ -20,10 +20,10 @@ import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.util.Strings;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementInfo;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
 
 /** Some basic information related to component's processing metadata elements. */
-public class ComponentInfo implements MetadataElementInfo {
+public class ComponentInfo implements MetadataInfo {
 
     /** ID of the component that operated on the element. */
     private String componentId;

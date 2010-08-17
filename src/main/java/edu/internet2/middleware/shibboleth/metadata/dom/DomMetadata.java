@@ -18,11 +18,13 @@ package edu.internet2.middleware.shibboleth.metadata.dom;
 
 import org.w3c.dom.Element;
 
-import edu.internet2.middleware.shibboleth.metadata.core.AbstractMetadataElement;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.AbstractMetadata;
+import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
+import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /** A metadata element whose data is a DOM, version 3, {@link Element}. */
-public class DomMetadataElement extends AbstractMetadataElement<Element> {
+public class DomMetadata extends AbstractMetadata<Element> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -6308292147361514467L;
@@ -32,14 +34,16 @@ public class DomMetadataElement extends AbstractMetadataElement<Element> {
      * 
      * @param metadata DOM metadata element
      */
-    public DomMetadataElement(Element metadata) {
+    public DomMetadata(Element metadata) {
         super();
-        setEntityMetadata(metadata);
+        setMetadata(metadata);
     }
 
     /** {@inheritDoc} */
-    public <T extends MetadataElement<Element>> T copy() {
-        // TODO Auto-generated method stub
-        return null;
+    public Metadata<Element> copy() {
+        Element domClone = (Element) getMetadata().cloneNode(true);
+        DomMetadata clone = new DomMetadata(domClone);
+        MetadataInfoHelper.addToAll(clone, getMetadataInfo().values().toArray(new MetadataInfo[] {}));
+        return clone;
     }
 }

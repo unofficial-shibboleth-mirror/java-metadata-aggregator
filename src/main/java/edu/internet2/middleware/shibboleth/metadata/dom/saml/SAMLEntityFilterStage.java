@@ -19,7 +19,6 @@ package edu.internet2.middleware.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -33,18 +32,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataElementCollection;
+import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
 import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.stage.Stage;
-import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadataElement;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /**
  * A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria.
  */
 @ThreadSafe
-public class SAMLEntityFilterStage extends AbstractComponent implements Stage<DomMetadataElement> {
+public class SAMLEntityFilterStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** QName of the RoleDescriptor element. */
     public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "RoleDescriptor");
@@ -255,14 +254,13 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
     }
 
     /** {@inheritDoc} */
-    public MetadataElementCollection<DomMetadataElement> execute(Map<String, Object> parameters,
-            MetadataElementCollection<DomMetadataElement> metadataCollection) {
+    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
         ComponentInfo compInfo = new ComponentInfo(this);
-        ArrayList<DomMetadataElement> markedForRemoval = new ArrayList<DomMetadataElement>();
+        ArrayList<DomMetadata> markedForRemoval = new ArrayList<DomMetadata>();
 
         Element descriptor;
-        for (DomMetadataElement metadata : metadataCollection) {
-            descriptor = metadata.getEntityMetadata();
+        for (DomMetadata metadata : metadataCollection) {
+            descriptor = metadata.getMetadata();
             if (filterEntityDescriptor(descriptor)) {
                 markedForRemoval.add(metadata);
             }
@@ -270,8 +268,8 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
         metadataCollection.removeAll(markedForRemoval);
 
         compInfo.setCompleteInstant();
-        for (DomMetadataElement element : metadataCollection) {
-            element.getElementInfo().put(compInfo);
+        for (DomMetadata element : metadataCollection) {
+            element.getMetadataInfo().put(compInfo);
         }
 
         return metadataCollection;
@@ -413,7 +411,7 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws PipelineInitializationException {
+    protected void doInitialize() throws ComponentInitializationException {
         // nothing to do here
     }
 }

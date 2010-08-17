@@ -25,21 +25,24 @@ import net.jcip.annotations.ThreadSafe;
  * @param <MetadataType> type of metadata element
  */
 @ThreadSafe
-public abstract class AbstractMetadataElement<MetadataType> implements MetadataElement<MetadataType> {
+public abstract class AbstractMetadata<MetadataType> implements Metadata<MetadataType> {
+
+    /** Serial version UID. */
+    private static final long serialVersionUID = 7706700116965553475L;
 
     /** The actual metadata. */
     private MetadataType metadata;
 
     /** Additional information associated with the metadata. */
-    private ClassToInstanceMultiMap<MetadataElementInfo> elementInfo;
+    private ClassToInstanceMultiMap<MetadataInfo> elementInfo;
 
     /** Constructor. */
-    protected AbstractMetadataElement() {
-        elementInfo = new ClassToInstanceMultiMap<MetadataElementInfo>(true);
+    protected AbstractMetadata() {
+        elementInfo = new ClassToInstanceMultiMap<MetadataInfo>(true);
     }
 
     /** {@inheritDoc} */
-    public MetadataType getEntityMetadata() {
+    public MetadataType getMetadata() {
         return metadata;
     }
 
@@ -48,12 +51,12 @@ public abstract class AbstractMetadataElement<MetadataType> implements MetadataE
      * 
      * @param entityMetadata the metadata
      */
-    protected void setEntityMetadata(MetadataType entityMetadata) {
+    protected void setMetadata(MetadataType entityMetadata) {
         metadata = entityMetadata;
     }
 
     /** {@inheritDoc} */
-    public ClassToInstanceMultiMap<MetadataElementInfo> getElementInfo() {
+    public ClassToInstanceMultiMap<MetadataInfo> getMetadataInfo() {
         return elementInfo;
     }
 }
