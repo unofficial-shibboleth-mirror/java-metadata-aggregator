@@ -25,6 +25,9 @@ import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
 /** Some basic information related to component's processing metadata elements. */
 public class ComponentInfo implements MetadataInfo {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = -2181091708008092869L;
+
     /** ID of the component that operated on the element. */
     private String componentId;
 
