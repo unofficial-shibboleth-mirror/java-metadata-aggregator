@@ -49,7 +49,6 @@ import org.opensaml.util.xml.QNames;
 import org.opensaml.util.xml.XmlConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -630,7 +629,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         try {
             c14nMethod = xmlSigFactory.newCanonicalizationMethod(c14nAlgo, c14nMethodSpec);
         } catch (Exception e) {
-            String errMsg = MessageFormatter.format("Unable to create transform {}", c14nAlgo);
+            String errMsg = "Unable to create transform " + c14nAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -639,7 +638,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         try {
             sigMethod = xmlSigFactory.newSignatureMethod(sigAlgo, null);
         } catch (Exception e) {
-            String errMsg = MessageFormatter.format("Unable to create signature method {}", sigAlgo);
+            String errMsg = "Unable to create signature method " + sigAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -672,7 +671,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
             DigestMethodParameterSpec digestMethodSpec = null;
             digestMethod = xmlSigFactory.newDigestMethod(digestAlgo, digestMethodSpec);
         } catch (Exception e) {
-            String errMsg = MessageFormatter.format("Unable to create digest method {}", digestAlgo);
+            String errMsg = "Unable to create digest method " + digestAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -684,7 +683,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
             transformSpec = null;
             transforms.add(xmlSigFactory.newTransform(TRANSFORM_ENVELOPED_SIGNATURE, transformSpec));
         } catch (Exception e) {
-            String errMsg = MessageFormatter.format("Unable to create transform {}", TRANSFORM_ENVELOPED_SIGNATURE);
+            String errMsg = "Unable to create transform " + TRANSFORM_ENVELOPED_SIGNATURE;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -696,7 +695,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
             }
             transforms.add(xmlSigFactory.newTransform(c14nAlgo, transformSpec));
         } catch (Exception e) {
-            String errMsg = MessageFormatter.format("Unable to create transform {}", c14nAlgo);
+            String errMsg = "Unable to create transform " + c14nAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }

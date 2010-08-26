@@ -27,7 +27,6 @@ import org.opensaml.util.Closeables;
 import org.opensaml.util.xml.ParserPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 import org.w3c.dom.Document;
 
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
@@ -219,14 +218,12 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
             return new DomMetadata(doc.getDocumentElement());
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
-                String errMsg = MessageFormatter.format("{} pipeline source unable to parse XML input file {}",
-                        getId(), source.getPath());
+                String errMsg = getId() + " pipeline source unable to parse XML input file " + source.getPath();
                 log.error(errMsg, e);
                 throw new SourceProcessingException(errMsg, e);
             } else {
-                log.warn(MessageFormatter.format(
-                        "{} pipeline source: unable to parse XML source file {}, ignoring it bad file", getId(), source
-                                .getPath()), e);
+                log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
+                        getId(), source.getPath(), e });
                 return null;
             }
         } finally {

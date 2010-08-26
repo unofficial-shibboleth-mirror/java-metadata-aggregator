@@ -32,7 +32,6 @@ import org.opensaml.util.Assert;
 import org.opensaml.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 
 import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
@@ -86,12 +85,12 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
                 compiledScript = ((Compilable) scriptEngine).compile(new FileReader(scriptFile));
             }
         } catch (ScriptException e) {
-            String errMsg = MessageFormatter.format(
-                    "{} unable to compile even though the scripting engine supports this functionality.", getId());
+            String errMsg = getId()
+                    + " unable to compile even though the scripting engine supports this functionality.";
             log.error(errMsg, e);
             throw new ComponentInitializationException(errMsg, e);
         } catch (IOException e) {
-            String errMsg = MessageFormatter.format("{} unable to read script file {}", getId(), scriptFile.getPath());
+            String errMsg = getId() + " unable to read script file " + scriptFile.getPath();
             log.error(errMsg, e);
             throw new ComponentInitializationException(errMsg, e);
         }
@@ -114,12 +113,11 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
 
             return (MetadataCollection<Metadata<?>>) bindings.get(METADATA);
         } catch (ScriptException e) {
-            String errMsg = MessageFormatter.format("{} pipeline stage unable to execut script", getId());
+            String errMsg = getId() + " pipeline stage unable to execut script";
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         } catch (FileNotFoundException e) {
-            String errMsg = MessageFormatter.format("{} pipeline stage unable to read script file {}", getId(),
-                    scriptFile.getPath());
+            String errMsg = getId() + " pipeline stage unable to read script file " + scriptFile.getPath();
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
