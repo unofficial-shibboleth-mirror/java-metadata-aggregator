@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 
 /**
  * A pipeline represents an ordered list of {@link Stage}s which takes transform input from either a {@link Source}.

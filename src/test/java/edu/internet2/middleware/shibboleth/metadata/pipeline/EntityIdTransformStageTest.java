@@ -22,13 +22,13 @@ import java.util.List;
 import org.springframework.core.convert.converter.Converter;
 import org.testng.annotations.Test;
 
+import edu.internet2.middleware.shibboleth.metadata.EntityIdInfo;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.MockMetadata;
-import edu.internet2.middleware.shibboleth.metadata.core.EntityIdInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.EntityIdTransformStage;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.EntityIdTransformStage;
 
 /**
  *

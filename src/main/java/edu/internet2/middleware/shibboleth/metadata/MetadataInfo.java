@@ -14,5 +14,20 @@
  * limitations under the License.
  */
 
-/** Base classes for dealing with collections of metadata (whatever metadata might mean to you). */
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata;
+
+import java.io.Serializable;
+
+import net.jcip.annotations.ThreadSafe;
+
+/**
+ * Processing information about a given {@link Metadata}. To overload the term, this is metadata about the
+ * metadata element.
+ * 
+ * Implementations of this class <strong>MUST</strong> be immutable. When an {@link Metadata} is cloned, the
+ * clone will reference the same {@link MetadataInfo} objects as the original.
+ */
+@ThreadSafe
+public interface MetadataInfo extends Serializable {
+
+}

@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata;
 
-import java.io.Serializable;
+import java.io.OutputStream;
 
-import net.jcip.annotations.ThreadSafe;
+/** Serializers convert a collection of {@link Metadata} in to an octet stream. */
+public interface MetadataSerializer<MetadataType extends Metadata<?>> {
 
-/**
- * Processing information about a given {@link Metadata}. To overload the term, this is metadata about the
- * metadata element.
- * 
- * Implementations of this class <strong>MUST</strong> be immutable. When an {@link Metadata} is cloned, the
- * clone will reference the same {@link MetadataInfo} objects as the original.
- */
-@ThreadSafe
-public interface MetadataInfo extends Serializable {
-
+    /**
+     * Serializes the metadata to the given output stream.
+     * 
+     * @param metadataCollection collection of metadata
+     * @param output output stream to which metadata will be written
+     */
+    public void serialize(MetadataCollection<MetadataType> metadataCollection, OutputStream output);
 }

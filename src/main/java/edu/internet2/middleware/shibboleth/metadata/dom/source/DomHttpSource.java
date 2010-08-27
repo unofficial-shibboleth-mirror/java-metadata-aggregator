@@ -16,11 +16,11 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.source;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Source;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
 
 /**
  * A pipeline source which reads an XML document from an HTTP source, parses the document, and returns the resultant

@@ -16,29 +16,32 @@
 
 package edu.internet2.middleware.shibboleth.metadata.query;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.DateTime;
 import org.opensaml.util.Assert;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.opensaml.util.Strings;
+import org.opensaml.util.collections.LazyList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.internet2.middleware.shibboleth.metadata.core.EntityIdInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.EntityIdInfo;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.TagInfo;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.PipelineProcessingException;
 
 /**
  *
@@ -46,27 +49,31 @@ import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineProces
 @Controller
 public class QueryController {
 
-    private ReadWriteLock metadataLock;
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(QueryController.class);
 
-    private Timer mdUpdateTimer;
-    
-    private long mdUpdateInterval;
+    /** Length of time, in milliseconds, between metadata refreshes. */
+    private long mdUpdatePeriod;
 
-    private Pipeline<Metadata<?>> mdPipeline;
+    /** Background task that updates the indexed metadata. */
+    private MetadataRefreshTask refreshTask;
 
-    private MetadataCollection<Metadata<?>> searchableMetadata;
+    /** Pipeline that produces metadata searched by this controller. */
+    private Pipeline<?> mdPipeline;
 
-    private HashMap<String, Metadata<?>> searchTermCache;
-
-    private HashSet<String> searchTermNCache;
+    /**
+     * Cache of search terms to associated metadata element. Value may be null indicating the search term does match any
+     * metadata element.
+     */
+    private HashMap<String, List<Metadata<?>>> termIndex;
 
     /**
      * Constructor.
      * 
      * @param pipeline the pipeline used to produce the metadata that is searched
+     * @param updateInterval length of time, in minutes, between metadata refresh updates
      */
-    @Autowired
-    public QueryController(Pipeline<Metadata<?>> pipeline, int updateInterval) {
+    public QueryController(Pipeline<?> pipeline, int updateInterval) {
         this(pipeline, updateInterval, new Timer(true));
     }
 
@@ -74,22 +81,20 @@ public class QueryController {
      * Constructor.
      * 
      * @param pipeline the pipeline used to produce the metadata that is searched
+     * @param updateInterval length of time, in minutes, between metadata refresh updates
      * @param backgroundTaskTimer the {@link Timer} used to run the metadata update refresh task
      */
-    @Autowired
-    public QueryController(Pipeline<Metadata<?>> pipeline, int updateInterval, Timer backgroundTaskTimer) {
+    public QueryController(Pipeline<?> pipeline, int updateInterval, Timer backgroundTaskTimer) {
         Assert.isNotNull(pipeline, "Metadata pipeline may not be null");
         mdPipeline = pipeline;
 
         Assert.isGreaterThan(0, updateInterval, "Update interval must be a positive number");
-        mdUpdateInterval = updateInterval * 60 * 1000;
-        
         Assert.isNotNull(backgroundTaskTimer, "Metadata refresh timer may not be null");
-        mdUpdateTimer = backgroundTaskTimer;
+        mdUpdatePeriod = updateInterval * 60 * 1000;
+        refreshTask = new MetadataRefreshTask();
+        backgroundTaskTimer.schedule(refreshTask, 0, mdUpdatePeriod);
 
-        metadataLock = new ReentrantReadWriteLock();
-        searchTermCache = new HashMap<String, Metadata<?>>();
-        searchTermNCache = new HashSet<String>();
+        termIndex = new HashMap<String, List<Metadata<?>>>();
     }
 
     /**
@@ -101,7 +106,7 @@ public class QueryController {
      */
     @RequestMapping(value = "/entities", method = RequestMethod.GET)
     public MetadataCollection<Metadata<?>> queryMetadata(HttpServletRequest request) {
-        String[] searchTerms = getSearchTerms(request);
+        List<String> searchTerms = getSearchTerms(request);
         return getMetadataElements(searchTerms);
     }
 
@@ -112,12 +117,24 @@ public class QueryController {
      * 
      * @return the search terms given on the request URL
      */
-    protected String[] getSearchTerms(HttpServletRequest request) {
+    protected List<String> getSearchTerms(HttpServletRequest request) {
         String requestPath = request.getPathInfo();
-        int operationNameIndex = requestPath.indexOf("entities");
+        log.debug("Extracting search terms from path '{}'", requestPath);
 
-        String searchTerms = requestPath.substring(operationNameIndex + 7);
-        return searchTerms.split("+");
+        int operationNameIndex = requestPath.indexOf("entities");
+        String concatSearchTerms = requestPath.substring(operationNameIndex + 9);
+        
+        String[] terms = concatSearchTerms.split("\\+");
+
+        String trimmedTerm;
+        ArrayList<String> searchTerms = new ArrayList<String>();
+        for (String term : terms) {
+            trimmedTerm = Strings.trimOrNull(term);
+            if (trimmedTerm != null) {
+                searchTerms.add(trimmedTerm);
+            }
+        }
+        return searchTerms;
     }
 
     /**
@@ -125,33 +142,41 @@ public class QueryController {
      * 
      * @param searchTerms search terms
      * 
-     * @return metadata elements labelled with all the given search terms
+     * @return metadata elements labeled with all the given search terms
      */
-    protected MetadataCollection<Metadata<?>> getMetadataElements(String[] searchTerms) {
-        Lock readLock = metadataLock.readLock();
-        readLock.lock();
-        MetadataCollection<Metadata<?>> metadata = searchableMetadata;
-        HashMap<String, Metadata<?>> cache = searchTermCache;
-        HashSet<String> ncache = searchTermNCache;
-        readLock.unlock();
+    protected MetadataCollection<Metadata<?>> getMetadataElements(List<String> searchTerms) {
+        log.debug("Searching for metaata elements matching the search terms: {}", searchTerms);
 
-        SimpleMetadataCollection<Metadata<?>> searchResults = new SimpleMetadataCollection<Metadata<?>>();
+        HashMap<String, List<Metadata<?>>> index = termIndex;
 
-        if (metadata != null) {
-            elements: for (Metadata<?> element : metadata) {
-                for (String searchTerm : searchTerms) {
-                    if (!isEntityId(searchTerm, element)) {
-                        continue elements;
-                    }
-                }
-                // if we looped through all the terms and nothing kicked us out
-                // of the current loop, then we matched all the search terms so
-                // the current element is a positive match
-                searchResults.add(element);
+        SimpleMetadataCollection<Metadata<?>> mdc = new SimpleMetadataCollection<Metadata<?>>();
+
+        String firstTerm = searchTerms.get(0);
+        if (!index.containsKey(firstTerm)) {
+            return mdc;
+        }
+
+        List<Metadata<?>> searchResults = new ArrayList<Metadata<?>>(index.get(firstTerm));
+        searchTerms.remove(firstTerm);
+        log.debug("Starting with result list for search term '{}' containing {} elements", firstTerm, searchResults.size());
+
+        String searchTerm;
+        Iterator<String> termItr = searchTerms.iterator();
+        while (termItr.hasNext() && !searchResults.isEmpty()) {
+            searchTerm = termItr.next();
+            if (index.containsKey(searchTerm)) {
+                searchResults.retainAll(index.get(searchTerm));
+                log.debug("{} results left after removing results not indexed by search term '{}'", searchResults.size(),
+                        searchTerm);
+            } else {
+                log.debug("No search results associated with term '{}', clearing search result list", searchTerm);
+                searchResults.clear();
             }
         }
 
-        return searchResults;
+        log.debug("{} metadata elements match all search terms", searchResults.size());
+        mdc.addAll(searchResults);
+        return mdc;
     }
 
     /**
@@ -177,20 +202,88 @@ public class QueryController {
         return false;
     }
 
+    /**
+     * Creates an index that indexes all {@link Metadata} by {@link EntityIdInfo}.
+     * 
+     * @param collection collection of metadata to be indexed
+     */
+    protected void indexMetadata(MetadataCollection<?> collection) {
+        log.debug("Indexing metadata collection containing {} elements", collection.size());
+        HashMap<String, List<Metadata<?>>> newIndex = new HashMap<String, List<Metadata<?>>>();
+
+        if (collection != null) {
+            for (Metadata<?> metadata : collection) {
+                indexByEntityIds(newIndex, metadata);
+                indexByTag(newIndex, metadata);
+            }
+        }
+
+        log.debug("New search term index contains entries for {} terms", newIndex.size());
+        termIndex = newIndex;
+    }
+
+    /**
+     * Adds an entry to the given index for each of given metadata's {@link EntityIdInfo}.
+     * 
+     * @param index index to be populated
+     * @param metadata metadata to be added to the index
+     */
+    protected void indexByEntityIds(HashMap<String, List<Metadata<?>>> index, Metadata<?> metadata) {
+        List<Metadata<?>> metadatasForTerm;
+
+        List<EntityIdInfo> idInfos = metadata.getMetadataInfo().get(EntityIdInfo.class);
+        if (idInfos == null || idInfos.isEmpty()) {
+            return;
+        }
+
+        String entityId;
+        for (EntityIdInfo idInfo : idInfos) {
+            entityId = idInfo.getEntityId();
+            metadatasForTerm = index.get(entityId);
+            if (metadatasForTerm == null) {
+                metadatasForTerm = new LazyList<Metadata<?>>();
+                index.put(entityId, metadatasForTerm);
+            }
+            metadatasForTerm.add(metadata);
+        }
+    }
+
+    /**
+     * Adds an entry to the given index for each of given metadata's {@link TagInfo}.
+     * 
+     * @param index index to be populated
+     * @param metadata metadata to be added to the index
+     */
+    protected void indexByTag(HashMap<String, List<Metadata<?>>> index, Metadata<?> metadata) {
+        List<Metadata<?>> metadatasForTerm;
+
+        List<TagInfo> tagInfos = metadata.getMetadataInfo().get(TagInfo.class);
+        if (tagInfos == null || tagInfos.isEmpty()) {
+            return;
+        }
+
+        String tag;
+        for (TagInfo tagInfo : tagInfos) {
+            tag = tagInfo.getTag();
+            metadatasForTerm = index.get(tag);
+            if (metadatasForTerm == null) {
+                metadatasForTerm = new LazyList<Metadata<?>>();
+                index.put(tag, metadatasForTerm);
+            }
+            metadatasForTerm.add(metadata);
+        }
+    }
+
     /** A task that updates the cached metadata. */
     private class MetadataRefreshTask extends TimerTask {
 
         /** {@inheritDoc} */
         public void run() {
             try {
-                MetadataCollection<Metadata<?>> newSearchableMetadata = mdPipeline.execute();
-
-                Lock writeLock = metadataLock.writeLock();
-                writeLock.lock();
-                searchableMetadata = newSearchableMetadata;
-                searchTermCache = new HashMap<String, Metadata<?>>();
-                searchTermNCache = new HashSet<String>();
-                writeLock.unlock();
+                log.debug("Metadata refresh starting");
+                indexMetadata(mdPipeline.execute());
+                log.debug("Metadata refressh completed, next refresh will occur at approximately {}", new DateTime()
+                        .plus(mdUpdatePeriod));
             } catch (PipelineProcessingException e) {
                 // TODO
             }

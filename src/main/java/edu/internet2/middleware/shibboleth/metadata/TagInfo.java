@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.Strings;
 
-/** Carries a unique identifier of the entity described by a piece of metadata. */
-public class EntityIdInfo implements MetadataInfo {
+/** A {@link MetadataInfo} that associates a tag with a given metadata element. */
+public class TagInfo implements MetadataInfo {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -3907907112463674533L;
-    
-    /** Unique ID for the entity. */
-    private String entityId;
+    private static final long serialVersionUID = 4727990464411083511L;
+
+    /** Metadata element tag. */
+    private final String tag;
 
     /**
      * Constructor.
      * 
-     * @param id a unique identifier for the entity, never null
+     * @param elementTag a tag for a metadata element
      */
-    public EntityIdInfo(String id) {
-        entityId = Strings.trimOrNull(id);
-        Assert.isNotNull(entityId, "Entity ID may not be null or empty");
+    public TagInfo(String elementTag) {
+        tag = Strings.trimOrNull(elementTag);
+        Assert.isNotNull(tag, "Tag may not be null or empty");
     }
 
     /**
-     * Gets a unique identifier for the entity.
+     * Gets the tag for the metadata element.
      * 
-     * @return unique identifier for the entity, never null
+     * @return tag for the metadata element, never null
      */
-    public String getEntityId() {
-        return entityId;
+    public String getTag() {
+        return tag;
     }
 }

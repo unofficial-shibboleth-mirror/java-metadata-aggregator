@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.View;
 
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataSerializer;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.MetadataSerializer;
 
 /**
  *

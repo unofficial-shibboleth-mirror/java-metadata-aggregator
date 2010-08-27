@@ -22,9 +22,9 @@ import java.io.FileOutputStream;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataSerializer;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.MetadataSerializer;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 
 /**
  *

@@ -16,9 +16,9 @@
 
 package edu.internet2.middleware.shibboleth.metadata.util;
 
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.MetadataInfo;
 
 /** Helper class for dealing with {@link MetadataInfo} operations. */
 public class MetadataInfoHelper {

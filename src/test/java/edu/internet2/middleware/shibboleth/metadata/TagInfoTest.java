@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata;
 
-import java.io.Serializable;
-import java.util.Collection;
+import org.testng.annotations.Test;
 
-/**
- * A collection of {@link Metadata}.
- * 
- * @param <ElementType> types of {@link Metadata} objects within the collection
- */
-public interface MetadataCollection<ElementType extends Metadata<?>> extends Collection<ElementType>,
-        Serializable {
+public class TagInfoTest {
 
-    /**
-     * Clones this collection. This clone must be a deep copy.
-     * 
-     * @return clone of this collection
-     */
-    public MetadataCollection<ElementType> copy();
+    @Test
+    public void test() {
+        TagInfo info = new TagInfo(" test ");
+        assert info.getTag().equals("test");
+
+        try {
+            info = new TagInfo("");
+            throw new AssertionError();
+        } catch (IllegalArgumentException e) {
+            // expected this
+        }
+
+        try {
+            info = new TagInfo(null);
+            throw new AssertionError();
+        } catch (IllegalArgumentException e) {
+            // expected this
+        }
+    }
 }

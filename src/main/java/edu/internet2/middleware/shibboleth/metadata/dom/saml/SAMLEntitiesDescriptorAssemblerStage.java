@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
 /**
  * A {@link Stage} capable of assembling a collection of EntityDescriptor elements in to a single EntitiesDescriptor

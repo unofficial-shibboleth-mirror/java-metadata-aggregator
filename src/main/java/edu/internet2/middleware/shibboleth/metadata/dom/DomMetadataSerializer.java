@@ -18,8 +18,8 @@ package edu.internet2.middleware.shibboleth.metadata.dom;
 
 import java.io.OutputStream;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataSerializer;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.MetadataSerializer;
 
 /**
  *

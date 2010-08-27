@@ -18,9 +18,9 @@ package edu.internet2.middleware.shibboleth.metadata.dom;
 
 import org.w3c.dom.Element;
 
-import edu.internet2.middleware.shibboleth.metadata.core.AbstractMetadata;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
+import edu.internet2.middleware.shibboleth.metadata.AbstractMetadata;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataInfo;
 import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /** A metadata element whose data is a DOM, version 3, {@link Element}. */

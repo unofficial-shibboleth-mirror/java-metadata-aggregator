@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import net.jcip.annotations.ThreadSafe;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 
 /**
- * A component of a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} which produces the input
+ * A component of a {@link edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline} which produces the input
  * to the pipeline.
  * 
  * Sources must be thread safe and reusable. They may cache some or all of their state between requests but if an
@@ -33,7 +33,7 @@ import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
 public interface Source<ElementType extends Metadata<?>> extends Component {
 
     /**
-     * Produces the input to the {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline}.
+     * Produces the input to the {@link edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline}.
      * 
      * @return the information produced by the source
      * 

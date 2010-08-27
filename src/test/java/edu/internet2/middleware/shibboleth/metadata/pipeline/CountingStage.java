@@ -16,12 +16,12 @@
 
 package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.StageProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingException;
 
 public class CountingStage<MetadataType extends Metadata<?>> extends AbstractComponent implements Stage<MetadataType> {
 

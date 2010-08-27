@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,8 +33,8 @@ import org.opensaml.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 
 /** A pipeline stage that computes that transforms the collection of metadata via a script. */
 public class ScriptletStage extends AbstractComponent implements Stage<Metadata<?>> {

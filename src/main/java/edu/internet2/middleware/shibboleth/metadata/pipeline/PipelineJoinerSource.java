@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,9 +22,9 @@ import java.util.Collections;
 
 import org.opensaml.util.Assert;
 
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /**

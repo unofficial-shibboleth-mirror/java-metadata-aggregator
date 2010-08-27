@@ -16,13 +16,13 @@
 
 package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.MockMetadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Source;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.SourceProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.SourceProcessingException;
 
 public class MockSource extends AbstractComponent implements Source<MockMetadata> {
 

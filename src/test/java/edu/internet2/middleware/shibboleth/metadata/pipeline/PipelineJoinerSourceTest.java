@@ -21,12 +21,12 @@ import java.util.Collection;
 
 import org.testng.annotations.Test;
 
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.MockMetadata;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.PipelineJoinerSource;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.SimplePipeline;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.PipelineJoinerSource;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.SimplePipeline;
 
 /**
  *

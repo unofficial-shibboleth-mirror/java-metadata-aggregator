@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.util.Strings;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
+import edu.internet2.middleware.shibboleth.metadata.MetadataInfo;
 
 /** Some basic information related to component's processing metadata elements. */
 public class ComponentInfo implements MetadataInfo {

@@ -16,11 +16,11 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
 /**
  * A pipeline stage which validates the XML digital signature found on the metadata elements.

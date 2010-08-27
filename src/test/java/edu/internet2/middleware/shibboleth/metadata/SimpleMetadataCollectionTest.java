@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import org.testng.annotations.Test;
 
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 
 /**
  *

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata;
 
 import java.util.ArrayList;
 import java.util.Collection;

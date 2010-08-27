@@ -16,29 +16,21 @@
 
 package edu.internet2.middleware.shibboleth.metadata;
 
-import org.testng.annotations.Test;
+import java.io.Serializable;
+import java.util.Collection;
 
-import edu.internet2.middleware.shibboleth.metadata.core.EntityIdInfo;
+/**
+ * A collection of {@link Metadata}.
+ * 
+ * @param <ElementType> types of {@link Metadata} objects within the collection
+ */
+public interface MetadataCollection<ElementType extends Metadata<?>> extends Collection<ElementType>,
+        Serializable {
 
-public class EntityInfoTest {
-
-    @Test
-    public void test() {
-        EntityIdInfo info = new EntityIdInfo(" test ");
-        assert info.getEntityId().equals("test");
-
-        try {
-            info = new EntityIdInfo("");
-            throw new AssertionError();
-        } catch (IllegalArgumentException e) {
-            // expected this
-        }
-
-        try {
-            info = new EntityIdInfo(null);
-            throw new AssertionError();
-        } catch (IllegalArgumentException e) {
-            // expected this
-        }
-    }
+    /**
+     * Clones this collection. This clone must be a deep copy.
+     * 
+     * @return clone of this collection
+     */
+    public MetadataCollection<ElementType> copy();
 }

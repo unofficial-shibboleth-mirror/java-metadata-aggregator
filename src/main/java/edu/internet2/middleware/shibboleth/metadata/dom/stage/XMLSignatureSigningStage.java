@@ -53,14 +53,14 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.SimpleMetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.Stage;
-import edu.internet2.middleware.shibboleth.metadata.core.pipeline.StageProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
  * A {@link Pipeline} stage that creates, and adds, an enveloped signature for each element in the given metadata

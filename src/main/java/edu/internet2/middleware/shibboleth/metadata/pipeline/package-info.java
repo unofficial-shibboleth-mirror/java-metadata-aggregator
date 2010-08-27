@@ -15,4 +15,4 @@
  */
 
 /** A set of classes for constructing generic data processing pipelines. */
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;

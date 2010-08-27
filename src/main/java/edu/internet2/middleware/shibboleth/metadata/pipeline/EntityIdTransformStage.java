@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,9 +26,9 @@ import org.apache.commons.codec.binary.Hex;
 import org.opensaml.util.Assert;
 import org.springframework.core.convert.converter.Converter;
 
-import edu.internet2.middleware.shibboleth.metadata.core.EntityIdInfo;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.EntityIdInfo;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /**

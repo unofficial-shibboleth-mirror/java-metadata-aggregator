@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
+package edu.internet2.middleware.shibboleth.metadata;
 
 import edu.internet2.middleware.shibboleth.metadata.util.ClassToInstanceMultiMap;
 import net.jcip.annotations.ThreadSafe;

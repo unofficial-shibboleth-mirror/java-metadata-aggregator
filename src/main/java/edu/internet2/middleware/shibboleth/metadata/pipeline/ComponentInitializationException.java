@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
-/** Base exception for all pipeline issues. */
-public class ComponentException extends Exception {
+/** Exception that occurs when initializing pipeline components. */
+public class ComponentInitializationException extends ComponentException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 6892206203449846566L;
+    private static final long serialVersionUID = -3053986427596885440L;
 
     /** Constructor. */
-    public ComponentException() {
+    public ComponentInitializationException() {
 
     }
 
@@ -32,7 +32,7 @@ public class ComponentException extends Exception {
      * 
      * @param message exception message
      */
-    public ComponentException(String message) {
+    public ComponentInitializationException(String message) {
         super(message);
     }
 
@@ -41,7 +41,7 @@ public class ComponentException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentException(Exception wrappedException) {
+    public ComponentInitializationException(Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -51,7 +51,7 @@ public class ComponentException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentException(String message, Exception wrappedException) {
+    public ComponentInitializationException(String message, Exception wrappedException) {
         super(message, wrappedException);
     }
 }

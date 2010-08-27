@@ -16,9 +16,10 @@
 
 package edu.internet2.middleware.shibboleth.metadata;
 
-import edu.internet2.middleware.shibboleth.metadata.core.AbstractMetadata;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataInfo;
+import edu.internet2.middleware.shibboleth.metadata.AbstractMetadata;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataInfo;
+import edu.internet2.middleware.shibboleth.metadata.util.ClassToInstanceMultiMap;
 import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 public class MockMetadata extends AbstractMetadata<String> {
@@ -31,6 +32,11 @@ public class MockMetadata extends AbstractMetadata<String> {
     
     public void setMetadata(String entityMetadata) {
         super.setMetadata(entityMetadata);
+    }
+    
+    public void setMetadataInfo(ClassToInstanceMultiMap<MetadataInfo> info) {
+        getMetadataInfo().clear();
+        getMetadataInfo().putAll(info);
     }
 
     public Metadata<String> copy() {

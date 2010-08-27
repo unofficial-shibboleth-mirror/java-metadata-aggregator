@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
-
-/** Exception indicating that the {@link Source} of the pipeline encountered an error. */
-public class SourceProcessingException extends PipelineProcessingException {
+/** Base exception for errors that occur within the pipeline execution. */
+public class PipelineProcessingException extends ComponentException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -6721119323664807447L;
+    private static final long serialVersionUID = -8313183972495091212L;
 
     /** Constructor. */
-    public SourceProcessingException() {
+    public PipelineProcessingException() {
 
     }
 
@@ -33,7 +32,7 @@ public class SourceProcessingException extends PipelineProcessingException {
      * 
      * @param message exception message
      */
-    public SourceProcessingException(String message) {
+    public PipelineProcessingException(String message) {
         super(message);
     }
 
@@ -42,7 +41,7 @@ public class SourceProcessingException extends PipelineProcessingException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public SourceProcessingException(Exception wrappedException) {
+    public PipelineProcessingException(Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +51,7 @@ public class SourceProcessingException extends PipelineProcessingException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public SourceProcessingException(String message, Exception wrappedException) {
+    public PipelineProcessingException(String message, Exception wrappedException) {
         super(message, wrappedException);
     }
 }

@@ -14,18 +14,5 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core;
-
-import java.io.OutputStream;
-
-/** Serializers convert a collection of {@link Metadata} in to an octet stream. */
-public interface MetadataSerializer<MetadataType extends Metadata<?>> {
-
-    /**
-     * Serializes the metadata to the given output stream.
-     * 
-     * @param metadataCollection collection of metadata
-     * @param output output stream to which metadata will be written
-     */
-    public void serialize(MetadataCollection<MetadataType> metadataCollection, OutputStream output);
-}
+/** Base classes for dealing with collections of metadata (whatever metadata might mean to you). */
+package edu.internet2.middleware.shibboleth.metadata;

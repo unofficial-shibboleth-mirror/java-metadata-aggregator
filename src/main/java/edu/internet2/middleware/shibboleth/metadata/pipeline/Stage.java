@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.core.pipeline;
+package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import net.jcip.annotations.ThreadSafe;
-import edu.internet2.middleware.shibboleth.metadata.core.Metadata;
-import edu.internet2.middleware.shibboleth.metadata.core.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 
 /**
- * A stage in a {@link edu.internet2.middleware.shibboleth.metadata.core.pipeline.Pipeline} that transforms data in a
+ * A stage in a {@link edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline} that transforms data in a
  * particular manner.
  * 
  * Stages must be thread safe and reusable.
