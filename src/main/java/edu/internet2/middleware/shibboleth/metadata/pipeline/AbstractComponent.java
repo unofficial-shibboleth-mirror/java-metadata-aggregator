@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /** Base implementation for pipeline components. */
 @ThreadSafe
 public abstract class AbstractComponent implements Component {
-    
+
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(AbstractComponent.class);
 
@@ -69,17 +69,17 @@ public abstract class AbstractComponent implements Component {
 
     /** {@inheritDoc} */
     public synchronized void initialize() throws ComponentInitializationException {
-        if(isInitialized()){
+        if (isInitialized()) {
             throw new IllegalStateException("Pipeline component already initialized");
         }
-        
+
         if (id == null) {
             throw new ComponentInitializationException("Pipeline component may not have a null or empty ID");
         }
-        
+
         log.debug("Initializing pipeline component {}", getId());
         doInitialize();
-        
+
         initInstant = new DateTime(ISOChronology.getInstanceUTC());
         log.debug("Pipeline component {} initialized", getId());
     }
@@ -109,9 +109,12 @@ public abstract class AbstractComponent implements Component {
     }
 
     /**
-     * Do the initialization of the component.
+     * Do the initialization of the component. Default implementation of this method is a no-op. Extending classes
+     * should override this method to perform any initialization logic necessary.
      * 
      * @throws ComponentInitializationException throw if there is a problem initializing the component
      */
-    protected abstract void doInitialize() throws ComponentInitializationException;
+    protected void doInitialize() throws ComponentInitializationException {
+
+    }
 }

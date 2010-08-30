@@ -36,43 +36,42 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
 /**
  * A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria.
  */
 @ThreadSafe
-public class SAMLEntityFilterStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntityFilterStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** QName of the RoleDescriptor element. */
-    public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "RoleDescriptor");
+    public static final QName ROLE_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "RoleDescriptor");
 
     /** QName of the IDPSSODescriptor element. */
-    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "IDPSSODescriptor");
+    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "IDPSSODescriptor");
 
     /** QName of the SPSSODescriptor element. */
-    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "SPSSODescriptor");
+    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "SPSSODescriptor");
 
     /** QName of the AuthnAuthorityDescriptor element. */
-    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS,
+    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS,
             "AuthnAuthorityDescriptor");
 
     /** QName of the AttributeAuthorityDescriptor element. */
-    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS,
+    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS,
             "AttributeAuthorityDescriptor");
 
     /** QName of the PDPDescriptor element. */
-    public static final QName PDP_DESCRIPTOR_NAME = new QName(SAMLConstants.MD_NS, "PDPDescriptor");
+    public static final QName PDP_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "PDPDescriptor");
 
     /** QName of the Organization element. */
-    private static final QName ORGANIZTION_NAME = new QName(SAMLConstants.MD_NS, "Organization");
+    private static final QName ORGANIZTION_NAME = new QName(MetadataHelper.MD_NS, "Organization");
 
     /** QName of the ContactPerson element. */
-    private static final QName CONTACT_PERSON_NAME = new QName(SAMLConstants.MD_NS, "ContactPerson");
+    private static final QName CONTACT_PERSON_NAME = new QName(MetadataHelper.MD_NS, "ContactPerson");
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(SAMLEntityFilterStage.class);
+    private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);
 
     // TODO white/blacklist bindings, extensions
 
@@ -105,7 +104,7 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
      * 
      * @param stageId unique stage ID
      */
-    public SAMLEntityFilterStage(String stageId) {
+    public EntityFilterStage(String stageId) {
         super(stageId);
 
         designatedEntities = new ArrayList<String>();
@@ -408,10 +407,5 @@ public class SAMLEntityFilterStage extends AbstractComponent implements Stage<Do
             log.debug("{} pipeline stage removing ContactPerson from EntityDescriptor {}", getId(), entityId);
             entityDescriptor.removeChild(childElement);
         }
-    }
-
-    /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
-        // nothing to do here
     }
 }

@@ -33,7 +33,6 @@ import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
 /**
@@ -48,10 +47,10 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
  * validUntil time of the EntityDescriptor and all enclosing EntitiesDescriptors.
  */
 @ThreadSafe
-public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntitySplitterStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(SAMLEntitySplitterStage.class);
+    private final Logger log = LoggerFactory.getLogger(EntitySplitterStage.class);
 
     /** Whether validUntil attributes on EntitiesDescriptors are pushed down to descendant EntityDescriptors. */
     private boolean pushValidUntil;
@@ -64,7 +63,7 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
      * 
      * @param stageId unique stage ID
      */
-    public SAMLEntitySplitterStage(String stageId) {
+    public EntitySplitterStage(String stageId) {
         super(stageId);
         pushValidUntil = true;
         pushCacheDuration = false;
@@ -79,7 +78,7 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
      * @param pushDownCacheDuration whether cacheDuration attributes on EntitiesDescriptors are pushed down to
      *            descendant EntityDescriptors
      */
-    public SAMLEntitySplitterStage(String stageId, boolean pushDownValidUntil, boolean pushDownCacheDuration) {
+    public EntitySplitterStage(String stageId, boolean pushDownValidUntil, boolean pushDownCacheDuration) {
         super(stageId);
         pushValidUntil = pushDownValidUntil;
         pushCacheDuration = pushDownCacheDuration;
@@ -135,9 +134,9 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
         Element metadataElement;
         for (DomMetadata sourceMetadata : sourceCollection) {
             metadataElement = sourceMetadata.getMetadata();
-            if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITIES_DESCRIPTOR_NAME)) {
+            if (MetadataHelper.isEntitiesDescriptor(metadataElement)) {
                 processEntitiesDescriptor(destinationCollection, metadataElement, null, null);
-            } else if (Elements.isElementNamed(metadataElement, SAMLConstants.ENTITY_DESCRIPTOR_NAME)) {
+            } else if (MetadataHelper.isEntityDescriptor(metadataElement)) {
                 destinationCollection.add(new DomMetadata(metadataElement));
             } else {
                 log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(), QNames
@@ -166,8 +165,8 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
             Element entitiesDescriptor, String validUntil, String cacheDuration) {
         String desciptorValidUntil = null;
         if (pushValidUntil) {
-            desciptorValidUntil = Attributes
-                    .getAttributeValue(entitiesDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME);
+            desciptorValidUntil = Attributes.getAttributeValue(entitiesDescriptor,
+                    MetadataHelper.VALID_UNTIL_ATTIB_NAME);
             if (desciptorValidUntil == null) {
                 desciptorValidUntil = validUntil;
             }
@@ -176,7 +175,7 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
         String descriptorCacheDuration = null;
         if (pushCacheDuration) {
             descriptorCacheDuration = Attributes.getAttributeValue(entitiesDescriptor,
-                    SAMLConstants.CACHE_DURATION_ATTRIB_NAME);
+                    MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
             if (descriptorCacheDuration == null) {
                 descriptorCacheDuration = cacheDuration;
             }
@@ -184,19 +183,18 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
 
         List<Element> children = Elements.getChildElements(entitiesDescriptor);
         for (Element child : children) {
-            if (Elements.isElementNamed(child, SAMLConstants.ENTITIES_DESCRIPTOR_NAME)) {
+            if (MetadataHelper.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(metadataCollection, child, desciptorValidUntil, descriptorCacheDuration);
             }
-            if (Elements.isElementNamed(child, SAMLConstants.ENTITY_DESCRIPTOR_NAME)) {
+            if (MetadataHelper.isEntityDescriptor(child)) {
                 metadataCollection.add(buildMetadataElement(child, desciptorValidUntil, descriptorCacheDuration));
             }
         }
     }
 
     /**
-     * Builds a {@link DomMetadata} from the given EntityDescriptor element. If the EntityDescriptor does not
-     * already have a validUntil or cacheDuration attribute these attributes are created and populated with the given
-     * values.
+     * Builds a {@link DomMetadata} from the given EntityDescriptor element. If the EntityDescriptor does not already
+     * have a validUntil or cacheDuration attribute these attributes are created and populated with the given values.
      * 
      * @param entityDescriptor EntityDescriptor element to be made in to a {@link DomMetadata}
      * @param validUntil validUntil attribute value to be added to the EntityDescriptor if the attribute does not
@@ -208,26 +206,21 @@ public class SAMLEntitySplitterStage extends AbstractComponent implements Stage<
      */
     protected DomMetadata buildMetadataElement(Element entityDescriptor, String validUntil, String cacheDuration) {
         String entityId = entityDescriptor.getAttributeNS(null, "entityID");
-        if (validUntil != null && !Attributes.hasAttribute(entityDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME)) {
+        if (validUntil != null && !Attributes.hasAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME)) {
             log.debug("{} pipeline stage adding valid until of {} to entity descriptor {}", new Object[] { getId(),
                     validUntil, entityId });
-            Attributes.appendAttribute(entityDescriptor, SAMLConstants.VALID_UNTIL_ATTIB_NAME, validUntil);
+            Attributes.appendAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, validUntil);
         }
 
         if (cacheDuration != null
-                && !Attributes.hasAttribute(entityDescriptor, SAMLConstants.CACHE_DURATION_ATTRIB_NAME)) {
+                && !Attributes.hasAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
             log.debug("{} pipeline stage adding cacheDuration of {} to EntityDescriptor {}", new Object[] { getId(),
                     cacheDuration, entityId });
-            Attributes.appendAttribute(entityDescriptor, SAMLConstants.CACHE_DURATION_ATTRIB_NAME, cacheDuration);
+            Attributes.appendAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME, cacheDuration);
         }
 
         DomMetadata element = new DomMetadata(entityDescriptor);
         element.getMetadataInfo().put(new EntityIdInfo(entityDescriptor.getAttributeNS("null", entityId)));
         return new DomMetadata(entityDescriptor);
-    }
-
-    /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
-        // nothing to do here
     }
 }

@@ -22,9 +22,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.testng.annotations.Test;
 
 import edu.internet2.middleware.shibboleth.metadata.EntityIdInfo;
+import edu.internet2.middleware.shibboleth.metadata.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.MockMetadata;
 import edu.internet2.middleware.shibboleth.metadata.TagInfo;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.CountingStage;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.MockSource;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SimplePipeline;
@@ -37,7 +39,11 @@ public class QueryControllerTest {
 
     @Test
     public void testQueryController() throws Exception {
-        QueryController controller = new QueryController(buildPipeline(), 1);
+        CountingStage<Metadata<?>> countingStage = new CountingStage<Metadata<?>>();
+        ArrayList<Stage<?>> postProcessStages = new ArrayList<Stage<?>>();
+        postProcessStages.add(countingStage);
+        
+        QueryController controller = new QueryController(buildPipeline(), 1, postProcessStages);
 
         // since the controller loads its metadata in a background thread we wait a second to let it do its thing
         Thread.sleep(1000);
@@ -46,34 +52,40 @@ public class QueryControllerTest {
         request.setPathInfo("/entities/one");
         MetadataCollection<?> result = controller.queryMetadata(request);
         assert result.size() == 1;
+        assert countingStage.getCount() == 1;
 
         request = new MockHttpServletRequest();
         request.setPathInfo("/entities/test");
         result = controller.queryMetadata(request);
         assert result.size() == 2;
+        assert countingStage.getCount() == 2;
 
         request = new MockHttpServletRequest();
         request.setPathInfo("/entities/test+two");
         result = controller.queryMetadata(request);
         assert result.size() == 1;
+        assert countingStage.getCount() == 3;
 
         request = new MockHttpServletRequest();
         request.setPathInfo("/entities/one+test");
         result = controller.queryMetadata(request);
         assert result.size() == 0;
+        assert countingStage.getCount() == 3;
 
         request = new MockHttpServletRequest();
         request.setPathInfo("/entities/prod");
         result = controller.queryMetadata(request);
         assert result.size() == 0;
+        assert countingStage.getCount() == 3;
 
         request = new MockHttpServletRequest();
         request.setPathInfo("/entities/two+prod");
         result = controller.queryMetadata(request);
         assert result.size() == 0;
+        assert countingStage.getCount() == 3;
     }
 
-    private Pipeline<MockMetadata> buildPipeline() {
+    private Pipeline<?> buildPipeline() {
         MockMetadata mdElem1 = new MockMetadata("one");
         mdElem1.getMetadataInfo().put(new EntityIdInfo("one"));
 

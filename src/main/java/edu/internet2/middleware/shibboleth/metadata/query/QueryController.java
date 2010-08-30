@@ -16,6 +16,7 @@
 
 package edu.internet2.middleware.shibboleth.metadata.query;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.opensaml.util.Assert;
@@ -31,7 +33,10 @@ import org.opensaml.util.Strings;
 import org.opensaml.util.collections.LazyList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -42,6 +47,10 @@ import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.TagInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.PipelineProcessingException;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.SimplePipeline;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.StaticSource;
 
 /**
  *
@@ -49,17 +58,20 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.PipelineProcessingE
 @Controller
 public class QueryController {
 
+    /** Name of model attribute to which metadata from the query is bound. */
+    public final static String METADATA_MODEL_ATTRIB = "metadata";
+
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(QueryController.class);
 
     /** Length of time, in milliseconds, between metadata refreshes. */
-    private long mdUpdatePeriod;
+    private final long mdUpdatePeriod;
 
     /** Background task that updates the indexed metadata. */
-    private MetadataRefreshTask refreshTask;
+    private final MetadataRefreshTask refreshTask;
 
     /** Pipeline that produces metadata searched by this controller. */
-    private Pipeline<?> mdPipeline;
+    private final Pipeline<?> mdPipeline;
 
     /**
      * Cache of search terms to associated metadata element. Value may be null indicating the search term does match any
@@ -67,14 +79,19 @@ public class QueryController {
      */
     private HashMap<String, List<Metadata<?>>> termIndex;
 
+    /** The pipeline stages through which query results are sent prior to being serialized and returned. */
+    private final List<Stage<?>> resultPostProcessStages;
+
     /**
      * Constructor.
      * 
      * @param pipeline the pipeline used to produce the metadata that is searched
      * @param updateInterval length of time, in minutes, between metadata refresh updates
+     * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
+     *            requester
      */
-    public QueryController(Pipeline<?> pipeline, int updateInterval) {
-        this(pipeline, updateInterval, new Timer(true));
+    public QueryController(Pipeline<?> pipeline, int updateInterval, List<Stage<?>> postProcessStages) {
+        this(pipeline, updateInterval, new Timer(true), postProcessStages);
     }
 
     /**
@@ -83,8 +100,11 @@ public class QueryController {
      * @param pipeline the pipeline used to produce the metadata that is searched
      * @param updateInterval length of time, in minutes, between metadata refresh updates
      * @param backgroundTaskTimer the {@link Timer} used to run the metadata update refresh task
+     * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
+     *            requester
      */
-    public QueryController(Pipeline<?> pipeline, int updateInterval, Timer backgroundTaskTimer) {
+    public QueryController(Pipeline<?> pipeline, int updateInterval, Timer backgroundTaskTimer,
+            List<Stage<?>> postProcessStages) {
         Assert.isNotNull(pipeline, "Metadata pipeline may not be null");
         mdPipeline = pipeline;
 
@@ -93,6 +113,9 @@ public class QueryController {
         mdUpdatePeriod = updateInterval * 60 * 1000;
         refreshTask = new MetadataRefreshTask();
         backgroundTaskTimer.schedule(refreshTask, 0, mdUpdatePeriod);
+
+        Assert.isNotNull(postProcessStages, "Result post-processing stages may not be null");
+        resultPostProcessStages = new ArrayList<Stage<?>>(postProcessStages);
 
         termIndex = new HashMap<String, List<Metadata<?>>>();
     }
@@ -103,11 +126,43 @@ public class QueryController {
      * @param request the HTTP request
      * 
      * @return the metadata elements that meet the search terms given in the request
+     * 
+     * @throws PipelineProcessingException thrown if there is a problem running a query result set through a
+     *             post-processing pipeline
      */
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/entities", method = RequestMethod.GET)
-    public MetadataCollection<Metadata<?>> queryMetadata(HttpServletRequest request) {
+    @ModelAttribute(METADATA_MODEL_ATTRIB)
+    public MetadataCollection<Metadata<?>> queryMetadata(HttpServletRequest request) throws PipelineProcessingException {
         List<String> searchTerms = getSearchTerms(request);
-        return getMetadataElements(searchTerms);
+        MetadataCollection<Metadata<?>> results = getMetadataElements(searchTerms);
+
+        if (results != null && !results.isEmpty()) {
+            Source<Metadata<?>> resultSource = new StaticSource<Metadata<?>>("postProcessSource", results);
+            SimplePipeline<Metadata<?>> resultPostProcess = new SimplePipeline("postprocess", resultSource,
+                    resultPostProcessStages);
+            results = resultPostProcess.execute();
+        }
+
+        return results;
+    }
+
+    /**
+     * Handles the exception that occurs when the post processing pipeline is working on a query result set.
+     * 
+     * @param e the thrown exception
+     * @param request current HTTP request
+     * @param response current HTTP response
+     */
+    @ExceptionHandler(PipelineProcessingException.class)
+    public void handlePipelineProcessingException(PipelineProcessingException pe, HttpServletRequest request,
+            HttpServletResponse response) {
+        try {
+            log.debug("Error post-prcossing result set", pe);
+            response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error post-processing query results");
+        } catch (IOException e) {
+            log.error("Unble to handle post-processing exception", e);
+        }
     }
 
     /**
@@ -123,7 +178,7 @@ public class QueryController {
 
         int operationNameIndex = requestPath.indexOf("entities");
         String concatSearchTerms = requestPath.substring(operationNameIndex + 9);
-        
+
         String[] terms = concatSearchTerms.split("\\+");
 
         String trimmedTerm;
@@ -158,7 +213,8 @@ public class QueryController {
 
         List<Metadata<?>> searchResults = new ArrayList<Metadata<?>>(index.get(firstTerm));
         searchTerms.remove(firstTerm);
-        log.debug("Starting with result list for search term '{}' containing {} elements", firstTerm, searchResults.size());
+        log.debug("Starting with result list for search term '{}' containing {} elements", firstTerm, searchResults
+                .size());
 
         String searchTerm;
         Iterator<String> termItr = searchTerms.iterator();
@@ -166,8 +222,8 @@ public class QueryController {
             searchTerm = termItr.next();
             if (index.containsKey(searchTerm)) {
                 searchResults.retainAll(index.get(searchTerm));
-                log.debug("{} results left after removing results not indexed by search term '{}'", searchResults.size(),
-                        searchTerm);
+                log.debug("{} results left after removing results not indexed by search term '{}'", searchResults
+                        .size(), searchTerm);
             } else {
                 log.debug("No search results associated with term '{}', clearing search result list", searchTerm);
                 searchResults.clear();

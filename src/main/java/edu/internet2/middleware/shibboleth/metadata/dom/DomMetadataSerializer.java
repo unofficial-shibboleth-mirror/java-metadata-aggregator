@@ -18,17 +18,22 @@ package edu.internet2.middleware.shibboleth.metadata.dom;
 
 import java.io.OutputStream;
 
+import org.opensaml.util.xml.Serialize;
+import org.w3c.dom.Element;
+
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.MetadataSerializer;
 
-/**
- *
- */
+/** Very simple serializer that serializes the first element of the given metadata collection. */
 public class DomMetadataSerializer implements MetadataSerializer<DomMetadata> {
 
     /** {@inheritDoc} */
     public void serialize(MetadataCollection<DomMetadata> metadataCollection, OutputStream output) {
-        // TODO Auto-generated method stub
+        if (metadataCollection == null || metadataCollection.isEmpty()) {
+            return;
+        }
 
+        Element documentRoot = metadataCollection.iterator().next().getMetadata();
+        Serialize.writeNode(documentRoot, output);
     }
 }

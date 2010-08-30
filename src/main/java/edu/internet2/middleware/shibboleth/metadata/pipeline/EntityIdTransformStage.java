@@ -78,11 +78,6 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
         return metadataCollection;
     }
 
-    /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
-        // nothing to do
-    }
-
     /** Converts a string in to another string that is the SHA1 hash of the original string prepended with "{sha1}". */
     public static class Sha1Converter implements Converter<String, String> {
 
