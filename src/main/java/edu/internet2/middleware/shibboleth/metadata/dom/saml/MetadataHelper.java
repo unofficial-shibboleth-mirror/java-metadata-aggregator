@@ -24,6 +24,7 @@ import javax.xml.namespace.QName;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
+import org.opensaml.util.Assert;
 import org.opensaml.util.xml.Attributes;
 import org.opensaml.util.xml.Elements;
 import org.w3c.dom.Document;
@@ -87,10 +88,11 @@ public class MetadataHelper {
      * given lifetime.
      * 
      * @param metadata element to which the attribute will be added
-     * @param lifetime lifetime of the element in milliseconds
+     * @param duration lifetime of the element in milliseconds
      */
-    public static void addValidUntil(Element metadata, long lifetime) {
-        DateTime now = new DateTime(ISOChronology.getInstanceUTC()).plus(lifetime);
+    public static void addValidUntil(Element metadata, long duration) {
+        Assert.isGreaterThan(0, duration, "Validity duration must be 1 or greater.");
+        DateTime now = new DateTime(ISOChronology.getInstanceUTC()).plus(duration);
         XMLGregorianCalendar validUntil = xmlDatatypeFactory.newXMLGregorianCalendar(now.toGregorianCalendar());
         Attributes.appendAttribute(metadata, VALID_UNTIL_ATTIB_NAME, validUntil.toString());
     }
@@ -102,6 +104,7 @@ public class MetadataHelper {
      * @param duration cache duration of the element in milliseconds
      */
     public static void addCacheDuration(Element metadata, long duration) {
+        Assert.isGreaterThan(0, duration, "Cache duration must be 1 or greater.");
         Duration xmlDuration = xmlDatatypeFactory.newDuration(duration);
         Attributes.appendAttribute(metadata, CACHE_DURATION_ATTRIB_NAME, xmlDuration.toString());
     }

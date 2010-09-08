@@ -36,8 +36,8 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
 /**
- * A pipeline stage that replaces any SAML EntitiesDescriptors found in the metadata collection and replaces them with
- * the EntityDescriptor elements contained therein.
+ * A pipeline stage that replaces any SAML EntitiesDescriptor found in the metadata collection with the EntityDescriptor
+ * elements contained therein.
  * 
  * This stage will always add a {@link EntityIdInfo}, containing the SAML entity ID given in the EntityDescriptor, to
  * each metadata element. In addition it may optionally attached a validUntil and cacheDuration to each
@@ -47,10 +47,10 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
  * validUntil time of the EntityDescriptor and all enclosing EntitiesDescriptors.
  */
 @ThreadSafe
-public class EntitySplitterStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntitiesDescriptorDisassemblerStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntitySplitterStage.class);
+    private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** Whether validUntil attributes on EntitiesDescriptors are pushed down to descendant EntityDescriptors. */
     private boolean pushValidUntil;
@@ -63,7 +63,7 @@ public class EntitySplitterStage extends AbstractComponent implements Stage<DomM
      * 
      * @param stageId unique stage ID
      */
-    public EntitySplitterStage(String stageId) {
+    public EntitiesDescriptorDisassemblerStage(String stageId) {
         super(stageId);
         pushValidUntil = true;
         pushCacheDuration = false;
@@ -78,7 +78,7 @@ public class EntitySplitterStage extends AbstractComponent implements Stage<DomM
      * @param pushDownCacheDuration whether cacheDuration attributes on EntitiesDescriptors are pushed down to
      *            descendant EntityDescriptors
      */
-    public EntitySplitterStage(String stageId, boolean pushDownValidUntil, boolean pushDownCacheDuration) {
+    public EntitiesDescriptorDisassemblerStage(String stageId, boolean pushDownValidUntil, boolean pushDownCacheDuration) {
         super(stageId);
         pushValidUntil = pushDownValidUntil;
         pushCacheDuration = pushDownCacheDuration;

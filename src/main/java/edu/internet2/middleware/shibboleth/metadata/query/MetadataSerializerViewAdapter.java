@@ -17,7 +17,10 @@
 package edu.internet2.middleware.shibboleth.metadata.query;
 
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,11 +75,24 @@ public class MetadataSerializerViewAdapter implements View {
 
         if (metadataCollection == null || metadataCollection.isEmpty()) {
             httpResponse.sendError(404);
+            return;
         }
 
+        OutputStream out = httpResponse.getOutputStream();
+
+        String acceptEncoding = httpRequest.getHeader("Accept-Encoding");
+        if(acceptEncoding != null){
+            if(acceptEncoding.contains("gzip")){
+                httpResponse.setHeader("Content-Encoding", "gzip");
+                out = new GZIPOutputStream(out);
+            }else if(acceptEncoding.contains("compress")){
+                httpResponse.setHeader("Content-Encoding", "compress");
+                out = new DeflaterOutputStream(out);
+            }
+        }
+        
         try {
-            OutputStream out = httpResponse.getOutputStream();
-            serializer.serialize(metadataCollection, httpResponse.getOutputStream());
+            serializer.serialize(metadataCollection, out);
             out.flush();
         } catch (Exception e) {
             log.warn("Unable to serialize metadata for request to " + httpRequest.getRequestURI(), e);
