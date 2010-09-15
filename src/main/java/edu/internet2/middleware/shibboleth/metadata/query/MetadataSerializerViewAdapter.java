@@ -17,7 +17,6 @@
 package edu.internet2.middleware.shibboleth.metadata.query;
 
 import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;

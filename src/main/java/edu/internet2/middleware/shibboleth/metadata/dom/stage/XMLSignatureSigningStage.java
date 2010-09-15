@@ -74,56 +74,56 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     };
 
     /** XML Signature base URI: {@value} . */
-    private static final String XML_SIG_BASE_URI = "http://www.w3.org/2000/09/xmldsig";
+    public static final String XML_SIG_BASE_URI = "http://www.w3.org/2000/09/xmldsig";
 
     /** XML Encryption base URI: {@value} . */
-    private static final String XML_ENC_BASE_URI = "http://www.w3.org/2001/04/xmlenc";
+    public static final String XML_ENC_BASE_URI = "http://www.w3.org/2001/04/xmlenc";
 
     /**
      * RFC4501 base URI: {@value} .
      * 
      * @see <a href="http://tools.ietf.org/html/rfc4501">RFC 4501</a>
      */
-    private static final String RFC4501_BASE_URI = "http://www.w3.org/2001/04/xmldsig-more";
+    public static final String RFC4501_BASE_URI = "http://www.w3.org/2001/04/xmldsig-more";
 
     /** RSA-SHA1 signature algorithm ID: {@value} . */
-    private static final String ALGO_ID_SIGNATURE_RSA_SHA1 = XML_SIG_BASE_URI + "#rsa-sha1";
+    public static final String ALGO_ID_SIGNATURE_RSA_SHA1 = XML_SIG_BASE_URI + "#rsa-sha1";
 
     /** RSA-SHA256 signature algorithm ID: {@value} . */
-    private static final String ALGO_ID_SIGNATURE_RSA_SHA256 = RFC4501_BASE_URI + "#rsa-sha256";
+    public static final String ALGO_ID_SIGNATURE_RSA_SHA256 = RFC4501_BASE_URI + "#rsa-sha256";
 
     /** RSA-SHA384 signature algorithm ID: {@value} . */
-    private static final String ALGO_ID_SIGNATURE_RSA_SHA384 = RFC4501_BASE_URI + "#rsa-sha384";
+    public static final String ALGO_ID_SIGNATURE_RSA_SHA384 = RFC4501_BASE_URI + "#rsa-sha384";
 
     /** RSA-SHA512 signature algorithm ID: {@value} . */
-    private static final String ALGO_ID_SIGNATURE_RSA_SHA512 = RFC4501_BASE_URI + "#rsa-sha512";
+    public static final String ALGO_ID_SIGNATURE_RSA_SHA512 = RFC4501_BASE_URI + "#rsa-sha512";
 
     /** SHA1 digest algorithm ID: {@value} . */
-    private static final String ALGO_ID_DIGEST_SHA1 = XML_SIG_BASE_URI + "#sha1";
+    public static final String ALGO_ID_DIGEST_SHA1 = XML_SIG_BASE_URI + "#sha1";
 
     /** SHA256 digest algorithm ID: {@value} . */
-    private static final String ALGO_ID_DIGEST_SHA256 = XML_ENC_BASE_URI + "#sha256";
+    public static final String ALGO_ID_DIGEST_SHA256 = XML_ENC_BASE_URI + "#sha256";
 
     /** SHA384 digest algorithm ID: {@value} . */
-    private static final String ALGO_ID_DIGEST_SHA384 = RFC4501_BASE_URI + "#sha384";
+    public static final String ALGO_ID_DIGEST_SHA384 = RFC4501_BASE_URI + "#sha384";
 
     /** SHA512 digest algorithm ID: {@value} . */
-    private static final String ALGO_ID_DIGEST_SHA512 = XML_ENC_BASE_URI + "#sha512";
+    public static final String ALGO_ID_DIGEST_SHA512 = XML_ENC_BASE_URI + "#sha512";
 
     /** Inclusive canonicalization, <strong>WITHOUT</strong> comments, algorithm ID: {@value} . */
-    private static final String ALGO_ID_C14N_OMIT_COMMENTS = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315";
+    public static final String ALGO_ID_C14N_OMIT_COMMENTS = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315";
 
     /** Inclusive canonicalization, <strong>WITH</strong> comments, algorithm ID: {@value} . */
-    private static final String ALGO_ID_C14N_WITH_COMMENTS = ALGO_ID_C14N_OMIT_COMMENTS + "#WithComments";
+    public static final String ALGO_ID_C14N_WITH_COMMENTS = ALGO_ID_C14N_OMIT_COMMENTS + "#WithComments";
 
     /** Exclusive canonicalization, <strong>WITHOUT</strong> comments, algorithm ID: {@value} . */
-    private static final String ALGO_ID_C14N_EXCL_OMIT_COMMENTS = "http://www.w3.org/2001/10/xml-exc-c14n#";
+    public static final String ALGO_ID_C14N_EXCL_OMIT_COMMENTS = "http://www.w3.org/2001/10/xml-exc-c14n#";
 
     /** Exclusive canonicalization, <strong>WITH</strong> comments, algorithm ID: {@value} . */
-    private static final String ALGO_ID_C14N_EXCL_WITH_COMMENTS = ALGO_ID_C14N_EXCL_OMIT_COMMENTS + "WithComments";
+    public static final String ALGO_ID_C14N_EXCL_WITH_COMMENTS = ALGO_ID_C14N_EXCL_OMIT_COMMENTS + "WithComments";
 
     /** Enveloped signature transform ID: {@value} . */
-    private static final String TRANSFORM_ENVELOPED_SIGNATURE = XML_SIG_BASE_URI + "#enveloped-signature";
+    public static final String TRANSFORM_ENVELOPED_SIGNATURE = XML_SIG_BASE_URI + "#enveloped-signature";
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureSigningStage.class);

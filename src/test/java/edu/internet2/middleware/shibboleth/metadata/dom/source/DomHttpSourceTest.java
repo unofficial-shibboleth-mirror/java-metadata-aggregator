@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package edu.internet2.middleware.shibboleth.metadata.dom;
+package edu.internet2.middleware.shibboleth.metadata.dom.source;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.http.client.HttpClient;
 import org.opensaml.util.http.HttpClientBuilder;
 import org.opensaml.util.http.HttpResource;
 import org.opensaml.util.xml.StaticBasicParserPool;
@@ -27,12 +26,10 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.dom.source.DomHttpSource;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SourceProcessingException;
 
-/**
- *
- */
 public class DomHttpSourceTest {
 
     @Test
