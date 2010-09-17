@@ -32,9 +32,6 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SimplePipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
-/**
- *
- */
 public class QueryControllerTest {
 
     @Test

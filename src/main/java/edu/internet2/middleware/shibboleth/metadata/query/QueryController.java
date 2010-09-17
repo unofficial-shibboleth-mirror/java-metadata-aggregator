@@ -52,9 +52,7 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.StaticSource;
 
-/**
- *
- */
+/** Controller that responds to Metadata Query requests.*/
 @Controller
 public class QueryController {
 

@@ -16,9 +16,57 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
-/**
- *
- */
+import java.io.File;
+import java.util.ArrayList;
+
+import org.opensaml.util.xml.StaticBasicParserPool;
+import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+
+import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
+import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
+
 public class XMLSchemaValidationStageTest {
 
+    @Test
+    public void testValidXml() throws Exception {
+        StaticBasicParserPool parserPool = new StaticBasicParserPool();
+        parserPool.initialize();
+        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream("/data/samlMetadata.xml"));
+        
+        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        
+        File schemaDir = new File(XMLSchemaValidationStageTest.class.getResource("/schemas").toURI());
+        ArrayList<String> schemas = new ArrayList<String>();
+        schemas.add(schemaDir.getAbsolutePath());
+        
+        XMLSchemaValidationStage stage = new XMLSchemaValidationStage("test", schemas);
+        stage.initialize();
+        
+        mdCol = stage.execute(mdCol);
+        assert mdCol.size() == 1;
+        assert mdCol.iterator().next().getMetadata().equals(doc.getDocumentElement());
+    }
+    
+    @Test
+    public void testInvalidXml() throws Exception {
+        StaticBasicParserPool parserPool = new StaticBasicParserPool();
+        parserPool.initialize();
+        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream("/data/invalidSamlMetadata.xml"));
+        
+        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        
+        File schemaDir = new File(XMLSchemaValidationStageTest.class.getResource("/schemas").toURI());
+        ArrayList<String> schemas = new ArrayList<String>();
+        schemas.add(schemaDir.getAbsolutePath());
+        
+        XMLSchemaValidationStage stage = new XMLSchemaValidationStage("test", schemas);
+        stage.initialize();
+        
+        mdCol = stage.execute(mdCol);
+        assert mdCol.size() == 0;
+    }
 }

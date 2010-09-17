@@ -16,12 +16,11 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
@@ -30,14 +29,13 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.xml.SchemaBuilder;
+import org.opensaml.util.xml.Serialize;
 import org.opensaml.util.xml.SchemaBuilder.SchemaLanguage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
@@ -84,23 +82,25 @@ public class XMLSchemaValidationStage extends AbstractComponent implements Stage
     public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
             throws StageProcessingException {
         log.debug("{} pipeline stage schema validating metadata collection elements", getId());
-        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
-
+        
         Validator validator = validationSchema.newValidator();
-        DOMResult result;
-        for (DomMetadata metadata : metadataCollection) {
+
+        Iterator<DomMetadata> mdItr = metadataCollection.iterator();
+        DomMetadata metadata;
+        while (mdItr.hasNext()) {
+            metadata = mdItr.next();
             try {
-                result = new DOMResult();
-                validator.validate(new DOMSource(metadata.getMetadata()), result);
-                mec.add(new DomMetadata((Element) result.getNode()));
-            } catch (SAXException e) {
-                throw new StageProcessingException("Metadata failed validation", e);
-            } catch (IOException e) {
-                throw new StageProcessingException("Metadata failed validation", e);
+                validator.validate(new DOMSource(metadata.getMetadata()));
+            } catch (Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Metadata element was not valid:\n{}", Serialize.prettyPrintXML(metadata.getMetadata()),
+                            e);
+                    mdItr.remove();
+                }
             }
         }
 
-        return mec;
+        return metadataCollection;
     }
 
     /** {@inheritDoc} */
