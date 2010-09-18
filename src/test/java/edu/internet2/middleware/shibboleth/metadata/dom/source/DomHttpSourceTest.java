@@ -21,13 +21,11 @@ import java.io.IOException;
 
 import org.opensaml.util.http.HttpClientBuilder;
 import org.opensaml.util.http.HttpResource;
-import org.opensaml.util.xml.StaticBasicParserPool;
+import org.opensaml.util.xml.BasicParserPool;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
 
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
-import edu.internet2.middleware.shibboleth.metadata.dom.source.DomHttpSource;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SourceProcessingException;
 
 public class DomHttpSourceTest {
@@ -36,32 +34,30 @@ public class DomHttpSourceTest {
     public void testSuccessfulFetchAndParse() throws Exception {
         HttpResource mdResource = buildHttpResource("http://metadata.ukfederation.org.uk/ukfederation-metadata.xml");
 
-        StaticBasicParserPool parserPool = new StaticBasicParserPool();
+        BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSource source = new DomHttpSource("test", mdResource, parserPool);
-        assert source.getCachedMetadata() == null;
+        DomHttpSource source = new DomHttpSource();
+        source.setId("test");
+        source.setMetadataResource(mdResource);
+        source.setParserPool(parserPool);
 
         MetadataCollection<DomMetadata> mc = source.execute();
-        Document metadata = source.getCachedMetadata();
         assert mc != null;
         assert mc.size() == 1;
-        assert metadata != null;
-
-        mc = source.execute();
-        assert mc != null;
-        assert mc.size() == 1;
-        assert source.getCachedMetadata() == metadata;
     }
 
     @Test
     public void testSuccessfulFetchAndFailedParse() throws Exception {
         HttpResource mdResource = buildHttpResource("http://www.google.com/intl/en/images/about_logo.gif");
 
-        StaticBasicParserPool parserPool = new StaticBasicParserPool();
+        BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSource source = new DomHttpSource("test", mdResource, parserPool);
+        DomHttpSource source = new DomHttpSource();
+        source.setId("test");
+        source.setMetadataResource(mdResource);
+        source.setParserPool(parserPool);
 
         try {
             source.execute();
@@ -75,10 +71,13 @@ public class DomHttpSourceTest {
     public void testFailedFetch() throws Exception {
         HttpResource mdResource = buildHttpResource("http://kslkjf.com/lkjlk3.dlw");
 
-        StaticBasicParserPool parserPool = new StaticBasicParserPool();
+        BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSource source = new DomHttpSource("test", mdResource, parserPool);
+        DomHttpSource source = new DomHttpSource();
+        source.setId("test");
+        source.setMetadataResource(mdResource);
+        source.setParserPool(parserPool);
 
         try {
             source.execute();

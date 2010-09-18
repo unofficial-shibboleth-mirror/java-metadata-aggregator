@@ -16,12 +16,11 @@
 
 package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
-
 /** Exception indicating that the {@link Source} of the pipeline encountered an error. */
 public class SourceProcessingException extends PipelineProcessingException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -6721119323664807447L;
+    private static final long serialVersionUID = -5704283270420905308L;
 
     /** Constructor. */
     public SourceProcessingException() {
@@ -33,7 +32,7 @@ public class SourceProcessingException extends PipelineProcessingException {
      * 
      * @param message exception message
      */
-    public SourceProcessingException(String message) {
+    public SourceProcessingException(final String message) {
         super(message);
     }
 
@@ -42,7 +41,7 @@ public class SourceProcessingException extends PipelineProcessingException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public SourceProcessingException(Exception wrappedException) {
+    public SourceProcessingException(final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +51,7 @@ public class SourceProcessingException extends PipelineProcessingException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public SourceProcessingException(String message, Exception wrappedException) {
+    public SourceProcessingException(final String message, final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

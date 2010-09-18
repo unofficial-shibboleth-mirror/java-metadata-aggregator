@@ -16,7 +16,6 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -27,10 +26,12 @@ import javax.xml.validation.Validator;
 
 import net.jcip.annotations.ThreadSafe;
 
-import org.opensaml.util.Assert;
+import org.opensaml.util.collections.CollectionSupport;
+import org.opensaml.util.collections.LazyList;
+import org.opensaml.util.resource.Resource;
 import org.opensaml.util.xml.SchemaBuilder;
-import org.opensaml.util.xml.Serialize;
 import org.opensaml.util.xml.SchemaBuilder.SchemaLanguage;
+import org.opensaml.util.xml.SerializeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -42,50 +43,49 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializa
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingException;
 
-/**
- * A pipeline stage that XML schema validates the elements within the metadata collection.
- */
+/** A pipeline stage that XML schema validates the elements within the metadata collection. */
 @ThreadSafe
 public class XMLSchemaValidationStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
 
-    /** File paths to schema files. */
-    private String[] schemaFiles;
+    /** Collection of schema resources. */
+    private List<Resource> schemaResources = Collections.emptyList();
 
     /** Schema used to validate the metadata. */
     private Schema validationSchema;
 
     /**
-     * Constructor.
+     * Gets an unmodifiable list of schema resources against which data is validated.
      * 
-     * @param stageId unique stage ID
-     * @param schemas filesystem paths to the schema files
+     * @return unmodifiable list of schema resources against which data is validated
      */
-    public XMLSchemaValidationStage(String stageId, List<String> schemas) {
-        super(stageId);
-        Assert.isNotNull(schemas, "Schema files may not be null");
-        schemaFiles = schemas.toArray(new String[schemas.size()]);
+    public List<Resource> getSchemaFiles() {
+        return schemaResources;
     }
 
     /**
-     * Gets an unmodifiable list of schema files against which data is validated.
+     * Sets the schema resources against which data is validated.
      * 
-     * @return unmodifiable list of schema files against which data is validated
+     * @param resources schema resources against which data is validated
      */
-    public List<String> getSchemaFiles() {
-        return Collections.unmodifiableList(Arrays.asList(schemaFiles));
+    public synchronized void setSchemaResources(final List<Resource> resources) {
+        if (isInitialized()) {
+            return;
+        }
+        schemaResources = Collections.unmodifiableList(CollectionSupport
+                .addNonNull(resources, new LazyList<Resource>()));
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection)
             throws StageProcessingException {
         log.debug("{} pipeline stage schema validating metadata collection elements", getId());
-        
-        Validator validator = validationSchema.newValidator();
 
-        Iterator<DomMetadata> mdItr = metadataCollection.iterator();
+        final Validator validator = validationSchema.newValidator();
+
+        final Iterator<DomMetadata> mdItr = metadataCollection.iterator();
         DomMetadata metadata;
         while (mdItr.hasNext()) {
             metadata = mdItr.next();
@@ -93,8 +93,8 @@ public class XMLSchemaValidationStage extends AbstractComponent implements Stage
                 validator.validate(new DOMSource(metadata.getMetadata()));
             } catch (Exception e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Metadata element was not valid:\n{}", Serialize.prettyPrintXML(metadata.getMetadata()),
-                            e);
+                    log.debug("Metadata element was not valid:\n{}",
+                            SerializeSupport.prettyPrintXML(metadata.getMetadata()), e);
                     mdItr.remove();
                 }
             }
@@ -105,9 +105,15 @@ public class XMLSchemaValidationStage extends AbstractComponent implements Stage
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        if (schemaResources == null || schemaResources.isEmpty()) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", SchemaResources may not be empty");
+        }
+
         try {
-            log.debug("{} pipeline stage building validation schema from files {}", getId(), schemaFiles);
-            validationSchema = SchemaBuilder.buildSchema(SchemaLanguage.XML, schemaFiles);
+            log.debug("{} pipeline stage building validation schema resources", getId());
+            validationSchema = SchemaBuilder.buildSchema(SchemaLanguage.XML,
+                    schemaResources.toArray(new Resource[schemaResources.size()]));
         } catch (SAXException e) {
             throw new ComponentInitializationException("Unable to generate schema", e);
         }

@@ -19,7 +19,9 @@ package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.opensaml.util.xml.StaticBasicParserPool;
+import org.opensaml.util.resource.FilesystemResource;
+import org.opensaml.util.resource.Resource;
+import org.opensaml.util.xml.BasicParserPool;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
@@ -31,42 +33,43 @@ public class XMLSchemaValidationStageTest {
 
     @Test
     public void testValidXml() throws Exception {
-        StaticBasicParserPool parserPool = new StaticBasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream("/data/samlMetadata.xml"));
-        
-        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
-        
-        File schemaDir = new File(XMLSchemaValidationStageTest.class.getResource("/schemas").toURI());
-        ArrayList<String> schemas = new ArrayList<String>();
-        schemas.add(schemaDir.getAbsolutePath());
-        
-        XMLSchemaValidationStage stage = new XMLSchemaValidationStage("test", schemas);
-        stage.initialize();
-        
-        mdCol = stage.execute(mdCol);
+        XMLSchemaValidationStage stage = buildStage();
+        MetadataCollection<DomMetadata> mdCol = stage.execute(buildMetdataCollection("/data/samlMetadata.xml"));
         assert mdCol.size() == 1;
-        assert mdCol.iterator().next().getMetadata().equals(doc.getDocumentElement());
     }
-    
+
     @Test
     public void testInvalidXml() throws Exception {
-        StaticBasicParserPool parserPool = new StaticBasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream("/data/invalidSamlMetadata.xml"));
-        
-        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
-        
-        File schemaDir = new File(XMLSchemaValidationStageTest.class.getResource("/schemas").toURI());
-        ArrayList<String> schemas = new ArrayList<String>();
-        schemas.add(schemaDir.getAbsolutePath());
-        
-        XMLSchemaValidationStage stage = new XMLSchemaValidationStage("test", schemas);
-        stage.initialize();
-        
-        mdCol = stage.execute(mdCol);
+        XMLSchemaValidationStage stage = buildStage();
+        MetadataCollection<DomMetadata> mdCol = stage.execute(buildMetdataCollection("/data/invalidSamlMetadata.xml"));
         assert mdCol.size() == 0;
+    }
+
+    protected XMLSchemaValidationStage buildStage() throws Exception {
+        ArrayList<Resource> schemas = new ArrayList<Resource>();
+        File schemaDir = new File(XMLSchemaValidationStageTest.class.getResource("/schemas").toURI());
+        for (String dirFile : schemaDir.list()) {
+            if (dirFile.endsWith(".xsd")) {
+                schemas.add(new FilesystemResource(dirFile));
+            }
+        }
+
+        XMLSchemaValidationStage stage = new XMLSchemaValidationStage();
+        stage.setId("test");
+        stage.setSchemaResources(schemas);
+        stage.initialize();
+
+        return stage;
+    }
+
+    protected SimpleMetadataCollection<DomMetadata> buildMetdataCollection(String xmlPath) throws Exception {
+        BasicParserPool parserPool = new BasicParserPool();
+        parserPool.initialize();
+        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
+
+        SimpleMetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+
+        return mdCol;
     }
 }

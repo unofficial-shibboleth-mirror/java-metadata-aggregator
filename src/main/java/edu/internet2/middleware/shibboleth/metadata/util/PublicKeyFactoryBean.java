@@ -36,7 +36,7 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
      * 
      * @param res resource providing the PEM encoded public key, never null
      */
-    public void setPublicKeyResource(Resource res) {
+    public void setPublicKeyResource(final Resource res) {
         pubKeyRes = res;
     }
 

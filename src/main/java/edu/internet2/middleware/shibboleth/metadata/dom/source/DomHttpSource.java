@@ -18,7 +18,9 @@ package edu.internet2.middleware.shibboleth.metadata.dom.source;
 
 import java.io.InputStream;
 
-import org.opensaml.util.Assert;
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.CloseableSupport;
 import org.opensaml.util.http.HttpResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.util.xml.ParserPool;
@@ -32,6 +34,7 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SourceProcessingException;
 
@@ -39,50 +42,71 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.SourceProcessingExc
  * A pipeline source which reads an XML document from an HTTP source, parses the document, and returns the resultant
  * document (root) element as the metadata within the returned collection.
  */
+@ThreadSafe
 public class DomHttpSource extends AbstractComponent implements Source<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DomHttpSource.class);
 
     /** Resource used to fetch remote metadata. */
-    private final HttpResource metadataResource;
+    private HttpResource metadataResource;
 
     /** Pool of parsers used to parse incoming metadata. */
-    private final ParserPool parserPool;
+    private ParserPool parserPool;
 
     /** Cached metadata. */
     private Document cachedMetadata;
 
     /**
-     * Constructor.
+     * Gets the resource from which metadata will be fetched.
      * 
-     * @param sourceId unique ID of this source
-     * @param resource HTTP resource from which to fetch metadata
-     * @param parsers pool parsers used to parse incoming metadata
+     * @return resource from which metadata will be fetched
      */
-    public DomHttpSource(String sourceId, HttpResource resource, ParserPool parsers) {
-        super(sourceId);
-
-        Assert.isNotNull(resource, "HTTPResource may not be null");
-        metadataResource = resource;
-
-        Assert.isNotNull(parsers, "Parser pool may not be null");
-        parserPool = parsers;
+    public HttpResource getMetadataResource() {
+        return metadataResource;
     }
 
     /**
-     * @return the cachedMetadata
+     * Sets the resource from which metadata will be fetched.
+     * 
+     * @param resource resource from which metadata will be fetched
      */
-    public Document getCachedMetadata() {
-        return cachedMetadata;
+    public synchronized void setMetadataResource(final HttpResource resource) {
+        if (isInitialized()) {
+            return;
+        }
+        metadataResource = resource;
+    }
+
+    /**
+     * Gets the pool of DOM parsers used to parse the XML file in to a DOM.
+     * 
+     * @return pool of DOM parsers used to parse the XML file in to a DOM
+     */
+    public ParserPool getParserPool() {
+        return parserPool;
+    }
+
+    /**
+     * Sets the pool of DOM parsers used to parse the XML file in to a DOM.
+     * 
+     * @param pool pool of DOM parsers used to parse the XML file in to a DOM
+     */
+    public synchronized void setParserPool(final ParserPool pool) {
+        if (isInitialized()) {
+            return;
+        }
+        parserPool = pool;
     }
 
     /** {@inheritDoc} */
     public MetadataCollection<DomMetadata> execute() throws SourceProcessingException {
+        InputStream ins = null;
+        
         try {
             log.debug("Attempting to fetch metadata document from '{}'", metadataResource.getLocation());
 
-            InputStream ins = metadataResource.getInputStream();
+            ins = metadataResource.getInputStream();
             if (ins != null) {
                 log.debug("New metadata available from '{}', processing it", metadataResource.getLocation());
                 return buildMetadataCollectionFromNewData(ins);
@@ -93,6 +117,8 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
             }
         } catch (ResourceException e) {
             throw new SourceProcessingException("Error retrieving metadata from " + metadataResource.getLocation(), e);
+        }finally{
+            CloseableSupport.closeQuietly(ins);
         }
 
     }
@@ -106,7 +132,7 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
      * 
      * @throws SourceProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected MetadataCollection<DomMetadata> buildMetadataCollectionFromNewData(InputStream data)
+    protected MetadataCollection<DomMetadata> buildMetadataCollectionFromNewData(final InputStream data)
             throws SourceProcessingException {
         try {
             log.debug("Parsing metadata retrieved from '{}'", metadataResource.getLocation());
@@ -123,11 +149,34 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
      * @return the metadata collection with a single {@link DomMetadata} element containing the retrieved metadata
      */
     protected MetadataCollection<DomMetadata> buildMetadataCollectionFromCache() {
-        Element clonedMetadata = (Element) cachedMetadata.getDocumentElement().cloneNode(true);
+        final Element clonedMetadata = (Element) cachedMetadata.getDocumentElement().cloneNode(true);
 
-        SimpleMetadataCollection<DomMetadata> mdc = new SimpleMetadataCollection<DomMetadata>();
+        final SimpleMetadataCollection<DomMetadata> mdc = new SimpleMetadataCollection<DomMetadata>();
         mdc.add(new DomMetadata(clonedMetadata));
 
         return mdc;
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        if (parserPool == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", ParserPool may not be null");
+        }
+
+        if (metadataResource == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", MetadataResource may not be null");
+        }
+
+        try {
+            if (!metadataResource.exists()) {
+                throw new ComponentInitializationException("Unable to initialize " + getId() + ", metadata resource "
+                        + metadataResource.getLocation() + " does not exist");
+            }
+        } catch (ResourceException e) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", error reading metadata resource " + metadataResource.getLocation() + " information", e);
+        }
     }
 }

@@ -18,6 +18,7 @@ package edu.internet2.middleware.shibboleth.metadata.query;
 
 import java.util.ArrayList;
 
+import org.opensaml.util.collections.CollectionSupport;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.testng.annotations.Test;
 
@@ -27,10 +28,10 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.MockMetadata;
 import edu.internet2.middleware.shibboleth.metadata.TagInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.CountingStage;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.MockSource;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SimplePipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.StaticSource;
 
 public class QueryControllerTest {
 
@@ -39,7 +40,7 @@ public class QueryControllerTest {
         CountingStage<Metadata<?>> countingStage = new CountingStage<Metadata<?>>();
         ArrayList<Stage<?>> postProcessStages = new ArrayList<Stage<?>>();
         postProcessStages.add(countingStage);
-        
+
         QueryController controller = new QueryController(buildPipeline(), 1, postProcessStages);
 
         // since the controller loads its metadata in a background thread we wait a second to let it do its thing
@@ -94,8 +95,14 @@ public class QueryControllerTest {
         mdElem3.getMetadataInfo().put(new EntityIdInfo("three"));
         mdElem3.getMetadataInfo().put(new TagInfo("test"));
 
-        MockSource mdSource = new MockSource(mdElem1, mdElem2, mdElem3);
+        StaticSource<MockMetadata> mdSource = new StaticSource<MockMetadata>();
+        mdSource.setId("source");
+        mdSource.setSourceMetadata(CollectionSupport.toList(mdElem1, mdElem2, mdElem3));
 
-        return new SimplePipeline<MockMetadata>("pipeline", mdSource, new ArrayList<Stage<MockMetadata>>());
+        SimplePipeline<MockMetadata> pipeline = new SimplePipeline<MockMetadata>();
+        pipeline.setId("pipeline");
+        pipeline.setSource(mdSource);
+
+        return pipeline;
     }
 }

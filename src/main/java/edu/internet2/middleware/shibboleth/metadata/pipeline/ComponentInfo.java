@@ -18,7 +18,7 @@ package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
-import org.opensaml.util.Strings;
+import org.opensaml.util.StringSupport;
 
 import edu.internet2.middleware.shibboleth.metadata.MetadataInfo;
 
@@ -50,7 +50,7 @@ public class ComponentInfo implements MetadataInfo {
      * 
      * @param component component which this info describes
      */
-    public ComponentInfo(Component component) {
+    public ComponentInfo(final Component component) {
         componentId = component.getId();
         componentType = component.getClass();
         startInstant = new DateTime(ISOChronology.getInstanceUTC());
@@ -70,8 +70,8 @@ public class ComponentInfo implements MetadataInfo {
      * 
      * @param id ID of the component that operated on the element
      */
-    public void setComponentId(String id) {
-        componentId = Strings.trimOrNull(id);
+    public void setComponentId(final String id) {
+        componentId = StringSupport.trimOrNull(id);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ComponentInfo implements MetadataInfo {
      * 
      * @param type type of the component that operated on the element
      */
-    public void setComponentType(Class<?> type) {
+    public void setComponentType(final Class<?> type) {
         componentType = type;
     }
 
@@ -106,7 +106,7 @@ public class ComponentInfo implements MetadataInfo {
      * 
      * @param instant instant when the component operation started
      */
-    public void setStartInstant(DateTime instant) {
+    public void setStartInstant(final DateTime instant) {
         startInstant = instant;
     }
 
@@ -120,10 +120,10 @@ public class ComponentInfo implements MetadataInfo {
     }
 
     /** Sets the complete instant of the component to now. */
-    public void setCompleteInstant(){
+    public void setCompleteInstant() {
         completeInstant = new DateTime(ISOChronology.getInstanceUTC());
     }
-    
+
     /**
      * Sets the instant when the component operation completed.
      * 

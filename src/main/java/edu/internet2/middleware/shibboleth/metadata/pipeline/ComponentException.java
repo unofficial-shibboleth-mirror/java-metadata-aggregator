@@ -20,7 +20,7 @@ package edu.internet2.middleware.shibboleth.metadata.pipeline;
 public class ComponentException extends Exception {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 6892206203449846566L;
+    private static final long serialVersionUID = 2083763618862431426L;
 
     /** Constructor. */
     public ComponentException() {
@@ -32,7 +32,7 @@ public class ComponentException extends Exception {
      * 
      * @param message exception message
      */
-    public ComponentException(String message) {
+    public ComponentException(final String message) {
         super(message);
     }
 
@@ -41,7 +41,7 @@ public class ComponentException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentException(Exception wrappedException) {
+    public ComponentException(final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -51,7 +51,7 @@ public class ComponentException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentException(String message, Exception wrappedException) {
+    public ComponentException(final String message, final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

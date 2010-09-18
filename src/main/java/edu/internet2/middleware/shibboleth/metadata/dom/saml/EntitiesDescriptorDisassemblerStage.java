@@ -20,9 +20,9 @@ import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 
-import org.opensaml.util.xml.Attributes;
-import org.opensaml.util.xml.Elements;
-import org.opensaml.util.xml.QNames;
+import org.opensaml.util.xml.AttributeSupport;
+import org.opensaml.util.xml.ElementSupport;
+import org.opensaml.util.xml.QNameSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -53,36 +53,10 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** Whether validUntil attributes on EntitiesDescriptors are pushed down to descendant EntityDescriptors. */
-    private boolean pushValidUntil;
+    private boolean pushValidUntil = true;
 
     /** Whether cacheDuration attributes on EntitiesDescriptors are pushed down to descendant EntityDescriptors. */
     private boolean pushCacheDuration;
-
-    /**
-     * Constructor.
-     * 
-     * @param stageId unique stage ID
-     */
-    public EntitiesDescriptorDisassemblerStage(String stageId) {
-        super(stageId);
-        pushValidUntil = true;
-        pushCacheDuration = false;
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param stageId unique stage ID
-     * @param pushDownValidUntil whether validUntil attributes on EntitiesDescriptors are pushed down to descendant
-     *            EntityDescriptors
-     * @param pushDownCacheDuration whether cacheDuration attributes on EntitiesDescriptors are pushed down to
-     *            descendant EntityDescriptors
-     */
-    public EntitiesDescriptorDisassemblerStage(String stageId, boolean pushDownValidUntil, boolean pushDownCacheDuration) {
-        super(stageId);
-        pushValidUntil = pushDownValidUntil;
-        pushCacheDuration = pushDownCacheDuration;
-    }
 
     /**
      * Get whether the validUntil attribute on an EntitiesDescriptor will be pushed down on to descendant
@@ -100,7 +74,10 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
      * 
      * @param pushDown true if validUntil attribute information is pushed down to EntityDescriptor elements
      */
-    public void setPushValidUntil(boolean pushDown) {
+    public synchronized void setPushValidUntil(final boolean pushDown) {
+        if (isInitialized()) {
+            return;
+        }
         pushValidUntil = pushDown;
     }
 
@@ -120,16 +97,18 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
      * 
      * @param pushDown true if cacheDuration attribute information is pushed down to EntityDescriptor elements
      */
-    public void setPushCacheDuration(boolean pushDown) {
+    public synchronized void setPushCacheDuration(final boolean pushDown) {
+        if (isInitialized()) {
+            return;
+        }
         pushCacheDuration = pushDown;
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> sourceCollection) {
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> sourceCollection) {
+        final ComponentInfo compInfo = new ComponentInfo(this);
 
-        ComponentInfo compInfo = new ComponentInfo(this);
-
-        SimpleMetadataCollection<DomMetadata> destinationCollection = new SimpleMetadataCollection<DomMetadata>();
+        final SimpleMetadataCollection<DomMetadata> destinationCollection = new SimpleMetadataCollection<DomMetadata>();
 
         Element metadataElement;
         for (DomMetadata sourceMetadata : sourceCollection) {
@@ -139,16 +118,16 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
             } else if (MetadataHelper.isEntityDescriptor(metadataElement)) {
                 destinationCollection.add(new DomMetadata(metadataElement));
             } else {
-                log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(), QNames
-                        .getNodeQName(metadataElement));
+                log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(),
+                        QNameSupport.getNodeQName(metadataElement));
             }
         }
 
-        compInfo.setCompleteInstant();
         for (DomMetadata element : destinationCollection) {
             element.getMetadataInfo().put(compInfo);
         }
 
+        compInfo.setCompleteInstant();
         return destinationCollection;
     }
 
@@ -161,11 +140,11 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
      * @param validUntil the validUntil attribute value from the ancestral EntitiesDescriptor, may be null
      * @param cacheDuration the cacheDuration attribute value from the ancestral EntitiesDescriptor, may be null
      */
-    protected void processEntitiesDescriptor(MetadataCollection<DomMetadata> metadataCollection,
-            Element entitiesDescriptor, String validUntil, String cacheDuration) {
+    protected void processEntitiesDescriptor(final MetadataCollection<DomMetadata> metadataCollection,
+            final Element entitiesDescriptor, final String validUntil, final String cacheDuration) {
         String desciptorValidUntil = null;
         if (pushValidUntil) {
-            desciptorValidUntil = Attributes.getAttributeValue(entitiesDescriptor,
+            desciptorValidUntil = AttributeSupport.getAttributeValue(entitiesDescriptor,
                     MetadataHelper.VALID_UNTIL_ATTIB_NAME);
             if (desciptorValidUntil == null) {
                 desciptorValidUntil = validUntil;
@@ -174,14 +153,14 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
 
         String descriptorCacheDuration = null;
         if (pushCacheDuration) {
-            descriptorCacheDuration = Attributes.getAttributeValue(entitiesDescriptor,
+            descriptorCacheDuration = AttributeSupport.getAttributeValue(entitiesDescriptor,
                     MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
             if (descriptorCacheDuration == null) {
                 descriptorCacheDuration = cacheDuration;
             }
         }
 
-        List<Element> children = Elements.getChildElements(entitiesDescriptor);
+        final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
             if (MetadataHelper.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(metadataCollection, child, desciptorValidUntil, descriptorCacheDuration);
@@ -204,22 +183,26 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
      * 
      * @return the constructed metadata element
      */
-    protected DomMetadata buildMetadataElement(Element entityDescriptor, String validUntil, String cacheDuration) {
-        String entityId = entityDescriptor.getAttributeNS(null, "entityID");
-        if (validUntil != null && !Attributes.hasAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME)) {
+    protected DomMetadata buildMetadataElement(final Element entityDescriptor, final String validUntil,
+            final String cacheDuration) {
+        final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
+
+        if (validUntil != null
+                && !AttributeSupport.hasAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME)) {
             log.debug("{} pipeline stage adding valid until of {} to entity descriptor {}", new Object[] { getId(),
                     validUntil, entityId });
-            Attributes.appendAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, validUntil);
+            AttributeSupport.appendAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, validUntil);
         }
 
         if (cacheDuration != null
-                && !Attributes.hasAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
+                && !AttributeSupport.hasAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
             log.debug("{} pipeline stage adding cacheDuration of {} to EntityDescriptor {}", new Object[] { getId(),
                     cacheDuration, entityId });
-            Attributes.appendAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME, cacheDuration);
+            AttributeSupport
+                    .appendAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME, cacheDuration);
         }
 
-        DomMetadata element = new DomMetadata(entityDescriptor);
+        final DomMetadata element = new DomMetadata(entityDescriptor);
         element.getMetadataInfo().put(new EntityIdInfo(entityDescriptor.getAttributeNS("null", entityId)));
         return new DomMetadata(entityDescriptor);
     }

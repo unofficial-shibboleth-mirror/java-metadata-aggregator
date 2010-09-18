@@ -23,7 +23,7 @@ import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 
-import org.opensaml.util.Closeables;
+import org.opensaml.util.CloseableSupport;
 import org.opensaml.util.xml.ParserPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +33,7 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SourceProcessingException;
@@ -49,7 +50,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     private final Logger log = LoggerFactory.getLogger(DomFilesystemSource.class);
 
     /** Pool of DOM parsers used to parse the XML file in to a DOM. */
-    private ParserPool parser;
+    private ParserPool parserPool;
 
     /** The file path to the DOM material provided by this source. May be a file or a directory. */
     private File sourceFile;
@@ -61,42 +62,48 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * Whether an error parsing one source file causes this entire {@link Source} to fail, or just excludes the material
      * from the offending source file.
      */
-    private boolean errorCausesSourceFailure;
+    private boolean errorCausesSourceFailure = true;
 
     /**
-     * Constructor.
+     * Gets the pool of DOM parsers used to parse the XML file in to a DOM.
      * 
-     * @param sourceId unique ID of this source
-     * @param parserPool pool of parsers used to parse the xml file
-     * @param sourcePath filesystem path to DOM material provided by this source, may be a file or directory, may not be
-     *            null
+     * @return pool of DOM parsers used to parse the XML file in to a DOM
      */
-    public DomFilesystemSource(String sourceId, ParserPool parserPool, String sourcePath) {
-        this(sourceId, parserPool, new File(sourcePath));
+    public ParserPool getParserPool() {
+        return parserPool;
     }
 
     /**
-     * Constructor.
+     * Sets the pool of DOM parsers used to parse the XML file in to a DOM.
      * 
-     * @param sourceId unique ID of this source
-     * @param parserPool pool of parsers used to parse the xml file
-     * @param source DOM material provided by this source, may be a file or directory, may not be null
+     * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
-    public DomFilesystemSource(String sourceId, ParserPool parserPool, File source) {
-        super(sourceId);
-        parser = parserPool;
+    public synchronized void setParserPool(final ParserPool pool) {
+        if (isInitialized()) {
+            return;
+        }
+        parserPool = pool;
+    }
+
+    /**
+     * Gets the path to the DOM material provided by this source. May be a file or a directory.
+     * 
+     * @return path to the DOM material provided by this source
+     */
+    public File getSource() {
+        return sourceFile;
+    }
+
+    /**
+     * Sets the path to the DOM material provided by this source. May be a file or a directory.
+     * 
+     * @param source path to the DOM material provided by this source
+     */
+    public synchronized void setSource(final File source) {
+        if (isInitialized()) {
+            return;
+        }
         sourceFile = source;
-        recurseDirectories = false;
-        errorCausesSourceFailure = true;
-    }
-
-    /**
-     * Gets the filesystem path to the DOM material provided by this source.
-     * 
-     * @return filesystem path to the DOM material provided by this source
-     */
-    public String getSourcePath() {
-        return sourceFile.getPath();
     }
 
     /**
@@ -113,7 +120,10 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * 
      * @param recurse whether directories will be recursively searched for XML input files
      */
-    public void setRecurseDirectories(boolean recurse) {
+    public synchronized void setRecurseDirectories(final boolean recurse) {
+        if (isInitialized()) {
+            return;
+        }
         recurseDirectories = recurse;
     }
 
@@ -131,16 +141,20 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * 
      * @param causesFailure whether an error parsing a single file causes the source to fail
      */
-    public void setErrorCausesSourceFailure(boolean causesFailure) {
+    public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
+        if (isInitialized()) {
+            return;
+        }
         errorCausesSourceFailure = causesFailure;
     }
 
     /** {@inheritDoc} */
     public MetadataCollection<DomMetadata> execute() throws SourceProcessingException {
+        final ComponentInfo compInfo = new ComponentInfo(this);
+        
+        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
-        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
-
-        ArrayList<File> sourceFiles = new ArrayList<File>();
+        final ArrayList<File> sourceFiles = new ArrayList<File>();
         getSourceFiles(sourceFile, sourceFiles);
 
         if (sourceFiles.isEmpty()) {
@@ -152,10 +166,12 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
         for (File source : sourceFiles) {
             dme = processSourceFile(source);
             if (dme != null) {
+                dme.getMetadataInfo().put(compInfo);
                 mec.add(dme);
             }
         }
 
+        compInfo.setCompleteInstant();
         return mec;
     }
 
@@ -167,7 +183,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * @param input the source input file, never null
      * @param collector the collector of XML input files
      */
-    protected void getSourceFiles(File input, List<File> collector) {
+    protected void getSourceFiles(final File input, final List<File> collector) {
         if (input.isFile()) {
             if (isXmlFile(input)) {
                 collector.add(input);
@@ -176,7 +192,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
         }
 
         // file must be a directory
-        File[] files = sourceFile.listFiles();
+        final File[] files = sourceFile.listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.isFile() || (file.isDirectory() && recurseDirectories)) {
@@ -193,7 +209,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * 
      * @return true of the file is an XML file, false if not
      */
-    protected boolean isXmlFile(File file) {
+    protected boolean isXmlFile(final File file) {
         return file.getName().endsWith(".xml");
     }
 
@@ -208,40 +224,41 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * @throws SourceProcessingException thrown if there is a problem reading in the metadata and
      *             {@link #errorCausesSourceFailure} is true
      */
-    protected DomMetadata processSourceFile(File source) throws SourceProcessingException {
+    protected DomMetadata processSourceFile(final File source) throws SourceProcessingException {
         FileInputStream xmlIn = null;
 
         try {
             log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
             xmlIn = new FileInputStream(source);
-            Document doc = parser.parse(xmlIn);
+            final Document doc = parserPool.parse(xmlIn);
             return new DomMetadata(doc.getDocumentElement());
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
-                String errMsg = getId() + " pipeline source unable to parse XML input file " + source.getPath();
-                log.error(errMsg, e);
-                throw new SourceProcessingException(errMsg, e);
+                throw new SourceProcessingException(getId() + " pipeline source unable to parse XML input file " + source.getPath(), e);
             } else {
                 log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
                         getId(), source.getPath(), e });
                 return null;
             }
         } finally {
-            Closeables.closeQuiety(xmlIn);
+            CloseableSupport.closeQuietly(xmlIn);
         }
     }
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        if (parser == null) {
-            log.error("Unable to initialize " + getId() + ", parser pool may not be null");
-            throw new ComponentInitializationException("ParserPool may not be null");
+        if (parserPool == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", ParserPool may not be null");
+        }
+
+        if (sourceFile == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", Source may not be null");
         }
 
         if (!sourceFile.exists() || !sourceFile.canRead()) {
-            log.error("Unable to initialize " + getId() + ", source file/directory " + sourceFile.getPath()
-                    + " can not be read");
-            throw new ComponentInitializationException("Unable to read source file/directory " + sourceFile.getPath());
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", source file/directory "
+                    + sourceFile.getPath() + " can not be read");
         }
     }
 }

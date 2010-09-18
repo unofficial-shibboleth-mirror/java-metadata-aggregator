@@ -47,7 +47,9 @@ public class EntityIdTransformStageTest {
         transforms.add(new EntityIdTransformStage.Md5Converter());
         transforms.add(new EntityIdTransformStage.Sha1Converter());
 
-        EntityIdTransformStage stage = new EntityIdTransformStage("test", transforms);
+        EntityIdTransformStage stage = new EntityIdTransformStage();
+        stage.setId("test");
+        stage.setIdTransformers(transforms);
         assert !stage.isInitialized();
 
         stage.initialize();

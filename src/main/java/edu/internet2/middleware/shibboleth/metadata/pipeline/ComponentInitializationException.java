@@ -20,7 +20,7 @@ package edu.internet2.middleware.shibboleth.metadata.pipeline;
 public class ComponentInitializationException extends ComponentException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -3053986427596885440L;
+    private static final long serialVersionUID = -2407898741991246063L;
 
     /** Constructor. */
     public ComponentInitializationException() {
@@ -32,7 +32,7 @@ public class ComponentInitializationException extends ComponentException {
      * 
      * @param message exception message
      */
-    public ComponentInitializationException(String message) {
+    public ComponentInitializationException(final String message) {
         super(message);
     }
 
@@ -41,7 +41,7 @@ public class ComponentInitializationException extends ComponentException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentInitializationException(Exception wrappedException) {
+    public ComponentInitializationException(final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -51,7 +51,7 @@ public class ComponentInitializationException extends ComponentException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentInitializationException(String message, Exception wrappedException) {
+    public ComponentInitializationException(final String message, final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

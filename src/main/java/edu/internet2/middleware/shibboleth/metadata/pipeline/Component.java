@@ -18,9 +18,7 @@ package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import org.joda.time.DateTime;
 
-/**
- * Base interface for all the components of a {@link Pipeline}, including the pipeline itself.
- */
+/** Base interface for all the components of a {@link Pipeline}, including the pipeline itself. */
 public interface Component {
 
     /**

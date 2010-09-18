@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.opensaml.util.Assert;
-import org.opensaml.util.Strings;
+import org.opensaml.util.StringSupport;
 import org.opensaml.util.collections.LazyList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +45,14 @@ import edu.internet2.middleware.shibboleth.metadata.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.TagInfo;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.PipelineProcessingException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.SimplePipeline;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.Source;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.StaticSource;
 
-/** Controller that responds to Metadata Query requests.*/
+/** Controller that responds to Metadata Query requests. */
 @Controller
 public class QueryController {
 
@@ -88,7 +88,7 @@ public class QueryController {
      * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
      *            requester
      */
-    public QueryController(Pipeline<?> pipeline, int updateInterval, List<Stage<?>> postProcessStages) {
+    public QueryController(final Pipeline<?> pipeline, final int updateInterval, final List<Stage<?>> postProcessStages) {
         this(pipeline, updateInterval, new Timer(true), postProcessStages);
     }
 
@@ -101,8 +101,8 @@ public class QueryController {
      * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
      *            requester
      */
-    public QueryController(Pipeline<?> pipeline, int updateInterval, Timer backgroundTaskTimer,
-            List<Stage<?>> postProcessStages) {
+    public QueryController(final Pipeline<?> pipeline, final int updateInterval, final Timer backgroundTaskTimer,
+            final List<Stage<?>> postProcessStages) {
         Assert.isNotNull(pipeline, "Metadata pipeline may not be null");
         mdPipeline = pipeline;
 
@@ -128,17 +128,28 @@ public class QueryController {
      * @throws PipelineProcessingException thrown if there is a problem running a query result set through a
      *             post-processing pipeline
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping(value = "/entities", method = RequestMethod.GET)
     @ModelAttribute(METADATA_MODEL_ATTRIB)
-    public MetadataCollection<Metadata<?>> queryMetadata(HttpServletRequest request) throws PipelineProcessingException {
-        List<String> searchTerms = getSearchTerms(request);
-        MetadataCollection<Metadata<?>> results = getMetadataElements(searchTerms);
+    public MetadataCollection queryMetadata(final HttpServletRequest request) throws PipelineProcessingException {
+        final List<String> searchTerms = getSearchTerms(request);
+        MetadataCollection results = getMetadataElements(searchTerms);
 
         if (results != null && !results.isEmpty()) {
-            Source<Metadata<?>> resultSource = new StaticSource<Metadata<?>>("postProcessSource", results);
-            SimplePipeline<Metadata<?>> resultPostProcess = new SimplePipeline("postprocess", resultSource,
-                    resultPostProcessStages);
+            final StaticSource resultSource = new StaticSource<Metadata>();
+            resultSource.setId("postProcessSource");
+            resultSource.setSourceMetadata(results);
+
+            final SimplePipeline resultPostProcess = new SimplePipeline();
+            resultPostProcess.setId("postProcess");
+            resultPostProcess.setSource(resultSource);
+            resultPostProcess.setStages(resultPostProcessStages);
+            try {
+                resultPostProcess.initialize();
+            } catch (ComponentInitializationException e) {
+                throw new PipelineProcessingException("Unable to initialize post-processing pipeline", e);
+            }
+
             results = resultPostProcess.execute();
         }
 
@@ -153,8 +164,8 @@ public class QueryController {
      * @param response current HTTP response
      */
     @ExceptionHandler(PipelineProcessingException.class)
-    public void handlePipelineProcessingException(PipelineProcessingException pe, HttpServletRequest request,
-            HttpServletResponse response) {
+    public void handlePipelineProcessingException(final PipelineProcessingException pe,
+            final HttpServletRequest request, final HttpServletResponse response) {
         try {
             log.debug("Error post-prcossing result set", pe);
             response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error post-processing query results");
@@ -170,19 +181,19 @@ public class QueryController {
      * 
      * @return the search terms given on the request URL
      */
-    protected List<String> getSearchTerms(HttpServletRequest request) {
-        String requestPath = request.getPathInfo();
+    protected List<String> getSearchTerms(final HttpServletRequest request) {
+        final String requestPath = request.getPathInfo();
         log.debug("Extracting search terms from path '{}'", requestPath);
 
-        int operationNameIndex = requestPath.indexOf("entities");
-        String concatSearchTerms = requestPath.substring(operationNameIndex + 9);
+        final int operationNameIndex = requestPath.indexOf("entities");
+        final String concatSearchTerms = requestPath.substring(operationNameIndex + 9);
 
-        String[] terms = concatSearchTerms.split("\\+");
+        final String[] terms = concatSearchTerms.split("\\+");
 
         String trimmedTerm;
-        ArrayList<String> searchTerms = new ArrayList<String>();
+        final ArrayList<String> searchTerms = new ArrayList<String>();
         for (String term : terms) {
-            trimmedTerm = Strings.trimOrNull(term);
+            trimmedTerm = StringSupport.trimOrNull(term);
             if (trimmedTerm != null) {
                 searchTerms.add(trimmedTerm);
             }
@@ -197,31 +208,31 @@ public class QueryController {
      * 
      * @return metadata elements labeled with all the given search terms
      */
-    protected MetadataCollection<Metadata<?>> getMetadataElements(List<String> searchTerms) {
+    protected MetadataCollection<Metadata<?>> getMetadataElements(final List<String> searchTerms) {
         log.debug("Searching for metaata elements matching the search terms: {}", searchTerms);
 
-        HashMap<String, List<Metadata<?>>> index = termIndex;
+        final HashMap<String, List<Metadata<?>>> index = termIndex;
 
-        SimpleMetadataCollection<Metadata<?>> mdc = new SimpleMetadataCollection<Metadata<?>>();
+        final SimpleMetadataCollection<Metadata<?>> mdc = new SimpleMetadataCollection<Metadata<?>>();
 
-        String firstTerm = searchTerms.get(0);
+        final String firstTerm = searchTerms.get(0);
         if (!index.containsKey(firstTerm)) {
             return mdc;
         }
 
-        List<Metadata<?>> searchResults = new ArrayList<Metadata<?>>(index.get(firstTerm));
+        final List<Metadata<?>> searchResults = new ArrayList<Metadata<?>>(index.get(firstTerm));
         searchTerms.remove(firstTerm);
-        log.debug("Starting with result list for search term '{}' containing {} elements", firstTerm, searchResults
-                .size());
+        log.debug("Starting with result list for search term '{}' containing {} elements", firstTerm,
+                searchResults.size());
 
         String searchTerm;
-        Iterator<String> termItr = searchTerms.iterator();
+        final Iterator<String> termItr = searchTerms.iterator();
         while (termItr.hasNext() && !searchResults.isEmpty()) {
             searchTerm = termItr.next();
             if (index.containsKey(searchTerm)) {
                 searchResults.retainAll(index.get(searchTerm));
-                log.debug("{} results left after removing results not indexed by search term '{}'", searchResults
-                        .size(), searchTerm);
+                log.debug("{} results left after removing results not indexed by search term '{}'",
+                        searchResults.size(), searchTerm);
             } else {
                 log.debug("No search results associated with term '{}', clearing search result list", searchTerm);
                 searchResults.clear();
@@ -241,8 +252,8 @@ public class QueryController {
      * 
      * @return true if the search term matched any {@link EntityIdInfo} for the given element, false otherwise
      */
-    protected boolean isEntityId(String searchTerm, Metadata<?> element) {
-        List<EntityIdInfo> idInfos = element.getMetadataInfo().get(EntityIdInfo.class);
+    protected boolean isEntityId(final String searchTerm, final Metadata<?> element) {
+        final List<EntityIdInfo> idInfos = element.getMetadataInfo().get(EntityIdInfo.class);
         if (idInfos == null || idInfos.isEmpty()) {
             return false;
         }
@@ -261,9 +272,9 @@ public class QueryController {
      * 
      * @param collection collection of metadata to be indexed
      */
-    protected void indexMetadata(MetadataCollection<?> collection) {
+    protected void indexMetadata(final MetadataCollection<?> collection) {
         log.debug("Indexing metadata collection containing {} elements", collection.size());
-        HashMap<String, List<Metadata<?>>> newIndex = new HashMap<String, List<Metadata<?>>>();
+        final HashMap<String, List<Metadata<?>>> newIndex = new HashMap<String, List<Metadata<?>>>();
 
         if (collection != null) {
             for (Metadata<?> metadata : collection) {
@@ -282,10 +293,10 @@ public class QueryController {
      * @param index index to be populated
      * @param metadata metadata to be added to the index
      */
-    protected void indexByEntityIds(HashMap<String, List<Metadata<?>>> index, Metadata<?> metadata) {
+    protected void indexByEntityIds(final HashMap<String, List<Metadata<?>>> index, final Metadata<?> metadata) {
         List<Metadata<?>> metadatasForTerm;
 
-        List<EntityIdInfo> idInfos = metadata.getMetadataInfo().get(EntityIdInfo.class);
+        final List<EntityIdInfo> idInfos = metadata.getMetadataInfo().get(EntityIdInfo.class);
         if (idInfos == null || idInfos.isEmpty()) {
             return;
         }
@@ -308,10 +319,10 @@ public class QueryController {
      * @param index index to be populated
      * @param metadata metadata to be added to the index
      */
-    protected void indexByTag(HashMap<String, List<Metadata<?>>> index, Metadata<?> metadata) {
+    protected void indexByTag(final HashMap<String, List<Metadata<?>>> index, final Metadata<?> metadata) {
         List<Metadata<?>> metadatasForTerm;
 
-        List<TagInfo> tagInfos = metadata.getMetadataInfo().get(TagInfo.class);
+        final List<TagInfo> tagInfos = metadata.getMetadataInfo().get(TagInfo.class);
         if (tagInfos == null || tagInfos.isEmpty()) {
             return;
         }
@@ -329,15 +340,15 @@ public class QueryController {
     }
 
     /** A task that updates the cached metadata. */
-    private class MetadataRefreshTask extends TimerTask {
+    private final class MetadataRefreshTask extends TimerTask {
 
         /** {@inheritDoc} */
         public void run() {
             try {
                 log.debug("Metadata refresh starting");
                 indexMetadata(mdPipeline.execute());
-                log.debug("Metadata refressh completed, next refresh will occur at approximately {}", new DateTime()
-                        .plus(mdUpdatePeriod));
+                log.debug("Metadata refressh completed, next refresh will occur at approximately {}",
+                        new DateTime().plus(mdUpdatePeriod));
             } catch (PipelineProcessingException e) {
                 // TODO
             }

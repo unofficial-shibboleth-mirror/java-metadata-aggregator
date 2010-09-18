@@ -16,47 +16,49 @@
 
 package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
-import org.opensaml.util.Assert;
+import java.util.Collection;
+
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.collections.CollectionSupport;
 
 import edu.internet2.middleware.shibboleth.metadata.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 
-/** Adapts a collection of metadata to the {@link Source} interface. */
+/**
+ * Adapts a collection of metadata to the {@link Source} interface. Each metadata element is cloned each time
+ * {@link #execute()} is invoked.
+ */
+@ThreadSafe
 public class StaticSource<MetadataType extends Metadata<?>> extends AbstractComponent implements Source<MetadataType> {
 
     /** Metadata returned by this source. */
-    private final MetadataCollection<MetadataType> source;
+    private MetadataCollection<MetadataType> source = new SimpleMetadataCollection<MetadataType>();
 
     /**
-     * Constructor.
+     * Gets the collection of metadata elements "produced" by this source.
      * 
-     * @param id ID of the source
-     * @param wrappedSource metadata returned by this source
+     * @return collection of metadata elements "produced" by this source
      */
-    public StaticSource(String id, MetadataCollection<MetadataType> wrappedSource) {
-        super(id);
-
-        Assert.isNotNull(wrappedSource, "Source MetadataCollection may not be null");
-        source = wrappedSource;
+    public Collection<MetadataType> getSourceMetadata() {
+        return source;
     }
 
     /**
-     * Constructor.
+     * Sets the collection of metadata elements "produced" by this source.
      * 
-     * @param id ID of the source
-     * @param wrappedSource metadata returned by this source
+     * @param metadatas collection of metadata elements "produced" by this source
      */
-    public StaticSource(String id, MetadataType... metadatas) {
-        super(id);
-        source = new SimpleMetadataCollection<MetadataType>();
-        for (MetadataType md : metadatas) {
-            source.add(md);
+    public synchronized void setSourceMetadata(final Collection<MetadataType> metadatas) {
+        if (isInitialized()) {
+            return;
         }
+        source = CollectionSupport.addNonNull(metadatas, new SimpleMetadataCollection<MetadataType>());
     }
 
     /** {@inheritDoc} */
     public MetadataCollection<MetadataType> execute() throws SourceProcessingException {
-        return source;
+        return source.copy();
     }
 }

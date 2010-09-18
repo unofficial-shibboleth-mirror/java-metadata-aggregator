@@ -30,7 +30,7 @@ public class MetadataInfoHelper {
      * @param infos collection of {@link MetadataInfo} items to be added to each {@link Metadata} element of the given
      *            collection
      */
-    public static void addToAll(MetadataCollection<?> metadataCollection, MetadataInfo... infos) {
+    public static void addToAll(final MetadataCollection<?> metadataCollection, final MetadataInfo... infos) {
         if (metadataCollection == null || infos == null || infos.length == 0) {
             return;
         }
@@ -46,7 +46,7 @@ public class MetadataInfoHelper {
      * @param metadata element to which {@link MetadataInfo} will be added
      * @param infos {@link MetadataInfo} to be added to the metadata element
      */
-    public static void addToAll(Metadata<?> metadata, MetadataInfo... infos) {
+    public static void addToAll(final Metadata<?> metadata, final MetadataInfo... infos) {
         if (metadata == null || infos == null || infos.length == 0) {
             return;
         }

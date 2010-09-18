@@ -16,62 +16,70 @@
 
 package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.opensaml.util.Assert;
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.collections.CollectionSupport;
+import org.opensaml.util.collections.LazyList;
 
 import edu.internet2.middleware.shibboleth.metadata.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /** A very simple implementation of {@link Pipeline}. This implementation takes a static source and list of stages. */
+@ThreadSafe
 public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractComponent implements
         Pipeline<MetadataType> {
 
     /** Source for this pipeline. */
-    private Source<MetadataType> source;
+    private Source<MetadataType> pipelineSource;
 
     /** Stages for this pipeline. */
-    private List<Stage<MetadataType>> stages;
-
-    /**
-     * Constructor.
-     * 
-     * @param id id of this pipeline
-     * @param pipelineSource source of this pipeline
-     * @param pipelineStages stages of this pipeline
-     */
-    public SimplePipeline(String id, Source<MetadataType> pipelineSource, List<Stage<MetadataType>> pipelineStages) {
-        super(id);
-        
-        Assert.isNotNull(pipelineSource, "Pipeline source may not be null");
-        source = pipelineSource;
-        
-        if(pipelineStages == null){
-            stages = Collections.emptyList();
-        }else{
-            stages = Collections.unmodifiableList(new ArrayList<Stage<MetadataType>>(pipelineStages));
-        }
-    }
+    private List<Stage<MetadataType>> pipelineStages = Collections.emptyList();
 
     /** {@inheritDoc} */
     public Source<MetadataType> getSource() {
-        return source;
+        return pipelineSource;
+    }
+
+    /**
+     * Sets the source that produces the initial set of metadata upon which this pipeline operates.
+     * 
+     * @param source source that produces the initial set of metadata upon which this pipeline operates
+     */
+    public synchronized void setSource(final Source<MetadataType> source) {
+        if (isInitialized()) {
+            return;
+        }
+        pipelineSource = source;
     }
 
     /** {@inheritDoc} */
     public List<Stage<MetadataType>> getStages() {
-        return stages;
+        return pipelineStages;
+    }
+
+    /**
+     * Sets the stages that make up this pipeline.
+     * 
+     * @param stages stages that make up this pipeline
+     */
+    public synchronized void setStages(final List<Stage<MetadataType>> stages) {
+        if (isInitialized()) {
+            return;
+        }
+        pipelineStages = Collections.unmodifiableList(CollectionSupport.addNonNull(stages,
+                new LazyList<Stage<MetadataType>>()));
     }
 
     /** {@inheritDoc} */
     public MetadataCollection<MetadataType> execute() throws PipelineProcessingException {
-        ComponentInfo compInfo = new ComponentInfo(this);
-        MetadataCollection<MetadataType> metadataCollection = source.execute();
+        final ComponentInfo compInfo = new ComponentInfo(this);
 
-        for (Stage<MetadataType> stage : stages) {
+        MetadataCollection<MetadataType> metadataCollection = pipelineSource.execute();
+        for (Stage<MetadataType> stage : pipelineStages) {
             metadataCollection = stage.execute(metadataCollection);
         }
 
@@ -82,9 +90,18 @@ public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractCo
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        source.initialize();
-        for (Stage<MetadataType> stage : stages) {
-            stage.initialize();
+        if (pipelineSource == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", Source may not be null");
+        }
+
+        if (!pipelineSource.isInitialized()) {
+            pipelineSource.initialize();
+        }
+
+        for (Stage<MetadataType> stage : pipelineStages) {
+            if (!stage.isInitialized()) {
+                stage.initialize();
+            }
         }
     }
 }

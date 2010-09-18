@@ -52,7 +52,8 @@ public class MetadataSerializerViewAdapter implements View {
      * @param viewType media type serviced by this view
      * @param metadataSerializer serializer for resultant metadata collections
      */
-    public MetadataSerializerViewAdapter(MediaType viewType, MetadataSerializer<Metadata<?>> metadataSerializer) {
+    public MetadataSerializerViewAdapter(final MediaType viewType,
+            final MetadataSerializer<Metadata<?>> metadataSerializer) {
         Assert.isNotNull(viewType, "View media type may not be null");
         mediaType = viewType;
 
@@ -67,9 +68,9 @@ public class MetadataSerializerViewAdapter implements View {
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public void render(Map<String, ?> model, HttpServletRequest httpRequest, HttpServletResponse httpResponse)
-            throws Exception {
-        MetadataCollection<Metadata<?>> metadataCollection = (MetadataCollection<Metadata<?>>) model
+    public void render(final Map<String, ?> model, final HttpServletRequest httpRequest,
+            final HttpServletResponse httpResponse) throws Exception {
+        final MetadataCollection<Metadata<?>> metadataCollection = (MetadataCollection<Metadata<?>>) model
                 .get(QueryController.METADATA_MODEL_ATTRIB);
 
         if (metadataCollection == null || metadataCollection.isEmpty()) {
@@ -80,16 +81,16 @@ public class MetadataSerializerViewAdapter implements View {
         OutputStream out = httpResponse.getOutputStream();
 
         String acceptEncoding = httpRequest.getHeader("Accept-Encoding");
-        if(acceptEncoding != null){
-            if(acceptEncoding.contains("gzip")){
+        if (acceptEncoding != null) {
+            if (acceptEncoding.contains("gzip")) {
                 httpResponse.setHeader("Content-Encoding", "gzip");
                 out = new GZIPOutputStream(out);
-            }else if(acceptEncoding.contains("compress")){
+            } else if (acceptEncoding.contains("compress")) {
                 httpResponse.setHeader("Content-Encoding", "compress");
                 out = new DeflaterOutputStream(out);
             }
         }
-        
+
         try {
             serializer.serialize(metadataCollection, out);
             out.flush();

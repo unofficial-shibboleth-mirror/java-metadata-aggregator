@@ -16,6 +16,8 @@
 
 package edu.internet2.middleware.shibboleth.metadata.dom;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.w3c.dom.Element;
 
 import edu.internet2.middleware.shibboleth.metadata.AbstractMetadata;
@@ -24,25 +26,26 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataInfo;
 import edu.internet2.middleware.shibboleth.metadata.util.MetadataInfoHelper;
 
 /** A metadata element whose data is a DOM, version 3, {@link Element}. */
+@ThreadSafe
 public class DomMetadata extends AbstractMetadata<Element> {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -6308292147361514467L;
+    private static final long serialVersionUID = 8677951541031584666L;
 
     /**
      * Constructor.
      * 
      * @param metadata DOM metadata element
      */
-    public DomMetadata(Element metadata) {
+    public DomMetadata(final Element metadata) {
         super();
         setMetadata(metadata);
     }
 
     /** {@inheritDoc} */
     public Metadata<Element> copy() {
-        Element domClone = (Element) getMetadata().cloneNode(true);
-        DomMetadata clone = new DomMetadata(domClone);
+        final Element domClone = (Element) getMetadata().cloneNode(true);
+        final DomMetadata clone = new DomMetadata(domClone);
         MetadataInfoHelper.addToAll(clone, getMetadataInfo().values().toArray(new MetadataInfo[] {}));
         return clone;
     }

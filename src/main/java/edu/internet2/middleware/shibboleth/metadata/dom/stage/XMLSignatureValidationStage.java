@@ -17,15 +17,17 @@
 package edu.internet2.middleware.shibboleth.metadata.dom.stage;
 
 import java.security.PublicKey;
+import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.List;
+
+import net.jcip.annotations.ThreadSafe;
 
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xml.security.signature.XMLSignatureException;
-import org.opensaml.util.Assert;
-import org.opensaml.util.xml.Elements;
-import org.opensaml.util.xml.Serialize;
+import org.opensaml.util.xml.ElementSupport;
+import org.opensaml.util.xml.SerializeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -33,6 +35,7 @@ import org.w3c.dom.Element;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -42,38 +45,66 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingExce
  * This stage will filter out any element in the metadata collection that is not signed, if a signature is required, or
  * whose signature is invalid.
  */
+@ThreadSafe
 public class XMLSignatureValidationStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureValidationStage.class);
 
     /** Whether metadata is required to be signed. */
-    private final boolean signatureRequired;
+    private boolean signatureRequired = true;
 
     /** Public key used to verify the metadata signature. */
-    private final PublicKey verificationKey;
+    private PublicKey verificationKey;
 
     /**
-     * Constructor.
-     * 
-     * @param stageId unique stage ID
-     * @param isSignatureRequired whether metadata is required to be signed
-     * @param key key used to verify the metadata
+     * @return the signatureRequired
      */
-    public XMLSignatureValidationStage(String stageId, boolean isSignatureRequired, PublicKey key) {
-        super(stageId);
+    public boolean isSignatureRequired() {
+        return signatureRequired;
+    }
 
-        signatureRequired = isSignatureRequired;
+    /**
+     * @param required the signatureRequired to set
+     */
+    public synchronized void setSignatureRequired(final boolean required) {
+        if (isInitialized()) {
+            return;
+        }
+        signatureRequired = required;
+    }
 
-        Assert.isNotNull(key, "Verification key may not be null");
+    /**
+     * @return the verificationKey
+     */
+    public PublicKey getVerificationKey() {
+        return verificationKey;
+    }
+
+    /**
+     * @param key the verificationKey to set
+     */
+    public synchronized void setVerificationKey(final PublicKey key) {
+        if (isInitialized()) {
+            return;
+        }
         verificationKey = key;
     }
 
+    public synchronized void setVerificationKey(final X509Certificate certificate) {
+        if (isInitialized()) {
+            return;
+        }
+        if (certificate != null) {
+            verificationKey = certificate.getPublicKey();
+        }
+    }
+
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadatas)
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadatas)
             throws StageProcessingException {
         if (!metadatas.isEmpty()) {
-            Iterator<DomMetadata> mdItr = metadatas.iterator();
+            final Iterator<DomMetadata> mdItr = metadatas.iterator();
             if (!signatureVerified(mdItr.next().getMetadata())) {
                 mdItr.remove();
             }
@@ -89,8 +120,8 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
      * 
      * @throws StageProcessingException thrown if the given root element contains more than on signature
      */
-    protected boolean signatureVerified(Element root) throws StageProcessingException {
-        Element signatureElement = getSignatureElement(root);
+    protected boolean signatureVerified(final Element root) throws StageProcessingException {
+        final Element signatureElement = getSignatureElement(root);
         if (signatureElement == null) {
             if (signatureRequired) {
                 log.debug("Metadata was not signed and signature is required");
@@ -101,11 +132,11 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
             }
         }
         if (log.isDebugEnabled()) {
-            log.debug("XML document contained Signature element\n{}", Serialize.prettyPrintXML(signatureElement));
+            log.debug("XML document contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
         }
 
         log.debug("Creating XML security library XMLSignature object");
-        XMLSignature signature = null;
+        final XMLSignature signature;
         try {
             signature = new XMLSignature(signatureElement, "");
         } catch (XMLSecurityException e) {
@@ -121,7 +152,7 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
         } catch (XMLSignatureException e) {
             if (log.isDebugEnabled()) {
                 log.debug("Signature on the following metadata element did not validate \n {}",
-                        Serialize.prettyPrintXML(root));
+                        SerializeSupport.prettyPrintXML(root));
             }
         }
 
@@ -135,8 +166,8 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
      * 
      * @return the signature element, or null
      */
-    protected Element getSignatureElement(Element root) throws StageProcessingException {
-        List<Element> sigElements = Elements.getChildElementsByTagNameNS(root,
+    protected Element getSignatureElement(final Element root) throws StageProcessingException {
+        final List<Element> sigElements = ElementSupport.getChildElementsByTagNameNS(root,
                 XMLSignatureSigningStage.XML_SIG_BASE_URI, "Signature");
 
         if (sigElements.isEmpty()) {
@@ -148,5 +179,13 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
         }
 
         return sigElements.get(0);
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        if (verificationKey == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", VerificationKey must not be null");
+        }
     }
 }

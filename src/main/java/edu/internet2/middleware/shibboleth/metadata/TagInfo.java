@@ -16,10 +16,13 @@
 
 package edu.internet2.middleware.shibboleth.metadata;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.opensaml.util.Assert;
-import org.opensaml.util.Strings;
+import org.opensaml.util.StringSupport;
 
 /** A {@link MetadataInfo} that associates a tag with a given metadata element. */
+@ThreadSafe
 public class TagInfo implements MetadataInfo {
 
     /** Serial version UID. */
@@ -33,8 +36,8 @@ public class TagInfo implements MetadataInfo {
      * 
      * @param elementTag a tag for a metadata element
      */
-    public TagInfo(String elementTag) {
-        tag = Strings.trimOrNull(elementTag);
+    public TagInfo(final String elementTag) {
+        tag = StringSupport.trimOrNull(elementTag);
         Assert.isNotNull(tag, "Tag may not be null or empty");
     }
 

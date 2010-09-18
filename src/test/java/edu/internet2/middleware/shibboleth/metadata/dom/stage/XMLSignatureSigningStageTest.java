@@ -22,8 +22,8 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.opensaml.util.xml.Serialize;
-import org.opensaml.util.xml.StaticBasicParserPool;
+import org.opensaml.util.xml.BasicParserPool;
+import org.opensaml.util.xml.SerializeSupport;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
@@ -39,7 +39,7 @@ public class XMLSignatureSigningStageTest {
 
     @Test
     public void testSigning() throws Exception {
-        StaticBasicParserPool parserPool = new StaticBasicParserPool();
+        BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
         Document doc = parserPool.parse(XMLSchemaValidationStageTest.class
                 .getResourceAsStream("/data/samlMetadata.xml"));
@@ -48,14 +48,15 @@ public class XMLSignatureSigningStageTest {
         mdCol.add(new DomMetadata(doc.getDocumentElement()));
 
         Security.addProvider(new BouncyCastleProvider());
-        PrivateKey signingKey = CryptReader.readPemPrivateKey(XMLSchemaValidationStageTest.class
-                .getResourceAsStream("/data/signingKey.pem"), null);
+        PrivateKey signingKey = CryptReader.readPemPrivateKey(
+                XMLSchemaValidationStageTest.class.getResourceAsStream("/data/signingKey.pem"), null);
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSchemaValidationStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
         ArrayList<X509Certificate> certs = new ArrayList<X509Certificate>();
         certs.add(signingCert);
 
-        XMLSignatureSigningStage stage = new XMLSignatureSigningStage("test");
+        XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
+        stage.setId("test");
         stage.setIncludeKeyValue(true);
         stage.setIncludeX509IssuerSerial(true);
         stage.setPrivKey(signingKey);
@@ -63,6 +64,6 @@ public class XMLSignatureSigningStageTest {
         stage.initialize();
 
         mdCol = stage.execute(mdCol);
-        System.out.println(Serialize.prettyPrintXML(mdCol.iterator().next().getMetadata()));
+        System.out.println(SerializeSupport.prettyPrintXML(mdCol.iterator().next().getMetadata()));
     }
 }

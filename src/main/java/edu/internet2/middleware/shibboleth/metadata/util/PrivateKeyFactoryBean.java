@@ -39,7 +39,7 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      * 
      * @param res resource providing the PEM encoded private key, never null
      */
-    public void setPrivateKeyResource(Resource res) {
+    public void setPrivateKeyResource(final Resource res) {
         privKeyRes = res;
     }
 
@@ -48,7 +48,7 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      * 
      * @param password password for the private key, may be null if key is not encrypted
      */
-    public void setPrivateKeyPassword(String password) {
+    public void setPrivateKeyPassword(final String password) {
         privKeyPass = password;
     }
 

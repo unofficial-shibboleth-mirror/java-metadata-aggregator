@@ -18,34 +18,22 @@ package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import edu.internet2.middleware.shibboleth.metadata.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
-import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingException;
 
 public class CountingStage<MetadataType extends Metadata<?>> extends AbstractComponent implements Stage<MetadataType> {
 
     private int counter = 0;
 
     public CountingStage() {
-        this("CountingStage");
-    }
-
-    public CountingStage(String id) {
-        super(id);
+        setId("CountingStage");
     }
 
     public int getCount() {
         return counter;
     }
 
-    public MetadataCollection<MetadataType> execute(MetadataCollection<MetadataType> metadataCollection)
+    public MetadataCollection<MetadataType> execute(final MetadataCollection<MetadataType> metadataCollection)
             throws StageProcessingException {
         counter += 1;
         return metadataCollection;
-    }
-
-    protected void doInitialize() throws ComponentInitializationException {
-
     }
 }

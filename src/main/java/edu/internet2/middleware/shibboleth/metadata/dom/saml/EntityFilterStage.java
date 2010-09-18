@@ -24,10 +24,12 @@ import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
 
-import org.opensaml.util.Objects;
-import org.opensaml.util.xml.Elements;
-import org.opensaml.util.xml.QNames;
-import org.opensaml.util.xml.Types;
+import org.opensaml.util.ObjectSupport;
+import org.opensaml.util.collections.CollectionSupport;
+import org.opensaml.util.collections.LazySet;
+import org.opensaml.util.xml.DomTypeSupport;
+import org.opensaml.util.xml.ElementSupport;
+import org.opensaml.util.xml.QNameSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -38,9 +40,7 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
-/**
- * A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria.
- */
+/** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
 public class EntityFilterStage extends AbstractComponent implements Stage<DomMetadata> {
 
@@ -76,13 +76,13 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
     // TODO white/blacklist bindings, extensions
 
     /** Entities which are white/black listed depending on the value of {@link #whitelistingEntities}. */
-    private Collection<String> designatedEntities;
+    private Collection<String> designatedEntities = new LazySet<String>();
 
     /** Whether {@link #designatedEntities} should be considered a whitelist or a blacklist. Default value: false */
     private boolean whitelistingEntities;
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
-    private Collection<QName> designatedRoles;
+    private Collection<QName> designatedRoles = new LazySet<QName>();
 
     /** Whether {@link #designatedRoles} should be considered a whitelist or a blacklist. Default value: false */
     private boolean whitelistingRoles;
@@ -91,32 +91,13 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * Whether EntityDescriptor metadata elements that do not contain roles, after filtering, should be removed. Default
      * value: true
      */
-    private boolean removeRolelessEntities;
+    private boolean removeRolelessEntities = true;
 
     /** Indicates that Organization elements should be removed from EntityDescriptors. Default value: true */
-    private boolean removeOrganization;
+    private boolean removeOrganization = true;
 
     /** Indicates that ContactPerson elements should be removed from EntityDescriptors. Default value: true */
-    private boolean removeContactPerson;
-
-    /**
-     * Constructor.
-     * 
-     * @param stageId unique stage ID
-     */
-    public EntityFilterStage(String stageId) {
-        super(stageId);
-
-        designatedEntities = new ArrayList<String>();
-        whitelistingEntities = false;
-
-        designatedRoles = new ArrayList<QName>();
-        whitelistingRoles = false;
-
-        removeRolelessEntities = true;
-        removeOrganization = true;
-        removeContactPerson = true;
-    }
+    private boolean removeContactPerson = true;
 
     /**
      * Gets the list of designated entity IDs.
@@ -132,12 +113,11 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param ids list of designated entity IDs
      */
-    public void setDesignatedEntities(Collection<String> ids) {
-        ArrayList<String> newIds = new ArrayList<String>();
-        if (ids != null) {
-            newIds.addAll(ids);
+    public synchronized void setDesignatedEntities(final Collection<String> ids) {
+        if (isInitialized()) {
+            return;
         }
-        designatedEntities = newIds;
+        designatedEntities = CollectionSupport.addNonNull(ids, new LazySet<String>());
     }
 
     /**
@@ -154,7 +134,10 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
-    public void setWhitelistingEntities(boolean whitelisting) {
+    public synchronized void setWhitelistingEntities(final boolean whitelisting) {
+        if (isInitialized()) {
+            return;
+        }
         whitelistingEntities = whitelisting;
     }
 
@@ -172,12 +155,11 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param roles list of designated entity roles
      */
-    public void setDesignatedRoles(Collection<QName> roles) {
-        ArrayList<QName> newRoles = new ArrayList<QName>();
-        if (roles != null) {
-            newRoles.addAll(roles);
+    public synchronized void setDesignatedRoles(final Collection<QName> roles) {
+        if (isInitialized()) {
+            return;
         }
-        designatedRoles = newRoles;
+        designatedRoles = CollectionSupport.addNonNull(roles, new LazySet<QName>());
     }
 
     /**
@@ -194,7 +176,10 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
-    public void setWhitelistingRoles(boolean whitelisting) {
+    public synchronized void setWhitelistingRoles(final boolean whitelisting) {
+        if (isInitialized()) {
+            return;
+        }
         whitelistingRoles = whitelisting;
     }
 
@@ -212,7 +197,10 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param remove whether EntityDescriptor elements without roles (after filtering) should be removed altogether
      */
-    public void setRemoveRolelessEntities(boolean remove) {
+    public synchronized void setRemoveRolelessEntities(final boolean remove) {
+        if (isInitialized()) {
+            return;
+        }
         removeRolelessEntities = remove;
     }
 
@@ -230,7 +218,10 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param remove whether Organization elements should be removed from EntityDescriptor elements
      */
-    public void setRemoveOrganization(boolean remove) {
+    public synchronized void setRemoveOrganization(final boolean remove) {
+        if (isInitialized()) {
+            return;
+        }
         removeOrganization = remove;
     }
 
@@ -248,15 +239,18 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @param remove whether ContactPerson elements should be removed from EntityDescriptor elements
      */
-    public void setRemoveContactPerson(boolean remove) {
+    public synchronized void setRemoveContactPerson(final boolean remove) {
+        if (isInitialized()) {
+            return;
+        }
         removeContactPerson = remove;
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
-        ComponentInfo compInfo = new ComponentInfo(this);
-        ArrayList<DomMetadata> markedForRemoval = new ArrayList<DomMetadata>();
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection) {
+        final ComponentInfo compInfo = new ComponentInfo(this);
 
+        final ArrayList<DomMetadata> markedForRemoval = new ArrayList<DomMetadata>();
         Element descriptor;
         for (DomMetadata metadata : metadataCollection) {
             descriptor = metadata.getMetadata();
@@ -266,11 +260,11 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
         }
         metadataCollection.removeAll(markedForRemoval);
 
-        compInfo.setCompleteInstant();
         for (DomMetadata element : metadataCollection) {
             element.getMetadataInfo().put(compInfo);
         }
 
+        compInfo.setCompleteInstant();
         return metadataCollection;
     }
 
@@ -281,8 +275,8 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @return true if the given entity descriptor itself should be filtered out, false otherwise
      */
-    protected boolean filterEntityDescriptor(Element entityDescriptor) {
-        String entityId = entityDescriptor.getAttributeNS(null, "entityID");
+    protected boolean filterEntityDescriptor(final Element entityDescriptor) {
+        final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
         if (!designatedEntities.isEmpty()) {
             // if we're whitelisting entities and this entity isn't in the list, kick it out
@@ -292,16 +286,14 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
             } else {
                 // we're backlisting entities, if the entity is in the list, kick it out
                 if (designatedEntities.contains(entityId)) {
-                    log
-                            .debug("{} pipeline stage removing entity {} because it was on the blacklist", getId(),
-                                    entityId);
+                    log.debug("{} pipeline stage removing entity {} because it was on the blacklist", getId(), entityId);
                     return true;
                 }
             }
         }
 
         // filter the internal elements of the entity
-        List<Element> children = Elements.getChildElements(entityDescriptor);
+        final List<Element> children = ElementSupport.getChildElements(entityDescriptor);
         for (Element child : children) {
             filterRoleDescriptor(entityId, entityDescriptor, child);
             filterOrganization(entityId, entityDescriptor, child);
@@ -311,9 +303,9 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
         // if requested, kick out entities that don't have any roles at this point
         if (removeRolelessEntities) {
             for (Element child : children) {
-                if (Objects.equalsAny(QNames.getNodeQName(child), ROLE_DESCRIPTOR_NAME, IDP_SSO_DESCRIPTOR_NAME,
-                        SP_SSO_DESCRIPTOR_NAME, AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME,
-                        PDP_DESCRIPTOR_NAME)) {
+                if (ObjectSupport.equalsAny(QNameSupport.getNodeQName(child), ROLE_DESCRIPTOR_NAME,
+                        IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME, AUTHN_AUTHORITY_DESCRIPTOR_NAME,
+                        ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME)) {
                     log.debug("{} pipeline stage removing entity {} because it no longer contains roles", getId(),
                             entityId);
                     return true;
@@ -332,7 +324,8 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * @param entityDescriptor the entity descriptor from which the role elements are to be removed
      * @param childElement a child element of the entity descriptor
      */
-    protected void filterRoleDescriptor(String entityId, Element entityDescriptor, Element childElement) {
+    protected void filterRoleDescriptor(final String entityId, final Element entityDescriptor,
+            final Element childElement) {
         if (designatedRoles.isEmpty()) {
             return;
         }
@@ -341,19 +334,17 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
 
         boolean isDesignatedRole = false;
         QName roleIdentifier = null;
-
-        QName elementName = QNames.getNodeQName(childElement);
-
         // check if the element is a <RoleDescriptor> and if its schema type is a designated role
-        if (Elements.isElementNamed(childElement, ROLE_DESCRIPTOR_NAME)) {
-            roleIdentifier = Types.getXSIType(childElement);
+        if (ElementSupport.isElementNamed(childElement, ROLE_DESCRIPTOR_NAME)) {
+            roleIdentifier = DomTypeSupport.getXSIType(childElement);
             if (roleIdentifier != null && !designatedRoles.contains(roleIdentifier)) {
                 isDesignatedRole = true;
             }
         }
 
+        QName elementName = QNameSupport.getNodeQName(childElement);
         // check if the element is a SAML specified role and it is a designated role
-        if (Objects.equalsAny(elementName, IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
+        if (ObjectSupport.equalsAny(elementName, IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
                 AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME)) {
             roleIdentifier = elementName;
             if (!designatedRoles.contains(roleIdentifier)) {
@@ -380,12 +371,12 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * @param entityDescriptor the entity descriptor from which the organization element is to be removed
      * @param childElement a child element of the entity descriptor
      */
-    protected void filterOrganization(String entityId, Element entityDescriptor, Element childElement) {
+    protected void filterOrganization(final String entityId, final Element entityDescriptor, final Element childElement) {
         if (!removeOrganization) {
             return;
         }
 
-        if (Elements.isElementNamed(childElement, ORGANIZTION_NAME)) {
+        if (ElementSupport.isElementNamed(childElement, ORGANIZTION_NAME)) {
             log.debug("{} pipeline stage removing Organization from EntityDescriptor {}", getId(), entityId);
             entityDescriptor.removeChild(childElement);
         }
@@ -398,12 +389,12 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * @param entityDescriptor the entity descriptor from which the contact person element is to be removed
      * @param childElement a child element of the entity descriptor
      */
-    protected void filterContactPerson(String entityId, Element entityDescriptor, Element childElement) {
+    protected void filterContactPerson(final String entityId, final Element entityDescriptor, final Element childElement) {
         if (!removeContactPerson) {
             return;
         }
 
-        if (Elements.isElementNamed(childElement, CONTACT_PERSON_NAME)) {
+        if (ElementSupport.isElementNamed(childElement, CONTACT_PERSON_NAME)) {
             log.debug("{} pipeline stage removing ContactPerson from EntityDescriptor {}", getId(), entityId);
             entityDescriptor.removeChild(childElement);
         }

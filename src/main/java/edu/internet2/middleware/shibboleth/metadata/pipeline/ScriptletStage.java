@@ -28,8 +28,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.Strings;
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ import edu.internet2.middleware.shibboleth.metadata.Metadata;
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 
 /** A pipeline stage that computes that transforms the collection of metadata via a script. */
+@ThreadSafe
 public class ScriptletStage extends AbstractComponent implements Stage<Metadata<?>> {
 
     /** Name of the scriptlet attribute, {@value} , containing the metadata collection to be transformed. */
@@ -46,7 +48,7 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
 
     /** Name of the scripting language in use. */
-    private String scriptLanguage;
+    private String scriptLanguage = "ecmascript";
 
     /** Filesystem path script file. */
     private File scriptFile;
@@ -58,50 +60,53 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
     private CompiledScript compiledScript;
 
     /**
-     * Constructor.
+     * Gets the scripting language used.
      * 
-     * @param id ID of this stage
-     * @param lang name of the script language engine
-     * @param path file system path to the script to be executed
+     * @return scripting language used
      */
-    public ScriptletStage(String id, String lang, String path) {
-        super(id);
-
-        scriptLanguage = Strings.trimOrNull(lang);
-        Assert.isNull(scriptLanguage, "Scripting language may not be null or empty");
-
-        scriptFile = new File(path);
-        Assert.isTrue(scriptFile.exists(), "Script file " + path + " does not exist");
-        Assert.isTrue(scriptFile.canRead(), "Script file " + path + " is not readbale");
+    public String getScriptLanguage() {
+        return scriptLanguage;
     }
 
-    /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
-        ScriptEngineManager sem = new ScriptEngineManager();
-        scriptEngine = sem.getEngineByName(scriptLanguage);
-
-        try {
-            if (scriptEngine != null && scriptEngine instanceof Compilable) {
-                compiledScript = ((Compilable) scriptEngine).compile(new FileReader(scriptFile));
-            }
-        } catch (ScriptException e) {
-            String errMsg = getId()
-                    + " unable to compile even though the scripting engine supports this functionality.";
-            log.error(errMsg, e);
-            throw new ComponentInitializationException(errMsg, e);
-        } catch (IOException e) {
-            String errMsg = getId() + " unable to read script file " + scriptFile.getPath();
-            log.error(errMsg, e);
-            throw new ComponentInitializationException(errMsg, e);
+    /**
+     * Sets the scripting language used.
+     * 
+     * @param language scripting language used
+     */
+    public synchronized void setScriptLanguage(final String language) {
+        if (isInitialized()) {
+            return;
         }
+        scriptLanguage = StringSupport.trimOrNull(language);
+    }
+
+    /**
+     * Gets the script file used.
+     * 
+     * @return script file used
+     */
+    public File getScriptFile() {
+        return scriptFile;
+    }
+
+    /**
+     * Sets the script file used.
+     * 
+     * @param file script file used
+     */
+    public synchronized void setScriptFile(final File file) {
+        if (isInitialized()) {
+            return;
+        }
+        scriptFile = file;
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public MetadataCollection<Metadata<?>> execute(MetadataCollection<Metadata<?>> metadataCollection)
+    public MetadataCollection<Metadata<?>> execute(final MetadataCollection<Metadata<?>> metadataCollection)
             throws StageProcessingException {
 
-        Bindings bindings = scriptEngine.createBindings();
+        final Bindings bindings = scriptEngine.createBindings();
         bindings.put(METADATA, metadataCollection);
 
         try {
@@ -120,6 +125,38 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
             String errMsg = getId() + " pipeline stage unable to read script file " + scriptFile.getPath();
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        if (scriptLanguage == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", ScriptLanguage may not be null");
+        }
+
+        if (scriptFile == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", Source may not be null");
+        }
+
+        if (!scriptFile.exists() || !scriptFile.canRead()) {
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", source file/directory "
+                    + scriptFile.getPath() + " can not be read");
+        }
+
+        ScriptEngineManager sem = new ScriptEngineManager();
+        scriptEngine = sem.getEngineByName(scriptLanguage);
+
+        try {
+            if (scriptEngine != null && scriptEngine instanceof Compilable) {
+                compiledScript = ((Compilable) scriptEngine).compile(new FileReader(scriptFile));
+            }
+        } catch (ScriptException e) {
+            throw new ComponentInitializationException(
+                    "Unable to initialize " + getId() + ", unable to compile script", e);
+        } catch (IOException e) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", unable to read script file", e);
         }
     }
 }

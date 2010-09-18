@@ -36,7 +36,7 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
      * 
      * @param res resource providing the PEM encoded certificate chain
      */
-    public void setCertificateChainResource(Resource res) {
+    public void setCertificateChainResource(final Resource res) {
         certChainRes = res;
     }
 

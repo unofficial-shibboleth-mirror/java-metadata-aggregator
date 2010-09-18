@@ -34,7 +34,7 @@ public abstract class AbstractMetadata<MetadataType> implements Metadata<Metadat
     private MetadataType metadata;
 
     /** Additional information associated with the metadata. */
-    private ClassToInstanceMultiMap<MetadataInfo> elementInfo;
+    private final ClassToInstanceMultiMap<MetadataInfo> elementInfo;
 
     /** Constructor. */
     protected AbstractMetadata() {
@@ -51,7 +51,7 @@ public abstract class AbstractMetadata<MetadataType> implements Metadata<Metadat
      * 
      * @param entityMetadata the metadata
      */
-    protected void setMetadata(MetadataType entityMetadata) {
+    synchronized protected void setMetadata(final MetadataType entityMetadata) {
         metadata = entityMetadata;
     }
 

@@ -36,13 +36,13 @@ import net.jcip.annotations.NotThreadSafe;
 public final class ClassToInstanceMultiMap<B> {
 
     /** Whether supertypes should also be indexed. */
-    private boolean indexSupertypes;
+    private final boolean indexSupertypes;
 
     /** Map which backs this map. */
-    private HashMap<Class<?>, List<B>> backingMap;
+    private final HashMap<Class<?>, List<B>> backingMap;
 
     /** List of values that are indexed. */
-    private List<B> values;
+    private final List<B> values;
 
     /** Constructor. Does not index supertypes. */
     public ClassToInstanceMultiMap() {
@@ -54,7 +54,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @param indexSupertypes indicates whether supertypes of a value should be indexed
      */
-    public ClassToInstanceMultiMap(boolean indexSupertypes) {
+    public ClassToInstanceMultiMap(final boolean indexSupertypes) {
         backingMap = new HashMap<Class<?>, List<B>>();
         values = new ArrayList<B>();
         this.indexSupertypes = indexSupertypes;
@@ -73,7 +73,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @return true if the map contains a mapping for the specified key
      */
-    public boolean containsKey(Class<?> key) {
+    public boolean containsKey(final Class<?> key) {
         if (key == null) {
             return false;
         }
@@ -88,7 +88,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @return true if the map contains a mapping to the specified value
      */
-    public boolean containsValue(B value) {
+    public boolean containsValue(final B value) {
         if (value == null) {
             return false;
         }
@@ -104,12 +104,12 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @return instances mapped to the given type or an empty list, immutable, list otherwise
      */
-    public <T extends B> List<T> get(Class<T> type) {
+    public <T extends B> List<T> get(final Class<T> type) {
         if (type == null) {
             return Collections.emptyList();
         }
 
-        List<T> values = (List<T>) backingMap.get(type);
+        final List<T> values = (List<T>) backingMap.get(type);
         if (values == null) {
             return Collections.emptyList();
         }
@@ -145,7 +145,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @param value value to be stored in the map
      */
-    public void put(B value) {
+    public void put(final B value) {
         if (value == null) {
             return;
         }
@@ -154,7 +154,7 @@ public final class ClassToInstanceMultiMap<B> {
             values.add(value);
         }
 
-        ArrayList<Class<?>> valueTypes = new ArrayList<Class<?>>();
+        final ArrayList<Class<?>> valueTypes = new ArrayList<Class<?>>();
         valueTypes.add(value.getClass());
 
         if (indexSupertypes) {
@@ -181,7 +181,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(Iterable<? extends B> values) {
+    public void putAll(final Iterable<? extends B> values) {
         if (values == null) {
             return;
         }
@@ -200,7 +200,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(ClassToInstanceMultiMap<? extends B> values) {
+    public void putAll(final ClassToInstanceMultiMap<? extends B> values) {
         if (values == null) {
             return;
         }
@@ -227,14 +227,14 @@ public final class ClassToInstanceMultiMap<B> {
      * @param clazz class for which supertypes will be determined
      * @param accumulator collection to which supertypes are added as they are determined
      */
-    private void getSuperTypes(Class<?> clazz, ArrayList<Class<?>> accumulator) {
-        Class<?> superclass = clazz.getSuperclass();
+    private void getSuperTypes(final Class<?> clazz, final ArrayList<Class<?>> accumulator) {
+        final Class<?> superclass = clazz.getSuperclass();
         if (superclass != null && superclass != Object.class) {
             accumulator.add(superclass);
             getSuperTypes(superclass, accumulator);
         }
 
-        Class<?>[] interfaces = clazz.getInterfaces();
+        final Class<?>[] interfaces = clazz.getInterfaces();
         if (interfaces.length > 0) {
             for (Class<?> iface : interfaces) {
                 accumulator.add(iface);

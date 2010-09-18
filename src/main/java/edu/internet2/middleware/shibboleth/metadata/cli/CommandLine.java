@@ -36,17 +36,17 @@ public final class CommandLine {
      */
     public static void main(String[] args) throws Exception {
 
-        ApplicationContext springContext = buildApplicationContext(args);
+        final ApplicationContext springContext = buildApplicationContext(args);
 
-        Pipeline pipeline = springContext.getBean(Pipeline.class);
-        MetadataSerializer serializer = springContext.getBean(MetadataSerializer.class);
-        File outputFile = springContext.getBean(File.class);
+        final Pipeline pipeline = springContext.getBean(Pipeline.class);
+        final MetadataSerializer serializer = springContext.getBean(MetadataSerializer.class);
+        final File outputFile = springContext.getBean(File.class);
 
-        MetadataCollection metadataCollection = pipeline.execute();
+        final MetadataCollection metadataCollection = pipeline.execute();
         serializer.serialize(metadataCollection, new FileOutputStream(outputFile));
     }
 
-    private static ApplicationContext buildApplicationContext(String[] contextFiles) {
+    private static ApplicationContext buildApplicationContext(final String[] contextFiles) {
         FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(contextFiles);
         context.start();
         return context;

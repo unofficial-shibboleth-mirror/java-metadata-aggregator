@@ -18,7 +18,9 @@ package edu.internet2.middleware.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.opensaml.util.collections.CollectionSupport;
 import org.testng.annotations.Test;
 
 import edu.internet2.middleware.shibboleth.metadata.Metadata;
@@ -36,16 +38,29 @@ public class PipelineJoinerSourceTest {
     @Test
     public void test() throws Exception {
         MockMetadata md1 = new MockMetadata("one");
-        Pipeline<Metadata<?>> pipeline1 = new SimplePipeline("p1", new MockSource(md1), null);
+        StaticSource<MockMetadata> source1 = new StaticSource<MockMetadata>();
+        source1.setId("src1");
+        source1.setSourceMetadata(CollectionSupport.toList(md1));
+        SimplePipeline<MockMetadata> pipeline1 = new SimplePipeline<MockMetadata>();
+        pipeline1.setId("p1");
+        pipeline1.setSource(source1);
 
         MockMetadata md2 = new MockMetadata("two");
-        Pipeline<Metadata<?>> pipeline2 = new SimplePipeline("p2", new MockSource(md2), null);
+        StaticSource<MockMetadata> source2 = new StaticSource<MockMetadata>();
+        source2.setId("src2");
+        source2.setSourceMetadata(CollectionSupport.toList(md2));
+        SimplePipeline<MockMetadata> pipeline2 = new SimplePipeline<MockMetadata>();
+        pipeline2.setId("p2");
+        pipeline2.setSource(source2);
 
-        Collection<Pipeline<Metadata<?>>> joinedPipelines = new ArrayList<Pipeline<Metadata<?>>>();
+        Collection<Pipeline<MockMetadata>> joinedPipelines = new ArrayList<Pipeline<MockMetadata>>();
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
-
-        PipelineJoinerSource joinSource = new PipelineJoinerSource("joinSource", joinedPipelines);
+        
+        PipelineJoinerSource joinSource = new PipelineJoinerSource();
+        joinSource.setId("joinSource");
+        joinSource.setJoinedPipelines((List)CollectionSupport.toList(pipeline1, pipeline2));
+        
         assert !joinSource.isInitialized();
         assert !pipeline1.isInitialized();
         assert !pipeline2.isInitialized();

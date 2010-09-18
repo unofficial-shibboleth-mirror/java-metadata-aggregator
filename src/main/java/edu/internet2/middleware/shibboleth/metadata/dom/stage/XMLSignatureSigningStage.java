@@ -43,9 +43,12 @@ import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.Strings;
-import org.opensaml.util.xml.QNames;
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.StringSupport;
+import org.opensaml.util.collections.CollectionSupport;
+import org.opensaml.util.collections.LazyList;
+import org.opensaml.util.xml.QNameSupport;
 import org.opensaml.util.xml.XmlConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +60,7 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializationException;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Pipeline;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
@@ -66,6 +70,7 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingExce
  * A {@link Pipeline} stage that creates, and adds, an enveloped signature for each element in the given metadata
  * collection.
  */
+@ThreadSafe
 public class XMLSignatureSigningStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** The variant of SHA to use in the various signature algorithms. */
@@ -135,7 +140,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     private KeyInfoFactory keyInfoFactory;
 
     /** SHA algorithm variant used in signature and digest algorithms. */
-    private ShaVariant shaVariant;
+    private ShaVariant shaVariant = ShaVariant.SHA256;
 
     /** Private key used to sign data. */
     private PrivateKey privKey;
@@ -156,7 +161,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     private String digestAlgo;
 
     /** Whether to use exclusive canonicalization. */
-    private boolean c14nExclusive;
+    private boolean c14nExclusive = true;
 
     /** Whether to include comments in the canonicalized data. */
     private boolean c14nWithComments;
@@ -177,10 +182,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     private List<String> keyNames;
 
     /** Whether additional key names should be derived from the end-entity certificate, if present. */
-    private boolean deriveKeyNames;
+    private boolean deriveKeyNames = true;
 
     /** Whether key names should be included in the signature's KeyInfo. */
-    private boolean includeKeyNames;
+    private boolean includeKeyNames = true;
 
     /** Whether the public key should be included in the signature's KeyInfo. */
     private boolean includeKeyValue;
@@ -189,7 +194,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     private boolean includeX509SubjectName;
 
     /** Whether the certificates chain should be included in the signature's KeyInfo. */
-    private boolean includeX509Certificates;
+    private boolean includeX509Certificates = true;
 
     /** Whether the CRLs should be included in the signature's KeyInfo. */
     private boolean includeX509Crls;
@@ -198,42 +203,24 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     private boolean includeX509IssuerSerial;
 
     /**
-     * Constructor. Sets SHA variant to SHA256.
+     * Gets the SHA algorithm variant used when computing the signature and digest.
      * 
-     * @param id ID of this stage
+     * @return SHA algorithm variant used when computing the signature and digest
      */
-    public XMLSignatureSigningStage(String id) {
-        this(id, ShaVariant.SHA256);
+    public ShaVariant getShaVariant() {
+        return shaVariant;
     }
 
     /**
-     * Constructor.
+     * Sets the SHA algorithm variant used when computing the signature and digest.
      * 
-     * @param id ID of this stage
-     * @param variant SHA variant to use in the signing and digest algorithms
+     * @param variant SHA algorithm variant used when computing the signature and digest
      */
-    public XMLSignatureSigningStage(String id, ShaVariant variant) {
-        super(id);
-
-        Assert.isNotNull(variant, "SHA variant must not be null");
+    public synchronized void setShaVariant(final ShaVariant variant) {
+        if (isInitialized()) {
+            return;
+        }
         shaVariant = variant;
-
-        c14nExclusive = true;
-        c14nWithComments = false;
-        deriveKeyNames = true;
-        includeKeyNames = true;
-        includeKeyValue = false;
-        includeX509Certificates = true;
-        includeX509Crls = false;
-        includeX509IssuerSerial = false;
-
-        idAttributeNames = new ArrayList<QName>();
-        idAttributeNames.add(new QName("id"));
-        idAttributeNames.add(new QName("Id"));
-        idAttributeNames.add(new QName("ID"));
-        idAttributeNames.add(XmlConstants.XML_ID_ATTRIB_NAME);
-
-        // TODO inclusive prefix list
     }
 
     /**
@@ -250,7 +237,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param key private key used to sign the content
      */
-    public void setPrivKey(PrivateKey key) {
+    public synchronized void setPrivKey(final PrivateKey key) {
+        if (isInitialized()) {
+            return;
+        }
         privKey = key;
     }
 
@@ -268,7 +258,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param key public key associated with private key used to sign the content
      */
-    public void setPubKey(PublicKey key) {
+    public synchronized void setPubKey(final PublicKey key) {
+        if (isInitialized()) {
+            return;
+        }
         pubKey = key;
     }
 
@@ -288,8 +281,11 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param certs certificates associated with the key used to sign the content
      */
-    public void setCertificates(List<X509Certificate> certs) {
-        certificates = certs;
+    public synchronized void setCertificates(final List<X509Certificate> certs) {
+        if (isInitialized()) {
+            return;
+        }
+        certificates = CollectionSupport.addNonNull(certs, new LazyList<X509Certificate>());
     }
 
     /**
@@ -306,8 +302,11 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param revocationLists CRLs associated with certificates
      */
-    public void setCrls(List<X509CRL> revocationLists) {
-        crls = revocationLists;
+    public synchronized void setCrls(final List<X509CRL> revocationLists) {
+        if (isInitialized()) {
+            return;
+        }
+        crls = CollectionSupport.addNonNull(revocationLists, new LazyList<X509CRL>());
     }
 
     /**
@@ -324,7 +323,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param isExclusive whether exclusive canonicalization will be used
      */
-    public void setC14nExclusive(boolean isExclusive) {
+    public synchronized void setC14nExclusive(final boolean isExclusive) {
+        if (isInitialized()) {
+            return;
+        }
         c14nExclusive = isExclusive;
     }
 
@@ -342,8 +344,11 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param withComments whether comments are canonicalized
      */
-    public void setC14nWithComments(boolean withComments) {
-        this.c14nWithComments = withComments;
+    public synchronized void setC14nWithComments(final boolean withComments) {
+        if (isInitialized()) {
+            return;
+        }
+        c14nWithComments = withComments;
     }
 
     /**
@@ -360,8 +365,11 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param prefixList inclusive prefix list used during exclusive canonicalization
      */
-    public void setInclusivePrefixList(List<String> prefixList) {
-        inclusivePrefixList = prefixList;
+    public synchronized void setInclusivePrefixList(final List<String> prefixList) {
+        if (isInitialized()) {
+            return;
+        }
+        inclusivePrefixList = CollectionSupport.addNonNull(prefixList, new LazyList<String>());
     }
 
     /**
@@ -378,8 +386,11 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param names names of the attributes treated as reference IDs
      */
-    public void setIdAttributeNames(List<QName> names) {
-        idAttributeNames = names;
+    public synchronized void setIdAttributeNames(final List<QName> names) {
+        if (isInitialized()) {
+            return;
+        }
+        idAttributeNames = CollectionSupport.addNonNull(names, new LazyList<QName>());
     }
 
     /**
@@ -396,8 +407,11 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param names explicit key names added to the KeyInfo
      */
-    public void setKeyNames(List<String> names) {
-        keyNames = names;
+    public synchronized void setKeyNames(final List<String> names) {
+        if (isInitialized()) {
+            return;
+        }
+        keyNames = CollectionSupport.addNonNull(names, new LazyList<String>());
     }
 
     /**
@@ -414,7 +428,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param deriveNames whether key names are derived from the end-entity certificate
      */
-    public void setDeriveKeyNames(boolean deriveNames) {
+    public synchronized void setDeriveKeyNames(final boolean deriveNames) {
+        if (isInitialized()) {
+            return;
+        }
         deriveKeyNames = deriveNames;
     }
 
@@ -432,7 +449,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param include whether key names are included in the KeyInfo
      */
-    public void setIncludeKeyNames(boolean include) {
+    public synchronized void setIncludeKeyNames(final boolean include) {
+        if (isInitialized()) {
+            return;
+        }
         includeKeyNames = include;
     }
 
@@ -450,7 +470,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param included whether key values are included in the KeyInfo
      */
-    public void setIncludeKeyValue(boolean included) {
+    public synchronized void setIncludeKeyValue(final boolean included) {
+        if (isInitialized()) {
+            return;
+        }
         includeKeyValue = included;
     }
 
@@ -468,7 +491,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param include whether end-entity certifcate's subject name is included in the KeyInfo
      */
-    public void setIncludeX509SubjectName(boolean include) {
+    public synchronized void setIncludeX509SubjectName(final boolean include) {
+        if (isInitialized()) {
+            return;
+        }
         includeX509SubjectName = include;
     }
 
@@ -486,7 +512,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param include whether X509 certificates are included in the KeyInfo
      */
-    public void setIncludeX509Certificates(boolean include) {
+    public synchronized void setIncludeX509Certificates(final boolean include) {
+        if (isInitialized()) {
+            return;
+        }
         includeX509Certificates = include;
     }
 
@@ -504,7 +533,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param include whether CRLs are included in the KeyInfo
      */
-    public void setIncludeX509Crls(boolean include) {
+    public synchronized void setIncludeX509Crls(final boolean include) {
+        if (isInitialized()) {
+            return;
+        }
         includeX509Crls = include;
     }
 
@@ -522,7 +554,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      * 
      * @param include whether the end-entity certificate's issuer and serial number are included in the KeyInfo
      */
-    public void setIncludeX509IssuerSerial(boolean include) {
+    public synchronized void setIncludeX509IssuerSerial(final boolean include) {
+        if (isInitialized()) {
+            return;
+        }
         includeX509IssuerSerial = include;
     }
 
@@ -542,6 +577,279 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      */
     public String getDigestAlgo() {
         return digestAlgo;
+    }
+
+    /** {@inheritDoc} */
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection)
+            throws StageProcessingException {
+        final ComponentInfo compInfo = new ComponentInfo(this);
+
+        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
+        Element element;
+        XMLSignature signature;
+        DomMetadata signedMetadata;
+        for (DomMetadata metadata : metadataCollection) {
+            element = metadata.getMetadata();
+
+            signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
+            try {
+                signature.sign(new DOMSignContext(privKey, element));
+            } catch (Exception e) {
+                log.error("Unable to create signature for element", e);
+                throw new StageProcessingException("Unable to create signature for element", e);
+            }
+            signedMetadata = new DomMetadata(element);
+            signedMetadata.getMetadataInfo().put(compInfo);
+            mec.add(signedMetadata);
+        }
+
+        compInfo.setCompleteInstant();
+        return mec;
+    }
+
+    /**
+     * Gets the descriptor of signed content.
+     * 
+     * @param target the element that will be signed
+     * 
+     * @return signed content descriptor
+     * 
+     * @throws StageProcessingException thrown if there is a problem create the signed content descriptor
+     */
+    protected SignedInfo buildSignedInfo(final Element target) throws StageProcessingException {
+        C14NMethodParameterSpec c14nMethodSpec = null;
+        if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
+                && !inclusivePrefixList.isEmpty()) {
+            c14nMethodSpec = new ExcC14NParameterSpec(inclusivePrefixList);
+        }
+
+        CanonicalizationMethod c14nMethod;
+        try {
+            c14nMethod = xmlSigFactory.newCanonicalizationMethod(c14nAlgo, c14nMethodSpec);
+        } catch (Exception e) {
+            String errMsg = "Unable to create transform " + c14nAlgo;
+            log.error(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
+        }
+
+        SignatureMethod sigMethod;
+        try {
+            sigMethod = xmlSigFactory.newSignatureMethod(sigAlgo, null);
+        } catch (Exception e) {
+            String errMsg = "Unable to create signature method " + sigAlgo;
+            log.error(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
+        }
+
+        final List<Reference> refs = Collections.singletonList(buildSignatureReference(target));
+
+        return xmlSigFactory.newSignedInfo(c14nMethod, sigMethod, refs);
+    }
+
+    /**
+     * Builds the references to the signed content.
+     * 
+     * @param target the element to be signed
+     * 
+     * @return reference to signed content
+     * 
+     * @throws StageProcessingException thrown if there is a problem creating the reference to the element
+     */
+    protected Reference buildSignatureReference(final Element target) throws StageProcessingException {
+        final String id = getElementId(target);
+        final String refUri;
+        if (id == null) {
+            refUri = "";
+        } else {
+            refUri = "#" + id;
+        }
+
+        DigestMethod digestMethod = null;
+        try {
+            DigestMethodParameterSpec digestMethodSpec = null;
+            digestMethod = xmlSigFactory.newDigestMethod(digestAlgo, digestMethodSpec);
+        } catch (Exception e) {
+            String errMsg = "Unable to create digest method " + digestAlgo;
+            log.error(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
+        }
+
+        TransformParameterSpec transformSpec;
+        final ArrayList<Transform> transforms = new ArrayList<Transform>();
+
+        try {
+            transformSpec = null;
+            transforms.add(xmlSigFactory.newTransform(TRANSFORM_ENVELOPED_SIGNATURE, transformSpec));
+        } catch (Exception e) {
+            String errMsg = "Unable to create transform " + TRANSFORM_ENVELOPED_SIGNATURE;
+            log.error(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
+        }
+
+        try {
+            if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
+                    && !inclusivePrefixList.isEmpty()) {
+                transformSpec = new ExcC14NParameterSpec(inclusivePrefixList);
+            }
+            transforms.add(xmlSigFactory.newTransform(c14nAlgo, transformSpec));
+        } catch (Exception e) {
+            String errMsg = "Unable to create transform " + c14nAlgo;
+            log.error(errMsg, e);
+            throw new StageProcessingException(errMsg, e);
+        }
+
+        return xmlSigFactory.newReference(refUri, digestMethod, transforms, null, null);
+    }
+
+    /**
+     * Determines the ID for the element to be signed. To determine the ID first, all the element attributes are
+     * inspected, if one matches the provided {@link #idAttributeNames} then the value of the attribute is used as the
+     * ID value. If no ID attribute names are given, or none of the given ones match, and one or more of the attributes
+     * is marked as an ID attribute (i.e. {@link Attr#isId()} is true), then the value of one of those attributes is
+     * used.
+     * 
+     * @param target an element to be referenced by the signature
+     * 
+     * @return the ID value for the element, or null
+     */
+    protected String getElementId(final Element target) {
+        final NamedNodeMap attributes = target.getAttributes();
+        if (attributes == null || attributes.getLength() > 1) {
+            return null;
+        }
+
+        Attr attribute;
+        String value;
+        if (idAttributeNames != null && !idAttributeNames.isEmpty()) {
+            for (int i = 0; i < attributes.getLength(); i++) {
+                attribute = (Attr) attributes.item(i);
+                if (idAttributeNames.contains(QNameSupport.getNodeQName(attribute))) {
+                    value = StringSupport.trimOrNull(attribute.getValue());
+                    if (value != null) {
+                        return value;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < attributes.getLength(); i++) {
+            attribute = (Attr) attributes.item(i);
+            if (attribute.isId()) {
+                value = StringSupport.trimOrNull(attribute.getValue());
+                if (value != null) {
+                    return value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Builds the KeyInfo element to be included in the signature.
+     * 
+     * @return KeyInfo element to be included in the signature
+     * 
+     * @throws StageProcessingException thrown if there is a problem creating the KeyInfo descriptor
+     */
+    protected KeyInfo buildKeyInfo() throws StageProcessingException {
+        final ArrayList<Object> keyInfoItems = new ArrayList<Object>();
+
+        addKeyNames(keyInfoItems);
+        addKeyValue(keyInfoItems);
+        addX509Data(keyInfoItems);
+
+        return keyInfoFactory.newKeyInfo(keyInfoItems);
+    }
+
+    /**
+     * Adds key names to the KeyInfo, if key names are to be included.
+     * 
+     * @param keyInfoItems collector for KeyInfo children
+     * 
+     * @throws StageProcessingException thrown if there is a problem creating the KeyName content
+     */
+    protected void addKeyNames(final ArrayList<Object> keyInfoItems) throws StageProcessingException {
+        if (!includeKeyNames) {
+            return;
+        }
+
+        if (keyNames != null && !keyNames.isEmpty()) {
+            for (String name : keyNames) {
+                keyInfoItems.add(keyInfoFactory.newKeyName(name));
+            }
+        }
+
+        if (deriveKeyNames) {
+            // TODO derived key names
+        }
+    }
+
+    /**
+     * Adds raw key values to the KeyInfo if key values are to be included.
+     * 
+     * @param keyInfoItems collector for KeyInfo children
+     * 
+     * @throws StageProcessingException thrown if there is a problem creating the KeyValue content
+     */
+    protected void addKeyValue(final ArrayList<Object> keyInfoItems) throws StageProcessingException {
+        if (!includeKeyValue) {
+            return;
+        }
+
+        PublicKey key = pubKey;
+        if (key == null && certificates != null) {
+            X509Certificate cert = certificates.get(0);
+            if (cert != null) {
+                key = cert.getPublicKey();
+            }
+        }
+        if (key != null) {
+            try {
+                keyInfoItems.add(keyInfoFactory.newKeyValue(pubKey));
+            } catch (Exception e) {
+                log.error("Unable to create KeyValue", e);
+                throw new StageProcessingException("Unable to create KeyValue", e);
+            }
+        }
+    }
+
+    /**
+     * Adds X509 data (subject names, certificates, CRLs, and Issuer/Serial) set to be included, into the key info.
+     * 
+     * @param keyInfoItems collector for KeyInfo children
+     * 
+     * @throws StageProcessingException thrown if there is a problem creating the X509Data content
+     */
+    protected void addX509Data(final ArrayList<Object> keyInfoItems) throws StageProcessingException {
+        final ArrayList<Object> x509Data = new ArrayList<Object>();
+
+        if (certificates != null && !certificates.isEmpty()) {
+            X509Certificate endEntityCert = certificates.get(0);
+
+            if (includeX509SubjectName) {
+                X500Principal subjectDn = endEntityCert.getSubjectX500Principal();
+                keyInfoItems.add(subjectDn.getName(X500Principal.RFC2253));
+            }
+
+            if (includeX509Certificates) {
+                x509Data.addAll(certificates);
+            }
+
+            if (includeX509IssuerSerial) {
+                X500Principal issuerDn = endEntityCert.getIssuerX500Principal();
+                BigInteger serialNumber = endEntityCert.getSerialNumber();
+                x509Data.add(keyInfoFactory.newX509IssuerSerial(issuerDn.getName(X500Principal.RFC2253), serialNumber));
+            }
+        }
+
+        if (includeX509Crls && crls != null && !crls.isEmpty()) {
+            x509Data.add(crls);
+        }
+
+        if (!x509Data.isEmpty()) {
+            keyInfoItems.add(keyInfoFactory.newX509Data(x509Data));
+        }
     }
 
     /** {@inheritDoc} */
@@ -584,273 +892,13 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
                 c14nAlgo = ALGO_ID_C14N_OMIT_COMMENTS;
             }
         }
-    }
 
-    /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
-
-        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
-
-        Element element;
-        XMLSignature signature;
-        for (DomMetadata metadata : metadataCollection) {
-            element = metadata.getMetadata();
-
-            signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
-            try {
-                signature.sign(new DOMSignContext(privKey, element));
-            } catch (Exception e) {
-                log.error("Unable to create signature for element", e);
-                throw new StageProcessingException("Unable to create signature for element", e);
-            }
-            mec.add(new DomMetadata(element));
-        }
-
-        return mec;
-    }
-
-    /**
-     * Gets the descriptor of signed content.
-     * 
-     * @param target the element that will be signed
-     * 
-     * @return signed content descriptor
-     * 
-     * @throws StageProcessingException thrown if there is a problem create the signed content descriptor
-     */
-    protected SignedInfo buildSignedInfo(Element target) throws StageProcessingException {
-        C14NMethodParameterSpec c14nMethodSpec = null;
-        if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
-                && !inclusivePrefixList.isEmpty()) {
-            c14nMethodSpec = new ExcC14NParameterSpec(inclusivePrefixList);
-        }
-        CanonicalizationMethod c14nMethod;
-        try {
-            c14nMethod = xmlSigFactory.newCanonicalizationMethod(c14nAlgo, c14nMethodSpec);
-        } catch (Exception e) {
-            String errMsg = "Unable to create transform " + c14nAlgo;
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
-        }
-
-        SignatureMethod sigMethod;
-        try {
-            sigMethod = xmlSigFactory.newSignatureMethod(sigAlgo, null);
-        } catch (Exception e) {
-            String errMsg = "Unable to create signature method " + sigAlgo;
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
-        }
-
-        List<Reference> refs = Collections.singletonList(buildSignatureReference(target));
-
-        return xmlSigFactory.newSignedInfo(c14nMethod, sigMethod, refs);
-    }
-
-    /**
-     * Builds the references to the signed content.
-     * 
-     * @param target the element to be signed
-     * 
-     * @return reference to signed content
-     * 
-     * @throws StageProcessingException thrown if there is a problem creating the reference to the element
-     */
-    protected Reference buildSignatureReference(Element target) throws StageProcessingException {
-        String id = getElementId(target);
-        String refUri;
-        if (id == null) {
-            refUri = "";
-        } else {
-            refUri = "#" + id;
-        }
-
-        DigestMethod digestMethod = null;
-        try {
-            DigestMethodParameterSpec digestMethodSpec = null;
-            digestMethod = xmlSigFactory.newDigestMethod(digestAlgo, digestMethodSpec);
-        } catch (Exception e) {
-            String errMsg = "Unable to create digest method " + digestAlgo;
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
-        }
-
-        TransformParameterSpec transformSpec;
-        ArrayList<Transform> transforms = new ArrayList<Transform>();
-
-        try {
-            transformSpec = null;
-            transforms.add(xmlSigFactory.newTransform(TRANSFORM_ENVELOPED_SIGNATURE, transformSpec));
-        } catch (Exception e) {
-            String errMsg = "Unable to create transform " + TRANSFORM_ENVELOPED_SIGNATURE;
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
-        }
-
-        try {
-            if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
-                    && !inclusivePrefixList.isEmpty()) {
-                transformSpec = new ExcC14NParameterSpec(inclusivePrefixList);
-            }
-            transforms.add(xmlSigFactory.newTransform(c14nAlgo, transformSpec));
-        } catch (Exception e) {
-            String errMsg = "Unable to create transform " + c14nAlgo;
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
-        }
-
-        return xmlSigFactory.newReference(refUri, digestMethod, transforms, null, null);
-    }
-
-    /**
-     * Determines the ID for the element to be signed. To determine the ID first, all the element attributes are
-     * inspected, if one matches the provided {@link #idAttributeNames} then the value of the attribute is used as the
-     * ID value. If no ID attribute names are given, or none of the given ones match, and one or more of the attributes
-     * is marked as an ID attribute (i.e. {@link Attr#isId()} is true), then the value of one of those attributes is
-     * used.
-     * 
-     * @param target an element to be referenced by the signature
-     * 
-     * @return the ID value for the element, or null
-     */
-    protected String getElementId(Element target) {
-        NamedNodeMap attributes = target.getAttributes();
-        if (attributes == null || attributes.getLength() > 1) {
-            return null;
-        }
-
-        Attr attribute;
-        String value;
-        if (idAttributeNames != null && !idAttributeNames.isEmpty()) {
-            for (int i = 0; i < attributes.getLength(); i++) {
-                attribute = (Attr) attributes.item(i);
-                if (idAttributeNames.contains(QNames.getNodeQName(attribute))) {
-                    value = Strings.trimOrNull(attribute.getValue());
-                    if (value != null) {
-                        return value;
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < attributes.getLength(); i++) {
-            attribute = (Attr) attributes.item(i);
-            if (attribute.isId()) {
-                value = Strings.trimOrNull(attribute.getValue());
-                if (value != null) {
-                    return value;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Builds the KeyInfo element to be included in the signature.
-     * 
-     * @return KeyInfo element to be included in the signature
-     * 
-     * @throws StageProcessingException thrown if there is a problem creating the KeyInfo descriptor
-     */
-    protected KeyInfo buildKeyInfo() throws StageProcessingException {
-        ArrayList<Object> keyInfoItems = new ArrayList<Object>();
-
-        addKeyNames(keyInfoItems);
-        addKeyValue(keyInfoItems);
-        addX509Data(keyInfoItems);
-
-        return keyInfoFactory.newKeyInfo(keyInfoItems);
-    }
-
-    /**
-     * Adds key names to the KeyInfo, if key names are to be included.
-     * 
-     * @param keyInfoItems collector for KeyInfo children
-     * 
-     * @throws StageProcessingException thrown if there is a problem creating the KeyName content
-     */
-    protected void addKeyNames(ArrayList<Object> keyInfoItems) throws StageProcessingException {
-        if (!includeKeyNames) {
-            return;
-        }
-
-        if (keyNames != null && !keyNames.isEmpty()) {
-            for (String name : keyNames) {
-                keyInfoItems.add(keyInfoFactory.newKeyName(name));
-            }
-        }
-
-        if (deriveKeyNames) {
-            // TODO derived key names
-        }
-    }
-
-    /**
-     * Adds raw key values to the KeyInfo if key values are to be included.
-     * 
-     * @param keyInfoItems collector for KeyInfo children
-     * 
-     * @throws StageProcessingException thrown if there is a problem creating the KeyValue content
-     */
-    protected void addKeyValue(ArrayList<Object> keyInfoItems) throws StageProcessingException {
-        if (!includeKeyValue) {
-            return;
-        }
-
-        PublicKey key = pubKey;
-        if (key == null && certificates != null) {
-            X509Certificate cert = certificates.get(0);
-            if (cert != null) {
-                pubKey = cert.getPublicKey();
-            }
-        }
-        if (pubKey != null) {
-            try {
-                keyInfoItems.add(keyInfoFactory.newKeyValue(pubKey));
-            } catch (Exception e) {
-                log.error("Unable to create KeyValue", e);
-                throw new StageProcessingException("Unable to create KeyValue", e);
-            }
-        }
-    }
-
-    /**
-     * Adds X509 data (subject names, certificates, CRLs, and Issuer/Serial) set to be included, into the key info.
-     * 
-     * @param keyInfoItems collector for KeyInfo children
-     * 
-     * @throws StageProcessingException thrown if there is a problem creating the X509Data content
-     */
-    protected void addX509Data(ArrayList<Object> keyInfoItems) throws StageProcessingException {
-        ArrayList<Object> x509Data = new ArrayList<Object>();
-
-        if (certificates != null && !certificates.isEmpty()) {
-            X509Certificate endEntityCert = certificates.get(0);
-
-            if (includeX509SubjectName) {
-                X500Principal subjectDn = endEntityCert.getSubjectX500Principal();
-                keyInfoItems.add(subjectDn.getName(X500Principal.RFC2253));
-            }
-
-            if (includeX509Certificates) {
-                x509Data.addAll(certificates);
-            }
-
-            if (includeX509IssuerSerial) {
-                X500Principal issuerDn = endEntityCert.getIssuerX500Principal();
-                BigInteger serialNumber = endEntityCert.getSerialNumber();
-                x509Data.add(keyInfoFactory.newX509IssuerSerial(issuerDn.getName(X500Principal.RFC2253), serialNumber));
-            }
-        }
-
-        if (includeX509Crls && crls != null && !crls.isEmpty()) {
-            x509Data.add(crls);
-        }
-
-        if (!x509Data.isEmpty()) {
-            keyInfoItems.add(keyInfoFactory.newX509Data(x509Data));
+        if (idAttributeNames == null) {
+            idAttributeNames = new ArrayList<QName>();
+            idAttributeNames.add(new QName("id"));
+            idAttributeNames.add(new QName("Id"));
+            idAttributeNames.add(new QName("ID"));
+            idAttributeNames.add(XmlConstants.XML_ID_ATTRIB_NAME);
         }
     }
 }

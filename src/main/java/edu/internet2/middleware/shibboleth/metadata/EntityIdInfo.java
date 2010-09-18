@@ -16,15 +16,18 @@
 
 package edu.internet2.middleware.shibboleth.metadata;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.opensaml.util.Assert;
-import org.opensaml.util.Strings;
+import org.opensaml.util.StringSupport;
 
 /** Carries a unique identifier of the entity described by a piece of metadata. */
+@ThreadSafe
 public class EntityIdInfo implements MetadataInfo {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -3907907112463674533L;
-    
+
     /** Unique ID for the entity. */
     private String entityId;
 
@@ -33,8 +36,8 @@ public class EntityIdInfo implements MetadataInfo {
      * 
      * @param id a unique identifier for the entity, never null
      */
-    public EntityIdInfo(String id) {
-        entityId = Strings.trimOrNull(id);
+    public EntityIdInfo(final String id) {
+        entityId = StringSupport.trimOrNull(id);
         Assert.isNotNull(entityId, "Entity ID may not be null or empty");
     }
 

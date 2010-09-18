@@ -20,14 +20,15 @@ import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
 
-import org.opensaml.util.Strings;
-import org.opensaml.util.xml.Attributes;
+import org.opensaml.util.StringSupport;
+import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
 import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.SimpleMetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.AbstractComponent;
+import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInfo;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 
 /**
@@ -50,15 +51,6 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
     private long cacheDuration;
 
     /**
-     * Constructor.
-     * 
-     * @param stageId unique stage ID
-     */
-    public EntitiesDescriptorAssemblerStage(String stageId) {
-        super(stageId);
-    }
-
-    /**
      * Gets the Name used for the generated descriptor.
      * 
      * @return Name used for the generated descriptor, may be null
@@ -72,8 +64,11 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * 
      * @param name Name used for the generated descriptor
      */
-    public void setDescriptorName(String name) {
-        descriptorName = Strings.trimOrNull(name);
+    public synchronized void setDescriptorName(final String name) {
+        if (isInitialized()) {
+            return;
+        }
+        descriptorName = StringSupport.trimOrNull(name);
     }
 
     /**
@@ -91,7 +86,10 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * 
      * @param duration amount of time, in milliseconds, that the produced EntitiesDescriptor is valid
      */
-    public void setValidityDuration(long duration) {
+    public synchronized void setValidityDuration(final long duration) {
+        if (isInitialized()) {
+            return;
+        }
         validityDuration = duration;
     }
 
@@ -111,21 +109,29 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * @param duration amount of time, in milliseconds, that the produced EntitiesDescriptor should be cached by the
      *            consumer
      */
-    public void setCacheDuration(long duration) {
+    public synchronized void setCacheDuration(final long duration) {
+        if (isInitialized()) {
+            return;
+        }
         cacheDuration = duration;
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
-        Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(metadataCollection);
-
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection) {
+        final ComponentInfo compInfo = new ComponentInfo(this);
+        
+        final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(metadataCollection);
         if (entitiesDescriptor != null) {
             addDescriptorName(entitiesDescriptor);
         }
 
-        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
+        final DomMetadata metadata = new DomMetadata(entitiesDescriptor);
+        metadata.getMetadataInfo().put(compInfo);
+
+        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
         mec.add(new DomMetadata(entitiesDescriptor));
 
+        compInfo.setCompleteInstant();
         return mec;
     }
 
@@ -135,9 +141,9 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * 
      * @param entitiesDescriptor
      */
-    protected void addDescriptorName(Element entitiesDescriptor) {
+    protected void addDescriptorName(final Element entitiesDescriptor) {
         if (descriptorName != null) {
-            Attributes.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
+            AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
         }
     }
 
@@ -147,7 +153,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * 
      * @param entitiesDescriptor EntitiesDescriptor element to which the attribute will be added, never null
      */
-    protected void addValidUntil(Element entitiesDescriptor) {
+    protected void addValidUntil(final Element entitiesDescriptor) {
         if (validityDuration > 0) {
             MetadataHelper.addValidUntil(entitiesDescriptor, validityDuration);
         }
@@ -159,7 +165,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * 
      * @param entitiesDescriptor EntitiesDescriptor element to which the attribute will be added, never null
      */
-    protected void addCacheDuration(Element entitiesDescriptor) {
+    protected void addCacheDuration(final Element entitiesDescriptor) {
         if (cacheDuration > 0) {
             MetadataHelper.addCacheDuration(entitiesDescriptor, cacheDuration);
         }

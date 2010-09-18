@@ -22,11 +22,13 @@ import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.util.Assert;
-import org.opensaml.util.xml.Attributes;
-import org.opensaml.util.xml.Elements;
+import org.opensaml.util.xml.AttributeSupport;
+import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -34,6 +36,7 @@ import edu.internet2.middleware.shibboleth.metadata.MetadataCollection;
 import edu.internet2.middleware.shibboleth.metadata.dom.DomMetadata;
 
 /** Helper class for dealing with SAML metadata. */
+@ThreadSafe
 public class MetadataHelper {
 
     /** SAML Metadata namespace URI. */
@@ -65,18 +68,17 @@ public class MetadataHelper {
      * 
      * @return the constructed EntitiesDescriptor
      */
-    public static Element buildEntitiesDescriptor(MetadataCollection<DomMetadata> metadataCollection) {
+    public static Element buildEntitiesDescriptor(final MetadataCollection<DomMetadata> metadataCollection) {
+        final Document owningDocument = metadataCollection.iterator().next().getMetadata().getOwnerDocument();
 
-        Document owningDocument = metadataCollection.iterator().next().getMetadata().getOwnerDocument();
-
-        Element entitiesDescriptor = Elements.constructElement(owningDocument, ENTITIES_DESCRIPTOR_NAME);
-        Elements.setDocumentElement(owningDocument, entitiesDescriptor);
+        final Element entitiesDescriptor = ElementSupport.constructElement(owningDocument, ENTITIES_DESCRIPTOR_NAME);
+        ElementSupport.setDocumentElement(owningDocument, entitiesDescriptor);
 
         Element descriptor;
         for (DomMetadata metadata : metadataCollection) {
             descriptor = metadata.getMetadata();
             if (isEntitiesDescriptor(descriptor) || isEntityDescriptor(descriptor)) {
-                Elements.appendChildElement(entitiesDescriptor, descriptor);
+                ElementSupport.appendChildElement(entitiesDescriptor, descriptor);
             }
         }
 
@@ -90,11 +92,11 @@ public class MetadataHelper {
      * @param metadata element to which the attribute will be added
      * @param duration lifetime of the element in milliseconds
      */
-    public static void addValidUntil(Element metadata, long duration) {
+    public static void addValidUntil(final Element metadata, final long duration) {
         Assert.isGreaterThan(0, duration, "Validity duration must be 1 or greater.");
-        DateTime now = new DateTime(ISOChronology.getInstanceUTC()).plus(duration);
-        XMLGregorianCalendar validUntil = xmlDatatypeFactory.newXMLGregorianCalendar(now.toGregorianCalendar());
-        Attributes.appendAttribute(metadata, VALID_UNTIL_ATTIB_NAME, validUntil.toString());
+        final DateTime now = new DateTime(ISOChronology.getInstanceUTC()).plus(duration);
+        final XMLGregorianCalendar validUntil = xmlDatatypeFactory.newXMLGregorianCalendar(now.toGregorianCalendar());
+        AttributeSupport.appendAttribute(metadata, VALID_UNTIL_ATTIB_NAME, validUntil.toString());
     }
 
     /**
@@ -103,10 +105,10 @@ public class MetadataHelper {
      * @param metadata element to which the attribute will be added
      * @param duration cache duration of the element in milliseconds
      */
-    public static void addCacheDuration(Element metadata, long duration) {
+    public static void addCacheDuration(final Element metadata, final long duration) {
         Assert.isGreaterThan(0, duration, "Cache duration must be 1 or greater.");
-        Duration xmlDuration = xmlDatatypeFactory.newDuration(duration);
-        Attributes.appendAttribute(metadata, CACHE_DURATION_ATTRIB_NAME, xmlDuration.toString());
+        final Duration xmlDuration = xmlDatatypeFactory.newDuration(duration);
+        AttributeSupport.appendAttribute(metadata, CACHE_DURATION_ATTRIB_NAME, xmlDuration.toString());
     }
 
     /**
@@ -115,8 +117,8 @@ public class MetadataHelper {
      * @param e element to check
      * @return true if the element is an EntitiesDescriptor, false otherwise
      */
-    public static boolean isEntitiesDescriptor(Element e) {
-        return Elements.isElementNamed(e, ENTITIES_DESCRIPTOR_NAME);
+    public static boolean isEntitiesDescriptor(final Element e) {
+        return ElementSupport.isElementNamed(e, ENTITIES_DESCRIPTOR_NAME);
     }
 
     /**
@@ -125,8 +127,8 @@ public class MetadataHelper {
      * @param e element to check
      * @return true if the element is an EntityDescriptor, false otherwise
      */
-    public static boolean isEntityDescriptor(Element e) {
-        return Elements.isElementNamed(e, ENTITY_DESCRIPTOR_NAME);
+    public static boolean isEntityDescriptor(final Element e) {
+        return ElementSupport.isElementNamed(e, ENTITY_DESCRIPTOR_NAME);
     }
 
     static {

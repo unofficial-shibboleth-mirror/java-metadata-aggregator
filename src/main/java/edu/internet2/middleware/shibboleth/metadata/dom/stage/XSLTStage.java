@@ -27,8 +27,11 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.opensaml.util.Strings;
-import org.opensaml.util.xml.Elements;
+import net.jcip.annotations.ThreadSafe;
+
+import org.opensaml.util.resource.Resource;
+import org.opensaml.util.resource.ResourceException;
+import org.opensaml.util.xml.ElementSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -41,48 +44,48 @@ import edu.internet2.middleware.shibboleth.metadata.pipeline.ComponentInitializa
 import edu.internet2.middleware.shibboleth.metadata.pipeline.Stage;
 import edu.internet2.middleware.shibboleth.metadata.pipeline.StageProcessingException;
 
-/**
- * A pipeline stage which applies and XSLT to each element in the metadata collection.
- */
+/** A pipeline stage which applies and XSLT to each element in the metadata collection. */
+@ThreadSafe
 public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XSLTStage.class);
 
-    /** Filesystem path to the XSL file. */
-    private String xslFile;
+    /** Resource that provides the XSL document. */
+    private Resource xslResource;
 
     /** XSL template used to transform metadata. */
     private Templates xslTemplate;
 
     /**
-     * Constructor.
+     * Gets the resource that provides the XSL document.
      * 
-     * @param stageId unique stage ID
-     * @param xslFilePath filesystem path the XSL file that will be used to transform each metadata element.
+     * @return resource that provides the XSL document
      */
-    public XSLTStage(String stageId, String xslFilePath) {
-        super(stageId);
-        xslFile = xslFilePath;
+    public Resource getXslResource() {
+        return xslResource;
     }
 
     /**
-     * Gets the filesystem path of the XSL file.
+     * Sets the resource that provides the XSL document.
      * 
-     * @return filesystem path of the XSL file
+     * @param resource resource that provides the XSL document
      */
-    public String getXslFile() {
-        return xslFile;
+    public synchronized void setXslResource(final Resource resource) {
+        if (isInitialized()) {
+            return;
+        }
+        xslResource = resource;
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
+    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection)
             throws StageProcessingException {
 
-        SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
+        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         try {
-            Transformer transform = xslTemplate.newTransformer();
+            final Transformer transform = xslTemplate.newTransformer();
 
             Element metadataElement;
             DOMResult result;
@@ -96,7 +99,7 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
 
                 transform.transform(new DOMSource(metadataElement), result);
 
-                transformedElements = Elements.getChildElements(result.getNode());
+                transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
                     mec.add(new DomMetadata(transformedElement));
                 }
@@ -112,19 +115,27 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        String trimmedXslFile = Strings.trimOrNull(xslFile);
-        if (trimmedXslFile == null) {
-            throw new ComponentInitializationException("XSL file path may not be null or empty");
+        if (xslResource == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", XslResource must not be null");
         }
 
-        TransformerFactory tfactory = TransformerFactory.newInstance();
-        // TODO features and attributes
-
         try {
-            log.debug("{} pipeline stage compiling XSL file {}", getId(), xslFile);
-            xslTemplate = tfactory.newTemplates(new StreamSource(xslFile));
+            if (!xslResource.exists()) {
+                throw new ComponentInitializationException("Unable to initialize " + getId() + ", XslResource "
+                        + xslResource.getLocation() + " does not exist");
+            }
+
+            final TransformerFactory tfactory = TransformerFactory.newInstance();
+            // TODO features and attributes
+
+            log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
+            xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream()));
         } catch (TransformerConfigurationException e) {
             throw new ComponentInitializationException("XSL transformation engine misconfigured", e);
+        } catch (ResourceException e) {
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", error reading XslResource " + xslResource.getLocation() + " information", e);
         }
     }
 }

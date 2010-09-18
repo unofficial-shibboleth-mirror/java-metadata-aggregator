@@ -28,14 +28,13 @@ import net.jcip.annotations.NotThreadSafe;
  * @param <ElementType> type of elements in the collection
  */
 @NotThreadSafe
-public class SimpleMetadataCollection<ElementType extends Metadata<?>> implements
-        MetadataCollection<ElementType> {
+public class SimpleMetadataCollection<ElementType extends Metadata<?>> implements MetadataCollection<ElementType> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 6445721225558015497L;
-    
+
     /** Backing delegate collection. */
-    private Collection<ElementType> delegate;
+    private final Collection<ElementType> delegate;
 
     /** Constructor. */
     public SimpleMetadataCollection() {
@@ -43,28 +42,28 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
     }
 
     /** {@inheritDoc} */
-    public boolean add(ElementType o) {
-        if(o == null){
+    public boolean add(final ElementType o) {
+        if (o == null) {
             return false;
         }
-        
+
         return delegate.add(o);
     }
 
     /** {@inheritDoc} */
-    public boolean addAll(Collection<? extends ElementType> c) {
-        if(c == null){
+    public boolean addAll(final Collection<? extends ElementType> c) {
+        if (c == null) {
             return false;
         }
-        
+
         boolean hasChanged = false;
-        for(ElementType element : c){
-            if(element != null){
+        for (ElementType element : c) {
+            if (element != null) {
                 delegate.add(element);
                 hasChanged = true;
             }
         }
-        
+
         return hasChanged;
     }
 
@@ -74,15 +73,15 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
     }
 
     /** {@inheritDoc} */
-    public boolean contains(Object o) {
-        if(o == null){
+    public boolean contains(final Object o) {
+        if (o == null) {
             return false;
         }
         return delegate.contains(o);
     }
 
     /** {@inheritDoc} */
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(final Collection<?> c) {
         return delegate.containsAll(c);
     }
 
@@ -97,33 +96,33 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
     }
 
     /** {@inheritDoc} */
-    public boolean remove(Object o) {
-        if(o == null){
+    public boolean remove(final Object o) {
+        if (o == null) {
             return false;
         }
         return delegate.remove(o);
     }
 
     /** {@inheritDoc} */
-    public boolean removeAll(Collection<?> c) {
-        if(c == null){
+    public boolean removeAll(final Collection<?> c) {
+        if (c == null) {
             return false;
         }
-        
+
         boolean hasChanged = false;
-        for(Object element : c){
-            if(element != null){
+        for (Object element : c) {
+            if (element != null) {
                 delegate.remove(element);
                 hasChanged = true;
             }
         }
-        
+
         return hasChanged;
     }
 
     /** {@inheritDoc} */
-    public boolean retainAll(Collection<?> c) {
-        if(c == null){
+    public boolean retainAll(final Collection<?> c) {
+        if (c == null) {
             return false;
         }
         return delegate.retainAll(c);
@@ -140,7 +139,7 @@ public class SimpleMetadataCollection<ElementType extends Metadata<?>> implement
     }
 
     /** {@inheritDoc} */
-    public <T> T[] toArray(T[] a) {
+    public <T> T[] toArray(final T[] a) {
         return delegate.toArray(a);
     }
 

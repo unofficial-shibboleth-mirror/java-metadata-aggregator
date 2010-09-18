@@ -20,12 +20,17 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
-import org.opensaml.util.Assert;
-import org.opensaml.util.Strings;
+import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Base implementation for pipeline components. */
+/**
+ * Base implementation for pipeline components.
+ * 
+ * All classes which extend this base class must ensure that the state of the object does <strong>not</strong> change
+ * after {@link #initialize()} is called. In particular, any setter method should check to see if the component has been
+ * initialized and, if so, immediately return without altering the component state.
+ */
 @ThreadSafe
 public abstract class AbstractComponent implements Component {
 
@@ -38,16 +43,6 @@ public abstract class AbstractComponent implements Component {
     /** Instant when the component was initialized. */
     private DateTime initInstant;
 
-    /**
-     * Constructor.
-     * 
-     * @param componentId the ID of the component
-     */
-    public AbstractComponent(String componentId) {
-        id = Strings.trimOrNull(componentId);
-        Assert.isNotNull(id, "Component ID may not be null or empty");
-    }
-
     /** {@inheritDoc} */
     public String getId() {
         return id;
@@ -58,17 +53,20 @@ public abstract class AbstractComponent implements Component {
      * 
      * @param componentId ID of the component, may not be null or empty
      */
-    protected void setId(String componentId) {
-        id = componentId;
+    public synchronized void setId(final String componentId) {
+        if (isInitialized()) {
+            return;
+        }
+        id = StringSupport.trimOrNull(componentId);
     }
 
     /** {@inheritDoc} */
-    public DateTime getInitializationInstant() {
+    public final DateTime getInitializationInstant() {
         return initInstant;
     }
 
     /** {@inheritDoc} */
-    public synchronized void initialize() throws ComponentInitializationException {
+    public synchronized final void initialize() throws ComponentInitializationException {
         if (isInitialized()) {
             throw new IllegalStateException("Pipeline component already initialized");
         }
@@ -85,7 +83,7 @@ public abstract class AbstractComponent implements Component {
     }
 
     /** {@inheritDoc} */
-    public boolean isInitialized() {
+    public final boolean isInitialized() {
         return initInstant != null;
     }
 
@@ -95,7 +93,7 @@ public abstract class AbstractComponent implements Component {
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -109,8 +107,9 @@ public abstract class AbstractComponent implements Component {
     }
 
     /**
-     * Do the initialization of the component. Default implementation of this method is a no-op. Extending classes
-     * should override this method to perform any initialization logic necessary.
+     * Do the initialization of the component. Default implementation of this method is a no-op.
+     * 
+     * Extending classes should override this method to perform any initialization logic necessary.
      * 
      * @throws ComponentInitializationException throw if there is a problem initializing the component
      */
