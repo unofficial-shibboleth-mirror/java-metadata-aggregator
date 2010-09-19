@@ -57,7 +57,7 @@ public class XMLSignatureSigningStageTest {
 
         XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
         stage.setId("test");
-        stage.setIncludeKeyValue(true);
+        stage.setIncludeKeyValue(false);
         stage.setIncludeX509IssuerSerial(true);
         stage.setPrivKey(signingKey);
         stage.setCertificates(certs);

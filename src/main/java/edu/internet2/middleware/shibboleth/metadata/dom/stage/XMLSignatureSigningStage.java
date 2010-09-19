@@ -593,7 +593,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
 
             signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
             try {
-                signature.sign(new DOMSignContext(privKey, element));
+                signature.sign(new DOMSignContext(privKey, element, element.getFirstChild()));
             } catch (Exception e) {
                 log.error("Unable to create signature for element", e);
                 throw new StageProcessingException("Unable to create signature for element", e);
@@ -714,7 +714,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
      */
     protected String getElementId(final Element target) {
         final NamedNodeMap attributes = target.getAttributes();
-        if (attributes == null || attributes.getLength() > 1) {
+        if (attributes == null || attributes.getLength() < 1) {
             return null;
         }
 
@@ -806,7 +806,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
         }
         if (key != null) {
             try {
-                keyInfoItems.add(keyInfoFactory.newKeyValue(pubKey));
+                keyInfoItems.add(keyInfoFactory.newKeyValue(key));
             } catch (Exception e) {
                 log.error("Unable to create KeyValue", e);
                 throw new StageProcessingException("Unable to create KeyValue", e);

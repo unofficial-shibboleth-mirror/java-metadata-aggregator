@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    Name="urn:mace:switch.ch:SWITCHaai" validUntil="2010-09-20T15:59:02Z">
+                    ID="1234" Name="urn:mace:switch.ch:SWITCHaai" validUntil="2010-09-20T15:59:02Z">
 
     <Extensions>
         <switchmd:PublishingInformation xmlns:switchmd="http://www.switch.ch/aai/metadata/extensions">
