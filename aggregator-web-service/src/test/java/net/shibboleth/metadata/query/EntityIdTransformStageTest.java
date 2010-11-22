@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata.query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,6 @@ import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MockMetadata;
 import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.EntityIdTransformStage;
 
 import org.springframework.core.convert.converter.Converter;
 import org.testng.annotations.Test;

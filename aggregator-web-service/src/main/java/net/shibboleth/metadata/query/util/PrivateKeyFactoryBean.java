@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.util;
+package net.shibboleth.metadata.query.util;
 
 import java.security.PrivateKey;
 import java.security.Security;

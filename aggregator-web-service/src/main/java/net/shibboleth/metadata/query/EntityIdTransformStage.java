@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +24,10 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.EntityIdInfo;
 import net.shibboleth.metadata.Metadata;
 import net.shibboleth.metadata.MetadataCollection;
+import net.shibboleth.metadata.pipeline.AbstractComponent;
+import net.shibboleth.metadata.pipeline.ComponentInfo;
+import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.MetadataInfoHelper;
 
 import org.opensaml.util.collections.CollectionSupport;

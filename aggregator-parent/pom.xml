@@ -12,12 +12,15 @@
 
     <modules>
         <module>../aggregator-pipeline</module>
+        <module>../aggregator-web-service</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.groupId>org.slf4j</slf4j.groupId>
+        <slf4j.version>1.6.1</slf4j.version>
         <spring.groupId>org.springframework</spring.groupId>
-        <spring.version>3.0.4.RELEASE</spring.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
         <xerces.groupId>org.apache.xerces</xerces.groupId>
         <xerces.version>2.10.0</xerces.version>
     </properties>
@@ -52,6 +55,12 @@
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
             <version>1.4.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
                 <dependency>
             <groupId>${slf4j.groupId}</groupId>
@@ -76,7 +85,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>0.9.24</version>
+            <version>0.9.26</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.util;
+package net.shibboleth.metadata.query.util;
 
+import java.security.PublicKey;
 import java.security.Security;
-import java.security.cert.X509Certificate;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.opensaml.util.resource.Resource;
@@ -25,30 +25,30 @@ import org.springframework.beans.factory.FactoryBean;
 
 import edu.vt.middleware.crypt.util.CryptReader;
 
-/** Spring bean factory for producing a {@link X509Certificate} chain from a {@link Resource}. */
-public class X509CertificateChainFactoryBean implements FactoryBean<X509Certificate[]> {
+/** Spring bean factory for producing a {@link PublicKey} from a {@link Resource}. */
+public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
 
-    /** Resource providing the PEM encoded certificate chain. */
-    private Resource certChainRes;
+    /** Resource providing the PEM encoded public key. */
+    private Resource pubKeyRes;
 
     /**
-     * Sets the resource providing the PEM encoded certificate chain.
+     * Sets the resource providing the PEM encoded public key.
      * 
-     * @param res resource providing the PEM encoded certificate chain
+     * @param res resource providing the PEM encoded public key, never null
      */
-    public void setCertificateChainResource(final Resource res) {
-        certChainRes = res;
+    public void setPublicKeyResource(final Resource res) {
+        pubKeyRes = res;
     }
 
     /** {@inheritDoc} */
-    public X509Certificate[] getObject() throws Exception {
+    public PublicKey getObject() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        return (X509Certificate[]) CryptReader.readCertificateChain(certChainRes.getInputStream());
+        return CryptReader.readPemPublicKey(pubKeyRes.getInputStream());
     }
 
     /** {@inheritDoc} */
     public Class<?> getObjectType() {
-        return X509Certificate.class;
+        return PublicKey.class;
     }
 
     /** {@inheritDoc} */
