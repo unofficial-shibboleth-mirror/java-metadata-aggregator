@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>Shibboleth Metadata Aggregator</name>
+    <groupId>net.shibboleth.metadata</groupId>
+    <artifactId>aggregator-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>../aggregator-pipeline</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.groupId>org.springframework</spring.groupId>
+        <spring.version>3.0.4.RELEASE</spring.version>
+        <xerces.groupId>org.apache.xerces</xerces.groupId>
+        <xerces.version>2.10.0</xerces.version>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>release-repo</id>
+            <url>${dist.release.url}</url>
+        </repository>
+    </distributionManagement>
+    
+    <repositories>
+        <repository>
+            <id>shibboleth.internet2.edu</id>
+            <name>Internet2</name>
+            <url>http://shibboleth.internet2.edu/downloads/maven2</url>
+        </repository>
+    </repositories>
+
+    <!--
+        Dependencies which are required by every single project module should go here and will be inherited by all
+        modules.
+    -->
+    <dependencies>
+        <!-- Compile Dependencies -->
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-util</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>1.4.3</version>
+        </dependency>
+                <dependency>
+            <groupId>${slf4j.groupId}</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${slf4j.groupId}</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${slf4j.groupId}</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${slf4j.groupId}</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.24</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6</version>
+        </dependency>
+        
+        <!-- Provided Dependencies -->
+        <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Runtime Dependencies -->
+    
+        <!--  Test Dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.9</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <!--
+        Dependencies which are not required by every project module but for which every module should use the same
+        version of the dependency should go here. That is to say, placing a dependency here allows one to "peg" the
+        version of the artifact used by all project modules.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Compile Dependencies -->
+
+            <!-- Provided Dependencies -->
+
+            <!-- Runtime Dependencies -->
+            <dependency>
+                <groupId>${xerces.groupId}</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>${xerces.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>${xerces.groupId}</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${xerces.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>${xerces.groupId}</groupId>
+                <artifactId>resolver</artifactId>
+                <version>${xerces.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>${xerces.groupId}</groupId>
+                <artifactId>serializer</artifactId>
+                <version>${xerces.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xalan</groupId>
+                <artifactId>xalan</artifactId>
+                <version>2.7.1</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!--  Test Dependencies -->
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <argLine>-Xmx256m</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!-- Project Metadata -->
+    <url>http://www.shibboleth.net</url>
+
+    <inceptionYear>2010</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Shibboleth</name>
+        <url>http://www.shibboleth.net/</url>
+    </organization>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://bugs.internet2.edu/</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>Shibboleth Announce</name>
+            <subscribe>http://shibboleth.internet2.edu/support.html#lists</subscribe>
+            <unsubscribe>http://shibboleth.internet2.edu/support.html#lists</unsubscribe>
+            <post>shibboleth-announce@internet2.edu</post>
+            <archive>https://mail.internet2.edu/wws/arc/shibboleth-announce</archive>
+        </mailingList>
+        <mailingList>
+            <name>Shibboleth Users</name>
+            <subscribe>http://shibboleth.internet2.edu/support.html#lists</subscribe>
+            <unsubscribe>http://shibboleth.internet2.edu/support.html#lists</unsubscribe>
+            <post>shibboleth-users@internet2.edu</post>
+            <archive>https://mail.internet2.edu/wws/arc/shibboleth-users</archive>
+        </mailingList>
+        <mailingList>
+            <name>Shibboleth Development</name>
+            <subscribe>http://shibboleth.internet2.edu/support.html#lists</subscribe>
+            <unsubscribe>http://shibboleth.internet2.edu/support.html#lists</unsubscribe>
+            <post>shibboleth-dev@internet2.edu</post>
+            <archive>https://mail.internet2.edu/wws/arc/shibboleth-dev</archive>
+        </mailingList>
+    </mailingLists>
+
+    <scm>
+        <connection>scm:svn:https://svn.middleware.georgetown.edu/java-metadata-aggregator/</connection>
+        <developerConnection>scm:svn:https://svn.middleware.georgetown.edu/java-metadata-aggregator/</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://svn.middleware.georgetown.edu/view/?root=java-metadata-aggregator</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>lajoie</id>
+            <name>Chad La Joie</name>
+            <organization>SWITCH</organization>
+            <organizationUrl>http://www.switch.ch/</organizationUrl>
+            <roles>
+                <role>developer</role>
+                <role>documentation</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+</project>
