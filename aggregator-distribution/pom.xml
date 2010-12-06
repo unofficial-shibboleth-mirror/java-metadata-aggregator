@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.shibboleth.metadata</groupId>
+        <artifactId>aggregator-project</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../aggreagtor-parent</relativePath>
+    </parent>
+    
+    <groupId>net.shibboleth.metadata</groupId>
+    <artifactId>metadata-aggregator-standalone</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>Shibboleth Metadata Aggreagtor :: Standalone Distribution</name>
+
+    <properties>
+        <bundle-symbolic-name>${project.groupId}.${artifactId}</bundle-symbolic-name>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jetty.groupId>org.eclipse.jetty</jetty.groupId>
+        <jetty.version>7.2.1.v20101111</jetty.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>aggregator-web-service</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${jetty.groupId}</groupId>
+                                    <artifactId>jetty-distribution</artifactId>
+                                    <version>${jetty.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <excludes>
+                                        **/README.txt,
+                                        **/.donotdelete,
+                                        **/contexts/**,
+                                        **/contexts-available/**,
+                                        **/javadoc/**,
+                                        **/resources/**,
+                                        **/webapps/**
+                                    </excludes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/bin.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

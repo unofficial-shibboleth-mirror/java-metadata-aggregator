@@ -13,6 +13,7 @@
     <modules>
         <module>../aggregator-pipeline</module>
         <module>../aggregator-web-service</module>
+        <module>../aggregator-distribution</module>
     </modules>
 
     <properties>

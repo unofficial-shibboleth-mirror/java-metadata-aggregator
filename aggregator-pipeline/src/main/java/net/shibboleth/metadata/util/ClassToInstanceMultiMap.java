@@ -104,7 +104,7 @@ public final class ClassToInstanceMultiMap<B> {
      * 
      * @return instances mapped to the given type or an empty list, immutable, list otherwise
      */
-    public <T extends B> List<T> get(final Class<T> type) {
+    public <T> List<T> get(final Class<T> type) {
         if (type == null) {
             return Collections.emptyList();
         }
