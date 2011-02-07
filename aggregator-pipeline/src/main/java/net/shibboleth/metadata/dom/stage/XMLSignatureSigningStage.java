@@ -50,7 +50,6 @@ import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.AbstractComponent;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -65,10 +64,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-
 /**
- * A {@link Pipeline} stage that creates, and adds, an enveloped signature for each element in the given metadata
- * collection.
+ * A pipeline stage that creates, and adds, an enveloped signature for each element in the given metadata collection.
  */
 @ThreadSafe
 public class XMLSignatureSigningStage extends AbstractComponent implements Stage<DomMetadata> {

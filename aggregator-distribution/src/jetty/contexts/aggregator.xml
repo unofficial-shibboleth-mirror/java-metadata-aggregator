@@ -5,16 +5,12 @@
     <Set name="contextPath">/</Set>
     <Set name="copyWebDir">false</Set>
     <Set name="extractWAR">false</Set>
-    <Set name="war">
-        <SystemProperty name="mdx.home" default="." />/war/TODO
-    </Set>
+    <Set name="war"><SystemProperty name="mdx.home" default="." />/war/TODO</Set>
 
     <Get name="servletContext">
         <Call name="setInitParameter" ">
-            <Arg>configLocation</Arg>
-            <Arg>
-                <SystemProperty name="mdx.home" default="." />/conf/mdx-config.xml
-            </Arg>
+            <Arg>contextConfigLocation</Arg>
+            <Arg><SystemProperty name="mdx.home" default="." />/conf/mdx-config.xml</Arg>
         </Call>
     </Get>
 

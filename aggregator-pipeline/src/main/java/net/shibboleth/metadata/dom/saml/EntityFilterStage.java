@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
 public class EntityFilterStage extends AbstractComponent implements Stage<DomMetadata> {
@@ -355,11 +354,11 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
         if (roleIdentifier != null) {
             if ((isWhitelistingRoles() && !isDesignatedRole) || (!isWhitelistingRoles() && isDesignatedRole)) {
                 log.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] { getId(),
-                        roleIdentifier, entityId });
+                        roleIdentifier, entityId, });
                 entityDescriptor.removeChild(childElement);
             } else {
                 log.debug("{} pipeline did not remove role {} from EntityDescriptor {}", new Object[] { getId(),
-                        roleIdentifier, entityId });
+                        roleIdentifier, entityId, });
             }
         }
     }

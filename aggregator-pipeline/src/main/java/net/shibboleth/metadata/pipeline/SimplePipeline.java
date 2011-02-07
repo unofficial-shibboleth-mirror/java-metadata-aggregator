@@ -28,7 +28,11 @@ import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
 
 
-/** A very simple implementation of {@link Pipeline}. This implementation takes a static source and list of stages. */
+/** 
+ * A very simple implementation of {@link Pipeline}. This implementation takes a static source and list of stages. 
+ *
+ * @param <MetadataType> the type of metadata which is produced by the source and operated upon by the stages
+ */
 @ThreadSafe
 public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractComponent implements
         Pipeline<MetadataType> {

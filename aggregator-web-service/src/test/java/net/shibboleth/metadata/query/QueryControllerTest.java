@@ -21,14 +21,11 @@ import java.util.ArrayList;
 import net.shibboleth.metadata.EntityIdInfo;
 import net.shibboleth.metadata.Metadata;
 import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.MockMetadata;
 import net.shibboleth.metadata.TagInfo;
-import net.shibboleth.metadata.pipeline.CountingStage;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.SimplePipeline;
 import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StaticSource;
-import net.shibboleth.metadata.query.QueryController;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.springframework.mock.web.MockHttpServletRequest;

@@ -17,6 +17,11 @@
 
     <dependencies>
         <!-- Compile Dependencies -->
+        <dependency>
+            <groupId>uk.co.flamingpenguin.jewelcli</groupId>
+            <artifactId>jewelcli</artifactId>
+            <version>0.6</version>
+        </dependency>
 
         <!-- Provided Dependencies -->
 
@@ -25,5 +30,9 @@
         <!-- Test Dependencies -->
 
         <!-- Managed Dependencies -->
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
     </dependencies>
 </project>

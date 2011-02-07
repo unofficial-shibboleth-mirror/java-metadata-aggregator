@@ -25,10 +25,11 @@ import net.shibboleth.metadata.SimpleMetadataCollection;
 
 import org.opensaml.util.collections.CollectionSupport;
 
-
 /**
  * Adapts a collection of metadata to the {@link Source} interface. Each metadata element is cloned each time
  * {@link #execute()} is invoked.
+ * 
+ * @param <MetadataType> the type of metadata produced by this source
  */
 @ThreadSafe
 public class StaticSource<MetadataType extends Metadata<?>> extends AbstractComponent implements Source<MetadataType> {

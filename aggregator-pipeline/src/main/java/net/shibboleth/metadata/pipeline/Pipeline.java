@@ -52,12 +52,11 @@ public interface Pipeline<MetadataType extends Metadata<?>> extends Component {
 
     /**
      * Executes the pipeline by pulling information from the {@link Source}, executing all the registered {@link Stages}
-     * , and giving the final result to the {@link Sink}.
-     * 
-     * @param source source of data to be processed by the pipeline
-     * @param sink object to which the processed data is given
+     * , and returning the final collection of metadata.
      * 
      * @return the result of the execution
+     * 
+     * @throws PipelineProcessingException thrown if there is a problem processing the pipeline
      */
     public MetadataCollection<MetadataType> execute() throws PipelineProcessingException;
 }

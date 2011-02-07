@@ -30,7 +30,6 @@ import org.opensaml.util.StringSupport;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
-
 /**
  * A {@link Stage} capable of assembling a collection of EntityDescriptor elements in to a single EntitiesDescriptor
  * element.
@@ -39,7 +38,7 @@ import org.w3c.dom.Element;
 public class EntitiesDescriptorAssemblerStage extends AbstractComponent implements Stage<DomMetadata> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
-    public final static QName NAME_ATTRIB_NAME = new QName("Name");
+    public static final QName NAME_ATTRIB_NAME = new QName("Name");
 
     /** Name to use for the EntitiesDescriptor. */
     private String descriptorName;
@@ -119,7 +118,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
     /** {@inheritDoc} */
     public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection) {
         final ComponentInfo compInfo = new ComponentInfo(this);
-        
+
         final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(metadataCollection);
         if (entitiesDescriptor != null) {
             addDescriptorName(entitiesDescriptor);
@@ -139,7 +138,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
      * Adds the Name attribute to the EntitiesDescriptor. This attribute is added if {@link #descriptorName} is not
      * null.
      * 
-     * @param entitiesDescriptor
+     * @param entitiesDescriptor the entity descriptor to which the
      */
     protected void addDescriptorName(final Element entitiesDescriptor) {
         if (descriptorName != null) {

@@ -20,7 +20,6 @@ import java.io.Serializable;
 
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 
-
 /**
  * A piece of metadata with associated processing information.
  * 
@@ -45,8 +44,6 @@ public interface Metadata<MetadataType> extends Serializable {
     /**
      * Performs a copy of the element. All member fields, except {@link MetadataInfo}, should be deep cloned.
      * {@link MetadataInfo} objects must be shared between the clone and the original.
-     * 
-     * @param <T> the type of metadata element returned
      * 
      * @return the clone of this element
      */

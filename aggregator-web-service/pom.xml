@@ -22,17 +22,6 @@
             <artifactId>aggregator-pipeline</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${spring.groupId}</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- Provided Dependencies -->
         <dependency>
@@ -58,5 +47,9 @@
         </dependency>
 
         <!-- Managed Dependencies -->
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
     </dependencies>
 </project>

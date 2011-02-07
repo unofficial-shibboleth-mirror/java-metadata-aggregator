@@ -34,10 +34,9 @@ import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 /** Helper class for dealing with SAML metadata. */
 @ThreadSafe
-public class MetadataHelper {
+public final class MetadataHelper {
 
     /** SAML Metadata namespace URI. */
     public static final String MD_NS = "urn:oasis:names:tc:SAML:2.0:metadata";
@@ -59,6 +58,11 @@ public class MetadataHelper {
 
     /** Factory used to create XML data types. */
     private static DatatypeFactory xmlDatatypeFactory;
+
+    /** Constructor. */
+    private MetadataHelper() {
+
+    }
 
     /**
      * Builds a SAML EntitiesDescriptor element from a collection of EntitiesDescriptor or EntityDescriptor elements.

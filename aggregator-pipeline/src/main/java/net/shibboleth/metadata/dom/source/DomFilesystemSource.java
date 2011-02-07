@@ -37,7 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-
 /**
  * A source which reads XML information from the filesystem and optionally caches it in memory.
  * 
@@ -151,7 +150,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     /** {@inheritDoc} */
     public MetadataCollection<DomMetadata> execute() throws SourceProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
-        
+
         final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         final ArrayList<File> sourceFiles = new ArrayList<File>();
@@ -234,10 +233,11 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
             return new DomMetadata(doc.getDocumentElement());
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
-                throw new SourceProcessingException(getId() + " pipeline source unable to parse XML input file " + source.getPath(), e);
+                throw new SourceProcessingException(getId() + " pipeline source unable to parse XML input file "
+                        + source.getPath(), e);
             } else {
                 log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
-                        getId(), source.getPath(), e });
+                        getId(), source.getPath(), e, });
                 return null;
             }
         } finally {

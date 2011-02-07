@@ -18,7 +18,11 @@ package net.shibboleth.metadata;
 
 import java.io.OutputStream;
 
-/** Serializers convert a collection of {@link Metadata} in to an octet stream. */
+/**
+ * Serializers convert a collection of {@link Metadata} in to an octet stream.
+ * 
+ * @param <MetadataType> type of metadata that can be serialized to an {@link OutputStream}
+ */
 public interface MetadataSerializer<MetadataType extends Metadata<?>> {
 
     /**

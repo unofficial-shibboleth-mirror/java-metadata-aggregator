@@ -9,14 +9,6 @@
     <description></description>
     
     <distributable/>
-
-    <!-- Param needs to be set in deployment descriptor --> 
-    <!-- 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>...</param-value>
-    </context-param>
-    -->
     
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

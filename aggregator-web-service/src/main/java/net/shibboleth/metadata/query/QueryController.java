@@ -137,7 +137,7 @@ public class QueryController {
         MetadataCollection results = getMetadataElements(searchTerms);
 
         if (results != null && !results.isEmpty()) {
-            final StaticSource resultSource = new StaticSource<Metadata>();
+            final StaticSource<?> resultSource = new StaticSource();
             resultSource.setId("postProcessSource");
             resultSource.setSourceMetadata(results);
 

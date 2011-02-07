@@ -31,6 +31,8 @@ import net.jcip.annotations.NotThreadSafe;
  * class.
  * 
  * Null values are not supported.
+ * 
+ * @param <B> a bound for the types of values in the map
  */
 @NotThreadSafe
 public final class ClassToInstanceMultiMap<B> {

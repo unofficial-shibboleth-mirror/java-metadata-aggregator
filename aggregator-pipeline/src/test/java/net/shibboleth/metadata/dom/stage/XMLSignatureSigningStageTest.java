@@ -43,7 +43,7 @@ public class XMLSignatureSigningStageTest {
     public void testSigning() throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
-        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class
+        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/samlMetadata.xml"));
 
         MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
@@ -51,8 +51,8 @@ public class XMLSignatureSigningStageTest {
 
         Security.addProvider(new BouncyCastleProvider());
         PrivateKey signingKey = CryptReader.readPemPrivateKey(
-                XMLSchemaValidationStageTest.class.getResourceAsStream("/data/signingKey.pem"), null);
-        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSchemaValidationStageTest.class
+                XMLSignatureSigningStageTest.class.getResourceAsStream("/data/signingKey.pem"), null);
+        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
         ArrayList<X509Certificate> certs = new ArrayList<X509Certificate>();
         certs.add(signingCert);

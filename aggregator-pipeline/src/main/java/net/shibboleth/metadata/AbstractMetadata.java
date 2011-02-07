@@ -51,7 +51,7 @@ public abstract class AbstractMetadata<MetadataType> implements Metadata<Metadat
      * 
      * @param entityMetadata the metadata
      */
-    synchronized protected void setMetadata(final MetadataType entityMetadata) {
+    protected synchronized void setMetadata(final MetadataType entityMetadata) {
         metadata = entityMetadata;
     }
 

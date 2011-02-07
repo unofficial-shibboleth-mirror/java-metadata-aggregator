@@ -66,7 +66,7 @@ public abstract class AbstractComponent implements Component {
     }
 
     /** {@inheritDoc} */
-    public synchronized final void initialize() throws ComponentInitializationException {
+    public final synchronized void initialize() throws ComponentInitializationException {
         if (isInitialized()) {
             throw new IllegalStateException("Pipeline component already initialized");
         }

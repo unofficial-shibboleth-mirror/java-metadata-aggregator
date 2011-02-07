@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-
 /**
  * A pipeline stage which validates the XML digital signature found on metadata elements.
  * 
@@ -58,14 +57,18 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
     private PublicKey verificationKey;
 
     /**
-     * @return the signatureRequired
+     * Gets whether the metadata is required to be signed.
+     * 
+     * @return whether the metadata is required to be signed
      */
     public boolean isSignatureRequired() {
         return signatureRequired;
     }
 
     /**
-     * @param required the signatureRequired to set
+     * Sets whether the metadata is required to be signed.
+     * 
+     * @param required whether the metadata is required to be signed
      */
     public synchronized void setSignatureRequired(final boolean required) {
         if (isInitialized()) {
@@ -75,14 +78,18 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
     }
 
     /**
-     * @return the verificationKey
+     * Gets the key used to verify the signature.
+     * 
+     * @return key used to verify the signature
      */
     public PublicKey getVerificationKey() {
         return verificationKey;
     }
 
     /**
-     * @param key the verificationKey to set
+     * Sets the key used to verify the signature.
+     * 
+     * @param key key used to verify the signature
      */
     public synchronized void setVerificationKey(final PublicKey key) {
         if (isInitialized()) {
@@ -91,6 +98,11 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
         verificationKey = key;
     }
 
+    /**
+     * Set the key, included in a certificate, used to verify the signature.
+     * 
+     * @param certificate certificate containing the key used to verify the signature
+     */
     public synchronized void setVerificationKey(final X509Certificate certificate) {
         if (isInitialized()) {
             return;
@@ -117,6 +129,8 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
      * Verifies the enclosed signature on the root of the metadata.
      * 
      * @param root root of the metadata
+     * 
+     * @return true if the signature is verified successfully, false otherwise
      * 
      * @throws StageProcessingException thrown if the given root element contains more than on signature
      */
@@ -162,9 +176,11 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
     /**
      * Gets the signature element from the document. The signature must be a child of the document root.
      * 
-     * @param xmlDoc document from which to pull the signature
+     * @param root root from which to start searching for the signature
      * 
      * @return the signature element, or null
+     * 
+     * @throws StageProcessingException thrown if there is more than one signature present
      */
     protected Element getSignatureElement(final Element root) throws StageProcessingException {
         final List<Element> sigElements = ElementSupport.getChildElementsByTagNameNS(root,

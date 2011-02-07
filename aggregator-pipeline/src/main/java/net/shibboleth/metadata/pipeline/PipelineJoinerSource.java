@@ -52,7 +52,7 @@ public class PipelineJoinerSource extends AbstractComponent implements Source<Me
     private List<Pipeline<Metadata<?>>> joinedPipelines = new LazyList<Pipeline<Metadata<?>>>();
 
     /**
-     * Gets the unmodifiable set of pipelines used by this source
+     * Gets the unmodifiable set of pipelines used by this source.
      * 
      * @return unmodifiable set of pipelines used by this source
      */

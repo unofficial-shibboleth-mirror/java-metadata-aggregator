@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-
 /**
  * A pipeline stage that replaces any SAML EntitiesDescriptor found in the metadata collection with the EntityDescriptor
  * elements contained therein.
@@ -190,14 +189,14 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
         if (validUntil != null
                 && !AttributeSupport.hasAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME)) {
             log.debug("{} pipeline stage adding valid until of {} to entity descriptor {}", new Object[] { getId(),
-                    validUntil, entityId });
+                    validUntil, entityId, });
             AttributeSupport.appendAttribute(entityDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, validUntil);
         }
 
         if (cacheDuration != null
                 && !AttributeSupport.hasAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
             log.debug("{} pipeline stage adding cacheDuration of {} to EntityDescriptor {}", new Object[] { getId(),
-                    cacheDuration, entityId });
+                    cacheDuration, entityId, });
             AttributeSupport
                     .appendAttribute(entityDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME, cacheDuration);
         }

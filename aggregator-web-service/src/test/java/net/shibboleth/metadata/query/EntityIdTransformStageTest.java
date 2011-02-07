@@ -22,13 +22,11 @@ import java.util.List;
 import net.shibboleth.metadata.EntityIdInfo;
 import net.shibboleth.metadata.Metadata;
 import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.MockMetadata;
 import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
 
 import org.springframework.core.convert.converter.Converter;
 import org.testng.annotations.Test;
-
 
 /**
  *

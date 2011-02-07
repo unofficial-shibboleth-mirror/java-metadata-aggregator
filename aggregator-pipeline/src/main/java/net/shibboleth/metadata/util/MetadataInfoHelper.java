@@ -21,7 +21,12 @@ import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MetadataInfo;
 
 /** Helper class for dealing with {@link MetadataInfo} operations. */
-public class MetadataInfoHelper {
+public final class MetadataInfoHelper {
+
+    /** Constructor. */
+    private MetadataInfoHelper() {
+
+    }
 
     /**
      * Adds all the give {@link MetadataInfo} items to each {@link Metadata} element in the given collection.
