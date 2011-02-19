@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <timestamp key="timestamp" datePattern="yyyyMMdd'T'HHmmss"/>
+
+
+    <logger name="net.shibboleth.metadata" level="DEBUG" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <Pattern>%level [%logger:%line] - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>aggreagtor-${timestamp}.log</file>
+        <append>false</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <Pattern>%date{ISO8601} - %level [%logger:%line] - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <root level="WARN">
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>
