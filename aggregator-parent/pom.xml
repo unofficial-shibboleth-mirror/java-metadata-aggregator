@@ -7,14 +7,17 @@
     <name>Shibboleth Metadata Aggregator</name>
     <groupId>net.shibboleth.metadata</groupId>
     <artifactId>aggregator-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>../aggregator-pipeline</module>
         <module>../aggregator-cli</module>
         <module>../aggregator-web-service</module>
+        
+        <!-- Comment this out until it gets fixed
         <module>../aggregator-distribution</module>
+        -->
     </modules>
 
     <properties>
@@ -256,23 +259,23 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:svn:https://svn.middleware.georgetown.edu/java-metadata-aggregator/</connection>
-        <developerConnection>scm:svn:https://svn.middleware.georgetown.edu/java-metadata-aggregator/</developerConnection>
+        <connection>scm:svn:https://svn.shibboleth.net/java-metadata-aggregator/</connection>
+        <developerConnection>scm:svn:https://svn.shibboleth.net/java-metadata-aggregator/</developerConnection>
         <tag>HEAD</tag>
-        <url>http://svn.middleware.georgetown.edu/view/?root=java-metadata-aggregator</url>
+        <url>http://svn.shibboleth.net/view/java-metadata-aggregator</url>
     </scm>
 
     <developers>
         <developer>
             <id>lajoie</id>
             <name>Chad La Joie</name>
-            <organization>SWITCH</organization>
-            <organizationUrl>http://www.switch.ch/</organizationUrl>
+            <organization>Itumi, LLC</organization>
+            <organizationUrl>http://itumi.biz/</organizationUrl>
             <roles>
                 <role>developer</role>
                 <role>documentation</role>
             </roles>
-            <timezone>+1</timezone>
+            <timezone>-5</timezone>
         </developer>
     </developers>
 

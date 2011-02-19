@@ -139,7 +139,7 @@ public final class MetadataHelper {
         try {
             xmlDatatypeFactory = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException e) {
-            // nothing to do, this is required to be supported by JAXP 1.3
+            throw new RuntimeException("JVM does not support creation of javax.xml.datatype.DatatypeFactory");
         }
     }
 }
