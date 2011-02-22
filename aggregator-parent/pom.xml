@@ -129,7 +129,7 @@
             <!-- Compile Dependencies -->
             <dependency>
                 <groupId>${spring.groupId}</groupId>
-                <artifactId>spring-beans</artifactId>
+                <artifactId>spring-context-support</artifactId>
                 <version>${spring.version}</version>
                 <exclusions>
                     <exclusion>
