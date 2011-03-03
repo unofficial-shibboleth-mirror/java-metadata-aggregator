@@ -56,7 +56,7 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     public PrivateKey getObject() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         if (privKeyPass == null) {
-            return CryptReader.readPrivateKey(privKeyRes.getInputStream(), null);
+            return CryptReader.readPrivateKey(privKeyRes.getInputStream());
         } else {
             return CryptReader.readPrivateKey(privKeyRes.getInputStream(), privKeyPass.toCharArray());
         }

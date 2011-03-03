@@ -50,7 +50,7 @@ public class XMLSignatureSigningStageTest {
 
         Security.addProvider(new BouncyCastleProvider());
         PrivateKey signingKey = CryptReader.readPrivateKey(
-                XMLSignatureSigningStageTest.class.getResourceAsStream("/data/signingKey.pem"), null);
+                XMLSignatureSigningStageTest.class.getResourceAsStream("/data/signingKey.pem"));
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
         ArrayList<X509Certificate> certs = new ArrayList<X509Certificate>();
