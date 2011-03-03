@@ -202,7 +202,7 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
         }
 
         final DomMetadata element = new DomMetadata(entityDescriptor);
-        element.getMetadataInfo().put(new EntityIdInfo(entityDescriptor.getAttributeNS("null", entityId)));
+        element.getMetadataInfo().put(new EntityIdInfo(entityId));
         return new DomMetadata(entityDescriptor);
     }
 }

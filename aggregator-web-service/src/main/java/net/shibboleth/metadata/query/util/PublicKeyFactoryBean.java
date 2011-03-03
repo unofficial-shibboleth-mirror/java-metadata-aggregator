@@ -43,7 +43,7 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
     /** {@inheritDoc} */
     public PublicKey getObject() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        return CryptReader.readPemPublicKey(pubKeyRes.getInputStream());
+        return CryptReader.readPublicKey(pubKeyRes.getInputStream());
     }
 
     /** {@inheritDoc} */

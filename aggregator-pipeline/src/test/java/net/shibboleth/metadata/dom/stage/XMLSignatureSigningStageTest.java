@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.dom.stage.XMLSignatureSigningStage;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.opensaml.util.xml.BasicParserPool;
@@ -50,7 +49,7 @@ public class XMLSignatureSigningStageTest {
         mdCol.add(new DomMetadata(doc.getDocumentElement()));
 
         Security.addProvider(new BouncyCastleProvider());
-        PrivateKey signingKey = CryptReader.readPemPrivateKey(
+        PrivateKey signingKey = CryptReader.readPrivateKey(
                 XMLSignatureSigningStageTest.class.getResourceAsStream("/data/signingKey.pem"), null);
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
