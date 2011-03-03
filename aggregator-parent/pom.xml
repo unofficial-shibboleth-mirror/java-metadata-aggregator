@@ -6,7 +6,7 @@
 
     <name>Shibboleth Metadata Aggregator</name>
     <groupId>net.shibboleth.metadata</groupId>
-    <artifactId>aggregator-project</artifactId>
+    <artifactId>aggregator-parent</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -15,9 +15,8 @@
         <module>../aggregator-cli</module>
         <module>../aggregator-web-service</module>
         
-        <!-- Comment this out until it gets fixed
-        <module>../aggregator-distribution</module>
-        -->
+        <!-- Comments out for now until we're read to finish this off -->
+        <!-- <module>../aggregator-distribution</module> -->
     </modules>
 
     <properties>
