@@ -16,9 +16,99 @@
 
 package net.shibboleth.metadata.dom.stage;
 
+import java.security.Security;
+import java.security.cert.X509Certificate;
+
+import net.shibboleth.metadata.MetadataCollection;
+import net.shibboleth.metadata.SimpleMetadataCollection;
+import net.shibboleth.metadata.dom.DomMetadata;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.opensaml.util.xml.BasicParserPool;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+
+import edu.vt.middleware.crypt.util.CryptReader;
+
 /**
  *
  */
 public class XMLSignatureValidationStageTest {
 
+    @Test
+    public void testValidSignature() throws Exception {
+        BasicParserPool parserPool = new BasicParserPool();
+        parserPool.initialize();
+        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/signedSamlMetadata.xml"));
+
+        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+
+        Security.addProvider(new BouncyCastleProvider());
+        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/signingCert.pem"));
+
+        XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setVerificationKey(signingCert);
+        stage.initialize();
+
+        mdCol = stage.execute(mdCol);
+    }
+    
+    @Test
+    public void testInvalidSignature() throws Exception {
+        BasicParserPool parserPool = new BasicParserPool();
+        parserPool.initialize();
+        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/badSignatureSamlMetadata.xml"));
+
+        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+
+        Security.addProvider(new BouncyCastleProvider());
+        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/signingCert.pem"));
+
+        XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setVerificationKey(signingCert);
+        stage.initialize();
+
+        mdCol = stage.execute(mdCol);
+        Assert.assertTrue(mdCol.isEmpty());
+    }
+
+    @Test
+    public void testRequiredSignature() throws Exception {
+        BasicParserPool parserPool = new BasicParserPool();
+        parserPool.initialize();
+        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/samlMetadata.xml"));
+
+        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+
+        Security.addProvider(new BouncyCastleProvider());
+        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/signingCert.pem"));
+
+        XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setSignatureRequired(false);
+        stage.setVerificationKey(signingCert);
+        stage.initialize();
+
+        mdCol = stage.execute(mdCol);
+
+        stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setSignatureRequired(true);
+        stage.setVerificationKey(signingCert);
+        stage.initialize();
+        mdCol = stage.execute(mdCol);
+        Assert.assertTrue(mdCol.isEmpty());
+    }
 }

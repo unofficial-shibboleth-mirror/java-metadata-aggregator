@@ -16,6 +16,9 @@
 
 package net.shibboleth.metadata.dom.stage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.X509Certificate;
@@ -26,8 +29,10 @@ import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.opensaml.util.FileSupport;
 import org.opensaml.util.xml.BasicParserPool;
 import org.opensaml.util.xml.SerializeSupport;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
@@ -49,8 +54,8 @@ public class XMLSignatureSigningStageTest {
         mdCol.add(new DomMetadata(doc.getDocumentElement()));
 
         Security.addProvider(new BouncyCastleProvider());
-        PrivateKey signingKey = CryptReader.readPrivateKey(
-                XMLSignatureSigningStageTest.class.getResourceAsStream("/data/signingKey.pem"));
+        PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/signingKey.pem"));
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
         ArrayList<X509Certificate> certs = new ArrayList<X509Certificate>();
@@ -65,6 +70,14 @@ public class XMLSignatureSigningStageTest {
         stage.initialize();
 
         mdCol = stage.execute(mdCol);
-        System.out.println(SerializeSupport.prettyPrintXML(mdCol.iterator().next().getMetadata()));
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        SerializeSupport.writeNode(mdCol.iterator().next().getMetadata(), output);
+        byte[] signedMetadata = output.toByteArray();
+
+        byte[] expectedOutput = FileSupport.fileToByteArray(new File(XMLSignatureSigningStageTest.class.getResource(
+                "/data/signedSamlMetadata.xml").toURI()));
+
+        Assert.assertEquals(signedMetadata, expectedOutput);
     }
 }

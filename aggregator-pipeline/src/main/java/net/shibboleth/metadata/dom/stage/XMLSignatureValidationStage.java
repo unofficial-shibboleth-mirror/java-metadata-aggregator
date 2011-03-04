@@ -122,7 +122,7 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
             }
         }
 
-        return null;
+        return metadatas;
     }
 
     /**
