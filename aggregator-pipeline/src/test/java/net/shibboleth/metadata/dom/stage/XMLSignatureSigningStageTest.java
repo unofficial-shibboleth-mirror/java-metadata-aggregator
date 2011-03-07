@@ -75,9 +75,14 @@ public class XMLSignatureSigningStageTest {
         SerializeSupport.writeNode(mdCol.iterator().next().getMetadata(), output);
         byte[] signedMetadata = output.toByteArray();
 
-        byte[] expectedOutput = FileSupport.fileToByteArray(new File(XMLSignatureSigningStageTest.class.getResource(
-                "/data/signedSamlMetadata.xml").toURI()));
+        // we read the file in, parse it, and spit it back out to a byte[] in order to avoid any issue with different
+        // fileystem encodings
+        Document expectedDocument = parserPool.parse(XMLSignatureSigningStageTest.class
+                .getResourceAsStream("/data/signedSamlMetadata.xml"));
+        ByteArrayOutputStream expectedOutput = new ByteArrayOutputStream();
+        SerializeSupport.writeNode(expectedDocument, expectedOutput);
+        byte[] expectedSignedMetadata = expectedOutput.toByteArray();
 
-        Assert.assertEquals(signedMetadata, expectedOutput);
+        Assert.assertEquals(signedMetadata, expectedSignedMetadata);
     }
 }
