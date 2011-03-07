@@ -8,7 +8,7 @@
         <groupId>net.shibboleth.metadata</groupId>
         <artifactId>aggregator-parent</artifactId>
         <version>0.5-SNAPSHOT</version>
-        <relativePath>../aggreagtor-parent</relativePath>
+        <relativePath>../aggregator-parent</relativePath>
     </parent>
 
     <name>Shibboleth Metadata Aggreagtor :: Command Line Interface</name>
