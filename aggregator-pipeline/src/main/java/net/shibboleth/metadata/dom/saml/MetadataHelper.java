@@ -16,20 +16,12 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 
-import org.joda.time.DateTime;
-import org.joda.time.chrono.ISOChronology;
-import org.opensaml.util.Assert;
-import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,9 +47,6 @@ public final class MetadataHelper {
 
     /** cacheDuration attribute name. */
     public static final QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");
-
-    /** Factory used to create XML data types. */
-    private static DatatypeFactory xmlDatatypeFactory;
 
     /** Constructor. */
     private MetadataHelper() {
@@ -90,32 +79,6 @@ public final class MetadataHelper {
     }
 
     /**
-     * Adds a validUntil attribute to the given element. The validUntil value is determined as the time now plus the
-     * given lifetime.
-     * 
-     * @param metadata element to which the attribute will be added
-     * @param duration lifetime of the element in milliseconds
-     */
-    public static void addValidUntil(final Element metadata, final long duration) {
-        Assert.isGreaterThan(0, duration, "Validity duration must be 1 or greater.");
-        final DateTime now = new DateTime(ISOChronology.getInstanceUTC()).plus(duration);
-        final XMLGregorianCalendar validUntil = xmlDatatypeFactory.newXMLGregorianCalendar(now.toGregorianCalendar());
-        AttributeSupport.appendAttribute(metadata, VALID_UNTIL_ATTIB_NAME, validUntil.toString());
-    }
-
-    /**
-     * Adds a cacheDuration attribute to the given element.
-     * 
-     * @param metadata element to which the attribute will be added
-     * @param duration cache duration of the element in milliseconds
-     */
-    public static void addCacheDuration(final Element metadata, final long duration) {
-        Assert.isGreaterThan(0, duration, "Cache duration must be 1 or greater.");
-        final Duration xmlDuration = xmlDatatypeFactory.newDuration(duration);
-        AttributeSupport.appendAttribute(metadata, CACHE_DURATION_ATTRIB_NAME, xmlDuration.toString());
-    }
-
-    /**
      * Checks if the given element is an EntitiesDescriptor.
      * 
      * @param e element to check
@@ -133,13 +96,5 @@ public final class MetadataHelper {
      */
     public static boolean isEntityDescriptor(final Element e) {
         return ElementSupport.isElementNamed(e, ENTITY_DESCRIPTOR_NAME);
-    }
-
-    static {
-        try {
-            xmlDatatypeFactory = DatatypeFactory.newInstance();
-        } catch (DatatypeConfigurationException e) {
-            throw new RuntimeException("JVM does not support creation of javax.xml.datatype.DatatypeFactory");
-        }
     }
 }
