@@ -20,6 +20,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
+import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,7 @@ public abstract class AbstractComponent implements Component {
             return;
         }
         id = StringSupport.trimOrNull(componentId);
+        Assert.isNotNull(id, "Component ID may not be null nor empty");
     }
 
     /** {@inheritDoc} */

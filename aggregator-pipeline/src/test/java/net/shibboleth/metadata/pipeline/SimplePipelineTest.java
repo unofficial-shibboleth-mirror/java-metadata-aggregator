@@ -69,7 +69,7 @@ public class SimplePipelineTest {
             pipeline.setStages(stages);
             pipeline.initialize();
             throw new AssertionError();
-        }catch(IllegalArgumentException e){
+        }catch(ComponentInitializationException e){
             //expected this
         }
         
@@ -90,7 +90,7 @@ public class SimplePipelineTest {
             pipeline.setStages(stages);
             pipeline.initialize();
             throw new AssertionError();
-        }catch(IllegalArgumentException e){
+        }catch(ComponentInitializationException e){
             //expected this
         }
     }
