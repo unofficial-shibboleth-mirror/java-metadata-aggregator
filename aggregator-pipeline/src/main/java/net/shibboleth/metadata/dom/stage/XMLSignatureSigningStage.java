@@ -53,6 +53,7 @@ import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
+import org.apache.xml.security.Init;
 import org.opensaml.util.StringSupport;
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
@@ -76,10 +77,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     };
 
     /** XML Signature base URI: {@value} . */
-    public static final String XML_SIG_BASE_URI = "http://www.w3.org/2000/09/xmldsig";
+    public static final String XML_SIG_NS_URI = "http://www.w3.org/2000/09/xmldsig#";
 
     /** XML Encryption base URI: {@value} . */
-    public static final String XML_ENC_BASE_URI = "http://www.w3.org/2001/04/xmlenc";
+    public static final String XML_ENC_NS_URI = "http://www.w3.org/2001/04/xmlenc#";
 
     /**
      * RFC4501 base URI: {@value} .
@@ -89,7 +90,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     public static final String RFC4501_BASE_URI = "http://www.w3.org/2001/04/xmldsig-more";
 
     /** RSA-SHA1 signature algorithm ID: {@value} . */
-    public static final String ALGO_ID_SIGNATURE_RSA_SHA1 = XML_SIG_BASE_URI + "#rsa-sha1";
+    public static final String ALGO_ID_SIGNATURE_RSA_SHA1 = XML_SIG_NS_URI + "rsa-sha1";
 
     /** RSA-SHA256 signature algorithm ID: {@value} . */
     public static final String ALGO_ID_SIGNATURE_RSA_SHA256 = RFC4501_BASE_URI + "#rsa-sha256";
@@ -101,16 +102,16 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     public static final String ALGO_ID_SIGNATURE_RSA_SHA512 = RFC4501_BASE_URI + "#rsa-sha512";
 
     /** SHA1 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA1 = XML_SIG_BASE_URI + "#sha1";
+    public static final String ALGO_ID_DIGEST_SHA1 = XML_SIG_NS_URI + "sha1";
 
     /** SHA256 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA256 = XML_ENC_BASE_URI + "#sha256";
+    public static final String ALGO_ID_DIGEST_SHA256 = XML_ENC_NS_URI + "sha256";
 
     /** SHA384 digest algorithm ID: {@value} . */
     public static final String ALGO_ID_DIGEST_SHA384 = RFC4501_BASE_URI + "#sha384";
 
     /** SHA512 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA512 = XML_ENC_BASE_URI + "#sha512";
+    public static final String ALGO_ID_DIGEST_SHA512 = XML_ENC_NS_URI + "sha512";
 
     /** Inclusive canonicalization, <strong>WITHOUT</strong> comments, algorithm ID: {@value} . */
     public static final String ALGO_ID_C14N_OMIT_COMMENTS = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315";
@@ -125,7 +126,7 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     public static final String ALGO_ID_C14N_EXCL_WITH_COMMENTS = ALGO_ID_C14N_EXCL_OMIT_COMMENTS + "WithComments";
 
     /** Enveloped signature transform ID: {@value} . */
-    public static final String TRANSFORM_ENVELOPED_SIGNATURE = XML_SIG_BASE_URI + "#enveloped-signature";
+    public static final String TRANSFORM_ENVELOPED_SIGNATURE = XML_SIG_NS_URI + "enveloped-signature";
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureSigningStage.class);
@@ -851,6 +852,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        if(!Init.isInitialized()){
+            Init.isInitialized();
+        }
+        
         xmlSigFactory = XMLSignatureFactory.getInstance();
         keyInfoFactory = xmlSigFactory.getKeyInfoFactory();
 

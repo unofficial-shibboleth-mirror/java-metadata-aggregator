@@ -18,7 +18,6 @@ e1lFX0lNQ2x3pb4aa23m3G4dcJGzSHJWP4oMp/jDCp8wxj3INpA4fs0dtw+iqluHP334pjM/5Dn5
 rL5V9hNlY1Vccrw18xQJXbrdPBDu4l9/8J+L1hXz9EGrbWi7thdDlNnuJI+jlYBVNpHHT9ui5Wn3
 ky2gtKCT9MVNOm3GJ/5x</X509Certificate><X509IssuerSerial><X509IssuerName>CN=tester,O=Acme,ST=MI,C=US</X509IssuerName><X509SerialNumber>14758908377974419053</X509SerialNumber></X509IssuerSerial></X509Data></KeyInfo></Signature>
 
-
     <Extensions>
         <switchmd:PublishingInformation xmlns:switchmd="http://www.switch.ch/aai/metadata/extensions">
             <switchmd:Federation>urn:mace:switch.ch:SWITCHaai</switchmd:Federation>

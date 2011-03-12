@@ -16,44 +16,33 @@
 
 package net.shibboleth.metadata.dom.stage;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.security.PrivateKey;
-import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
+import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.SimpleMetadataCollection;
+import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomMetadata;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.opensaml.util.FileSupport;
-import org.opensaml.util.xml.BasicParserPool;
-import org.opensaml.util.xml.SerializeSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import edu.vt.middleware.crypt.util.CryptReader;
 
-/**
- *
- */
-public class XMLSignatureSigningStageTest {
+/** {@link XMLSignatureSigningStage} unit test. */
+public class XMLSignatureSigningStageTest extends BaseDomTest {
 
+    /** Test signing with and verifying the result against a known good. */
     @Test
     public void testSigning() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/samlMetadata.xml"));
+        Element testInput = readXmlData("samlMetadata.xml");
 
         MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        mdCol.add(new DomMetadata(testInput));
 
-        Security.addProvider(new BouncyCastleProvider());
         PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingKey.pem"));
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -70,19 +59,12 @@ public class XMLSignatureSigningStageTest {
         stage.initialize();
 
         mdCol = stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
 
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        SerializeSupport.writeNode(mdCol.iterator().next().getMetadata(), output);
-        byte[] signedMetadata = output.toByteArray();
+        DomMetadata result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
-        // we read the file in, parse it, and spit it back out to a byte[] in order to avoid any issue with different
-        // fileystem encodings
-        Document expectedDocument = parserPool.parse(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/signedSamlMetadata.xml"));
-        ByteArrayOutputStream expectedOutput = new ByteArrayOutputStream();
-        SerializeSupport.writeNode(expectedDocument, expectedOutput);
-        byte[] expectedSignedMetadata = expectedOutput.toByteArray();
-
-        Assert.assertEquals(signedMetadata, expectedSignedMetadata);
+        Element expected = readXmlData("signedSamlMetadata.xml");
+        assertXmlEqual(expected, result.getMetadata());
     }
 }

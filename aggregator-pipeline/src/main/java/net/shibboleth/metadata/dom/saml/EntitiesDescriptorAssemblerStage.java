@@ -76,11 +76,11 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
         final DomMetadata metadata = new DomMetadata(entitiesDescriptor);
         metadata.getMetadataInfo().put(compInfo);
 
-        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
-        mec.add(new DomMetadata(entitiesDescriptor));
+        metadataCollection.clear();
+        metadataCollection.add(metadata);
 
         compInfo.setCompleteInstant();
-        return mec;
+        return metadataCollection;
     }
 
     /**

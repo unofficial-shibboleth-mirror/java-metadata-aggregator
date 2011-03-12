@@ -16,37 +16,35 @@
 
 package net.shibboleth.metadata.dom.stage;
 
-import java.security.Security;
 import java.security.cert.X509Certificate;
 
+import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.SimpleMetadataCollection;
+import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomMetadata;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.opensaml.util.xml.BasicParserPool;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import edu.vt.middleware.crypt.util.CryptReader;
 
-/**
- *
- */
-public class XMLSignatureValidationStageTest {
+/** Unit test for {@link XMLSchemaValidationStage}. */
+public class XMLSignatureValidationStageTest extends BaseDomTest {
 
+    /**
+     * Tests verifying a file with a valid signature.
+     * 
+     * @throws Exception thrown if there is a problem verifying the data
+     */
     @Test
     public void testValidSignature() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/signedSamlMetadata.xml"));
+        Element testInput = readXmlData("signedSamlMetadata.xml");
 
         MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        mdCol.add(new DomMetadata(testInput));
 
-        Security.addProvider(new BouncyCastleProvider());
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
 
@@ -56,19 +54,24 @@ public class XMLSignatureValidationStageTest {
         stage.initialize();
 
         mdCol = stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DomMetadata result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
     }
-    
+
+    /**
+     * Test that a metadata element with an invalid signature is removed from the collection.
+     * 
+     * @throws Exception thrown if there is a problem checking the signature
+     */
     @Test
     public void testInvalidSignature() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/badSignatureSamlMetadata.xml"));
+        Element testInput = readXmlData("badSignatureSamlMetadata.xml");
 
         MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        mdCol.add(new DomMetadata(testInput));
 
-        Security.addProvider(new BouncyCastleProvider());
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
 
@@ -81,17 +84,19 @@ public class XMLSignatureValidationStageTest {
         Assert.assertTrue(mdCol.isEmpty());
     }
 
+    /**
+     * Test that metadata elements that do not contain signature are appropriately filtered out when valid signatures
+     * are required.
+     * 
+     * @throws Exception thrown if there is a problem checking signatures
+     */
     @Test
     public void testRequiredSignature() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/samlMetadata.xml"));
+        Element testInput = readXmlData("samlMetadata.xml");
 
         MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        mdCol.add(new DomMetadata(testInput));
 
-        Security.addProvider(new BouncyCastleProvider());
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
 
@@ -102,6 +107,10 @@ public class XMLSignatureValidationStageTest {
         stage.initialize();
 
         mdCol = stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DomMetadata result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
         stage = new XMLSignatureValidationStage();
         stage.setId("test");

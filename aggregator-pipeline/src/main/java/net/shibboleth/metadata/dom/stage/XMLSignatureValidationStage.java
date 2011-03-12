@@ -25,10 +25,13 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.AbstractComponent;
+import net.shibboleth.metadata.pipeline.ComponentInfo;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.metadata.util.MetadataInfoHelper;
 
+import org.apache.xml.security.Init;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xml.security.signature.XMLSignatureException;
@@ -115,6 +118,8 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
     /** {@inheritDoc} */
     public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadatas)
             throws StageProcessingException {
+        ComponentInfo compInfo = new ComponentInfo(this);
+
         if (!metadatas.isEmpty()) {
             final Iterator<DomMetadata> mdItr = metadatas.iterator();
             if (!signatureVerified(mdItr.next().getMetadata())) {
@@ -122,6 +127,8 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
             }
         }
 
+        MetadataInfoHelper.addToAll(metadatas, compInfo);
+        compInfo.setCompleteInstant();
         return metadatas;
     }
 
@@ -165,8 +172,7 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
             }
         } catch (XMLSignatureException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Signature on the following metadata element did not validate \n {}",
-                        SerializeSupport.prettyPrintXML(root));
+                log.debug("Signature was not valid, metadata element will be removed", e);
             }
         }
 
@@ -184,7 +190,7 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
      */
     protected Element getSignatureElement(final Element root) throws StageProcessingException {
         final List<Element> sigElements = ElementSupport.getChildElementsByTagNameNS(root,
-                XMLSignatureSigningStage.XML_SIG_BASE_URI, "Signature");
+                XMLSignatureSigningStage.XML_SIG_NS_URI, "Signature");
 
         if (sigElements.isEmpty()) {
             return null;
@@ -202,6 +208,10 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
         if (verificationKey == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", VerificationKey must not be null");
+        }
+
+        if (!Init.isInitialized()) {
+            Init.init();
         }
     }
 }
