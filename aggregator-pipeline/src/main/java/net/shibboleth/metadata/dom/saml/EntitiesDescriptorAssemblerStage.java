@@ -16,16 +16,19 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.AbstractComponent;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
 import net.shibboleth.metadata.pipeline.Stage;
 
+import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
@@ -40,8 +43,39 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
     /** Name of the EntitiesDescriptor's Name attribute. */
     public static final QName NAME_ATTRIB_NAME = new QName("Name");
 
+    /** Strategy used to order a collection of metadata. The default strategy performs no ordering. */
+    private MetadataOrderingStrategy orderingStrategy;
+
     /** Name to use for the EntitiesDescriptor. */
     private String descriptorName;
+
+    /** Constructor. */
+    public EntitiesDescriptorAssemblerStage() {
+        super();
+        orderingStrategy = new NoOpMetadataOrderingStrategy();
+    }
+
+    /**
+     * Gets the strategy used to order a collection of metadata.
+     * 
+     * @return strategy used to order a collection of metadata
+     */
+    public MetadataOrderingStrategy getMetadataOrderingStrategy() {
+        return orderingStrategy;
+    }
+
+    /**
+     * Sets the strategy used to order a collection of metadata.
+     * 
+     * @param strategy strategy used to order a collection of metadata, never null
+     */
+    public synchronized void setMetadataOrderingStrategy(MetadataOrderingStrategy strategy) {
+        if (isInitialized()) {
+            return;
+        }
+        Assert.isNotNull(strategy, "Metadata ordering strategy may not be null");
+        orderingStrategy = strategy;
+    }
 
     /**
      * Gets the Name used for the generated descriptor.
@@ -68,7 +102,9 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
     public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection) {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(metadataCollection);
+        final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(orderingStrategy
+                .order(metadataCollection));
+
         if (entitiesDescriptor != null) {
             addDescriptorName(entitiesDescriptor);
         }
@@ -92,6 +128,32 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
     protected void addDescriptorName(final Element entitiesDescriptor) {
         if (descriptorName != null) {
             AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
+        }
+    }
+
+    /**
+     * A strategy that defines how to order a {@link MetadataCollection}.
+     * 
+     * @param <MetadataType> type of metadata elements in the collection
+     */
+    public static interface MetadataOrderingStrategy {
+
+        /**
+         * Orders a given metadata collection.
+         * 
+         * @param metadata collection of metadata, never null
+         * 
+         * @return sorted collection of metadata, never null
+         */
+        public List<DomMetadata> order(MetadataCollection<DomMetadata> metadata);
+    }
+
+    /** An ordering strategy that simply returns the collection in whatever order it was already in. */
+    private class NoOpMetadataOrderingStrategy implements MetadataOrderingStrategy {
+
+        /** {@inheritDoc} */
+        public List<DomMetadata> order(MetadataCollection<DomMetadata> metadata) {
+            return new ArrayList<DomMetadata>(metadata);
         }
     }
 }

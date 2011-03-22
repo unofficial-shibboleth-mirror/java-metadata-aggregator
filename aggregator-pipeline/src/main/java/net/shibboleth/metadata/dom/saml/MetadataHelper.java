@@ -16,10 +16,11 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.util.Collection;
+
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 
 import org.opensaml.util.xml.ElementSupport;
@@ -61,7 +62,7 @@ public final class MetadataHelper {
      * 
      * @return the constructed EntitiesDescriptor
      */
-    public static Element buildEntitiesDescriptor(final MetadataCollection<DomMetadata> metadataCollection) {
+    public static Element buildEntitiesDescriptor(final Collection<DomMetadata> metadataCollection) {
         final Document owningDocument = metadataCollection.iterator().next().getMetadata().getOwnerDocument();
 
         final Element entitiesDescriptor = ElementSupport.constructElement(owningDocument, ENTITIES_DESCRIPTOR_NAME);
