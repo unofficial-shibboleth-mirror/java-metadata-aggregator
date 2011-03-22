@@ -52,7 +52,7 @@ public class SimpleCommandLine {
      */
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.err.println("This command line only supports a two arguments, "
+            System.err.println("This command line only supports two arguments, "
                     + "the file: URI path to the Spring configuration file describing the metadata pipeline "
                     + "and the file: URI path to which the resultant metadata will be written.");
             System.exit(1);
@@ -61,7 +61,7 @@ public class SimpleCommandLine {
         Logger log = LoggerFactory.getLogger(SimpleCommandLine.class);
 
         try {
-            log.debug("Initializing Spring context with configuraiton file {}", args[0]);
+            log.debug("Initializing Spring context with configuration file {}", args[0]);
             FileSystemXmlApplicationContext appCtx = new FileSystemXmlApplicationContext(args[0]);
 
             log.debug("Retreiving pipeline from Spring context");
@@ -72,16 +72,16 @@ public class SimpleCommandLine {
             }
 
             if (!pipeline.isInitialized()) {
-                log.debug("Retreived pipeline has not been initialized, initializing it now");
+                log.debug("Retrieved pipeline has not been initialized, initializing it now");
                 pipeline.initialize();
             } else {
-                log.debug("Retreived pipeline has already been initialized");
+                log.debug("Retrieved pipeline has already been initialized");
             }
 
             log.debug("Executing pipeline");
             MetadataCollection metadata = pipeline.execute();
 
-            log.debug("Retreiving metadata serialized from Spring context");
+            log.debug("Retrieving metadata serialized from Spring context");
             MetadataSerializer serializer = appCtx.getBean(MetadataSerializer.class);
             if (serializer == null) {
                 log.error("No net.shibboleth.metadata.MetadataSerializer defined in Spring configuration");
