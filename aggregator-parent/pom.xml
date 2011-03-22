@@ -13,9 +13,8 @@
     <modules>
         <module>../aggregator-pipeline</module>
         <module>../aggregator-cli</module>
-        <module>../aggregator-web-service</module>
-        
-        <!-- Comments out for now until we're read to finish this off -->
+        <!-- Comments out for now until we're ready to work on this -->
+        <!-- <module>../aggregator-web-service</module> -->
         <!-- <module>../aggregator-distribution</module> -->
     </modules>
 
@@ -103,6 +102,36 @@
         </dependency>
 
         <!-- Runtime Dependencies -->
+        <dependency>
+            <groupId>${xerces.groupId}</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>${xerces.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${xerces.groupId}</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xerces.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${xerces.groupId}</groupId>
+            <artifactId>resolver</artifactId>
+            <version>${xerces.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${xerces.groupId}</groupId>
+            <artifactId>serializer</artifactId>
+            <version>${xerces.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
@@ -152,36 +181,6 @@
             <!-- Provided Dependencies -->
 
             <!-- Runtime Dependencies -->
-            <dependency>
-                <groupId>${xerces.groupId}</groupId>
-                <artifactId>xml-apis</artifactId>
-                <version>${xerces.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>${xerces.groupId}</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>${xerces.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>${xerces.groupId}</groupId>
-                <artifactId>resolver</artifactId>
-                <version>${xerces.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>${xerces.groupId}</groupId>
-                <artifactId>serializer</artifactId>
-                <version>${xerces.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.xalan</groupId>
-                <artifactId>xalan</artifactId>
-                <version>2.7.1</version>
-                <scope>runtime</scope>
-            </dependency>
 
             <!-- Test Dependencies -->
         </dependencies>
@@ -198,6 +197,23 @@
                         <source>1.6</source>
                         <target>1.6</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <configuration>
+                        <tarLongFileMode>gnu</tarLongFileMode>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>attached</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
