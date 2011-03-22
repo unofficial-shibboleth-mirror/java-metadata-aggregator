@@ -17,6 +17,7 @@
 package net.shibboleth.metadata.dom.source;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,12 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
 
     /** The file path to the DOM material provided by this source. May be a file or a directory. */
     private File sourceFile;
+
+    /**
+     * Filter used to determine if a file should be included. This is only used if the {@link #sourceFile} is a
+     * directory.
+     */
+    private FileFilter sourceFileFilter;
 
     /** Whether or not directories are recursed if the given input file is a directory. */
     private boolean recurseDirectories;
@@ -106,6 +113,28 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     }
 
     /**
+     * Gets the filter used to determine if a file, in a directory, should be treated as a source file. If no filter is
+     * set then all files are used as source files. If the source file is not a directory this filter is meaningless.
+     * 
+     * @return filter used to determine if a file, in a directory, should be treated as a source file, may be null
+     */
+    public FileFilter getSourceFileFilter() {
+        return sourceFileFilter;
+    }
+
+    /**
+     * Sets the filter used to determine if a file, in a directory, should be treated as a source file.
+     * 
+     * @param filter filter used to determine if a file, in a directory, should be treated as a source file, may be null
+     */
+    public synchronized void setSourceFileFilter(FileFilter filter) {
+        if (isInitialized()) {
+            return;
+        }
+        sourceFileFilter = filter;
+    }
+
+    /**
      * Gets whether directories will be recursively searched for XML input files.
      * 
      * @return whether directories will be recursively searched for XML input files
@@ -154,7 +183,11 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
         final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
 
         final ArrayList<File> sourceFiles = new ArrayList<File>();
-        getSourceFiles(sourceFile, sourceFiles);
+        if(sourceFile.isFile()){
+            sourceFiles.add(sourceFile);
+        }else{
+            getSourceFiles(sourceFile, sourceFiles);
+        }
 
         if (sourceFiles.isEmpty()) {
             log.debug("{} pipeline source: no input XML files in source path {}", getId(), sourceFile.getPath());
@@ -184,7 +217,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      */
     protected void getSourceFiles(final File input, final List<File> collector) {
         if (input.isFile()) {
-            if (isXmlFile(input)) {
+            if(sourceFileFilter == null || sourceFileFilter.accept(input)){
                 collector.add(input);
             }
             return;
@@ -199,17 +232,6 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
                 }
             }
         }
-    }
-
-    /**
-     * Checks to see if the file is an XML file. Default implementation simply checks to see if the file ends in '.xml'.
-     * 
-     * @param file file to check
-     * 
-     * @return true of the file is an XML file, false if not
-     */
-    protected boolean isXmlFile(final File file) {
-        return file.getName().endsWith(".xml");
     }
 
     /**
