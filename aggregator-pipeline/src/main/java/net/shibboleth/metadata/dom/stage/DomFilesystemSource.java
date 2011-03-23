@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.source;
+package net.shibboleth.metadata.dom.stage;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.AbstractComponent;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Source;
-import net.shibboleth.metadata.pipeline.SourceProcessingException;
+import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
 import org.opensaml.util.xml.ParserPool;
@@ -44,7 +44,7 @@ import org.w3c.dom.Document;
  * When caching is enabled the collection of metadata produced is always a clone of the DOM element that is cached.
  */
 @ThreadSafe
-public class DomFilesystemSource extends AbstractComponent implements Source<DomMetadata> {
+public class DomFilesystemSource extends BaseStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DomFilesystemSource.class);
@@ -177,34 +177,26 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute() throws SourceProcessingException {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
-
+    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<File>();
-        if(sourceFile.isFile()){
+        if (sourceFile.isFile()) {
             sourceFiles.add(sourceFile);
-        }else{
+        } else {
             getSourceFiles(sourceFile, sourceFiles);
         }
 
         if (sourceFiles.isEmpty()) {
             log.debug("{} pipeline source: no input XML files in source path {}", getId(), sourceFile.getPath());
-            return mec;
+            return;
         }
 
         DomMetadata dme;
         for (File source : sourceFiles) {
             dme = processSourceFile(source);
             if (dme != null) {
-                dme.getMetadataInfo().put(compInfo);
-                mec.add(dme);
+                metadataCollection.add(dme);
             }
         }
-
-        compInfo.setCompleteInstant();
-        return mec;
     }
 
     /**
@@ -217,7 +209,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      */
     protected void getSourceFiles(final File input, final List<File> collector) {
         if (input.isFile()) {
-            if(sourceFileFilter == null || sourceFileFilter.accept(input)){
+            if (sourceFileFilter == null || sourceFileFilter.accept(input)) {
                 collector.add(input);
             }
             return;
@@ -245,7 +237,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
      * @throws SourceProcessingException thrown if there is a problem reading in the metadata and
      *             {@link #errorCausesSourceFailure} is true
      */
-    protected DomMetadata processSourceFile(final File source) throws SourceProcessingException {
+    protected DomMetadata processSourceFile(final File source) throws StageProcessingException {
         FileInputStream xmlIn = null;
 
         try {
@@ -255,7 +247,7 @@ public class DomFilesystemSource extends AbstractComponent implements Source<Dom
             return new DomMetadata(doc.getDocumentElement());
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
-                throw new SourceProcessingException(getId() + " pipeline source unable to parse XML input file "
+                throw new StageProcessingException(getId() + " pipeline source unable to parse XML input file "
                         + source.getPath(), e);
             } else {
                 log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {

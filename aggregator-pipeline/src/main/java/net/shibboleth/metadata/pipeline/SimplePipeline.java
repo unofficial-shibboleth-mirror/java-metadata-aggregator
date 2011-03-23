@@ -16,49 +16,28 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.util.MetadataInfoHelper;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
 
-
-/** 
- * A very simple implementation of {@link Pipeline}. This implementation takes a static source and list of stages. 
- *
+/**
+ * A very simple implementation of {@link Pipeline}. This implementation takes a static source and list of stages.
+ * 
  * @param <MetadataType> the type of metadata which is produced by the source and operated upon by the stages
  */
 @ThreadSafe
 public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractComponent implements
         Pipeline<MetadataType> {
 
-    /** Source for this pipeline. */
-    private Source<MetadataType> pipelineSource;
-
     /** Stages for this pipeline. */
     private List<Stage<MetadataType>> pipelineStages = Collections.emptyList();
-
-    /** {@inheritDoc} */
-    public Source<MetadataType> getSource() {
-        return pipelineSource;
-    }
-
-    /**
-     * Sets the source that produces the initial set of metadata upon which this pipeline operates.
-     * 
-     * @param source source that produces the initial set of metadata upon which this pipeline operates
-     */
-    public synchronized void setSource(final Source<MetadataType> source) {
-        if (isInitialized()) {
-            return;
-        }
-        pipelineSource = source;
-    }
 
     /** {@inheritDoc} */
     public List<Stage<MetadataType>> getStages() {
@@ -79,29 +58,19 @@ public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractCo
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<MetadataType> execute() throws PipelineProcessingException {
+    public void execute(Collection<MetadataType> metadataCollection) throws PipelineProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        MetadataCollection<MetadataType> metadataCollection = pipelineSource.execute();
         for (Stage<MetadataType> stage : pipelineStages) {
-            metadataCollection = stage.execute(metadataCollection);
+            stage.execute(metadataCollection);
         }
 
         compInfo.setCompleteInstant();
         MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
     }
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        if (pipelineSource == null) {
-            throw new ComponentInitializationException("Unable to initialize " + getId() + ", Source may not be null");
-        }
-
-        if (!pipelineSource.isInitialized()) {
-            pipelineSource.initialize();
-        }
-
         for (Stage<MetadataType> stage : pipelineStages) {
             if (!stage.isInitialized()) {
                 stage.initialize();

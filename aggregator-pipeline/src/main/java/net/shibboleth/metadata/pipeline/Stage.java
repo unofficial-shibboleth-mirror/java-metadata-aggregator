@@ -16,13 +16,13 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.Collection;
+
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
 
 /**
- * A stage in a {@link net.shibboleth.metadata.pipeline.Pipeline} that transforms data in a
- * particular manner.
+ * A stage in a {@link Pipeline} that transforms data in a particular manner.
  * 
  * Stages must be thread safe and reusable.
  * 
@@ -36,10 +36,7 @@ public interface Stage<ElementType extends Metadata<?>> extends Component {
      * 
      * @param metadataCollection the data to be transformed
      * 
-     * @return the output of the transformation
-     * 
      * @throws StageProcessingException thrown if there is a problem running this stage on the given input
      */
-    public MetadataCollection<ElementType> execute(MetadataCollection<ElementType> metadataCollection)
-            throws StageProcessingException;
+    public void execute(Collection<ElementType> metadataCollection) throws StageProcessingException;
 }

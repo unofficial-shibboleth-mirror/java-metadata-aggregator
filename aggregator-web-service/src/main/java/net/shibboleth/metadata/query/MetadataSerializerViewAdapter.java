@@ -17,6 +17,7 @@
 package net.shibboleth.metadata.query;
 
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
@@ -25,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MetadataSerializer;
 
 import org.opensaml.util.Assert;
@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.View;
-
 
 /** Adapts a {@link MetadataSerializer} to a Spring {@link View}. */
 public class MetadataSerializerViewAdapter implements View {
@@ -71,7 +70,7 @@ public class MetadataSerializerViewAdapter implements View {
     @SuppressWarnings("unchecked")
     public void render(final Map<String, ?> model, final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) throws Exception {
-        final MetadataCollection<Metadata<?>> metadataCollection = (MetadataCollection<Metadata<?>>) model
+        final Collection<Metadata<?>> metadataCollection = (Collection<Metadata<?>>) model
                 .get(QueryController.METADATA_MODEL_ATTRIB);
 
         if (metadataCollection == null || metadataCollection.isEmpty()) {

@@ -17,15 +17,14 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.Stage;
 
 import org.opensaml.util.Assert;
@@ -38,7 +37,7 @@ import org.w3c.dom.Element;
  * element.
  */
 @ThreadSafe
-public class EntitiesDescriptorAssemblerStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntitiesDescriptorAssemblerStage extends BaseStage<DomMetadata> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
     public static final QName NAME_ATTRIB_NAME = new QName("Name");
@@ -99,9 +98,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection) {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
+    protected void doExecute(final Collection<DomMetadata> metadataCollection) {
         final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(orderingStrategy
                 .order(metadataCollection));
 
@@ -110,13 +107,8 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
         }
 
         final DomMetadata metadata = new DomMetadata(entitiesDescriptor);
-        metadata.getMetadataInfo().put(compInfo);
-
         metadataCollection.clear();
         metadataCollection.add(metadata);
-
-        compInfo.setCompleteInstant();
-        return metadataCollection;
     }
 
     /**
@@ -145,14 +137,14 @@ public class EntitiesDescriptorAssemblerStage extends AbstractComponent implemen
          * 
          * @return sorted collection of metadata, never null
          */
-        public List<DomMetadata> order(MetadataCollection<DomMetadata> metadata);
+        public List<DomMetadata> order(Collection<DomMetadata> metadata);
     }
 
     /** An ordering strategy that simply returns the collection in whatever order it was already in. */
     private class NoOpMetadataOrderingStrategy implements MetadataOrderingStrategy {
 
         /** {@inheritDoc} */
-        public List<DomMetadata> order(MetadataCollection<DomMetadata> metadata) {
+        public List<DomMetadata> order(Collection<DomMetadata> metadata) {
             return new ArrayList<DomMetadata>(metadata);
         }
     }

@@ -18,11 +18,9 @@ package net.shibboleth.metadata.dom.stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.dom.stage.XMLSchemaValidationStage;
 
 import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.Resource;
@@ -30,20 +28,22 @@ import org.opensaml.util.xml.BasicParserPool;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
-
 public class XMLSchemaValidationStageTest {
 
     @Test
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        MetadataCollection<DomMetadata> mdCol = stage.execute(buildMetdataCollection("/data/samlMetadata.xml"));
+
+        Collection<DomMetadata> mdCol = buildMetdataCollection("/data/samlMetadata/entitiesDescriptor1.xml");
+        stage.execute(mdCol);
         assert mdCol.size() == 1;
     }
 
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        MetadataCollection<DomMetadata> mdCol = stage.execute(buildMetdataCollection("/data/invalidSamlMetadata.xml"));
+        Collection<DomMetadata> mdCol = buildMetdataCollection("/data/samlMetadata/invalidSamlMetadata.xml.xml");
+        stage.execute(mdCol);
         assert mdCol.size() == 0;
     }
 
@@ -64,12 +64,12 @@ public class XMLSchemaValidationStageTest {
         return stage;
     }
 
-    protected SimpleMetadataCollection<DomMetadata> buildMetdataCollection(String xmlPath) throws Exception {
+    protected Collection<DomMetadata> buildMetdataCollection(String xmlPath) throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
         Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
 
-        SimpleMetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(doc.getDocumentElement()));
 
         return mdCol;

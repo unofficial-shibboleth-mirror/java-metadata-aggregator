@@ -18,18 +18,13 @@ package net.shibboleth.metadata.dom.stage;
 
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
-import java.util.Iterator;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
 
 import org.apache.xml.security.Init;
 import org.apache.xml.security.exceptions.XMLSecurityException;
@@ -48,7 +43,7 @@ import org.w3c.dom.Element;
  * whose signature is invalid.
  */
 @ThreadSafe
-public class XMLSignatureValidationStage extends AbstractComponent implements Stage<DomMetadata> {
+public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureValidationStage.class);
@@ -116,20 +111,12 @@ public class XMLSignatureValidationStage extends AbstractComponent implements St
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadatas)
-            throws StageProcessingException {
-        ComponentInfo compInfo = new ComponentInfo(this);
-
-        if (!metadatas.isEmpty()) {
-            final Iterator<DomMetadata> mdItr = metadatas.iterator();
-            if (!signatureVerified(mdItr.next().getMetadata())) {
-                mdItr.remove();
-            }
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
+        if (!signatureVerified(metadata.getMetadata())) {
+            return false;
         }
 
-        MetadataInfoHelper.addToAll(metadatas, compInfo);
-        compInfo.setCompleteInstant();
-        return metadatas;
+        return true;
     }
 
     /**

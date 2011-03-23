@@ -16,136 +16,109 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MockMetadata;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.SimplePipeline;
-import net.shibboleth.metadata.pipeline.Source;
-import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.pipeline.StaticSource;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
 import org.testng.annotations.Test;
 
-
 public class SimplePipelineTest {
 
     @Test
     public void testInitialize() throws Exception {
-        Source<MockMetadata> source = buildSource();
         List<Stage<MockMetadata>> stages = buildStages();
-        
+
         SimplePipeline<MockMetadata> pipeline = new SimplePipeline<MockMetadata>();
         pipeline.setId(" test ");
-        pipeline.setSource(source);
         pipeline.setStages(stages);
         assert "test".equals(pipeline.getId());
-        assert pipeline.getSource() == source;
-        assert !pipeline.getSource().isInitialized();
         assert pipeline.getStages() != stages;
-        assert pipeline.getStages().size() == 2;
+        assert pipeline.getStages().size() == 3;
         assert pipeline.getStages().containsAll(stages);
         assert !pipeline.getStages().get(0).isInitialized();
         assert !pipeline.getStages().get(1).isInitialized();
         assert pipeline.getInitializationInstant() == null;
-        
-        pipeline.initialize();        
+
+        pipeline.initialize();
         assert "test".equals(pipeline.getId());
-        assert pipeline.getSource() == source;
-        assert pipeline.getSource().isInitialized();
         assert pipeline.getStages() != stages;
-        assert pipeline.getStages().size() == 2;
+        assert pipeline.getStages().size() == 3;
         assert pipeline.getStages().containsAll(stages);
         assert pipeline.getStages().get(0).isInitialized();
         assert pipeline.getStages().get(1).isInitialized();
+        assert pipeline.getStages().get(2).isInitialized();
         assert pipeline.getInitializationInstant() != null;
-        
-        try{
+
+        try {
             pipeline = new SimplePipeline<MockMetadata>();
-            pipeline.setSource(source);
             pipeline.setStages(stages);
             pipeline.initialize();
             throw new AssertionError();
-        }catch(ComponentInitializationException e){
-            //expected this
+        } catch (ComponentInitializationException e) {
+            // expected this
         }
-        
-        try{
+
+        try {
             pipeline = new SimplePipeline<MockMetadata>();
             pipeline.setId("");
-            pipeline.setSource(source);
             pipeline.setStages(stages);
             pipeline.initialize();
             throw new AssertionError();
-        }catch(IllegalArgumentException e){
-            //expected this
-        }
-        
-        try{
-            pipeline = new SimplePipeline<MockMetadata>();
-            pipeline.setId("test");
-            pipeline.setStages(stages);
-            pipeline.initialize();
-            throw new AssertionError();
-        }catch(ComponentInitializationException e){
-            //expected this
+        } catch (IllegalArgumentException e) {
+            // expected this
         }
     }
-    
+
     @Test
-    public void testExecution() throws Exception{
-        Source<MockMetadata> source = buildSource();
+    public void testExecution() throws Exception {
         List<Stage<MockMetadata>> stages = buildStages();
-        
+
         SimplePipeline<MockMetadata> pipeline = new SimplePipeline<MockMetadata>();
         pipeline.setId("test");
-        pipeline.setSource(source);
         pipeline.setStages(stages);
-                
-        MetadataCollection<MockMetadata> result = pipeline.execute();
-        assert result.size() == 2;
-        
-        assert ((CountingStage)stages.get(0)).getCount() == 1;
-        assert ((CountingStage)stages.get(1)).getCount() == 1;
-        
-        MockMetadata md = result.iterator().next();
+
+        ArrayList<MockMetadata> metadata = new ArrayList<MockMetadata>();
+        pipeline.execute(metadata);
+        assert metadata.size() == 2;
+
+        assert ((CountingStage) stages.get(1)).getCount() == 1;
+        assert ((CountingStage) stages.get(2)).getCount() == 1;
+
+        MockMetadata md = metadata.iterator().next();
         assert md.getMetadataInfo().containsKey(ComponentInfo.class);
-        assert md.getMetadataInfo().values().size() == 1;
+        assert md.getMetadataInfo().values().size() == 2;
         assert md.getMetadataInfo().containsKey(ComponentInfo.class);
-        
-        try{
+
+        try {
             List<Stage<MockMetadata>> pipelineStages = pipeline.getStages();
             pipelineStages.clear();
             throw new AssertionError();
-        }catch(UnsupportedOperationException e){
-            //expected this
+        } catch (UnsupportedOperationException e) {
+            // expected this
         }
-        
-        result = pipeline.execute();
-        assert result.size() == 2;
-        assert ((CountingStage)stages.get(0)).getCount() == 2;
-        assert ((CountingStage)stages.get(0)).getCount() == 2;
+
+        metadata = new ArrayList<MockMetadata>();
+        pipeline.execute(metadata);
+        assert metadata.size() == 2;
+        assert ((CountingStage) stages.get(1)).getCount() == 2;
+        assert ((CountingStage) stages.get(2)).getCount() == 2;
     }
-    
-    protected Source<MockMetadata> buildSource(){
+
+    protected List<Stage<MockMetadata>> buildStages() {
         MockMetadata md1 = new MockMetadata("one");
         MockMetadata md2 = new MockMetadata("two");
-        
-        StaticSource<MockMetadata> source = new StaticSource<MockMetadata>();
+
+        StaticMetadataInjectionStage<MockMetadata> source = new StaticMetadataInjectionStage<MockMetadata>();
         source.setId("src");
         source.setSourceMetadata(CollectionSupport.toList(md1, md2));
-        
-        return source;
-    }
-    
-    protected List<Stage<MockMetadata>> buildStages(){
+
         CountingStage<MockMetadata> stage1 = new CountingStage<MockMetadata>();
         CountingStage<MockMetadata> stage2 = new CountingStage<MockMetadata>();
-        
-        LazyList<? extends Stage<MockMetadata>> stages = CollectionSupport.toList(stage1, stage2);
+
+        LazyList<? extends Stage<MockMetadata>> stages = CollectionSupport.toList(source, stage1, stage2);
         return (List<Stage<MockMetadata>>) stages;
     }
 }

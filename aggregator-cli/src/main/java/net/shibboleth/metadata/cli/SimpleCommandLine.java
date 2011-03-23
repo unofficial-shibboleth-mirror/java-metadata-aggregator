@@ -19,9 +19,10 @@ package net.shibboleth.metadata.cli;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MetadataSerializer;
+import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.Pipeline;
 
 import org.slf4j.Logger;
@@ -79,7 +80,8 @@ public class SimpleCommandLine {
             }
 
             log.debug("Executing pipeline");
-            MetadataCollection metadata = pipeline.execute();
+            ArrayList<DomMetadata> metadata = new ArrayList<DomMetadata>();
+            pipeline.execute(metadata);
 
             log.debug("Retrieving metadata serialized from Spring context");
             MetadataSerializer serializer = appCtx.getBean(MetadataSerializer.class);

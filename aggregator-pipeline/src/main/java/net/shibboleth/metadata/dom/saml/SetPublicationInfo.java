@@ -16,10 +16,10 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import net.shibboleth.metadata.MetadataCollection;
+import java.util.Collection;
+
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
@@ -29,13 +29,11 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * given descriptor already contains publication information than the existing information is moved to the publication
  * path.
  */
-public class SetPublicationInfo extends AbstractComponent implements Stage<DomMetadata> {
+public class SetPublicationInfo extends BaseStage<DomMetadata> {
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
+    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
         // TODO Auto-generated method stub
-        return null;
-    }
 
+    }
 }

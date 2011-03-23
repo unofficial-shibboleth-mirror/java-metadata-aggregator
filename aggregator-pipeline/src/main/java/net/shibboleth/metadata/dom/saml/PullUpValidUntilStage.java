@@ -16,11 +16,15 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.joda.time.convert.ConverterManager;
 import org.opensaml.util.Assert;
@@ -29,21 +33,12 @@ import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
-
 /**
  * For each metadata collection element that is a SAML EntitiesDescriptor this stage will scan all descendant
  * EntitiesDescriptors and EntityDescriptors, determine the earliest valid until date, set that on the root
  * EntitiesDescriptor and remove the valid until dates from all descendants.
  */
-public class PullUpValidUntilStage extends AbstractComponent implements Stage<DomMetadata> {
+public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
 
     /** Manager used to convert to read/write XML data/times. */
     ConverterManager timeConverter;
@@ -96,22 +91,11 @@ public class PullUpValidUntilStage extends AbstractComponent implements Stage<Do
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
-
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        Element descriptor;
-        long nearestValidUntil;
-        for (DomMetadata metadata : metadataCollection) {
-            descriptor = metadata.getMetadata();
-            nearestValidUntil = getNearestValidUntil(descriptor);
-            setValidUntil(descriptor, nearestValidUntil);
-        }
-
-        compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
+        Element descriptor = metadata.getMetadata();
+        long nearestValidUntil = getNearestValidUntil(descriptor);
+        setValidUntil(descriptor, nearestValidUntil);
+        return true;
     }
 
     /**
@@ -153,7 +137,7 @@ public class PullUpValidUntilStage extends AbstractComponent implements Stage<Do
             if (nearestValidUntil > 0 && validUntil < nearestValidUntil) {
                 nearestValidUntil = validUntil;
             }
-            
+
             descriptor.removeAttributeNode(validUntilAttr);
         }
 

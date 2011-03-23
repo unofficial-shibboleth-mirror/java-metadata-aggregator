@@ -16,7 +16,6 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -24,12 +23,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 
 import org.opensaml.util.ObjectSupport;
 import org.opensaml.util.collections.CollectionSupport;
@@ -48,7 +43,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptors the role filter will effect all descendant EntityDescriptors.
  */
 @ThreadSafe
-public class EntityRoleFilterStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
 
     /** QName of the RoleDescriptor element. */
     public static final QName ROLE_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "RoleDescriptor");
@@ -182,29 +177,19 @@ public class EntityRoleFilterStage extends AbstractComponent implements Stage<Do
      * 
      * @return the resulting, filtered, metadata collection
      */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        final ArrayList<DomMetadata> markedForRemoval = new ArrayList<DomMetadata>();
-        Element descriptor;
-        for (DomMetadata metadata : metadataCollection) {
-            descriptor = metadata.getMetadata();
-            if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
-                if (processEntitiesDescriptor(descriptor)) {
-                    markedForRemoval.add(metadata);
-                }
-            } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
-                if (processEntityDescriptor(descriptor)) {
-                    markedForRemoval.add(metadata);
-                }
+    protected boolean doExecute(DomMetadata metadata) {
+        Element descriptor = metadata.getMetadata();
+        if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
+            if (processEntitiesDescriptor(descriptor)) {
+                return false;
+            }
+        } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
+            if (processEntityDescriptor(descriptor)) {
+                return false;
             }
         }
 
-        metadataCollection.removeAll(markedForRemoval);
-
-        compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
+        return true;
     }
 
     /**

@@ -21,8 +21,6 @@ import java.util.List;
 
 import net.shibboleth.metadata.EntityIdInfo;
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
 
 import org.springframework.core.convert.converter.Converter;
@@ -38,7 +36,7 @@ public class EntityIdTransformStageTest {
         MockMetadata metadata = new MockMetadata("test");
         metadata.getMetadataInfo().put(new EntityIdInfo("http://example.org"));
 
-        MetadataCollection<Metadata<?>> mdColl = new SimpleMetadataCollection<Metadata<?>>();
+        ArrayList<Metadata<?>> mdColl = new ArrayList<Metadata<?>>();
         mdColl.add(metadata);
 
         ArrayList<Converter<String, String>> transforms = new ArrayList<Converter<String, String>>();
@@ -53,8 +51,8 @@ public class EntityIdTransformStageTest {
         stage.initialize();
         assert stage.isInitialized();
 
-        MetadataCollection<Metadata<?>> results = stage.execute(mdColl);
-        assert results.size() == 1;
+        stage.execute(mdColl);
+        assert mdColl.size() == 1;
         assert metadata.getMetadataInfo().values().size() == 4;
 
         ComponentInfo compInfo = metadata.getMetadataInfo().get(ComponentInfo.class).get(0);

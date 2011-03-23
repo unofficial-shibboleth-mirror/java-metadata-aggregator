@@ -17,13 +17,12 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.dom.stage.XMLSignatureSigningStageTest;
 
-import org.apache.xml.security.c14n.Canonicalizer;
 import org.opensaml.util.xml.BasicParserPool;
 import org.opensaml.util.xml.SerializeSupport;
 import org.testng.Assert;
@@ -40,8 +39,8 @@ public class EntitiesDescriptorAssemblerStageTest {
     public void testAssemblingWithoutName() throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
-        
-        MetadataCollection<DomMetadata> metadataCollection = buildMetadataCollection();
+
+        Collection<DomMetadata> metadataCollection = buildMetadataCollection();
 
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
@@ -49,23 +48,23 @@ public class EntitiesDescriptorAssemblerStageTest {
 
         stage.execute(metadataCollection);
         Document result = metadataCollection.iterator().next().getMetadata().getOwnerDocument();
-        
+
         String serializedResult = SerializeSupport.nodeToString(result);
         result = parserPool.parse(new StringReader(serializedResult));
 
         Document expectedResult = parserPool.parse(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/entitiesDescriptor.xml"));
-        
+
         Assert.assertTrue(result.getDocumentElement().isEqualNode(expectedResult.getDocumentElement()));
-        
-        //TODO figure out how to do an equality match against /data/entitiesDescriptor.xml
+
+        // TODO figure out how to do an equality match against /data/entitiesDescriptor.xml
     }
 
-    protected MetadataCollection<DomMetadata> buildMetadataCollection() throws Exception {
+    protected Collection<DomMetadata> buildMetadataCollection() throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
 
         Element descriptor = parserPool.parse(
                 SetCacheDurationStageTest.class.getResourceAsStream("/data/entityDescriptor1.xml"))

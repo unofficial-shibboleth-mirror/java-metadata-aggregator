@@ -25,7 +25,7 @@ import net.shibboleth.metadata.TagInfo;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.SimplePipeline;
 import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.pipeline.StaticSource;
+import net.shibboleth.metadata.pipeline.StaticMetadataInjectionStage;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -94,7 +94,7 @@ public class QueryControllerTest {
         mdElem3.getMetadataInfo().put(new EntityIdInfo("three"));
         mdElem3.getMetadataInfo().put(new TagInfo("test"));
 
-        StaticSource<MockMetadata> mdSource = new StaticSource<MockMetadata>();
+        StaticMetadataInjectionStage<MockMetadata> mdSource = new StaticMetadataInjectionStage<MockMetadata>();
         mdSource.setId("source");
         mdSource.setSourceMetadata(CollectionSupport.toList(mdElem1, mdElem2, mdElem3));
 

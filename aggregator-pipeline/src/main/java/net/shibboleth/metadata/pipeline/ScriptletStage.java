@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -30,16 +31,14 @@ import javax.script.ScriptException;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
 
 import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /** A pipeline stage that computes that transforms the collection of metadata via a script. */
 @ThreadSafe
-public class ScriptletStage extends AbstractComponent implements Stage<Metadata<?>> {
+public class ScriptletStage extends BaseStage<Metadata<?>> {
 
     /** Name of the scriptlet attribute, {@value} , containing the metadata collection to be transformed. */
     public static final String METADATA = "metadata";
@@ -102,10 +101,7 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public MetadataCollection<Metadata<?>> execute(final MetadataCollection<Metadata<?>> metadataCollection)
-            throws StageProcessingException {
-
+    protected void doExecute(final Collection<Metadata<?>> metadataCollection) throws StageProcessingException {
         final Bindings bindings = scriptEngine.createBindings();
         bindings.put(METADATA, metadataCollection);
 
@@ -115,8 +111,6 @@ public class ScriptletStage extends AbstractComponent implements Stage<Metadata<
             } else {
                 scriptEngine.eval(new FileReader(scriptFile), bindings);
             }
-
-            return (MetadataCollection<Metadata<?>>) bindings.get(METADATA);
         } catch (ScriptException e) {
             String errMsg = getId() + " pipeline stage unable to execut script";
             log.error(errMsg, e);

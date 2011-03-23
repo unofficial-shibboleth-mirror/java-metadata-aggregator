@@ -23,10 +23,7 @@ import java.util.List;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.EntityIdInfo;
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.MetadataInfoHelper;
 
@@ -44,7 +41,7 @@ import edu.vt.middleware.crypt.util.HexConverter;
  * result of the transform) with the element.
  */
 @ThreadSafe
-public class EntityIdTransformStage extends AbstractComponent implements Stage<Metadata<?>> {
+public class EntityIdTransformStage extends BaseIteratingStage<Metadata<?>> {
 
     /** Transformers used on IDs. */
     private Collection<Converter<String, String>> idTransformers = new LazyList<Converter<String, String>>();
@@ -71,28 +68,20 @@ public class EntityIdTransformStage extends AbstractComponent implements Stage<M
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<Metadata<?>> execute(final MetadataCollection<Metadata<?>> metadataCollection)
-            throws StageProcessingException {
-        final ComponentInfo compInfo = new ComponentInfo(this);
+    protected boolean doExecute(final Metadata<?> metadata) throws StageProcessingException {
+        List<EntityIdInfo> ids = metadata.getMetadataInfo().get(EntityIdInfo.class);
 
-        List<EntityIdInfo> ids;
         final List<EntityIdInfo> transformedIds = new ArrayList<EntityIdInfo>();
         String transformedId;
-        for (Metadata<?> element : metadataCollection) {
-            ids = element.getMetadataInfo().get(EntityIdInfo.class);
-            for (EntityIdInfo id : ids) {
-                for (Converter<String, String> idTransform : idTransformers) {
-                    transformedId = idTransform.convert(id.getEntityId());
-                    transformedIds.add(new EntityIdInfo(transformedId));
-                }
+        for (EntityIdInfo id : ids) {
+            for (Converter<String, String> idTransform : idTransformers) {
+                transformedId = idTransform.convert(id.getEntityId());
+                transformedIds.add(new EntityIdInfo(transformedId));
             }
-            MetadataInfoHelper.addToAll(element, transformedIds.toArray(new EntityIdInfo[] {}));
-            element.getMetadataInfo().put(compInfo);
         }
-
-        compInfo.setCompleteInstant();
-
-        return metadataCollection;
+        MetadataInfoHelper.addToAll(metadata, transformedIds.toArray(new EntityIdInfo[] {}));
+        
+        return true;
     }
 
     /** Converts a string in to another string that is the SHA1 hash of the original string prepended with "{sha1}". */

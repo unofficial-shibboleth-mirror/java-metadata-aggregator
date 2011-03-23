@@ -17,21 +17,20 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.OutputStream;
+import java.util.Collection;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MetadataSerializer;
 
 import org.opensaml.util.xml.SerializeSupport;
 import org.w3c.dom.Element;
-
 
 /** Very simple serializer that serializes the first element of the given metadata collection. */
 @ThreadSafe
 public class DomMetadataSerializer implements MetadataSerializer<DomMetadata> {
 
     /** {@inheritDoc} */
-    public void serialize(final MetadataCollection<DomMetadata> metadataCollection, OutputStream output) {
+    public void serialize(final Collection<DomMetadata> metadataCollection, OutputStream output) {
         if (metadataCollection == null || metadataCollection.isEmpty()) {
             return;
         }

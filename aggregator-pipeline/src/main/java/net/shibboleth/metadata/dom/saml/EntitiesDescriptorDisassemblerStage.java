@@ -16,16 +16,14 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.EntityIdInfo;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.BaseStage;
 
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.ElementSupport;
@@ -46,7 +44,7 @@ import org.w3c.dom.Element;
  * validUntil time of the EntityDescriptor and all enclosing EntitiesDescriptors.
  */
 @ThreadSafe
-public class EntitiesDescriptorDisassemblerStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
@@ -104,30 +102,22 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> sourceCollection) {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        final SimpleMetadataCollection<DomMetadata> destinationCollection = new SimpleMetadataCollection<DomMetadata>();
-
+    protected void doExecute(final Collection<DomMetadata> metadataCollection) {
         Element metadataElement;
-        for (DomMetadata sourceMetadata : sourceCollection) {
-            metadataElement = sourceMetadata.getMetadata();
+        Iterator<DomMetadata> metadataIterator = metadataCollection.iterator();
+        while (metadataIterator.hasNext()) {
+            metadataElement = metadataIterator.next().getMetadata();
             if (MetadataHelper.isEntitiesDescriptor(metadataElement)) {
-                processEntitiesDescriptor(destinationCollection, metadataElement, null, null);
+                processEntitiesDescriptor(metadataCollection, metadataElement, null, null);
             } else if (MetadataHelper.isEntityDescriptor(metadataElement)) {
-                destinationCollection.add(new DomMetadata(metadataElement));
+                metadataCollection.add(new DomMetadata(metadataElement));
             } else {
                 log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(),
                         QNameSupport.getNodeQName(metadataElement));
             }
-        }
 
-        for (DomMetadata element : destinationCollection) {
-            element.getMetadataInfo().put(compInfo);
+            metadataIterator.remove();
         }
-
-        compInfo.setCompleteInstant();
-        return destinationCollection;
     }
 
     /**
@@ -139,7 +129,7 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractComponent imple
      * @param validUntil the validUntil attribute value from the ancestral EntitiesDescriptor, may be null
      * @param cacheDuration the cacheDuration attribute value from the ancestral EntitiesDescriptor, may be null
      */
-    protected void processEntitiesDescriptor(final MetadataCollection<DomMetadata> metadataCollection,
+    protected void processEntitiesDescriptor(final Collection<DomMetadata> metadataCollection,
             final Element entitiesDescriptor, final String validUntil, final String cacheDuration) {
         String desciptorValidUntil = null;
         if (pushValidUntil) {

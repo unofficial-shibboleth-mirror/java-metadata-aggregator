@@ -16,7 +16,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import net.shibboleth.metadata.SimpleMetadataCollection;
+import java.util.ArrayList;
+
 import net.shibboleth.metadata.dom.DomMetadata;
 
 import org.opensaml.util.xml.AttributeSupport;
@@ -45,7 +46,7 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME) == null);
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
         metadataCollection.add(new DomMetadata(entitiesDescriptor));
 
         long duration = 123456;
@@ -77,7 +78,7 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME) != null);
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
         metadataCollection.add(new DomMetadata(entitiesDescriptor));
 
         long duration = 123456;
@@ -108,7 +109,7 @@ public class SetCacheDurationStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
         metadataCollection.add(new DomMetadata(root));
 
         long duration = 123456;

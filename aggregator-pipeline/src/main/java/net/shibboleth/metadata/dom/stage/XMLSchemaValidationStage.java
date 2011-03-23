@@ -17,7 +17,6 @@
 package net.shibboleth.metadata.dom.stage;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.transform.dom.DOMSource;
@@ -25,11 +24,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.collections.CollectionSupport;
@@ -42,10 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-
 /** A pipeline stage that XML schema validates the elements within the metadata collection. */
 @ThreadSafe
-public class XMLSchemaValidationStage extends AbstractComponent implements Stage<DomMetadata> {
+public class XMLSchemaValidationStage extends BaseIteratingStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
@@ -79,28 +75,20 @@ public class XMLSchemaValidationStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating metadata collection elements", getId());
 
         final Validator validator = validationSchema.newValidator();
-
-        final Iterator<DomMetadata> mdItr = metadataCollection.iterator();
-        DomMetadata metadata;
-        while (mdItr.hasNext()) {
-            metadata = mdItr.next();
-            try {
-                validator.validate(new DOMSource(metadata.getMetadata()));
-            } catch (Exception e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Metadata element was not valid:\n{}",
-                            SerializeSupport.prettyPrintXML(metadata.getMetadata()), e);
-                    mdItr.remove();
-                }
+        try {
+            validator.validate(new DOMSource(metadata.getMetadata()));
+            return true;
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Metadata element was not valid:\n{}",
+                        SerializeSupport.prettyPrintXML(metadata.getMetadata()), e);
             }
+            return false;
         }
-
-        return metadataCollection;
     }
 
     /** {@inheritDoc} */

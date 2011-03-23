@@ -37,7 +37,7 @@ import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.PipelineProcessingException;
 import net.shibboleth.metadata.pipeline.SimplePipeline;
 import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.pipeline.StaticSource;
+import net.shibboleth.metadata.pipeline.StaticMetadataInjectionStage;
 
 import org.joda.time.DateTime;
 import org.opensaml.util.Assert;
@@ -137,7 +137,7 @@ public class QueryController {
         MetadataCollection results = getMetadataElements(searchTerms);
 
         if (results != null && !results.isEmpty()) {
-            final StaticSource<?> resultSource = new StaticSource();
+            final StaticMetadataInjectionStage<?> resultSource = new StaticMetadataInjectionStage();
             resultSource.setId("postProcessSource");
             resultSource.setSourceMetadata(results);
 

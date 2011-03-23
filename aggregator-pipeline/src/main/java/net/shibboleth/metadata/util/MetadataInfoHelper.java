@@ -16,8 +16,9 @@
 
 package net.shibboleth.metadata.util;
 
+import java.util.Collection;
+
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.MetadataInfo;
 
 /** Helper class for dealing with {@link MetadataInfo} operations. */
@@ -35,7 +36,7 @@ public final class MetadataInfoHelper {
      * @param infos collection of {@link MetadataInfo} items to be added to each {@link Metadata} element of the given
      *            collection
      */
-    public static void addToAll(final MetadataCollection<?> metadataCollection, final MetadataInfo... infos) {
+    public static void addToAll(final Collection<? extends Metadata> metadataCollection, final MetadataInfo... infos) {
         if (metadataCollection == null || infos == null || infos.length == 0) {
             return;
         }

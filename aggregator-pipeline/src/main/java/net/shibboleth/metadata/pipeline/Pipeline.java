@@ -16,14 +16,16 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
 
 /**
- * A pipeline represents an ordered list of {@link Stage}s which takes transform input from either a {@link Source}.
+ * A pipeline represents an ordered list of {@link Stage}s that operate on a collection of metadata. In general the
+ * first stage is responsible for populating the collection with an initial set of metadata which subsequent stages
+ * further modify.
  * 
  * Each pipeline must be initialized, via the {@link #initialize()} method, before use. After a pipeline has been
  * initialized it may never be re-initialized. A pipeline is not considered initialized until all of its {@link Stages},
@@ -37,13 +39,6 @@ import net.shibboleth.metadata.MetadataCollection;
 public interface Pipeline<MetadataType extends Metadata<?>> extends Component {
 
     /**
-     * Gets the source of data operated upon by this pipeline.
-     * 
-     * @return source of data operated upon by this pipeline
-     */
-    public Source<MetadataType> getSource();
-
-    /**
      * Gets the list of Stages within the pipeline.
      * 
      * @return unmodifiable list of stages within the pipeline
@@ -51,12 +46,11 @@ public interface Pipeline<MetadataType extends Metadata<?>> extends Component {
     public List<Stage<MetadataType>> getStages();
 
     /**
-     * Executes the pipeline by pulling information from the {@link Source}, executing all the registered {@link Stages}
-     * , and returning the final collection of metadata.
+     * Executes each registered {@link Stage} in turn.
      * 
-     * @return the result of the execution
+     * @param metadataCollection the collection that will hold the metadata as it passes from stage to stage
      * 
      * @throws PipelineProcessingException thrown if there is a problem processing the pipeline
      */
-    public MetadataCollection<MetadataType> execute() throws PipelineProcessingException;
+    public void execute(Collection<MetadataType> metadataCollection) throws PipelineProcessingException;
 }

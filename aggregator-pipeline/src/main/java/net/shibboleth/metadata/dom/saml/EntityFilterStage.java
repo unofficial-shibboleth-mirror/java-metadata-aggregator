@@ -16,18 +16,13 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazySet;
@@ -38,7 +33,7 @@ import org.w3c.dom.Element;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
-public class EntityFilterStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);
@@ -127,29 +122,20 @@ public class EntityFilterStage extends AbstractComponent implements Stage<DomMet
      * 
      * @return the resulting, filtered, metadata collection
      */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        final ArrayList<DomMetadata> markedForRemoval = new ArrayList<DomMetadata>();
+    protected boolean doExecute(DomMetadata metadata) {
         Element descriptor;
-        for (DomMetadata metadata : metadataCollection) {
-            descriptor = metadata.getMetadata();
-            if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
-                if (processEntitiesDescriptor(descriptor)) {
-                    markedForRemoval.add(metadata);
-                }
-            } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
-                if (processEntityDescriptor(descriptor)) {
-                    markedForRemoval.add(metadata);
-                }
+        descriptor = metadata.getMetadata();
+        if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
+            if (processEntitiesDescriptor(descriptor)) {
+                return false;
+            }
+        } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
+            if (processEntityDescriptor(descriptor)) {
+                return false;
             }
         }
 
-        metadataCollection.removeAll(markedForRemoval);
-
-        compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
+        return true;
     }
 
     /**

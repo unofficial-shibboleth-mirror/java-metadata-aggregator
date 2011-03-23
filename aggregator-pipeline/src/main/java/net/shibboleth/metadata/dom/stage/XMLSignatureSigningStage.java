@@ -44,13 +44,9 @@ import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.apache.xml.security.Init;
@@ -69,7 +65,7 @@ import org.w3c.dom.NamedNodeMap;
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given metadata collection.
  */
 @ThreadSafe
-public class XMLSignatureSigningStage extends AbstractComponent implements Stage<DomMetadata> {
+public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
 
     /** The variant of SHA to use in the various signature algorithms. */
     public static enum ShaVariant {
@@ -578,31 +574,17 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
-        Element element;
-        XMLSignature signature;
-        DomMetadata signedMetadata;
-        for (DomMetadata metadata : metadataCollection) {
-            element = metadata.getMetadata();
-
-            signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
-            try {
-                signature.sign(new DOMSignContext(privKey, element, element.getFirstChild()));
-            } catch (Exception e) {
-                log.error("Unable to create signature for element", e);
-                throw new StageProcessingException("Unable to create signature for element", e);
-            }
-            signedMetadata = new DomMetadata(element);
-            signedMetadata.getMetadataInfo().put(compInfo);
-            mec.add(signedMetadata);
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
+        Element element = metadata.getMetadata();
+        XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
+        try {
+            signature.sign(new DOMSignContext(privKey, element, element.getFirstChild()));
+        } catch (Exception e) {
+            log.error("Unable to create signature for element", e);
+            throw new StageProcessingException("Unable to create signature for element", e);
         }
 
-        compInfo.setCompleteInstant();
-        return mec;
+        return true;
     }
 
     /**
@@ -852,10 +834,10 @@ public class XMLSignatureSigningStage extends AbstractComponent implements Stage
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        if(!Init.isInitialized()){
+        if (!Init.isInitialized()) {
             Init.isInitialized();
         }
-        
+
         xmlSigFactory = XMLSignatureFactory.getInstance();
         keyInfoFactory = xmlSigFactory.getKeyInfoFactory();
 

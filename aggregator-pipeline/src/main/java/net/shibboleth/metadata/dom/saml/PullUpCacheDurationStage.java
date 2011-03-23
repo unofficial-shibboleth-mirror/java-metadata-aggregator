@@ -16,20 +16,14 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.xml.AttributeSupport;
-import org.opensaml.util.xml.DomTypeSupport;
 import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -39,7 +33,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptors and EntityDescriptors, determine the shortest cache duration, set that on the root
  * EntitiesDescriptor and remove the cache duration from all descendants.
  */
-public class PullUpCacheDurationStage extends AbstractComponent implements Stage<DomMetadata> {
+public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
 
     /** The minimum cache duration in milliseconds. Default value: {@value} */
     private long minCacheDuration;
@@ -89,22 +83,11 @@ public class PullUpCacheDurationStage extends AbstractComponent implements Stage
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
-
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        Element descriptor;
-        long cacheDuration;
-        for (DomMetadata metadata : metadataCollection) {
-            descriptor = metadata.getMetadata();
-            cacheDuration = getShortestCacheDuration(descriptor);
-            setCacheDuration(descriptor, cacheDuration);
-        }
-        
-        compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
+        Element descriptor = metadata.getMetadata();
+        long cacheDuration = getShortestCacheDuration(descriptor);
+        setCacheDuration(descriptor, cacheDuration);
+        return true;
     }
 
     /**
@@ -146,7 +129,7 @@ public class PullUpCacheDurationStage extends AbstractComponent implements Stage
             if (shortestCacheDuration > 0 && cacheDuration < shortestCacheDuration) {
                 shortestCacheDuration = cacheDuration;
             }
-            
+
             descriptor.removeAttributeNode(cacheDurationAttr);
         }
 

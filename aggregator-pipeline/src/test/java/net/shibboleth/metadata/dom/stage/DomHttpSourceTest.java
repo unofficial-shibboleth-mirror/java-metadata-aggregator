@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.source;
+package net.shibboleth.metadata.dom.stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.dom.source.DomHttpSource;
-import net.shibboleth.metadata.pipeline.SourceProcessingException;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.http.HttpClientBuilder;
 import org.opensaml.util.http.HttpResource;
 import org.opensaml.util.xml.BasicParserPool;
 import org.testng.annotations.Test;
-
 
 public class DomHttpSourceTest {
 
@@ -44,9 +42,10 @@ public class DomHttpSourceTest {
         source.setMetadataResource(mdResource);
         source.setParserPool(parserPool);
 
-        MetadataCollection<DomMetadata> mc = source.execute();
-        assert mc != null;
-        assert mc.size() == 1;
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        source.execute(metadataCollection);
+        assert metadataCollection != null;
+        assert metadataCollection.size() == 1;
     }
 
     @Test
@@ -62,9 +61,10 @@ public class DomHttpSourceTest {
         source.setParserPool(parserPool);
 
         try {
-            source.execute();
+            ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+            source.execute(metadataCollection);
             throw new AssertionError("Invalid URL marked as parsed");
-        } catch (SourceProcessingException e) {
+        } catch (StageProcessingException e) {
             // expected this
         }
     }
@@ -82,9 +82,10 @@ public class DomHttpSourceTest {
         source.setParserPool(parserPool);
 
         try {
-            source.execute();
+            ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+            source.execute(metadataCollection);
             throw new AssertionError("Invalid URL processed");
-        } catch (SourceProcessingException e) {
+        } catch (StageProcessingException e) {
             // expected this
         }
     }

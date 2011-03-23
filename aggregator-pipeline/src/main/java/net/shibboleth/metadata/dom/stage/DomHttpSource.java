@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.source;
+package net.shibboleth.metadata.dom.stage;
 
 import java.io.InputStream;
+import java.util.Collection;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.AbstractComponent;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Source;
-import net.shibboleth.metadata.pipeline.SourceProcessingException;
+import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
 import org.opensaml.util.http.HttpResource;
@@ -37,13 +37,12 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 /**
  * A pipeline source which reads an XML document from an HTTP source, parses the document, and returns the resultant
  * document (root) element as the metadata within the returned collection.
  */
 @ThreadSafe
-public class DomHttpSource extends AbstractComponent implements Source<DomMetadata> {
+public class DomHttpSource extends BaseStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DomHttpSource.class);
@@ -100,27 +99,26 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute() throws SourceProcessingException {
+    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
         InputStream ins = null;
-        
+
         try {
             log.debug("Attempting to fetch metadata document from '{}'", metadataResource.getLocation());
 
             ins = metadataResource.getInputStream();
             if (ins != null) {
                 log.debug("New metadata available from '{}', processing it", metadataResource.getLocation());
-                return buildMetadataCollectionFromNewData(ins);
+                buildMetadataCollectionFromNewData(metadataCollection, ins);
             } else {
                 log.debug("Metadata from '{}' unchanged since last request, using cached copy",
                         metadataResource.getLocation());
-                return buildMetadataCollectionFromCache();
+                buildMetadataCollectionFromCache(metadataCollection);
             }
         } catch (ResourceException e) {
-            throw new SourceProcessingException("Error retrieving metadata from " + metadataResource.getLocation(), e);
-        }finally{
+            throw new StageProcessingException("Error retrieving metadata from " + metadataResource.getLocation(), e);
+        } finally {
             CloseableSupport.closeQuietly(ins);
         }
-
     }
 
     /**
@@ -132,14 +130,14 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
      * 
      * @throws SourceProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected MetadataCollection<DomMetadata> buildMetadataCollectionFromNewData(final InputStream data)
-            throws SourceProcessingException {
+    protected void buildMetadataCollectionFromNewData(Collection<DomMetadata> metadataCollection, final InputStream data)
+            throws StageProcessingException {
         try {
             log.debug("Parsing metadata retrieved from '{}'", metadataResource.getLocation());
             cachedMetadata = parserPool.parse(data);
-            return buildMetadataCollectionFromCache();
+            buildMetadataCollectionFromCache(metadataCollection);
         } catch (XMLParserException e) {
-            throw new SourceProcessingException("Unable to parse returned metadata", e);
+            throw new StageProcessingException("Unable to parse returned metadata", e);
         }
     }
 
@@ -148,13 +146,9 @@ public class DomHttpSource extends AbstractComponent implements Source<DomMetada
      * 
      * @return the metadata collection with a single {@link DomMetadata} element containing the retrieved metadata
      */
-    protected MetadataCollection<DomMetadata> buildMetadataCollectionFromCache() {
+    protected void buildMetadataCollectionFromCache(Collection<DomMetadata> metadataCollection) {
         final Element clonedMetadata = (Element) cachedMetadata.getDocumentElement().cloneNode(true);
-
-        final SimpleMetadataCollection<DomMetadata> mdc = new SimpleMetadataCollection<DomMetadata>();
-        mdc.add(new DomMetadata(clonedMetadata));
-
-        return mdc;
+        metadataCollection.add(new DomMetadata(clonedMetadata));
     }
 
     /** {@inheritDoc} */

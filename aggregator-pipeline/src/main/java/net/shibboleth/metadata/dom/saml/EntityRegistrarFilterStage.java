@@ -16,10 +16,10 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import net.shibboleth.metadata.MetadataCollection;
+import java.util.Collection;
+
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
@@ -27,13 +27,11 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * 
  * A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority.
  */
-public class EntityRegistrarFilterStage extends AbstractComponent implements Stage<DomMetadata> {
+public class EntityRegistrarFilterStage extends BaseStage<DomMetadata> {
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
+    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
         // TODO Auto-generated method stub
-        return null;
-    }
 
+    }
 }

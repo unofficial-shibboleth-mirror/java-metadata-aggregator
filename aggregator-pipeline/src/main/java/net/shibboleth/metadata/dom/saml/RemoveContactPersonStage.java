@@ -18,12 +18,9 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.xml.ElementSupport;
 import org.slf4j.Logger;
@@ -31,34 +28,20 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /** Filtering stage that removes ContactPerson elements from EntityDescriptors. */
-public class RemoveContactPersonStage extends AbstractComponent implements Stage<DomMetadata> {
+public class RemoveContactPersonStage extends BaseIteratingStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(RemoveContactPersonStage.class);
 
-    /**
-     * Filters out any ContactPerson elements found within EntityDescriptors.
-     * 
-     * @param metadataCollection collection of metadata on which to operate
-     * 
-     * @return the resulting, filtered, metadata collection
-     */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection) {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        Element descriptor;
-        for (DomMetadata metadata : metadataCollection) {
-            descriptor = metadata.getMetadata();
-            if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
-                processEntitiesDescriptor(descriptor);
-            } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
-                processEntityDescriptor(descriptor);
-            }
+    /** {@inheritDoc} */
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
+        Element descriptor = metadata.getMetadata();
+        if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
+            processEntitiesDescriptor(descriptor);
+        } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
+            processEntityDescriptor(descriptor);
         }
-
-        compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
+        return true;
     }
 
     /**

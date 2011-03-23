@@ -21,8 +21,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomMetadata;
 
@@ -40,7 +38,7 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
     public void testSigning() throws Exception {
         Element testInput = readXmlData("samlMetadata.xml");
 
-        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
         PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
@@ -58,7 +56,7 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
         stage.setCertificates(certs);
         stage.initialize();
 
-        mdCol = stage.execute(mdCol);
+        stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
         DomMetadata result = mdCol.iterator().next();

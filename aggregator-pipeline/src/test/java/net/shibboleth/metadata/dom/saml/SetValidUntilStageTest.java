@@ -16,7 +16,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import net.shibboleth.metadata.SimpleMetadataCollection;
+import java.util.ArrayList;
+
 import net.shibboleth.metadata.dom.DomMetadata;
 
 import org.opensaml.util.xml.AttributeSupport;
@@ -47,7 +48,7 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME) == null);
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
         metadataCollection.add(new DomMetadata(entitiesDescriptor));
 
         long duration = 123456;
@@ -58,7 +59,7 @@ public class SetValidUntilStageTest {
         stage.initialize();
 
         stage.execute(metadataCollection);
-        
+
         Attr validUntilAttr = AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
@@ -81,7 +82,7 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME));
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
         metadataCollection.add(new DomMetadata(entitiesDescriptor));
 
         long duration = 123456;
@@ -92,7 +93,7 @@ public class SetValidUntilStageTest {
         stage.initialize();
 
         stage.execute(metadataCollection);
-        
+
         System.out.println(SerializeSupport.prettyPrintXML(entitiesDescriptor));
 
         Attr validUntilAttr = AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
@@ -117,7 +118,7 @@ public class SetValidUntilStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        SimpleMetadataCollection<DomMetadata> metadataCollection = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
         metadataCollection.add(new DomMetadata(root));
 
         long duration = 123456;

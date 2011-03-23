@@ -16,20 +16,16 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import net.shibboleth.metadata.MetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
 /** Sets a validUntil attribute for every EntityDescriptor and EntitiesDescriptor element in the collection. */
-public class SetValidUntilStage extends AbstractComponent implements Stage<DomMetadata> {
+public class SetValidUntilStage extends BaseIteratingStage<DomMetadata> {
 
     /** Amount of time the descriptors will be valid, expressed in milliseconds. */
     private long validityDuration;
@@ -54,27 +50,18 @@ public class SetValidUntilStage extends AbstractComponent implements Stage<DomMe
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
-        final ComponentInfo compInfo = new ComponentInfo(this);
-
-        Element descriptor;
-        for (DomMetadata metadata : metadataCollection) {
-            descriptor = metadata.getMetadata();
-            if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
-                if (AttributeSupport.hasAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
-                    descriptor.removeAttributeNode(AttributeSupport.getAttribute(descriptor,
-                            MetadataHelper.CACHE_DURATION_ATTRIB_NAME));
-                }
-
-                AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME,
-                        System.currentTimeMillis() + validityDuration);
+    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
+        Element descriptor = metadata.getMetadata();
+        if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
+            if (AttributeSupport.hasAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
+                descriptor.removeAttributeNode(AttributeSupport.getAttribute(descriptor,
+                        MetadataHelper.CACHE_DURATION_ATTRIB_NAME));
             }
+
+            AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME,
+                    System.currentTimeMillis() + validityDuration);
         }
-
-        compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
-        return metadataCollection;
+        
+        return true;
     }
-
 }

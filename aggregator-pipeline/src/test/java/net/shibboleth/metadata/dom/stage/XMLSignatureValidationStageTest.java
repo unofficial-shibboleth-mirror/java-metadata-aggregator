@@ -17,10 +17,9 @@
 package net.shibboleth.metadata.dom.stage;
 
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomMetadata;
 
@@ -42,7 +41,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testValidSignature() throws Exception {
         Element testInput = readXmlData("signedSamlMetadata.xml");
 
-        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -53,7 +52,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.setVerificationKey(signingCert);
         stage.initialize();
 
-        mdCol = stage.execute(mdCol);
+        stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
         DomMetadata result = mdCol.iterator().next();
@@ -69,7 +68,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testInvalidSignature() throws Exception {
         Element testInput = readXmlData("badSignatureSamlMetadata.xml");
 
-        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -80,7 +79,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.setVerificationKey(signingCert);
         stage.initialize();
 
-        mdCol = stage.execute(mdCol);
+        stage.execute(mdCol);
         Assert.assertTrue(mdCol.isEmpty());
     }
 
@@ -92,9 +91,9 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
      */
     @Test
     public void testRequiredSignature() throws Exception {
-        Element testInput = readXmlData("samlMetadata.xml");
+        Element testInput = readXmlData("samlMetadata/entitiesDescriptor2.xml");
 
-        MetadataCollection<DomMetadata> mdCol = new SimpleMetadataCollection<DomMetadata>();
+        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -106,18 +105,19 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.setVerificationKey(signingCert);
         stage.initialize();
 
-        mdCol = stage.execute(mdCol);
+        stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
         DomMetadata result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
+        mdCol = new ArrayList<DomMetadata>();
         stage = new XMLSignatureValidationStage();
         stage.setId("test");
         stage.setSignatureRequired(true);
         stage.setVerificationKey(signingCert);
         stage.initialize();
-        mdCol = stage.execute(mdCol);
+        stage.execute(mdCol);
         Assert.assertTrue(mdCol.isEmpty());
     }
 }

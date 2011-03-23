@@ -16,6 +16,9 @@
 
 package net.shibboleth.metadata.dom.stage;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.transform.Templates;
@@ -28,12 +31,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.resource.Resource;
@@ -43,10 +43,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-
 /** A pipeline stage which applies and XSLT to each element in the metadata collection. */
 @ThreadSafe
-public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
+public class XSLTStage extends BaseStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XSLTStage.class);
@@ -79,10 +78,7 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    public MetadataCollection<DomMetadata> execute(final MetadataCollection<DomMetadata> metadataCollection)
-            throws StageProcessingException {
-
-        final SimpleMetadataCollection<DomMetadata> mec = new SimpleMetadataCollection<DomMetadata>();
+    protected void doExecute(final Collection<DomMetadata> metadataCollection) throws StageProcessingException {
 
         try {
             final Transformer transform = xslTemplate.newTransformer();
@@ -90,27 +86,30 @@ public class XSLTStage extends AbstractComponent implements Stage<DomMetadata> {
             Element metadataElement;
             DOMResult result;
             List<Element> transformedElements;
-            for (DomMetadata metadata : metadataCollection) {
-                metadataElement = metadata.getMetadata();
+
+            ArrayList<DomMetadata> newMetadataElements = new ArrayList<DomMetadata>();
+            Iterator<DomMetadata> metadataIterator = metadataCollection.iterator();
+            while (metadataIterator.hasNext()) {
+                metadataElement = metadataIterator.next().getMetadata();
+
                 // we put things in a doc fragment, instead of new documents, because down the line
                 // there is a good chance that at least some elements will get mashed together and this
                 // may eliminate the need to adopt them in to other documents, an expensive operation
                 result = new DOMResult(metadataElement.getOwnerDocument().createDocumentFragment());
-
                 transform.transform(new DOMSource(metadataElement), result);
 
                 transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
-                    mec.add(new DomMetadata(transformedElement));
+                    newMetadataElements.add(new DomMetadata(transformedElement));
                 }
+                metadataIterator.remove();
             }
+            metadataCollection.addAll(newMetadataElements);
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException("XSL transofrmation engine misconfigured", e);
         } catch (TransformerException e) {
             throw new StageProcessingException("Unable to transform metadata element", e);
         }
-
-        return mec;
     }
 
     /** {@inheritDoc} */
