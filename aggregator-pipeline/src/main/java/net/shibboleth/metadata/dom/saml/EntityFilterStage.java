@@ -144,27 +144,23 @@ public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
         Iterator<Element> descriptorItr;
         Element descriptor;
 
-        final List<Element> childEntitiesDescriptors = ElementSupport.getChildElementsByTagNameNS(entitiesDescriptor,
-                MetadataHelper.ENTITIES_DESCRIPTOR_NAME.getNamespaceURI(),
-                MetadataHelper.ENTITIES_DESCRIPTOR_NAME.getLocalPart());
+        final List<Element> childEntitiesDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
+                MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
-                descriptorItr.remove();
             }
         }
 
-        final List<Element> childEntityDescriptors = ElementSupport.getChildElementsByTagNameNS(entitiesDescriptor,
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME.getNamespaceURI(),
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME.getLocalPart());
+        final List<Element> childEntityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
+                MetadataHelper.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
-            if (processEntitiesDescriptor(descriptor)) {
+            if (processEntityDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
-                descriptorItr.remove();
             }
         }
 
