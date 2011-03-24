@@ -37,7 +37,7 @@ public class DomHttpSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSource source = new DomHttpSource();
+        DomHttpSourceStage source = new DomHttpSourceStage();
         source.setId("test");
         source.setMetadataResource(mdResource);
         source.setParserPool(parserPool);
@@ -55,7 +55,7 @@ public class DomHttpSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSource source = new DomHttpSource();
+        DomHttpSourceStage source = new DomHttpSourceStage();
         source.setId("test");
         source.setMetadataResource(mdResource);
         source.setParserPool(parserPool);
@@ -76,7 +76,7 @@ public class DomHttpSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSource source = new DomHttpSource();
+        DomHttpSourceStage source = new DomHttpSourceStage();
         source.setId("test");
         source.setMetadataResource(mdResource);
         source.setParserPool(parserPool);

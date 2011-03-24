@@ -40,7 +40,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSource source = new DomFilesystemSource();
+        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
@@ -59,7 +59,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSource source = new DomFilesystemSource();
+        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
@@ -77,7 +77,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSource source = new DomFilesystemSource();
+        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
@@ -103,7 +103,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSource source = new DomFilesystemSource();
+        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
@@ -124,7 +124,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSource source = new DomFilesystemSource();
+        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);

@@ -34,7 +34,7 @@ public class PipelineJoinerSourceTest {
     @Test
     public void test() throws Exception {
         MockMetadata md1 = new MockMetadata("one");
-        StaticMetadataInjectionStage<MockMetadata> source1 = new StaticMetadataInjectionStage<MockMetadata>();
+        StaticMetadataSourceStage<MockMetadata> source1 = new StaticMetadataSourceStage<MockMetadata>();
         source1.setId("src1");
         source1.setSourceMetadata(CollectionSupport.toList(md1));
         SimplePipeline<MockMetadata> pipeline1 = new SimplePipeline<MockMetadata>();
@@ -42,7 +42,7 @@ public class PipelineJoinerSourceTest {
         pipeline1.setStages(CollectionSupport.toList((Stage<MockMetadata>) source1));
 
         MockMetadata md2 = new MockMetadata("two");
-        StaticMetadataInjectionStage<MockMetadata> source2 = new StaticMetadataInjectionStage<MockMetadata>();
+        StaticMetadataSourceStage<MockMetadata> source2 = new StaticMetadataSourceStage<MockMetadata>();
         source2.setId("src2");
         source2.setSourceMetadata(CollectionSupport.toList(md2));
         SimplePipeline<MockMetadata> pipeline2 = new SimplePipeline<MockMetadata>();

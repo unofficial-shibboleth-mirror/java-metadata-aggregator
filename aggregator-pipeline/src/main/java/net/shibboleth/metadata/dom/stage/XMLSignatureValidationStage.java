@@ -21,6 +21,8 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.metadata.ErrorStatusInfo;
+import net.shibboleth.metadata.WarningStatusInfo;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
@@ -39,8 +41,13 @@ import org.w3c.dom.Element;
 /**
  * A pipeline stage which validates the XML digital signature found on metadata elements.
  * 
- * This stage will filter out any element in the metadata collection that is not signed, if a signature is required, or
- * whose signature is invalid.
+ * If metadata element signatures are required, per {@link #signatureRequired}, and an element does not contain a
+ * signature than an {@link ErrorStatusInfo} object is set on the element.
+ * 
+ * If metadata element signatures are required to be valid, per {@link #isValidSignatureRequired()}, and an element
+ * signature is found to be invalid than an {@link ErrorStatusInfo} object is set on the element. If signatures are not
+ * required to be valid and an element signature is found to be invalid than an {@link WarningStatusInfo} is set on the
+ * element.
  */
 @ThreadSafe
 public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata> {
@@ -50,6 +57,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
 
     /** Whether metadata is required to be signed. */
     private boolean signatureRequired = true;
+
+    /** Whether the signature on a metadata elements is required to be valid. Default value: {@value} */
+    private boolean validSignatureRequired = true;
 
     /** Public key used to verify the metadata signature. */
     private PublicKey verificationKey;
@@ -73,6 +83,27 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
             return;
         }
         signatureRequired = required;
+    }
+
+    /**
+     * Gets whether the signature on a metadata element is required to be valid.
+     * 
+     * @return whether the signature on a metadata element is required to be valid
+     */
+    public boolean isValidSignatureRequired() {
+        return validSignatureRequired;
+    }
+
+    /**
+     * Sets whether the signature on a metadata element is required to be valid.
+     * 
+     * @param isRequired whether the signature on a metadata element is required to be valid
+     */
+    public synchronized void setValidSignatureRequired(boolean isRequired) {
+        if (isInitialized()) {
+            return;
+        }
+        validSignatureRequired = isRequired;
     }
 
     /**
@@ -112,8 +143,26 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
 
     /** {@inheritDoc} */
     protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
-        if (!signatureVerified(metadata.getMetadata())) {
-            return false;
+        final Element signatureElement = getSignatureElement(metadata.getMetadata());
+        if (signatureElement == null) {
+            if (signatureRequired) {
+                log.debug("Metadata was not signed and signature is required");
+                metadata.getMetadataInfo().put(
+                        new ErrorStatusInfo(getId(), "element was not signed but signatures are required"));
+            } else {
+                log.debug("XML document is not signed, no verification performed");
+            }
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("XML document contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
+        }
+
+        if (!signatureVerified(signatureElement)) {
+            if (validSignatureRequired) {
+                metadata.getMetadataInfo().put(new ErrorStatusInfo(getId(), "element signature is invalid"));
+            } else {
+                metadata.getMetadataInfo().put(new WarningStatusInfo(getId(), "element signature is invalid"));
+            }
         }
 
         return true;
@@ -122,27 +171,13 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
     /**
      * Verifies the enclosed signature on the root of the metadata.
      * 
-     * @param root root of the metadata
+     * @param signatureElement the Signature element
      * 
      * @return true if the signature is verified successfully, false otherwise
      * 
      * @throws StageProcessingException thrown if the given root element contains more than on signature
      */
-    protected boolean signatureVerified(final Element root) throws StageProcessingException {
-        final Element signatureElement = getSignatureElement(root);
-        if (signatureElement == null) {
-            if (signatureRequired) {
-                log.debug("Metadata was not signed and signature is required");
-                return false;
-            } else {
-                log.debug("XML document is not signed, no verification performed");
-                return true;
-            }
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("XML document contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
-        }
-
+    protected boolean signatureVerified(final Element signatureElement) throws StageProcessingException {
         log.debug("Creating XML security library XMLSignature object");
         final XMLSignature signature;
         try {
@@ -156,14 +191,16 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
             if (signature.checkSignatureValue(verificationKey)) {
                 log.debug("XML document signature verified.");
                 return true;
+            } else {
+                log.debug("XML document signature did not verify.");
+                return false;
             }
         } catch (XMLSignatureException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Signature was not valid, metadata element will be removed", e);
+                log.debug("Unable to validate signature", e);
             }
+            return false;
         }
-
-        return false;
     }
 
     /**

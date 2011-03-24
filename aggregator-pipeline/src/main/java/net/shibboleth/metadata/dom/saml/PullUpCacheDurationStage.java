@@ -56,6 +56,10 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
      * @param duration the minimum cache duration in milliseconds
      */
     public synchronized void setMinimumCacheDuration(long duration) {
+        if (isInitialized()) {
+            return;
+        }
+
         if (duration < 0) {
             minCacheDuration = 0;
         } else {
@@ -78,6 +82,9 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
      * @param duration maximum cache duration in milliseconds, must be greater than 0
      */
     public synchronized void setMaximumCacheDuration(long duration) {
+        if (isInitialized()) {
+            return;
+        }
         Assert.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }

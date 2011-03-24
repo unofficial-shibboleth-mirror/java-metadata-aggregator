@@ -25,11 +25,8 @@ import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
@@ -39,15 +36,13 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 /**
- * A source which reads XML information from the filesystem and optionally caches it in memory.
- * 
- * When caching is enabled the collection of metadata produced is always a clone of the DOM element that is cached.
+ * A stage which reads XML information from the filesystem and places it in the given metadata collection.
  */
 @ThreadSafe
-public class DomFilesystemSource extends BaseStage<DomMetadata> {
+public class DomFilesystemSourceStage extends BaseStage<DomMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DomFilesystemSource.class);
+    private final Logger log = LoggerFactory.getLogger(DomFilesystemSourceStage.class);
 
     /** Pool of DOM parsers used to parse the XML file in to a DOM. */
     private ParserPool parserPool;
@@ -61,12 +56,15 @@ public class DomFilesystemSource extends BaseStage<DomMetadata> {
      */
     private FileFilter sourceFileFilter;
 
-    /** Whether or not directories are recursed if the given input file is a directory. */
+    /** Whether or not directories are recursed if the given input file is a directory. Default value: {@value} */
     private boolean recurseDirectories;
 
+    /** Whether the lack of source files is treated as an error. Default value: {@value} */
+    private boolean noSourceFilesAnError;
+
     /**
-     * Whether an error parsing one source file causes this entire {@link Source} to fail, or just excludes the material
-     * from the offending source file.
+     * Whether an error parsing one source file causes this entire {@link net.shibboleth.metadata.pipeline.Stage} to
+     * fail, or just excludes the material from the offending source file. Default value: {@value}
      */
     private boolean errorCausesSourceFailure = true;
 
@@ -156,6 +154,27 @@ public class DomFilesystemSource extends BaseStage<DomMetadata> {
     }
 
     /**
+     * Get whether the lack of source files is considered an error.
+     * 
+     * @return whether the lack of source files is considered an error
+     */
+    public boolean isNoSourceFilesAnError() {
+        return noSourceFilesAnError;
+    }
+
+    /**
+     * Sets whether the lack of source files is considered an error.
+     * 
+     * @param isError whether the lack of source files is considered an error
+     */
+    public synchronized void setNoSourceFilesAnError(boolean isError) {
+        if (isInitialized()) {
+            return;
+        }
+        noSourceFilesAnError = isError;
+    }
+
+    /**
      * Gets whether an error parsing a single file causes the source to fail. If not, the parsed file is simply ignored.
      * 
      * @return whether an error parsing a single file causes the source to fail
@@ -186,8 +205,12 @@ public class DomFilesystemSource extends BaseStage<DomMetadata> {
         }
 
         if (sourceFiles.isEmpty()) {
-            log.debug("{} pipeline source: no input XML files in source path {}", getId(), sourceFile.getPath());
-            return;
+            if (!noSourceFilesAnError) {
+                log.warn("stage {}: no input XML files in source path {}", getId(), sourceFile.getPath());
+                return;
+            } else {
+                throw new StageProcessingException("stage " + getId() + ": no source file was available for parsing");
+            }
         }
 
         DomMetadata dme;
@@ -234,7 +257,7 @@ public class DomFilesystemSource extends BaseStage<DomMetadata> {
      * @return the resultant metadata element, may be null if there was an error parsing the data and
      *         {@link #errorCausesSourceFailure} is false
      * 
-     * @throws SourceProcessingException thrown if there is a problem reading in the metadata and
+     * @throws StageProcessingException thrown if there is a problem reading in the metadata and
      *             {@link #errorCausesSourceFailure} is true
      */
     protected DomMetadata processSourceFile(final File source) throws StageProcessingException {

@@ -21,10 +21,8 @@ import java.util.Collection;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
@@ -38,14 +36,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * A pipeline source which reads an XML document from an HTTP source, parses the document, and returns the resultant
- * document (root) element as the metadata within the returned collection.
+ * A pipeline stage which reads an XML document from an HTTP source, parses the document, and places the resultant
+ * document (root) element in to the provided metadata collection.
  */
 @ThreadSafe
-public class DomHttpSource extends BaseStage<DomMetadata> {
+public class DomHttpSourceStage extends BaseStage<DomMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DomHttpSource.class);
+    private final Logger log = LoggerFactory.getLogger(DomHttpSourceStage.class);
 
     /** Resource used to fetch remote metadata. */
     private HttpResource metadataResource;
@@ -53,6 +51,12 @@ public class DomHttpSource extends BaseStage<DomMetadata> {
     /** Pool of parsers used to parse incoming metadata. */
     private ParserPool parserPool;
 
+    /**
+     * Whether an error parsing one source file causes this entire {@link net.shibboleth.metadata.pipeline.Stage} to
+     * fail, or just excludes the material from the offending source file. Default value: {@value}
+     */
+    private boolean errorCausesSourceFailure = true;
+    
     /** Cached metadata. */
     private Document cachedMetadata;
 
@@ -97,6 +101,27 @@ public class DomHttpSource extends BaseStage<DomMetadata> {
         }
         parserPool = pool;
     }
+    
+    /**
+     * Gets whether an error reading and parsing the XML file causes this stage to fail.
+     * 
+     * @return whether an error reading and parsing the XML file causes this stage to fail
+     */
+    public boolean getErrorCausesSourceFailure() {
+        return errorCausesSourceFailure;
+    }
+
+    /**
+     * Sets whether an error reading and parsing the XML file causes this stage to fail.
+     * 
+     * @param causesFailure whether an error reading and parsing the XML file causes this stage to fail
+     */
+    public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
+        if (isInitialized()) {
+            return;
+        }
+        errorCausesSourceFailure = causesFailure;
+    }
 
     /** {@inheritDoc} */
     protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
@@ -115,7 +140,12 @@ public class DomHttpSource extends BaseStage<DomMetadata> {
                 buildMetadataCollectionFromCache(metadataCollection);
             }
         } catch (ResourceException e) {
-            throw new StageProcessingException("Error retrieving metadata from " + metadataResource.getLocation(), e);
+            if(errorCausesSourceFailure){
+                throw new StageProcessingException("Error retrieving metadata from " + metadataResource.getLocation(), e);
+            }else{
+                log.warn("stage {}: unable to read in XML file");
+                log.debug("stage {}: HTTP resource exception", getId(), e);
+            }
         } finally {
             CloseableSupport.closeQuietly(ins);
         }
@@ -124,11 +154,10 @@ public class DomHttpSource extends BaseStage<DomMetadata> {
     /**
      * Builds a metadata collection from new matadata. Also caches metadata in its parsed form for later use.
      * 
-     * @param data matadata input
+     * @param metadataCollection metadata collection to which the read in and parsed document element is added
+     * @param data XML input file
      * 
-     * @return the metadata collection with a single {@link DomMetadata} element containing the retrieved metadata
-     * 
-     * @throws SourceProcessingException thrown if there is a problem reading and parsing the response
+     * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
     protected void buildMetadataCollectionFromNewData(Collection<DomMetadata> metadataCollection, final InputStream data)
             throws StageProcessingException {
@@ -137,14 +166,19 @@ public class DomHttpSource extends BaseStage<DomMetadata> {
             cachedMetadata = parserPool.parse(data);
             buildMetadataCollectionFromCache(metadataCollection);
         } catch (XMLParserException e) {
-            throw new StageProcessingException("Unable to parse returned metadata", e);
+            if(errorCausesSourceFailure){
+                throw new StageProcessingException("Unable to parse returned metadata", e);
+            }else{
+                log.warn("stage {}: unable to parse XML document", getId());
+                log.debug("stage {}: parsing exception", getId(), e);
+            }
         }
     }
 
     /**
      * Builds the metadata collection from the cached metadata.
      * 
-     * @return the metadata collection with a single {@link DomMetadata} element containing the retrieved metadata
+     * @param metadataCollection metadata collection to which the cached document element is added
      */
     protected void buildMetadataCollectionFromCache(Collection<DomMetadata> metadataCollection) {
         final Element clonedMetadata = (Element) cachedMetadata.getDocumentElement().cloneNode(true);

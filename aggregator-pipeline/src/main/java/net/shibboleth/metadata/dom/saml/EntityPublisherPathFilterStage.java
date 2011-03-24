@@ -19,9 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.Collection;
 
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.Stage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
@@ -34,6 +32,6 @@ public class EntityPublisherPathFilterStage extends BaseStage<DomMetadata> {
     /** {@inheritDoc} */
     protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
         // TODO Auto-generated method stub
-        
+
     }
 }

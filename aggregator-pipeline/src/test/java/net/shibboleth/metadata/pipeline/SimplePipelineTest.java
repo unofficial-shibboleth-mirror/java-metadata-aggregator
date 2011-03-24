@@ -111,7 +111,7 @@ public class SimplePipelineTest {
         MockMetadata md1 = new MockMetadata("one");
         MockMetadata md2 = new MockMetadata("two");
 
-        StaticMetadataInjectionStage<MockMetadata> source = new StaticMetadataInjectionStage<MockMetadata>();
+        StaticMetadataSourceStage<MockMetadata> source = new StaticMetadataSourceStage<MockMetadata>();
         source.setId("src");
         source.setSourceMetadata(CollectionSupport.toList(md1, md2));
 

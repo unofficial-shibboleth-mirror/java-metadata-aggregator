@@ -113,15 +113,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
         removingEntitylessEntitiesDescriptor = remove;
     }
 
-    /**
-     * Filters out the appropriate roles from EntityDescriptors found within the metadata collection. May remove
-     * EntityDescriptors that do not contain roles after filter. May remove EntitiesDescriptors that do not contain
-     * EntityDescriptors after filtering.
-     * 
-     * @param metadataCollection collection of metadata on which to operate
-     * 
-     * @return the resulting, filtered, metadata collection
-     */
+    /** {@inheritDoc} */
     protected boolean doExecute(DomMetadata metadata) {
         Element descriptor;
         descriptor = metadata.getMetadata();

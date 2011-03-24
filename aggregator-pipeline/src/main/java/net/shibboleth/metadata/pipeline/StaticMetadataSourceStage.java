@@ -29,7 +29,7 @@ import net.shibboleth.metadata.Metadata;
  * @param <MetadataType> the type of metadata produced by this source
  */
 @ThreadSafe
-public class StaticMetadataInjectionStage<MetadataType extends Metadata<?>> extends BaseStage<MetadataType> {
+public class StaticMetadataSourceStage<MetadataType extends Metadata<?>> extends BaseStage<MetadataType> {
 
     /** Collection of static metadata added to each metadata collection by {@link #execute(Collection)}. */
     private Collection<MetadataType> source;

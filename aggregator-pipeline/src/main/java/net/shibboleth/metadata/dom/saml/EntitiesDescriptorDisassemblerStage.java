@@ -18,7 +18,6 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;

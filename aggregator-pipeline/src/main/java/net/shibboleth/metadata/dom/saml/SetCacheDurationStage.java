@@ -45,6 +45,9 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomMetadata> {
      * @param duration cache duration, in milliseconds; must be greater than 0
      */
     public void setCacheDuration(long duration) {
+        if (isInitialized()) {
+            return;
+        }
         Assert.isGreaterThan(0, duration, "Cache duration must be greater than 0");
         cacheDuration = duration;
     }

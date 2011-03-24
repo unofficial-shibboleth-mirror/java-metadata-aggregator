@@ -23,10 +23,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-import org.joda.time.convert.ConverterManager;
 import org.opensaml.util.Assert;
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.ElementSupport;
@@ -39,9 +37,6 @@ import org.w3c.dom.Element;
  * EntitiesDescriptor and remove the valid until dates from all descendants.
  */
 public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
-
-    /** Manager used to convert to read/write XML data/times. */
-    ConverterManager timeConverter;
 
     /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: {@value} */
     private long minValidityDuration;
@@ -64,6 +59,10 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
      * @param duration minimum amount of time, in milliseconds, a descriptor may be valid
      */
     public synchronized void setMinimumCacheDuration(long duration) {
+        if (isInitialized()) {
+            return;
+        }
+
         if (duration < 0) {
             minValidityDuration = 0;
         } else {
@@ -86,6 +85,10 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
      * @param duration maximum amount of time, in milliseconds, a descriptor may be valid, must be greater than 0
      */
     public synchronized void setMaximumCacheDuration(long duration) {
+        if (isInitialized()) {
+            return;
+        }
+
         Assert.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
         maxValidityDuration = duration;
     }
@@ -192,11 +195,5 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
         }
 
         AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, validUntil);
-    }
-
-    /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-        timeConverter = ConverterManager.getInstance();
     }
 }

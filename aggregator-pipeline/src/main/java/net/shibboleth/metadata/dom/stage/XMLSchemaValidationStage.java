@@ -24,6 +24,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.metadata.ErrorStatusInfo;
+import net.shibboleth.metadata.WarningStatusInfo;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
@@ -39,7 +41,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-/** A pipeline stage that XML schema validates the elements within the metadata collection. */
+/**
+ * A pipeline stage that XML schema validates the elements within the metadata collection.
+ * 
+ * If metadata elements are required to be valid, per {@link #isMetadataRequiredToBeSchemaValid()} and an element is
+ * found to be invalid than an {@link ErrorStatusInfo} object is set on the element. If the metadata is not required to
+ * be valid and an element is found to be invalid than an {@link WarningStatusInfo} is set on the element.
+ */
 @ThreadSafe
 public class XMLSchemaValidationStage extends BaseIteratingStage<DomMetadata> {
 
@@ -48,6 +56,9 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomMetadata> {
 
     /** Collection of schema resources. */
     private List<Resource> schemaResources = Collections.emptyList();
+
+    /** Whether metadata elements are required to be schema valid. Default value: {@value} */
+    private boolean metadataRequiredToBeSchemaValid = true;
 
     /** Schema used to validate the metadata. */
     private Schema validationSchema;
@@ -74,6 +85,27 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomMetadata> {
                 .addNonNull(resources, new LazyList<Resource>()));
     }
 
+    /**
+     * Gets whether metadata elements are required to be schema valid.
+     * 
+     * @return whether metadata elements are required to be schema valid
+     */
+    public boolean isMetadataRequiredToBeSchemaValid() {
+        return metadataRequiredToBeSchemaValid;
+    }
+
+    /**
+     * Sets whether metadata elements are required to be schema valid.
+     * 
+     * @param isRequired whether metadata elements are required to be schema valid
+     */
+    public synchronized void setMetadataRequiredToBeSchemaValid(boolean isRequired) {
+        if (isInitialized()) {
+            return;
+        }
+        metadataRequiredToBeSchemaValid = isRequired;
+    }
+
     /** {@inheritDoc} */
     protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating metadata collection elements", getId());
@@ -81,14 +113,19 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomMetadata> {
         final Validator validator = validationSchema.newValidator();
         try {
             validator.validate(new DOMSource(metadata.getMetadata()));
-            return true;
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug("Metadata element was not valid:\n{}",
                         SerializeSupport.prettyPrintXML(metadata.getMetadata()), e);
             }
-            return false;
+            if (metadataRequiredToBeSchemaValid) {
+                metadata.getMetadataInfo().put(new ErrorStatusInfo(getId(), e.getMessage()));
+            } else {
+                metadata.getMetadataInfo().put(new WarningStatusInfo(getId(), e.getMessage()));
+            }
         }
+
+        return true;
     }
 
     /** {@inheritDoc} */

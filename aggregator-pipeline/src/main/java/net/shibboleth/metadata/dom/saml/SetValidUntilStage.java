@@ -45,6 +45,9 @@ public class SetValidUntilStage extends BaseIteratingStage<DomMetadata> {
      * @param duration amount of time the descriptors will be valid, expressed in milliseconds, must be greater than 0
      */
     public synchronized void setValidityDuration(long duration) {
+        if (isInitialized()) {
+            return;
+        }
         Assert.isGreaterThan(0, duration, "Validity duration must be greater than 0");
         validityDuration = duration;
     }

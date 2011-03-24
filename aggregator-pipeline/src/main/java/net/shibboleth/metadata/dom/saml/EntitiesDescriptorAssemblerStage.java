@@ -25,7 +25,6 @@ import javax.xml.namespace.QName;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.Stage;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
@@ -33,8 +32,8 @@ import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
 /**
- * A {@link Stage} capable of assembling a collection of EntityDescriptor elements in to a single EntitiesDescriptor
- * element.
+ * A {@link net.shibboleth.metadata.pipeline.Stage} capable of assembling a collection of EntityDescriptor elements in
+ * to a single EntitiesDescriptor element.
  */
 @ThreadSafe
 public class EntitiesDescriptorAssemblerStage extends BaseStage<DomMetadata> {
