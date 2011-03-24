@@ -41,7 +41,7 @@ public abstract class BaseIteratingStage<MetadataType extends Metadata<?>> exten
         MetadataType metadata;
         while (metadataIterator.hasNext()) {
             metadata = metadataIterator.next();
-            if (doExecute(metadata)) {
+            if (!doExecute(metadata)) {
                 metadataIterator.remove();
             }
         }
