@@ -16,6 +16,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -103,10 +104,14 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomMetadata> 
 
     /** {@inheritDoc} */
     protected void doExecute(final Collection<DomMetadata> metadataCollection) {
+        // make a copy of the input collection and clear it so that we can iterate over
+        // the copy and add to the provided collection
+        ArrayList<DomMetadata> metadatas = new ArrayList<DomMetadata>(metadataCollection);
+        metadataCollection.clear();
+
         Element metadataElement;
-        Iterator<DomMetadata> metadataIterator = metadataCollection.iterator();
-        while (metadataIterator.hasNext()) {
-            metadataElement = metadataIterator.next().getMetadata();
+        for (DomMetadata metadata : metadatas) {
+            metadataElement = metadata.getMetadata();
             if (MetadataHelper.isEntitiesDescriptor(metadataElement)) {
                 processEntitiesDescriptor(metadataCollection, metadataElement, null, null);
             } else if (MetadataHelper.isEntityDescriptor(metadataElement)) {
@@ -115,8 +120,6 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomMetadata> 
                 log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(),
                         QNameSupport.getNodeQName(metadataElement));
             }
-
-            metadataIterator.remove();
         }
     }
 
