@@ -16,7 +16,7 @@
 
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>aggreagtor-${timestamp}.log</file>
+        <file>aggregator-${timestamp}.log</file>
         <append>false</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <charset>UTF-8</charset>
