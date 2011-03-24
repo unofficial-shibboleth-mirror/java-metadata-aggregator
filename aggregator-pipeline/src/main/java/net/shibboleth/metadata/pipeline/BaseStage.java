@@ -16,6 +16,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -153,6 +154,12 @@ public abstract class BaseStage<MetadataType extends Metadata<?>> extends Abstra
          */
         public MetadataInfoFilteringStrategy(Collection<Class<MetadataInfo>> metadataInfoClasses) {
             Assert.isNotNull(metadataInfoClasses, "Metadata info classes may not be null");
+            filterRequirements = new ArrayList<Class<MetadataInfo>>();
+            for (Class<MetadataInfo> metadataInfoClass : metadataInfoClasses) {
+                if (metadataInfoClass != null) {
+                    filterRequirements.add(metadataInfoClass);
+                }
+            }
         }
 
         /**

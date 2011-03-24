@@ -20,12 +20,10 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomMetadata;
-import net.shibboleth.metadata.dom.stage.XMLSignatureSigningStageTest;
 
-import org.opensaml.util.xml.BasicParserPool;
 import org.opensaml.util.xml.SerializeSupport;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,50 +31,35 @@ import org.w3c.dom.Element;
 /**
  *
  */
-public class EntitiesDescriptorAssemblerStageTest {
+public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
     @Test
     public void testAssemblingWithoutName() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-
         Collection<DomMetadata> metadataCollection = buildMetadataCollection();
-
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.initialize();
-
         stage.execute(metadataCollection);
+
         Document result = metadataCollection.iterator().next().getMetadata().getOwnerDocument();
-
         String serializedResult = SerializeSupport.nodeToString(result);
-        result = parserPool.parse(new StringReader(serializedResult));
+        result = getParserPool().parse(new StringReader(serializedResult));
 
-        Document expectedResult = parserPool.parse(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/entitiesDescriptor.xml"));
+        Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2.xml");
 
-        Assert.assertTrue(result.getDocumentElement().isEqualNode(expectedResult.getDocumentElement()));
-
-        // TODO figure out how to do an equality match against /data/entitiesDescriptor.xml
+        assertXmlEqual(expectedResult, result);
     }
 
     protected Collection<DomMetadata> buildMetadataCollection() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-
         ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
 
-        Element descriptor = parserPool.parse(
-                SetCacheDurationStageTest.class.getResourceAsStream("/data/entityDescriptor1.xml"))
-                .getDocumentElement();
+        Element descriptor = readXmlData("samlMetadata/entityDescriptor1.xml");
         metadataCollection.add(new DomMetadata(descriptor));
 
-        descriptor = parserPool.parse(
-                SetCacheDurationStageTest.class.getResourceAsStream("/data/entityDescriptor2.xml"))
-                .getDocumentElement();
+        descriptor = readXmlData("samlMetadata/entityDescriptor2.xml");
         metadataCollection.add(new DomMetadata(descriptor));
 
-        Element fooElement = parserPool.newDocument().createElement("foo");
+        Element fooElement = getParserPool().newDocument().createElement("foo");
         metadataCollection.add(new DomMetadata(fooElement));
 
         return metadataCollection;

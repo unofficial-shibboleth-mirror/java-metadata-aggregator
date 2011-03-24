@@ -16,7 +16,30 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-/** {@link EntitiesDescriptorDisassemblerStage} unit test. */
-public class EntitiesDescriptorDisassemblerStageTest {
+import java.util.ArrayList;
 
+import net.shibboleth.metadata.dom.BaseDomTest;
+import net.shibboleth.metadata.dom.DomMetadata;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.w3c.dom.Element;
+
+/** {@link EntitiesDescriptorDisassemblerStage} unit test. */
+public class EntitiesDescriptorDisassemblerStageTest extends BaseDomTest {
+
+    @Test
+    public void test() throws Exception {
+        Element entitiesDescriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
+
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        metadataCollection.add(new DomMetadata(entitiesDescriptor));
+
+        EntitiesDescriptorDisassemblerStage stage = new EntitiesDescriptorDisassemblerStage();
+        stage.setId("foo");
+        stage.initialize();
+
+        stage.execute(metadataCollection);
+        Assert.assertEquals(metadataCollection.size(), 3);
+    }
 }
