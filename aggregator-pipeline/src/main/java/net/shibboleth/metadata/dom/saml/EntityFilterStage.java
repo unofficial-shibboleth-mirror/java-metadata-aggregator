@@ -151,6 +151,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
             descriptor = descriptorItr.next();
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
+                descriptorItr.remove();
             }
         }
 
@@ -161,6 +162,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
             descriptor = descriptorItr.next();
             if (processEntityDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
+                descriptorItr.remove();
             }
         }
 

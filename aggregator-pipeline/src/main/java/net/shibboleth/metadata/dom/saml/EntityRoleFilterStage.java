@@ -204,6 +204,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
             descriptor = descriptorItr.next();
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
+                descriptorItr.remove();
             }
         }
 
@@ -214,6 +215,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
             descriptor = descriptorItr.next();
             if (processEntityDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
+                descriptorItr.remove();
             }
         }
 
@@ -277,6 +279,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
                     AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME)) {
                 roleIdentifier = childQName;
             } else {
+                childItr.remove();
                 continue;
             }
 

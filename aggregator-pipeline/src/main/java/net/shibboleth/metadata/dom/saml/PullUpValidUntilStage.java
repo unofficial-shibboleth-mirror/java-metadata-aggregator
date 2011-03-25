@@ -18,9 +18,6 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
-import javax.xml.datatype.DatatypeConstants;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -45,7 +42,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
     private long maxValidityDuration = Long.MAX_VALUE;
 
     /**
-     * Gets the minimum amount of time ,in milliseconds, a descriptor may be valid.
+     * Gets the minimum amount of time, in milliseconds, a descriptor may be valid.
      * 
      * @return minimum amount of time, in milliseconds, a descriptor may be valid, always 0 or greater
      */
@@ -54,11 +51,11 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /**
-     * Sets the minimum amount of time,i n milliseconds, a descriptor may be valid.
+     * Sets the minimum amount of time, in milliseconds, a descriptor may be valid.
      * 
      * @param duration minimum amount of time, in milliseconds, a descriptor may be valid
      */
-    public synchronized void setMinimumCacheDuration(long duration) {
+    public synchronized void setMinimumValidityDuration(long duration) {
         if (isInitialized()) {
             return;
         }
@@ -75,7 +72,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @return maximum maximum amount of time, in milliseconds, a descriptor may be valid, always greater than 0
      */
-    public long getMaximumCacheDuration() {
+    public long getMaximumValidityDuration() {
         return maxValidityDuration;
     }
 
@@ -84,19 +81,19 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @param duration maximum amount of time, in milliseconds, a descriptor may be valid, must be greater than 0
      */
-    public synchronized void setMaximumCacheDuration(long duration) {
+    public synchronized void setMaximumValidityDuration(long duration) {
         if (isInitialized()) {
             return;
         }
 
-        Assert.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
+        Assert.isGreaterThan(0, duration, "Maximum validity duration must be greater than 0");
         maxValidityDuration = duration;
     }
 
     /** {@inheritDoc} */
     protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
         Element descriptor = metadata.getMetadata();
-        long nearestValidUntil = getNearestValidUntil(descriptor);
+        Long nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);
         return true;
     }
@@ -106,21 +103,21 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @param descriptor descriptor from which to get the shortest cache duration
      * 
-     * @return the shortest cache duration from the descriptor and its descendants or 0 if the descriptor does not
+     * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    protected long getNearestValidUntil(final Element descriptor) {
-        long nearestValidUntil = 0;
+    protected Long getNearestValidUntil(final Element descriptor) {
+        Long nearestValidUntil = null;
         if (!MetadataHelper.isEntitiesDescriptor(descriptor) && !MetadataHelper.isEntityDescriptor(descriptor)) {
             return nearestValidUntil;
         }
 
-        long validUntil;
+        Long validUntil;
         List<Element> entitiesDescriptors = ElementSupport.getChildElements(descriptor,
                 MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
         for (Element entitiesDescriptor : entitiesDescriptors) {
             validUntil = getNearestValidUntil(entitiesDescriptor);
-            if (nearestValidUntil > 0 && validUntil < nearestValidUntil) {
+            if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
                 nearestValidUntil = validUntil;
             }
         }
@@ -129,15 +126,15 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
                 MetadataHelper.ENTITY_DESCRIPTOR_NAME);
         for (Element entityDescriptor : entityDescriptors) {
             validUntil = getNearestValidUntil(entityDescriptor);
-            if (nearestValidUntil > 0 && validUntil < nearestValidUntil) {
+            if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
                 nearestValidUntil = validUntil;
             }
         }
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = descriptor.getAttributeNodeNS(null, MetadataHelper.VALID_UNTIL_ATTIB_NAME.getLocalPart());
         if (validUntilAttr != null) {
-            validUntil = AttributeSupport.getDurationAttributeValueAsLong(validUntilAttr);
-            if (nearestValidUntil > 0 && validUntil < nearestValidUntil) {
+            validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
+            if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
                 nearestValidUntil = validUntil;
             }
 
@@ -148,52 +145,35 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /**
-     * Chooses the earliest of the two given dates.
+     * Sets the valid until instant on the given descriptor. If the given validUntil is null no instant is set. If the
+     * given validUntil is less than now + {@link #minValidityDuration} then the instant of now + the minimum duration
+     * is set. If the given validUntil is greater than now + {@link #maxValidityDuration} then the instant of now + the
+     * maximum duration is set. Otherwise the given instant is set.
      * 
-     * @param instant1 first instant, may be null
-     * @param instant2 second instant, may be null
-     * 
-     * @return the earliest of the instants or null if the given instants were null
+     * @param descriptor entity or entities descriptor to receive the validUntil, never null
+     * @param validUntil validUntil time to be set on the given descriptor
      */
-    protected XMLGregorianCalendar chooseEarliest(XMLGregorianCalendar instant1, XMLGregorianCalendar instant2) {
-        if (instant1 == null && instant2 == null) {
-            return null;
-        }
-
-        if (instant2 == null) {
-            return instant1;
-        }
-
-        if (instant1.compare(instant2) == DatatypeConstants.LESSER) {
-            return instant1;
-        }
-
-        return instant2;
-    }
-
-    /**
-     * Sets the valid until instant on the given descriptor. If the given duration is less than, or equal to, 0 no
-     * instant is set. If the given duration is less than {@link #minValidityDuration} then the instant of now + the
-     * minimum duration is set. If the given duration is greater than {@link #maxValidityDuration} then the instant of
-     * now + the maximum duration is set. Otherwise the instant of now + the given duration is set.
-     * 
-     * @param descriptor entity or entities descriptor to receive the cache duration, never null
-     * @param validityDuration valid duration used to computer the validity instant
-     */
-    protected void setValidUntil(final Element descriptor, final long validityDuration) {
-        if (validityDuration <= 0) {
+    protected void setValidUntil(final Element descriptor, final Long validUntil) {
+        if (validUntil == null) {
             return;
         }
 
-        long validUntil;
-        if (validityDuration < minValidityDuration) {
-            validUntil = System.currentTimeMillis() + maxValidityDuration;
-        } else if (validityDuration > maxValidityDuration) {
-            validUntil = System.currentTimeMillis() + maxValidityDuration;
-        } else {
-            validUntil = System.currentTimeMillis() + validityDuration;
+        long now = System.currentTimeMillis();
+        long minValidUntil = now + minValidityDuration;
+        long maxValidUntil = now + maxValidityDuration;
+        if(maxValidUntil < 0){
+            maxValidUntil = Long.MAX_VALUE;
         }
 
-        AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, validUntil);
+        long boundedValidUntil;
+        if (validUntil < minValidUntil) {
+            boundedValidUntil = minValidUntil;
+        } else if (validUntil > maxValidUntil) {
+            boundedValidUntil = maxValidUntil;
+        } else {
+            boundedValidUntil = validUntil;
+        }
+
+        AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME, boundedValidUntil);
     }
 }

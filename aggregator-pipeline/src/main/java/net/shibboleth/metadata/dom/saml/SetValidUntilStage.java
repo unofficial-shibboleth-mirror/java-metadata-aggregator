@@ -56,15 +56,11 @@ public class SetValidUntilStage extends BaseIteratingStage<DomMetadata> {
     protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
         Element descriptor = metadata.getMetadata();
         if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
-            if (AttributeSupport.hasAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
-                descriptor.removeAttributeNode(AttributeSupport.getAttribute(descriptor,
-                        MetadataHelper.CACHE_DURATION_ATTRIB_NAME));
-            }
-
+            AttributeSupport.removeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
             AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME,
                     System.currentTimeMillis() + validityDuration);
         }
-        
+
         return true;
     }
 }

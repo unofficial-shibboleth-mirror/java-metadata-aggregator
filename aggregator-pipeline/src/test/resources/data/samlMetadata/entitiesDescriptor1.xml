@@ -1,4 +1,5 @@
-<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+<EntitiesDescriptor Name="urn:example.org:test" cacheDuration="PT4H" validUntil="2050-01-01T00:00:00Z" 
+    xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
     xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
     xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" 
     xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
@@ -6,7 +7,7 @@
     xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd
                         urn:oasis:names:tc:SAML:metadata:ui http://www.oasis-open.org/committees/download.php/40272/sstc-saml-metadata-ui-v1.0.xsd" >
     
-    <EntityDescriptor entityID="https://idp.shibboleth.net/idp/shibboleth">
+    <EntityDescriptor entityID="https://idp.shibboleth.net/idp/shibboleth" cacheDuration="PT3H" validUntil="2049-01-01T00:00:00Z">
         
         <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
             
@@ -74,7 +75,7 @@
         
     </EntityDescriptor>
     
-    <EntityDescriptor entityID="https://issues.shibboleth.net/shibboleth" >
+    <EntityDescriptor entityID="https://issues.shibboleth.net/shibboleth" cacheDuration="PT2H" validUntil="2048-01-01T00:00:00Z">
         
         <SPSSODescriptor
             protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol urn:oasis:names:tc:SAML:2.0:protocol">
@@ -190,7 +191,7 @@ uQfWf/K4Fj4CqCzMOU3mmvy7ricwz/4Kzas=
         
     </EntityDescriptor>
 
-    <EntityDescriptor entityID="https://wiki.shibboleth.net/shibboleth">
+    <EntityDescriptor entityID="https://wiki.shibboleth.net/shibboleth" cacheDuration="PT1H" validUntil="2047-01-01T00:00:00Z">
         
         <SPSSODescriptor
             protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol urn:oasis:names:tc:SAML:2.0:protocol">

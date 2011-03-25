@@ -28,8 +28,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
+/** Unit test for {@link EntityRoleFilterStage}. */
 public class EntityRoleFilterStageTest extends BaseDomTest {
 
+    /**
+     * Test that whitelisted roles are retained and all other roles are removed. Also tests that roleless entities are
+     * removed.
+     */
     @Test
     public void testRoleWhitelist() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
@@ -40,19 +45,17 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         List<DomMetadata> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
+        Assert.assertEquals(metadataCollection.size(), 1);
+
         Element descriptor = metadataCollection.get(0).getMetadata();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
-
-        descriptor = metadataCollection.get(1).getMetadata();
-        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
-                .size(), 0);
-
-        descriptor = metadataCollection.get(2).getMetadata();
-        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
-                .size(), 0);
     }
 
+    /**
+     * Test that blacklisted roles are removed and all other roles are retained. Also tests that roleless entities are
+     * removed.
+     */
     @Test
     public void testRoleBlacklist() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
@@ -63,19 +66,50 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         List<DomMetadata> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
+        Assert.assertEquals(metadataCollection.size(), 2);
+
         Element descriptor = metadataCollection.get(0).getMetadata();
-        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME)
-                .size(), 0);
+        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
+                .size(), 1);
 
         descriptor = metadataCollection.get(1).getMetadata();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
+    }
+
+    /**
+     * Test that EntityDescriptors that have had all their roles removed are not themselves removed if
+     * {@link EntityRoleFilterStage#isRemovingRolelessEntities()} is false.
+     */
+    @Test
+    public void testDontRemoveRolelessEntityDescriptor() throws Exception {
+        EntityRoleFilterStage stage = new EntityRoleFilterStage();
+        stage.setId("test");
+        stage.setDesignatedRoles(CollectionSupport.toList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
+        stage.setWhitelistingRoles(true);
+        stage.setRemoveRolelessEntities(false);
+
+        List<DomMetadata> metadataCollection = buildMetadataCollection();
+        stage.execute(metadataCollection);
+
+        Assert.assertEquals(metadataCollection.size(), 3);
+
+        Element descriptor = metadataCollection.get(0).getMetadata();
+        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME)
+                .size(), 1);
+
+        descriptor = metadataCollection.get(1).getMetadata();
+        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
+                .size(), 0);
 
         descriptor = metadataCollection.get(2).getMetadata();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
-                .size(), 1);
+                .size(), 0);
     }
-
+    
+    /**
+     * Test that role filtering is performed on descendant elements of metadata collection elements.
+     */
     @Test
     public void testEntitiesDescriptorFiltering() throws Exception {
         ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
@@ -88,19 +122,54 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.execute(metadataCollection);
 
         List<Element> descriptors = ElementSupport.getChildElements(metadataCollection.iterator().next().getMetadata());
+        Assert.assertEquals(descriptors.size(), 2);
+
         Element descriptor = descriptors.get(0);
-        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME)
-                .size(), 0);
+        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
+                .size(), 1);
 
         descriptor = descriptors.get(1);
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
-
-        descriptor = descriptors.get(2);
-        Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
-                .size(), 1);
     }
 
+    /**
+     * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are themselves removed.
+     */
+    @Test
+    public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+
+        EntityRoleFilterStage stage = new EntityRoleFilterStage();
+        stage.setId("test");
+        stage.setDesignatedRoles(CollectionSupport.toList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME));
+        stage.setWhitelistingRoles(false);
+        stage.execute(metadataCollection);
+        
+        Assert.assertEquals(metadataCollection.size(), 0);
+    }
+
+    /**
+     * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are not themselves removed
+     * when {@link EntityRoleFilterStage#isRemovingEntitylessEntitiesDescriptor()} is false.
+     */
+    @Test
+    public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
+        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+
+        EntityRoleFilterStage stage = new EntityRoleFilterStage();
+        stage.setId("test");
+        stage.setDesignatedRoles(CollectionSupport.toList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME));
+        stage.setWhitelistingRoles(false);
+        stage.setRemovingEntitylessEntitiesDescriptor(false);
+        stage.execute(metadataCollection);
+        
+        Assert.assertEquals(metadataCollection.size(), 1);
+    }
+
+    /** Build up a metadata collection containing 3 EntityDescriptors. */
     private List<DomMetadata> buildMetadataCollection() throws Exception {
         ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
 

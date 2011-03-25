@@ -56,11 +56,7 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomMetadata> {
     protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
         Element descriptor = metadata.getMetadata();
         if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
-            if (AttributeSupport.hasAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME)) {
-                descriptor.removeAttributeNode(AttributeSupport.getAttribute(descriptor,
-                        MetadataHelper.CACHE_DURATION_ATTRIB_NAME));
-            }
-
+            AttributeSupport.removeAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
             AttributeSupport.appendDurationAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME,
                     cacheDuration);
         }

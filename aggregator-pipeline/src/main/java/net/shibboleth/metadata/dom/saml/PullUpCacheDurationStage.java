@@ -92,7 +92,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
     /** {@inheritDoc} */
     protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
         Element descriptor = metadata.getMetadata();
-        long cacheDuration = getShortestCacheDuration(descriptor);
+        Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);
         return true;
     }
@@ -102,21 +102,21 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @param descriptor descriptor from which to get the shortest cache duration
      * 
-     * @return the shortest cache duration from the descriptor and its descendants or 0 if the descriptor does not
+     * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    protected long getShortestCacheDuration(final Element descriptor) {
-        long shortestCacheDuration = 0;
+    protected Long getShortestCacheDuration(final Element descriptor) {
+        Long shortestCacheDuration = null;
         if (!MetadataHelper.isEntitiesDescriptor(descriptor) && !MetadataHelper.isEntityDescriptor(descriptor)) {
             return shortestCacheDuration;
         }
 
-        long cacheDuration;
+        Long cacheDuration = null;
         List<Element> entitiesDescriptors = ElementSupport.getChildElements(descriptor,
                 MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
         for (Element entitiesDescriptor : entitiesDescriptors) {
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
-            if (shortestCacheDuration > 0 && cacheDuration < shortestCacheDuration) {
+            if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
                 shortestCacheDuration = cacheDuration;
             }
         }
@@ -125,7 +125,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
                 MetadataHelper.ENTITY_DESCRIPTOR_NAME);
         for (Element entityDescriptor : entityDescriptors) {
             cacheDuration = getShortestCacheDuration(entityDescriptor);
-            if (shortestCacheDuration > 0 && cacheDuration < shortestCacheDuration) {
+            if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
                 shortestCacheDuration = cacheDuration;
             }
         }
@@ -133,7 +133,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
         Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
         if (cacheDurationAttr != null) {
             cacheDuration = AttributeSupport.getDurationAttributeValueAsLong(cacheDurationAttr);
-            if (shortestCacheDuration > 0 && cacheDuration < shortestCacheDuration) {
+            if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
                 shortestCacheDuration = cacheDuration;
             }
 
@@ -150,10 +150,10 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
      * duration is set. Otherwise the given cache duration is set.
      * 
      * @param descriptor entity or entities descriptor to receive the cache duration, never null
-     * @param cacheDuration cache duration to be set
+     * @param cacheDuration cache duration to be set, may be null
      */
-    protected void setCacheDuration(final Element descriptor, final long cacheDuration) {
-        if (cacheDuration <= 0) {
+    protected void setCacheDuration(final Element descriptor, final Long cacheDuration) {
+        if (cacheDuration == null || cacheDuration <= 0) {
             return;
         }
 
@@ -165,7 +165,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
                     maxCacheDuration);
         } else {
             AttributeSupport.appendDurationAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME,
-                    minCacheDuration);
+                    cacheDuration);
         }
     }
 }
