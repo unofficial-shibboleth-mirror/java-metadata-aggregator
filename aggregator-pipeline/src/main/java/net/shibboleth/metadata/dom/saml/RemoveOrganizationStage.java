@@ -72,7 +72,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<DomMetadata> {
         final List<Element> organizations = ElementSupport.getChildElementsByTagNameNS(entityDescriptor,
                 MetadataHelper.MD_NS, "Organization");
         if (!organizations.isEmpty()) {
-            log.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
+            log.debug("{} pipeline stage filtering Organization from EntityDescriptor {}", getId(), entityId);
             for (Element organization : organizations) {
                 entityDescriptor.removeChild(organization);
             }
