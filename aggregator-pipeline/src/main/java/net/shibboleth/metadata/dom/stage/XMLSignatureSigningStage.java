@@ -222,7 +222,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @return the privKey private key used to sign the content
      */
-    public PrivateKey getPrivKey() {
+    public PrivateKey getPrivateKey() {
         return privKey;
     }
 
@@ -231,7 +231,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @param key private key used to sign the content
      */
-    public synchronized void setPrivKey(final PrivateKey key) {
+    public synchronized void setPrivateKey(final PrivateKey key) {
         if (isInitialized()) {
             return;
         }
@@ -243,7 +243,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @return public key associated with private key used to sign the content
      */
-    public PublicKey getPubKey() {
+    public PublicKey getPublicKey() {
         return pubKey;
     }
 
@@ -252,7 +252,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @param key public key associated with private key used to sign the content
      */
-    public synchronized void setPubKey(final PublicKey key) {
+    public synchronized void setPublicKey(final PublicKey key) {
         if (isInitialized()) {
             return;
         }
