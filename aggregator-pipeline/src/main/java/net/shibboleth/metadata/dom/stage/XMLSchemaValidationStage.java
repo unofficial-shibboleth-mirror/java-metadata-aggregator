@@ -68,7 +68,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomMetadata> {
      * 
      * @return unmodifiable list of schema resources against which data is validated
      */
-    public List<Resource> getSchemaFiles() {
+    public List<Resource> getSchemaResources() {
         return schemaResources;
     }
 
