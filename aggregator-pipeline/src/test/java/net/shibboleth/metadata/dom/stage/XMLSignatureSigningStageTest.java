@@ -52,7 +52,7 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setIncludeKeyValue(false);
         stage.setIncludeX509IssuerSerial(true);
-        stage.setPrivKey(signingKey);
+        stage.setPrivateKey(signingKey);
         stage.setCertificates(certs);
         stage.initialize();
 
