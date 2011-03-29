@@ -18,7 +18,9 @@ package net.shibboleth.metadata.dom.stage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -56,6 +58,13 @@ public class XSLTStage extends BaseStage<DomMetadata> {
 
     /** XSL template used to transform metadata. */
     private Templates xslTemplate;
+    
+    /**
+     * Collection of named parameters to make available to the transform.
+     * 
+     * If not set, an empty collection.
+     */
+    private Map<String, Object> parameters = new HashMap<String, Object>();
 
     /**
      * Gets the resource that provides the XSL document.
@@ -77,6 +86,18 @@ public class XSLTStage extends BaseStage<DomMetadata> {
         }
         xslResource = resource;
     }
+    
+    /**
+     * Sets the named parameters for the transform.
+     * 
+     * @param parameterMap parameters for the transform
+     */
+    public synchronized void setParameters(Map<String, Object> parameterMap) {
+        if (isInitialized()) {
+            return;
+        }
+        this.parameters = parameterMap;
+    }
 
     /** {@inheritDoc} */
     protected void doExecute(final Collection<DomMetadata> metadataCollection) throws StageProcessingException {
@@ -84,6 +105,10 @@ public class XSLTStage extends BaseStage<DomMetadata> {
         try {
             final Transformer transform = xslTemplate.newTransformer();
 
+            // Pass any parameters through to the transform.
+            for (Map.Entry<String, Object> entry: parameters.entrySet()) {
+                transform.setParameter(entry.getKey(), entry.getValue());
+            }
             
             Element metadataElement;
             DOMResult result;

@@ -17,7 +17,9 @@
 package net.shibboleth.metadata.dom.stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import net.shibboleth.metadata.AssertSupport;
@@ -134,6 +136,37 @@ public class XSLTStageTest extends BaseDomTest {
         
         Assert.assertTrue(names.contains("firstValue"));
         Assert.assertTrue(names.contains("secondValue"));
+    }
+    
+    /**
+     * Test a transform to which we supply a named parameter.
+     */
+    @Test
+    public void testTransformParam() throws Exception {
+        
+        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
+        mdCol.add(makeInput());
+
+        Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("fruit", "avocados");
+        
+        XSLTStage stage = new XSLTStage();
+        stage.setId("test");
+        stage.setXslResource(transform);
+        stage.setParameters(params);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DomMetadata result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
+        Assert.assertEquals(result.getMetadataInfo().get(TestInfo.class).size(), 1);
+
+        Element expected = readXmlData("xsltStageParamOutput.xml");
+        assertXmlEqual(expected, result.getMetadata());
     }
     
 
