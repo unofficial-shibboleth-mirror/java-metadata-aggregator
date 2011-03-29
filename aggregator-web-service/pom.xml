@@ -11,7 +11,7 @@
         <relativePath>../aggregator-parent</relativePath>
     </parent>
 
-    <name>Shibboleth Metadata Aggreagtor :: Web Service Interface</name>
+    <name>Shibboleth Metadata Aggregator :: Web Service Interface</name>
     <artifactId>aggregator-web-service</artifactId>
     <packaging>war</packaging>
 

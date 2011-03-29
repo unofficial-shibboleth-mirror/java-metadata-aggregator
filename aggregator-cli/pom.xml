@@ -11,7 +11,7 @@
         <relativePath>../aggregator-parent</relativePath>
     </parent>
 
-    <name>Shibboleth Metadata Aggreagtor :: Command Line Interface</name>
+    <name>Shibboleth Metadata Aggregator :: Command Line Interface</name>
     <artifactId>aggregator-cli</artifactId>
     <packaging>jar</packaging>
 

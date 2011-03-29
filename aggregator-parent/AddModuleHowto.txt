@@ -49,7 +49,7 @@ Some notes:
 modules.  So don't commit changes to them unless you really mean to change the
 setting for all modules.
 
-* The aggreagtor-parent/pom.xml declares both inherited and managed dependencies.
+* The aggregator-parent/pom.xml declares both inherited and managed dependencies.
 Inherited dependencies are inherited by, available to, all project modules. You
 don't have to do anything in your pom to get them. Managed dependencies are 
 managed (version, scope, exclusions, etc.) by the parent pom but are not 
