@@ -52,7 +52,7 @@ public abstract class BaseIteratingStage<MetadataType extends Metadata<?>> exten
      * 
      * @param metadata metadata element on which to operate
      * 
-     * @return true of the metadata element should be retained in the collection, false if not
+     * @return true if the metadata element should be retained in the collection, false if not
      * 
      * @throws StageProcessingException thrown if there is a problem with the stage processing
      */
