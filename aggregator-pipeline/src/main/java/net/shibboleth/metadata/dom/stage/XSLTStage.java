@@ -18,7 +18,6 @@ package net.shibboleth.metadata.dom.stage;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.transform.Templates;
@@ -31,10 +30,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.metadata.MetadataInfo;
 import net.shibboleth.metadata.dom.DomMetadata;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.metadata.util.MetadataInfoHelper;
 
 import org.opensaml.util.resource.Resource;
 import org.opensaml.util.resource.ResourceException;
@@ -83,14 +84,14 @@ public class XSLTStage extends BaseStage<DomMetadata> {
         try {
             final Transformer transform = xslTemplate.newTransformer();
 
+            
             Element metadataElement;
             DOMResult result;
             List<Element> transformedElements;
 
             ArrayList<DomMetadata> newMetadataElements = new ArrayList<DomMetadata>();
-            Iterator<DomMetadata> metadataIterator = metadataCollection.iterator();
-            while (metadataIterator.hasNext()) {
-                metadataElement = metadataIterator.next().getMetadata();
+            for (DomMetadata domMetadata: metadataCollection) {
+                metadataElement = domMetadata.getMetadata();
 
                 // we put things in a doc fragment, instead of new documents, because down the line
                 // there is a good chance that at least some elements will get mashed together and this
@@ -98,15 +99,23 @@ public class XSLTStage extends BaseStage<DomMetadata> {
                 result = new DOMResult(metadataElement.getOwnerDocument().createDocumentFragment());
                 transform.transform(new DOMSource(metadataElement), result);
 
+                // The result of the transform contains a number of Elements, each of which
+                // becomes a new DomMetadata in the output collection carrying the same
+                // MetadataInfo objects as the input.  The predominant case is for one
+                // input element to be transformed into one output element, but it is
+                // possible to have none, or many.
                 transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
-                    newMetadataElements.add(new DomMetadata(transformedElement));
+                    DomMetadata newMetadata = new DomMetadata(transformedElement);
+                    MetadataInfoHelper.addToAll(newMetadata,
+                            domMetadata.getMetadataInfo().values().toArray(new MetadataInfo[] {}));
+                    newMetadataElements.add(newMetadata);
                 }
-                metadataIterator.remove();
             }
+            metadataCollection.clear();
             metadataCollection.addAll(newMetadataElements);
         } catch (TransformerConfigurationException e) {
-            throw new RuntimeException("XSL transofrmation engine misconfigured", e);
+            throw new RuntimeException("XSL transformation engine misconfigured", e);
         } catch (TransformerException e) {
             throw new StageProcessingException("Unable to transform metadata element", e);
         }
