@@ -27,13 +27,26 @@
         <spring.version>3.0.5.RELEASE</spring.version>
         <xerces.groupId>org.apache.xerces</xerces.groupId>
         <xerces.version>2.10.0</xerces.version>
+        <xmlresolver.groupId>xml-resolver</xmlresolver.groupId>
+        <xmlresolver.version>1.2</xmlresolver.version>
+        <xalan.groupId>xalan</xalan.groupId>
+        <xalan.version>2.7.1</xalan.version>
     </properties>
 
     <repositories>
         <repository>
-            <id>shibboleth.internet2.edu</id>
-            <name>Internet2</name>
-            <url>http://shibboleth.internet2.edu/downloads/maven2</url>
+            <id>shib-release</id>
+            <url>https://shibboleth.net/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>shib-snapshot</id>
+            <url>https://shibboleth.net/nexus/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
     </repositories>
 
@@ -110,20 +123,20 @@
         </dependency>
         <dependency>
             <groupId>${xerces.groupId}</groupId>
-            <artifactId>resolver</artifactId>
-            <version>${xerces.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${xerces.groupId}</groupId>
             <artifactId>serializer</artifactId>
             <version>${xerces.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.xalan</groupId>
+            <groupId>${xmlresolver.groupId}</groupId>
+            <artifactId>xml-resolver</artifactId>
+            <version>${xmlresolver.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${xalan.groupId}</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.1</version>
+            <version>${xalan.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -182,24 +195,86 @@
 
     <distributionManagement>
         <repository>
-            <id>release-repo</id>
-            <url>${dist.release.url}</url>
+            <id>release</id>
+            <url>https://shibboleth.net/nexus/content/repositories/releases</url>
         </repository>
+        <snapshotRepository>
+            <id>snapshot</id>
+            <url>https://shibboleth.net/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>
-        <defaultGoal>install</defaultGoal>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <source>${target.java.version}</source>
-                        <target>${target.java.version}</target>
-                    </configuration>
-                </plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${xerces.groupId}</groupId>
+                                    <artifactId>xml-apis</artifactId>
+                                    <version>${xerces.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>${xerces.groupId}</groupId>
+                                    <artifactId>xercesImpl</artifactId>
+                                    <version>${xerces.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>${xerces.groupId}</groupId>
+                                    <artifactId>serializer</artifactId>
+                                    <version>${xerces.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>${xmlresolver.groupId}</groupId>
+                                    <artifactId>xml-resolver</artifactId>
+                                    <version>${xmlresolver.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>${xalan.groupId}</groupId>
+                                    <artifactId>xalan</artifactId>
+                                    <version>${xalan.version}</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <compilerArguments>
+                        <endorseddirs>${project.build.directory}/endorsed</endorseddirs>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.8</version>
+                <configuration>
+                    <argLine>-Xmx256m</argLine>
+                    <systemProperties>
+                        <property>
+                            <name>java.endorsed.dirs</name>
+                            <value>${project.build.directory}/endorsed</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -217,28 +292,33 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.8</version>
-                    <configuration>
-                        <argLine>-Xmx256m</argLine>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.1.2</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <!-- Project Metadata -->
