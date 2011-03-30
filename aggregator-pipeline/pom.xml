@@ -43,8 +43,8 @@
                             <manifestSection>
                                 <name>net/shibboleth/metadata</name>
                                 <manifestEntries>
-                                    <Implementation-Title>${pom.artifactId}</Implementation-Title>
-                                    <Implementation-Version>${pom.version}</Implementation-Version>
+                                    <Implementation-Title>${project.artifactId}</Implementation-Title>
+                                    <Implementation-Version>${project.version}</Implementation-Version>
                                     <Implementation-Vendor>shibboleth.net</Implementation-Vendor>
                                 </manifestEntries>
                             </manifestSection>

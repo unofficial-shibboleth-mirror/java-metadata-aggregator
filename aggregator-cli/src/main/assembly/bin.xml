@@ -22,7 +22,8 @@
             <scope>runtime</scope>
             <includes>
                 <include>org.apache.xerces:*</include>
-                <include>org.apache.xalan:*</include>
+                <include>xalan:*</include>
+                <include>xml-resolver:*</include>
             </includes>
         </dependencySet>
         

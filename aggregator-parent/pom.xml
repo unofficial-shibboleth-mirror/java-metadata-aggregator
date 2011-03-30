@@ -138,6 +138,12 @@
             <artifactId>xalan</artifactId>
             <version>${xalan.version}</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>${xalan.groupId}</groupId>
+                    <artifactId>serializer</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Test Dependencies -->
