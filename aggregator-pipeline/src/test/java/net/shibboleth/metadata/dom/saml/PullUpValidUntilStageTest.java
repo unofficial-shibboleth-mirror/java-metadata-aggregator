@@ -29,9 +29,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomMetadata;
 
-/**
- *
- */
+/** Unit test for {@link PullUpValidUntilStage}. */
 public class PullUpValidUntilStageTest extends BaseDomTest {
 
     /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */
@@ -62,7 +60,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
         }
     }
 
-    /** Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration§ + now. */
+    /** Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration + now. */
     @Test
     public void testMinCacheDuration() throws Exception {
         ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();

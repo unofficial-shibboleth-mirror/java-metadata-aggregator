@@ -19,8 +19,6 @@ package net.shibboleth.metadata.util;
 import java.io.Serializable;
 import java.util.List;
 
-import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
-
 import org.joda.time.Chronology;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;

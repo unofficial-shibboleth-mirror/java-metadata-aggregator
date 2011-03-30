@@ -66,7 +66,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
     public static final QName PDP_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "PDPDescriptor");
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStageTest.class);
+    private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStage.class);
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
     private Collection<QName> designatedRoles = new LazySet<QName>();
