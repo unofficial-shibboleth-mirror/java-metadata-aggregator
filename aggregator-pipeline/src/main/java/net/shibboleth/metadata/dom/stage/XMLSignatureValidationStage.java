@@ -17,7 +17,7 @@
 package net.shibboleth.metadata.dom.stage;
 
 import java.security.PublicKey;
-import java.security.cert.X509Certificate;
+import java.security.cert.Certificate;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
@@ -132,7 +132,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
      * 
      * @param certificate certificate containing the key used to verify the signature
      */
-    public synchronized void setVerificationKey(final X509Certificate certificate) {
+    public synchronized void setVerificationKey(final Certificate certificate) {
         if (isInitialized()) {
             return;
         }

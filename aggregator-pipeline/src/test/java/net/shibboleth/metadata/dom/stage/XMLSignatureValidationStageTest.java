@@ -16,7 +16,7 @@
 
 package net.shibboleth.metadata.dom.stage;
 
-import java.security.cert.X509Certificate;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
@@ -44,7 +44,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
-        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+        Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -71,7 +71,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
-        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+        Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -96,7 +96,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
         mdCol.add(new DomMetadata(testInput));
 
-        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+        Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
