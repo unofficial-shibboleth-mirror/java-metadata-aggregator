@@ -55,6 +55,7 @@ public class StaticMetadataSourceStage<MetadataType extends Metadata<?>> extends
 
         if (metadatas == null || metadatas.isEmpty()) {
             source = Collections.emptyList();
+            return;
         }
 
         source = new ArrayList<MetadataType>();
