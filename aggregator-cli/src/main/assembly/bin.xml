@@ -38,5 +38,13 @@
                 <include>*.sh</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <outputDirectory>/</outputDirectory>
+            <directory>${project.basedir}/src/script/bat</directory>
+            <fileMode>700</fileMode>
+            <includes>
+                <include>*.bat</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
