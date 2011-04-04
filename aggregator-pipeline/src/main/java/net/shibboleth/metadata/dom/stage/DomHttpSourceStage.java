@@ -16,6 +16,7 @@
 
 package net.shibboleth.metadata.dom.stage;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -26,6 +27,8 @@ import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
+import org.opensaml.util.StringSupport;
+import org.opensaml.util.http.HttpClientBuilder;
 import org.opensaml.util.http.HttpResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.util.xml.ParserPool;
@@ -33,17 +36,26 @@ import org.opensaml.util.xml.XMLParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
+import edu.vt.middleware.crypt.digest.MD5;
+import edu.vt.middleware.crypt.util.HexConverter;
 
 /**
  * A pipeline stage which reads an XML document from an HTTP source, parses the document, and places the resultant
  * document (root) element in to the provided metadata collection.
+ * 
+ * To initialize this stage either you must provide a {@link #parserPool} and either a {@link #metadataResource} or
+ * {@link #sourceUrl}. If both a {@link #metadataResource} and {@link #sourceUrl} are specified then
+ * {@link #metadataResource} is used.
  */
 @ThreadSafe
 public class DomHttpSourceStage extends BaseStage<DomMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DomHttpSourceStage.class);
+
+    /** URL from which metadata will be fetched. */
+    private String sourceUrl;
 
     /** Resource used to fetch remote metadata. */
     private HttpResource metadataResource;
@@ -56,9 +68,30 @@ public class DomHttpSourceStage extends BaseStage<DomMetadata> {
      * fail, or just excludes the material from the offending source file. Default value: {@value}
      */
     private boolean errorCausesSourceFailure = true;
-    
+
     /** Cached metadata. */
     private Document cachedMetadata;
+
+    /**
+     * Gets the URL from which metadata will be fetched.
+     * 
+     * @return URL from which metadata will be fetched
+     */
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    /**
+     * Sets the URL from which metadata will be fetched.
+     * 
+     * @param url URL from which metadata will be fetched
+     */
+    public synchronized void setSourceUrl(String url) {
+        if (isInitialized()) {
+            return;
+        }
+        sourceUrl = StringSupport.trimOrNull(url);
+    }
 
     /**
      * Gets the resource from which metadata will be fetched.
@@ -101,7 +134,7 @@ public class DomHttpSourceStage extends BaseStage<DomMetadata> {
         }
         parserPool = pool;
     }
-    
+
     /**
      * Gets whether an error reading and parsing the XML file causes this stage to fail.
      * 
@@ -140,9 +173,10 @@ public class DomHttpSourceStage extends BaseStage<DomMetadata> {
                 buildMetadataCollectionFromCache(metadataCollection);
             }
         } catch (ResourceException e) {
-            if(errorCausesSourceFailure){
-                throw new StageProcessingException("Error retrieving metadata from " + metadataResource.getLocation(), e);
-            }else{
+            if (errorCausesSourceFailure) {
+                throw new StageProcessingException("Error retrieving metadata from " + metadataResource.getLocation(),
+                        e);
+            } else {
                 log.warn("stage {}: unable to read in XML file");
                 log.debug("stage {}: HTTP resource exception", getId(), e);
             }
@@ -166,9 +200,9 @@ public class DomHttpSourceStage extends BaseStage<DomMetadata> {
             cachedMetadata = parserPool.parse(data);
             buildMetadataCollectionFromCache(metadataCollection);
         } catch (XMLParserException e) {
-            if(errorCausesSourceFailure){
+            if (errorCausesSourceFailure) {
                 throw new StageProcessingException("Unable to parse returned metadata", e);
-            }else{
+            } else {
                 log.warn("stage {}: unable to parse XML document", getId());
                 log.debug("stage {}: parsing exception", getId(), e);
             }
@@ -181,8 +215,8 @@ public class DomHttpSourceStage extends BaseStage<DomMetadata> {
      * @param metadataCollection metadata collection to which the cached document element is added
      */
     protected void buildMetadataCollectionFromCache(Collection<DomMetadata> metadataCollection) {
-        final Element clonedMetadata = (Element) cachedMetadata.getDocumentElement().cloneNode(true);
-        metadataCollection.add(new DomMetadata(clonedMetadata));
+        final Document clonedDocument = (Document) cachedMetadata.cloneNode(true);
+        metadataCollection.add(new DomMetadata(clonedDocument.getDocumentElement()));
     }
 
     /** {@inheritDoc} */
@@ -192,9 +226,24 @@ public class DomHttpSourceStage extends BaseStage<DomMetadata> {
                     + ", ParserPool may not be null");
         }
 
-        if (metadataResource == null) {
+        if (sourceUrl == null && metadataResource == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", MetadataResource may not be null");
+                    + ", either a SourceUrl or MetadataResource must be specified");
+        }
+
+        if (metadataResource == null) {
+            HttpClientBuilder clientBuilder = new HttpClientBuilder();
+            clientBuilder.setConnectionDisregardSslCertificate(true);
+            clientBuilder.setConnectionPooling(true);
+            clientBuilder.setConnectionTimeout(60000);
+            clientBuilder.setHttpFollowRedirects(true);
+            clientBuilder.setSocketTimeout(60000);
+
+            String urlHash = new MD5().digest(sourceUrl.getBytes(), new HexConverter());
+            String backupFilePath = System.getProperty("java.io.tmpdir") + File.pathSeparator + urlHash;
+            metadataResource = new HttpResource(sourceUrl, clientBuilder.buildClient(), backupFilePath);
+        } else {
+            sourceUrl = metadataResource.getLocation();
         }
 
         try {
