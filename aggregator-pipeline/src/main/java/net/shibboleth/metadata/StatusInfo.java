@@ -61,7 +61,7 @@ public class StatusInfo implements MetadataInfo {
      * 
      * @return the status message, never null
      */
-    String getStatusMessage() {
+    public String getStatusMessage() {
         return message;
     }
 }
