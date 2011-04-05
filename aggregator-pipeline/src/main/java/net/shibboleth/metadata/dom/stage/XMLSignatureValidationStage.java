@@ -61,6 +61,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
     /** Whether the signature on a metadata elements is required to be valid. Default value: {@value} */
     private boolean validSignatureRequired = true;
 
+    /** Certificate whose public key is used to verify the metadata signature. */
+    private Certificate verificationCertificate;
+
     /** Public key used to verify the metadata signature. */
     private PublicKey verificationKey;
 
@@ -128,15 +131,27 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomMetadata>
     }
 
     /**
-     * Set the key, included in a certificate, used to verify the signature.
+     * Gets the certificate whose public key is used to verify the signed metadata.
+     * 
+     * @return certificate whose public key is used to verify the signed metadata
+     */
+    public Certificate getVerificationCertificate() {
+        return verificationCertificate;
+    }
+
+    /**
+     * Set the key, included in a certificate, used to verify the signature. This method will also set
+     * {@link #verificationKey} with the public key of the certificate.
      * 
      * @param certificate certificate containing the key used to verify the signature
      */
-    public synchronized void setVerificationKey(final Certificate certificate) {
+
+    public synchronized void setVerificationCertificate(final Certificate certificate) {
         if (isInitialized()) {
             return;
         }
         if (certificate != null) {
+            verificationCertificate = certificate;
             verificationKey = certificate.getPublicKey();
         }
     }

@@ -49,7 +49,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
         stage.setId("test");
-        stage.setVerificationKey(signingCert);
+        stage.setVerificationCertificate(signingCert);
         stage.initialize();
 
         stage.execute(mdCol);
@@ -76,7 +76,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
         stage.setId("test");
-        stage.setVerificationKey(signingCert);
+        stage.setVerificationCertificate(signingCert);
         stage.initialize();
 
         stage.execute(mdCol);
@@ -102,7 +102,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
         stage.setId("test");
         stage.setSignatureRequired(false);
-        stage.setVerificationKey(signingCert);
+        stage.setVerificationCertificate(signingCert);
         stage.initialize();
 
         stage.execute(mdCol);
@@ -115,7 +115,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage = new XMLSignatureValidationStage();
         stage.setId("test");
         stage.setSignatureRequired(true);
-        stage.setVerificationKey(signingCert);
+        stage.setVerificationCertificate(signingCert);
         stage.initialize();
         stage.execute(mdCol);
         Assert.assertTrue(mdCol.isEmpty());
