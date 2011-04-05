@@ -12,6 +12,8 @@
     <dependencySets>
         <dependencySet>
             <outputDirectory>/lib</outputDirectory>
+            <directoryMode>774</directoryMode>
+            <fileMode>444</fileMode>
             <scope>compile</scope>
             <includes>
                 <include>*:jar:*</include>
@@ -19,6 +21,8 @@
         </dependencySet>
         <dependencySet>
             <outputDirectory>/lib/endorsed</outputDirectory>
+            <directoryMode>774</directoryMode>
+            <fileMode>444</fileMode>
             <scope>runtime</scope>
             <includes>
                 <include>org.apache.xerces:*</include>
