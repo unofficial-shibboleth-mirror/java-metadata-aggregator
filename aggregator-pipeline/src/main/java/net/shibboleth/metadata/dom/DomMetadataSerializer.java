@@ -16,18 +16,29 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.MetadataSerializer;
 
-import org.opensaml.util.xml.SerializeSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /** Very simple serializer that serializes the first element of the given metadata collection. */
 @ThreadSafe
 public class DomMetadataSerializer implements MetadataSerializer<DomMetadata> {
+
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(DomMetadataSerializer.class);
 
     /** {@inheritDoc} */
     public void serialize(final Collection<DomMetadata> metadataCollection, OutputStream output) {
@@ -36,6 +47,21 @@ public class DomMetadataSerializer implements MetadataSerializer<DomMetadata> {
         }
 
         final Element documentRoot = metadataCollection.iterator().next().getMetadata();
-        SerializeSupport.writeNode(documentRoot, output);
+
+        try {
+            TransformerFactory tfac = TransformerFactory.newInstance();
+            Transformer serializer = tfac.newTransformer();
+            serializer.setOutputProperty("encoding", "UTF-8");
+            serializer.transform(new DOMSource(documentRoot.getOwnerDocument()), new StreamResult(output));
+        } catch (TransformerException e) {
+            log.error("Unable to write out XML", e);
+        }
+
+        try {
+            output.flush();
+            output.close();
+        } catch (IOException e) {
+            log.error("Unable to close output stream", e);
+        }
     }
 }
