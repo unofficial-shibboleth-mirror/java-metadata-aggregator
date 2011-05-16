@@ -58,7 +58,7 @@ public class MetadataInfoFilterStage extends BaseStage<Metadata<?>> {
         if (isInitialized()) {
             return;
         }
-        filterRequirements = Collections.unmodifiableList(CollectionSupport.addNonNull(filterRequirements,
+        filterRequirements = Collections.unmodifiableList(CollectionSupport.addNonNull(requirements,
                 new LazyList<Class<MetadataInfo>>()));
     }
 

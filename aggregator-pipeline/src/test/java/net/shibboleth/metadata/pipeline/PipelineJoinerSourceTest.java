@@ -26,9 +26,7 @@ import net.shibboleth.metadata.MockMetadata;
 import org.opensaml.util.collections.CollectionSupport;
 import org.testng.annotations.Test;
 
-/**
- *
- */
+/** {@link PipelineJoinerStage} unit test. */
 public class PipelineJoinerSourceTest {
 
     @Test
