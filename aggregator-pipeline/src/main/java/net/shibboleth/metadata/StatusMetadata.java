@@ -19,8 +19,8 @@ package net.shibboleth.metadata;
 import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 
-/** A {@link MetadataInfo} implementation that carries status information about a metdata elements. */
-public class StatusInfo implements MetadataInfo {
+/** A {@link ItemMetadata} implementation that carries status information about an {@link Item}. */
+public class StatusMetadata implements ItemMetadata {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 9058387763020864155L;
@@ -37,7 +37,7 @@ public class StatusInfo implements MetadataInfo {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public StatusInfo(String componentId, String statusMessage) {
+    public StatusMetadata(String componentId, String statusMessage) {
         String trimmedId = StringSupport.trimOrNull(componentId);
         Assert.isNotNull(trimmedId, "Component ID can not be null or empty");
         component = trimmedId;

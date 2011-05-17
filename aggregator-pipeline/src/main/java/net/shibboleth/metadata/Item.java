@@ -21,31 +21,31 @@ import java.io.Serializable;
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 
 /**
- * A piece of metadata with associated processing information.
+ * A wrapper around a piece of information processed by pipeline stages.
  * 
- * @param <MetadataType> type of metadata element
+ * @param <T> type of metadata element
  */
-public interface Metadata<MetadataType> extends Serializable {
+public interface Item<T> extends Serializable {
 
     /**
-     * Gets the metadata.
+     * Gets the wrapped item data.
      * 
-     * @return the metadata
+     * @return the wrapped item data
      */
-    public MetadataType getMetadata();
+    public T unwrap();
 
     /**
-     * Gets all of the processing data attached to this element.
+     * Gets all of the metadata attached to this Item.
      * 
-     * @return processing data attached to this element
+     * @return metadata attached to this Item
      */
-    public ClassToInstanceMultiMap<MetadataInfo> getMetadataInfo();
+    public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
 
     /**
-     * Performs a copy of the element. All member fields, except {@link MetadataInfo}, should be deep cloned.
-     * {@link MetadataInfo} objects must be shared between the clone and the original.
+     * Performs a copy of this Item. All member fields, except {@link ItemMetadata}, should be deep cloned.
+     * {@link ItemMetadata} objects must be shared between the clone and the original.
      * 
      * @return the clone of this element
      */
-    public Metadata<MetadataType> copy();
+    public Item<T> copy();
 }

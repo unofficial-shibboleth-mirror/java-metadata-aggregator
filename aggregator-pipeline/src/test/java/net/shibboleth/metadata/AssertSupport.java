@@ -38,7 +38,7 @@ public final class AssertSupport {
      * @param expectedComponentType type of {@link Component} that created that {@link ComponentInfo}, never null
      * @param expectedComponentId ID of the {@link Component} that created that {@link ComponentInfo}, never null
      */
-    public static void assertValidComponentInfo(Metadata<?> metadataElement, int expectedComponentInfos,
+    public static void assertValidComponentInfo(Item<?> metadataElement, int expectedComponentInfos,
             Class<? extends Component> expectedComponentType, String expectedComponentId) {
         org.opensaml.util.Assert.isNotNull(metadataElement, "Metadata element must not be null");
         org.opensaml.util.Assert.isGreaterThan(0, expectedComponentInfos,
@@ -46,7 +46,7 @@ public final class AssertSupport {
         org.opensaml.util.Assert.isNotNull(expectedComponentType, "Expected Component type must not be null");
         org.opensaml.util.Assert.isNotNull(expectedComponentId, "Expected Component ID must not be null");
 
-        List<ComponentInfo> compInfos = metadataElement.getMetadataInfo().get(ComponentInfo.class);
+        List<ComponentInfo> compInfos = metadataElement.getItemMetadata().get(ComponentInfo.class);
         Assert.assertEquals(compInfos.size(), expectedComponentInfos);
 
         ComponentInfo compInfo;

@@ -21,7 +21,7 @@ import java.io.FileFilter;
 import java.net.URL;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.xml.BasicParserPool;
@@ -45,7 +45,7 @@ public class DomFilesystemSourceTest {
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
         assert metadataCollection != null;
         assert metadataCollection.size() == 1;
@@ -64,7 +64,7 @@ public class DomFilesystemSourceTest {
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
         assert metadataCollection != null;
         assert metadataCollection.size() == 4;
@@ -89,7 +89,7 @@ public class DomFilesystemSourceTest {
             }
         });
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
         assert metadataCollection != null;
         assert metadataCollection.size() == 7;
@@ -109,7 +109,7 @@ public class DomFilesystemSourceTest {
         source.setSource(sourceFile);
 
         try {
-            ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
             source.execute(metadataCollection);
             throw new AssertionError("Source did not fail when given a non-XML file");
         } catch (StageProcessingException e) {
@@ -130,7 +130,7 @@ public class DomFilesystemSourceTest {
         source.setSource(sourceFile);
 
         try {
-            ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
             source.execute(metadataCollection);
         } catch (StageProcessingException e) {
             throw new AssertionError("Source did failed when given a nonexistant file");

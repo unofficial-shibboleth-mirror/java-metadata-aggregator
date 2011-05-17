@@ -19,7 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,8 +32,8 @@ public class EntitiesDescriptorDisassemblerStageTest extends BaseDomTest {
     public void test() throws Exception {
         Element entitiesDescriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(entitiesDescriptor));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         EntitiesDescriptorDisassemblerStage stage = new EntitiesDescriptorDisassemblerStage();
         stage.setId("foo");

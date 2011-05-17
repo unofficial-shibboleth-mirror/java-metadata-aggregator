@@ -16,21 +16,29 @@
 
 package net.shibboleth.metadata;
 
-import java.io.OutputStream;
-import java.util.Collection;
+import net.shibboleth.metadata.ItemTag;
 
-/**
- * Serializers convert a collection of {@link Metadata} in to an octet stream.
- * 
- * @param <MetadataType> type of metadata that can be serialized to an {@link OutputStream}
- */
-public interface MetadataSerializer<MetadataType extends Metadata<?>> {
+import org.testng.annotations.Test;
 
-    /**
-     * Serializes the metadata to the given output stream.
-     * 
-     * @param metadataCollection collection of metadata
-     * @param output output stream to which metadata will be written
-     */
-    public void serialize(Collection<MetadataType> metadataCollection, OutputStream output);
+public class ItemTagTest {
+
+    @Test
+    public void test() {
+        ItemTag info = new ItemTag(" test ");
+        assert info.getTag().equals("test");
+
+        try {
+            info = new ItemTag("");
+            throw new AssertionError();
+        } catch (IllegalArgumentException e) {
+            // expected this
+        }
+
+        try {
+            info = new ItemTag(null);
+            throw new AssertionError();
+        } catch (IllegalArgumentException e) {
+            // expected this
+        }
+    }
 }

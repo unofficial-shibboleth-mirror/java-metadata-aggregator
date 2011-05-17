@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.BasicParserPool;
@@ -48,8 +48,8 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME) == null);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(entitiesDescriptor));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
         long now = System.currentTimeMillis();
@@ -82,8 +82,8 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME));
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(entitiesDescriptor));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
         long now = System.currentTimeMillis();
@@ -118,8 +118,8 @@ public class SetValidUntilStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(root));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(root));
 
         long duration = 123456;
         SetValidUntilStage stage = new SetValidUntilStage();

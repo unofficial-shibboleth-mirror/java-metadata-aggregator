@@ -16,32 +16,32 @@
 
 package net.shibboleth.metadata;
 
-import net.shibboleth.metadata.AbstractMetadata;
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataInfo;
+import net.shibboleth.metadata.AbstractItem;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.util.ItemMetadataSupport;
 
-public class MockMetadata extends AbstractMetadata<String> {
+public class MockItem extends AbstractItem<String> {
 
     private static final long serialVersionUID = 7960618036577597153L;
 
-    public MockMetadata(String str){
-        setMetadata(str);
+    public MockItem(String str){
+        setData(str);
     }
     
-    public void setMetadata(String entityMetadata) {
-        super.setMetadata(entityMetadata);
+    public void setData(String entityMetadata) {
+        super.setData(entityMetadata);
     }
     
-    public void setMetadataInfo(ClassToInstanceMultiMap<MetadataInfo> info) {
-        getMetadataInfo().clear();
-        getMetadataInfo().putAll(info);
+    public void setMetadataInfo(ClassToInstanceMultiMap<ItemMetadata> info) {
+        getItemMetadata().clear();
+        getItemMetadata().putAll(info);
     }
 
-    public Metadata<String> copy() {
-        MockMetadata clone = new MockMetadata(new String(getMetadata()));
-        MetadataInfoHelper.addToAll(clone, getMetadataInfo().values().toArray(new MetadataInfo[] {}));
+    public Item<String> copy() {
+        MockItem clone = new MockItem(new String(unwrap()));
+        ItemMetadataSupport.addToAll(clone, getItemMetadata().values().toArray(new ItemMetadata[] {}));
         return clone;
     }
 }

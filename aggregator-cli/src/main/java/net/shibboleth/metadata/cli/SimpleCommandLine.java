@@ -21,8 +21,8 @@ import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.MetadataSerializer;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.Pipeline;
 
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * 
  * This class takes two parameters, the first is the file: URI to the Spring configuration file. The second parameter is
  * the file: URI to the file to which the results will be serialized. The Spring configuration file must define one, and
- * only one, {@link Pipeline} and {@link MetadataSerializer}. If the pipeline is not initialized by Spring it will be
+ * only one, {@link Pipeline} and {@link ItemSerializer}. If the pipeline is not initialized by Spring it will be
  * initialized by this CLI.
  * 
  * All logging is done in accordance with the logback.xml file included in command line JAR file. If you wish to use a
@@ -55,8 +55,8 @@ public class SimpleCommandLine {
     public static void main(String[] args) {
         if (args.length != 2) {
             System.err.println("This command line only supports two arguments, "
-                    + "the file: URI path to the Spring configuration file describing the metadata pipeline "
-                    + "and the file: URI path to which the resultant metadata will be written.");
+                    + "the file: URI path to the Spring configuration file describing the processing pipeline "
+                    + "and the file: URI path to which the resultant information will be written.");
             System.exit(1);
         }
 
@@ -78,10 +78,10 @@ public class SimpleCommandLine {
             System.exit(1);
         }
 
-        log.debug("Retrieving metadata serialized from Spring context");
-        MetadataSerializer serializer = appCtx.getBean(MetadataSerializer.class);
+        log.debug("Retrieving serializer from Spring context");
+        ItemSerializer serializer = appCtx.getBean(ItemSerializer.class);
         if (serializer == null) {
-            log.error("No net.shibboleth.metadata.MetadataSerializer defined in Spring configuration");
+            log.error("No net.shibboleth.metadata.ItemSerializer defined in Spring configuration");
             System.exit(1);
         }
 
@@ -94,16 +94,16 @@ public class SimpleCommandLine {
             }
 
             log.debug("Executing pipeline");
-            ArrayList<DomMetadata> metadata = new ArrayList<DomMetadata>();
-            pipeline.execute(metadata);
+            ArrayList<DomElementItem> item = new ArrayList<DomElementItem>();
+            pipeline.execute(item);
 
-            log.debug("Serializing metadata out to {}", args[1]);
-            serializer.serialize(metadata, new FileOutputStream(new File(new URI(args[1]))));
+            log.debug("Serializing information out to {}", args[1]);
+            serializer.serialize(item, new FileOutputStream(new File(new URI(args[1]))));
             log.debug("Serialization complete.");
 
             System.exit(0);
         } catch (Exception e) {
-            log.error("Error processing metadata", e);
+            log.error("Error processing information", e);
             System.exit(1);
         }
     }

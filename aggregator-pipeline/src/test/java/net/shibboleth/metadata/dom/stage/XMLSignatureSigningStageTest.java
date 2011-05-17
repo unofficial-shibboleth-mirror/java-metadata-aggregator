@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,8 +38,8 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
     public void testSigning() throws Exception {
         Element testInput = readXmlData("samlMetadata.xml");
 
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
-        mdCol.add(new DomMetadata(testInput));
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(new DomElementItem(testInput));
 
         PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingKey.pem"));
@@ -59,10 +59,10 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomMetadata result = mdCol.iterator().next();
+        DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
         Element expected = readXmlData("signedSamlMetadata.xml");
-        assertXmlEqual(expected, result.getMetadata());
+        assertXmlEqual(expected, result.unwrap());
     }
 }

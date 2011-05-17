@@ -27,26 +27,26 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataSerializer;
+import net.shibboleth.metadata.ItemSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-/** Very simple serializer that serializes the first element of the given metadata collection. */
+/** Very simple serializer that serializes the first element of the given {@link DomElementItem} collection. */
 @ThreadSafe
-public class DomMetadataSerializer implements MetadataSerializer<DomMetadata> {
+public class DomElementSerializer implements ItemSerializer<DomElementItem> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DomMetadataSerializer.class);
+    private final Logger log = LoggerFactory.getLogger(DomElementSerializer.class);
 
     /** {@inheritDoc} */
-    public void serialize(final Collection<DomMetadata> metadataCollection, OutputStream output) {
-        if (metadataCollection == null || metadataCollection.isEmpty()) {
+    public void serialize(final Collection<DomElementItem> itemCollection, OutputStream output) {
+        if (itemCollection == null || itemCollection.isEmpty()) {
             return;
         }
 
-        final Element documentRoot = metadataCollection.iterator().next().getMetadata();
+        final Element documentRoot = itemCollection.iterator().next().unwrap();
 
         try {
             TransformerFactory tfac = TransformerFactory.newInstance();

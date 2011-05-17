@@ -16,11 +16,14 @@
 
 package net.shibboleth.metadata;
 
-/** A type of {@link StatusInfo} that indicates something is definitely wrong with the metadata element. */
-public class ErrorStatusInfo extends StatusInfo {
+/**
+ * A type of {@link StatusMetadata} that carries informational messages. These messages should never be used to carry
+ * status messages that would indicate an error or failing of the Item in some way.
+ */
+public class InfoStatus extends StatusMetadata {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -559355929721764600L;
+    private static final long serialVersionUID = 4418261627233729537L;
 
     /**
      * Constructor.
@@ -28,7 +31,7 @@ public class ErrorStatusInfo extends StatusInfo {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public ErrorStatusInfo(String componentId, String statusMessage) {
+    public InfoStatus(String componentId, String statusMessage) {
         super(componentId, statusMessage);
     }
 }

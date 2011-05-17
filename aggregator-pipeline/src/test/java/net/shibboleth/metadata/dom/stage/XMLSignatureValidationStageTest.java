@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,8 +41,8 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testValidSignature() throws Exception {
         Element testInput = readXmlData("signedSamlMetadata.xml");
 
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
-        mdCol.add(new DomMetadata(testInput));
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(new DomElementItem(testInput));
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
@@ -55,7 +55,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomMetadata result = mdCol.iterator().next();
+        DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
     }
 
@@ -68,8 +68,8 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testInvalidSignature() throws Exception {
         Element testInput = readXmlData("badSignatureSamlMetadata.xml");
 
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
-        mdCol.add(new DomMetadata(testInput));
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(new DomElementItem(testInput));
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
@@ -93,8 +93,8 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testRequiredSignature() throws Exception {
         Element testInput = readXmlData("samlMetadata/entitiesDescriptor2.xml");
 
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
-        mdCol.add(new DomMetadata(testInput));
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(new DomElementItem(testInput));
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
@@ -108,10 +108,10 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomMetadata result = mdCol.iterator().next();
+        DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
-        mdCol = new ArrayList<DomMetadata>();
+        mdCol = new ArrayList<DomElementItem>();
         stage = new XMLSignatureValidationStage();
         stage.setId("test");
         stage.setSignatureRequired(true);

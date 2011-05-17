@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.Resource;
@@ -34,7 +34,7 @@ public class XMLSchemaValidationStageTest {
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
 
-        Collection<DomMetadata> mdCol = buildMetdataCollection("/data/samlMetadata/entitiesDescriptor1.xml");
+        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/samlMetadata/entitiesDescriptor1.xml");
         stage.execute(mdCol);
         assert mdCol.size() == 1;
     }
@@ -42,7 +42,7 @@ public class XMLSchemaValidationStageTest {
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        Collection<DomMetadata> mdCol = buildMetdataCollection("/data/samlMetadata/invalidSamlMetadata.xml.xml");
+        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/samlMetadata/invalidSamlMetadata.xml.xml");
         stage.execute(mdCol);
         assert mdCol.size() == 0;
     }
@@ -64,13 +64,13 @@ public class XMLSchemaValidationStageTest {
         return stage;
     }
 
-    protected Collection<DomMetadata> buildMetdataCollection(String xmlPath) throws Exception {
+    protected Collection<DomElementItem> buildMetdataCollection(String xmlPath) throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
         Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
 
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
-        mdCol.add(new DomMetadata(doc.getDocumentElement()));
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(new DomElementItem(doc.getDocumentElement()));
 
         return mdCol;
     }

@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -27,10 +27,10 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * 
  * A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on the publication path.
  */
-public class EntityPublisherPathFilterStage extends BaseStage<DomMetadata> {
+public class EntityPublisherPathFilterStage extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
+    protected void doExecute(Collection<DomElementItem> metadataCollection) throws StageProcessingException {
         // TODO Auto-generated method stub
 
     }

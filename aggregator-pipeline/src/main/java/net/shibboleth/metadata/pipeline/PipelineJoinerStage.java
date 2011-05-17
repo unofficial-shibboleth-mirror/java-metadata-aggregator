@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.Metadata;
+import net.shibboleth.metadata.Item;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.collections.CollectionSupport;
@@ -33,32 +33,32 @@ import org.opensaml.util.collections.LazyList;
  * used as the input source for another pipeline.
  * 
  * This source works producing a {@link Collection} by means of the registered
- * {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.MetadataCollectionFactory} . Then each of its registered
+ * {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.ItemCollectionFactory} . Then each of its registered
  * {@link Pipeline} is invoked in turn (no ordering is guaranteed and pipelines may execute concurrently). After each
- * pipeline has completed the results are merged in to the metadata collection given to this stage by means of the an
+ * pipeline has completed the results are merged in to the Item collection given to this stage by means of the an
  * {@link CollectionMergeStrategy}.
  */
 @ThreadSafe
-public class PipelineJoinerStage extends BaseStage<Metadata<?>> {
+public class PipelineJoinerStage extends BaseStage<Item<?>> {
 
     /**
-     * The factory used to create the {@link MetadataCollection} returned by this source. Default implementation is
-     * {@link SimpleMetadataCollectionFacotry}.
+     * The factory used to create the item  returned by this source. Default implementation is
+     * {@link SimpleItemCollectionFacotry}.
      */
-    private MetadataCollectionFactory collectionFactory = new SimpleMetadataCollectionFacotry();
+    private ItemCollectionFactory collectionFactory = new SimpleItemCollectionFacotry();
 
-    /** Strategy used to merge all the joined pipeline results in to the final metadata collection. */
+    /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /** Pipelines whose results become the output of this source. */
-    private List<Pipeline<Metadata<?>>> joinedPipelines = new LazyList<Pipeline<Metadata<?>>>();
+    private List<Pipeline<Item<?>>> joinedPipelines = new LazyList<Pipeline<Item<?>>>();
 
     /**
      * Gets the unmodifiable set of pipelines used by this source.
      * 
      * @return unmodifiable set of pipelines used by this source
      */
-    public List<Pipeline<Metadata<?>>> getJoinedPipelines() {
+    public List<Pipeline<Item<?>>> getJoinedPipelines() {
         return joinedPipelines;
     }
 
@@ -67,29 +67,29 @@ public class PipelineJoinerStage extends BaseStage<Metadata<?>> {
      * 
      * @param pipelines pipelines joined by this source
      */
-    public synchronized void setJoinedPipelines(final List<Pipeline<Metadata<?>>> pipelines) {
+    public synchronized void setJoinedPipelines(final List<Pipeline<Item<?>>> pipelines) {
         if (isInitialized()) {
             return;
         }
         joinedPipelines = Collections.unmodifiableList(CollectionSupport.addNonNull(pipelines,
-                new LazyList<Pipeline<Metadata<?>>>()));
+                new LazyList<Pipeline<Item<?>>>()));
     }
 
     /**
-     * Gets the factory used to create the {@link MetadataCollection} produced by this source.
+     * Gets the factory used to create the {@link Item} collection produced by this source.
      * 
-     * @return factory used to create the {@link MetadataCollection} produced by this source
+     * @return factory used to create the {@link Item} collection produced by this source
      */
-    public MetadataCollectionFactory getCollectionFactory() {
+    public ItemCollectionFactory getCollectionFactory() {
         return collectionFactory;
     }
 
     /**
-     * Sets the factory used to create the {@link MetadataCollection} produced by this source.
+     * Sets the factory used to create the {@link Item} collection produced by this source.
      * 
-     * @param factory factory used to create the {@link MetadataCollection} produced by this source
+     * @param factory factory used to create the {@link Item} collection produced by this source
      */
-    public synchronized void setCollectionFactory(final MetadataCollectionFactory factory) {
+    public synchronized void setCollectionFactory(final ItemCollectionFactory factory) {
         if (isInitialized()) {
             return;
         }
@@ -98,18 +98,18 @@ public class PipelineJoinerStage extends BaseStage<Metadata<?>> {
     }
 
     /**
-     * Gets the strategy used to merge all the joined pipeline results in to the final metadata collection.
+     * Gets the strategy used to merge all the joined pipeline results in to the final Item collection.
      * 
-     * @return strategy used to merge all the joined pipeline results in to the final metadata collection, never null
+     * @return strategy used to merge all the joined pipeline results in to the final Item collection, never null
      */
     public CollectionMergeStrategy getCollectionMergeStrategy() {
         return mergeStrategy;
     }
 
     /**
-     * Sets the strategy used to merge all the joined pipeline results in to the final metadata collection.
+     * Sets the strategy used to merge all the joined pipeline results in to the final Item collection.
      * 
-     * @param strategy strategy used to merge all the joined pipeline results in to the final metadata collection, never
+     * @param strategy strategy used to merge all the joined pipeline results in to the final Item collection, never
      *            null
      */
     public synchronized void setCollectionMergeStrategy(final CollectionMergeStrategy strategy) {
@@ -121,10 +121,10 @@ public class PipelineJoinerStage extends BaseStage<Metadata<?>> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<Metadata<?>> metadataCollection) throws StageProcessingException {
-        final ArrayList<Collection<Metadata<?>>> pipelineResults = new ArrayList<Collection<Metadata<?>>>();
-        Collection<Metadata<?>> pipelineResult;
-        for (Pipeline<Metadata<?>> pipeline : joinedPipelines) {
+    protected void doExecute(Collection<Item<?>> itemCollection) throws StageProcessingException {
+        final ArrayList<Collection<Item<?>>> pipelineResults = new ArrayList<Collection<Item<?>>>();
+        Collection<Item<?>> pipelineResult;
+        for (Pipeline<Item<?>> pipeline : joinedPipelines) {
             try {
                 pipelineResult = collectionFactory.newCollection();
                 pipeline.execute(pipelineResult);
@@ -134,13 +134,13 @@ public class PipelineJoinerStage extends BaseStage<Metadata<?>> {
             }
         }
 
-        mergeStrategy.mergeCollection(metadataCollection,
+        mergeStrategy.mergeCollection(itemCollection,
                 pipelineResults.toArray(new Collection[pipelineResults.size()]));
     }
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        for (Pipeline<Metadata<?>> pipeline : joinedPipelines) {
+        for (Pipeline<Item<?>> pipeline : joinedPipelines) {
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }
@@ -148,52 +148,52 @@ public class PipelineJoinerStage extends BaseStage<Metadata<?>> {
     }
 
     /** Factory used to create the {@link Collection} that will be passed in to each child pipeline. */
-    public static interface MetadataCollectionFactory {
+    public static interface ItemCollectionFactory {
 
         /**
          * Creates the {@link Collection}.
          * 
          * @return the {@link Collection}
          */
-        public Collection<Metadata<?>> newCollection();
+        public Collection<Item<?>> newCollection();
     }
 
     /**
-     * Implementation {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.MetadataCollectionFactory} that
+     * Implementation {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.ItemCollectionFactory} that
      * produces {@link ArrayList} instances.
      */
-    public static class SimpleMetadataCollectionFacotry implements MetadataCollectionFactory {
+    public static class SimpleItemCollectionFacotry implements ItemCollectionFactory {
 
         /** {@inheritDoc} */
-        public Collection<Metadata<?>> newCollection() {
-            return new ArrayList<Metadata<?>>();
+        public Collection<Item<?>> newCollection() {
+            return new ArrayList<Item<?>>();
         }
     }
 
     /**
-     * Strategy used to merge the results of each child pipeline in to the collection of metadata given to this stage.
+     * Strategy used to merge the results of each child pipeline in to the collection of Items given to this stage.
      */
     public static interface CollectionMergeStrategy {
 
         /**
-         * Merges the results of each child pipeline in to the collection of metadata given to this stage.
+         * Merges the results of each child pipeline in to the collection of Item given to this stage.
          * 
-         * @param target collection in to which all the metadata should be merged, never null
-         * @param sources collections of metadata to be merged in to the target, never null not containing any null
+         * @param target collection in to which all the Items should be merged, never null
+         * @param sources collections of Items to be merged in to the target, never null not containing any null
          *            elements
          */
-        public void mergeCollection(Collection<Metadata<?>> target, Collection<Metadata<?>>... sources);
+        public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources);
     }
 
     /**
-     * A {@link CollectionMergeStrategy} that adds the metadata from each source, in order, by means of the
+     * A {@link CollectionMergeStrategy} that adds the Item from each source, in order, by means of the
      * {@link Collection#addAll(Collection)} method on the target.
      */
     public static class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
 
         /** {@inheritDoc} */
-        public void mergeCollection(Collection<Metadata<?>> target, Collection<Metadata<?>>... sources) {
-            for (Collection<Metadata<?>> source : sources) {
+        public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources) {
+            for (Collection<Item<?>> source : sources) {
                 target.addAll(source);
             }
         }

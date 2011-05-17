@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.shibboleth.metadata.AssertSupport;
-import net.shibboleth.metadata.MetadataInfo;
+import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.resource.ClasspathResource;
 import org.opensaml.util.resource.Resource;
@@ -37,24 +37,24 @@ import org.w3c.dom.Element;
 /** {@link XSLTStage} unit test. */
 public class XSLTStageTest extends BaseDomTest {
 
-    /** Simple marker object to test correct passage of {@link MetadataInfo} through pipeline stages. */
-    private static class TestInfo implements MetadataInfo {
+    /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
+    private static class TestInfo implements ItemMetadata {
         /** All {@link MetdataInfo} subclasses must declare version UIDs. */
         private static final long serialVersionUID = -4133926323393787487L;
     }
 
     /**
-     * Utility method to grab our standard input file and turn it into a {@link DomMetadata}.
+     * Utility method to grab our standard input file and turn it into a {@link DomElementItem}.
      * 
      * @throws XMLParserException
      */
-    private DomMetadata makeInput() throws XMLParserException  {
+    private DomElementItem makeInput() throws XMLParserException  {
         Element testInput = readXmlData("xsltStageInput.xml");
-        DomMetadata metadata = new DomMetadata(testInput);
+        DomElementItem metadata = new DomElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
-        Assert.assertEquals(metadata.getMetadataInfo().get(TestInfo.class).size(), 0);
-        metadata.getMetadataInfo().put(new TestInfo());
-        Assert.assertEquals(metadata.getMetadataInfo().get(TestInfo.class).size(), 1);
+        Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
+        metadata.getItemMetadata().put(new TestInfo());
+        Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 1);
         return metadata;
     }
 
@@ -65,7 +65,7 @@ public class XSLTStageTest extends BaseDomTest {
     @Test
     public void testTransform1() throws Exception {
         
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
@@ -78,12 +78,12 @@ public class XSLTStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomMetadata result = mdCol.iterator().next();
+        DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
-        Assert.assertEquals(result.getMetadataInfo().get(TestInfo.class).size(), 1);
+        Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
-        assertXmlEqual(expected, result.getMetadata());
+        assertXmlEqual(expected, result.unwrap());
     }
     
     /**
@@ -92,7 +92,7 @@ public class XSLTStageTest extends BaseDomTest {
     @Test
     public void testTransform0() throws Exception {
         
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform0.xsl");
@@ -109,12 +109,12 @@ public class XSLTStageTest extends BaseDomTest {
     /**
      * Test a transform which results in two empty output elements, which we
      * can test against by collecting their element names.  We also need to
-     * confirm that each output element retains the input {@link MetadataInfo}s.
+     * confirm that each output element retains the input {@link ItemMetadata}s.
      */
     @Test
     public void testTransform2() throws Exception {
         
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform2.xsl");
@@ -128,10 +128,10 @@ public class XSLTStageTest extends BaseDomTest {
         Assert.assertEquals(mdCol.size(), 2);
 
         Set<String> names = new HashSet<String>();
-        for (DomMetadata result: mdCol) {
+        for (DomElementItem result: mdCol) {
             AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
-            Assert.assertEquals(result.getMetadataInfo().get(TestInfo.class).size(), 1);
-            names.add(result.getMetadata().getNodeName());
+            Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
+            names.add(result.unwrap().getNodeName());
         }
         
         Assert.assertTrue(names.contains("firstValue"));
@@ -144,7 +144,7 @@ public class XSLTStageTest extends BaseDomTest {
     @Test
     public void testTransformParam() throws Exception {
         
-        ArrayList<DomMetadata> mdCol = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
@@ -161,12 +161,12 @@ public class XSLTStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomMetadata result = mdCol.iterator().next();
+        DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
-        Assert.assertEquals(result.getMetadataInfo().get(TestInfo.class).size(), 1);
+        Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageParamOutput.xml");
-        assertXmlEqual(expected, result.getMetadata());
+        assertXmlEqual(expected, result.unwrap());
     }
     
 

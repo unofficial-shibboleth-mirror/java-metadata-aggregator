@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.BasicParserPool;
@@ -46,8 +46,8 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME) == null);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(entitiesDescriptor));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -78,8 +78,8 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME) != null);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(entitiesDescriptor));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -109,8 +109,8 @@ public class SetCacheDurationStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(root));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(root));
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();

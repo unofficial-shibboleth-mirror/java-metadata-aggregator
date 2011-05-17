@@ -44,7 +44,7 @@ import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -62,10 +62,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 /**
- * A pipeline stage that creates, and adds, an enveloped signature for each element in the given metadata collection.
+ * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem} collection.
  */
 @ThreadSafe
-public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
+public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem> {
 
     /** The variant of SHA to use in the various signature algorithms. */
     public static enum ShaVariant {
@@ -574,8 +574,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
-        Element element = metadata.getMetadata();
+    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+        Element element = item.unwrap();
         XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {
             signature.sign(new DOMSignContext(privKey, element, element.getFirstChild()));

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MockMetadata;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.MockItem;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.testng.annotations.Test;
@@ -31,23 +31,23 @@ public class PipelineJoinerSourceTest {
 
     @Test
     public void test() throws Exception {
-        MockMetadata md1 = new MockMetadata("one");
-        StaticMetadataSourceStage<MockMetadata> source1 = new StaticMetadataSourceStage<MockMetadata>();
+        MockItem md1 = new MockItem("one");
+        StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
         source1.setId("src1");
         source1.setSourceMetadata(CollectionSupport.toList(md1));
-        SimplePipeline<MockMetadata> pipeline1 = new SimplePipeline<MockMetadata>();
+        SimplePipeline<MockItem> pipeline1 = new SimplePipeline<MockItem>();
         pipeline1.setId("p1");
-        pipeline1.setStages(CollectionSupport.toList((Stage<MockMetadata>) source1));
+        pipeline1.setStages(CollectionSupport.toList((Stage<MockItem>) source1));
 
-        MockMetadata md2 = new MockMetadata("two");
-        StaticMetadataSourceStage<MockMetadata> source2 = new StaticMetadataSourceStage<MockMetadata>();
+        MockItem md2 = new MockItem("two");
+        StaticItemSourceStage<MockItem> source2 = new StaticItemSourceStage<MockItem>();
         source2.setId("src2");
         source2.setSourceMetadata(CollectionSupport.toList(md2));
-        SimplePipeline<MockMetadata> pipeline2 = new SimplePipeline<MockMetadata>();
+        SimplePipeline<MockItem> pipeline2 = new SimplePipeline<MockItem>();
         pipeline2.setId("p2");
-        pipeline2.setStages(CollectionSupport.toList((Stage<MockMetadata>) source2));
+        pipeline2.setStages(CollectionSupport.toList((Stage<MockItem>) source2));
 
-        Collection<Pipeline<MockMetadata>> joinedPipelines = new ArrayList<Pipeline<MockMetadata>>();
+        Collection<Pipeline<MockItem>> joinedPipelines = new ArrayList<Pipeline<MockItem>>();
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
 
@@ -64,21 +64,21 @@ public class PipelineJoinerSourceTest {
         assert pipeline1.isInitialized();
         assert pipeline2.isInitialized();
 
-        ArrayList<Metadata<?>> metadataCollection = new ArrayList<Metadata<?>>();
+        ArrayList<Item<?>> metadataCollection = new ArrayList<Item<?>>();
         joinSource.execute(metadataCollection);
         assert metadataCollection.size() == 2;
 
         boolean md1CloneMatch = false, md2CloneMatch = false;
-        for (Metadata<?> metadata : metadataCollection) {
-            if ("one".equals(metadata.getMetadata())) {
+        for (Item<?> metadata : metadataCollection) {
+            if ("one".equals(metadata.unwrap())) {
                 md1CloneMatch = true;
                 assert metadata != md1;
-            } else if ("two".equals(metadata.getMetadata())) {
+            } else if ("two".equals(metadata.unwrap())) {
                 md2CloneMatch = true;
                 assert metadata != md2;
             }
             // two ComponentInfo: one from the pipeline, one from the static inject stage, one from the join stage
-            assert metadata.getMetadataInfo().values().size() == 3;
+            assert metadata.getItemMetadata().values().size() == 3;
         }
 
         assert md1CloneMatch;

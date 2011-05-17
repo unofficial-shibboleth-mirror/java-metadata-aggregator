@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -36,10 +36,10 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 /**
- * A stage which reads XML information from the filesystem and places it in the given metadata collection.
+ * A stage which reads XML information from the filesystem and places it in the given {@link DomElementItem} collection.
  */
 @ThreadSafe
-public class DomFilesystemSourceStage extends BaseStage<DomMetadata> {
+public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DomFilesystemSourceStage.class);
@@ -196,7 +196,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
+    protected void doExecute(Collection<DomElementItem> itemCollection) throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<File>();
         if (sourceFile.isFile()) {
             sourceFiles.add(sourceFile);
@@ -213,11 +213,11 @@ public class DomFilesystemSourceStage extends BaseStage<DomMetadata> {
             }
         }
 
-        DomMetadata dme;
+        DomElementItem dme;
         for (File source : sourceFiles) {
             dme = processSourceFile(source);
             if (dme != null) {
-                metadataCollection.add(dme);
+                itemCollection.add(dme);
             }
         }
     }
@@ -250,24 +250,24 @@ public class DomFilesystemSourceStage extends BaseStage<DomMetadata> {
     }
 
     /**
-     * Reads in an XML source file, parses it, and creates the appropriate {@link DomMetadata} for the data.
+     * Reads in an XML source file, parses it, and creates the appropriate {@link DomElementItem} for the data.
      * 
      * @param source XML file to read in
      * 
-     * @return the resultant metadata element, may be null if there was an error parsing the data and
+     * @return the resultant Element Itme, may be null if there was an error parsing the data and
      *         {@link #errorCausesSourceFailure} is false
      * 
-     * @throws StageProcessingException thrown if there is a problem reading in the metadata and
+     * @throws StageProcessingException thrown if there is a problem reading in the Element and
      *             {@link #errorCausesSourceFailure} is true
      */
-    protected DomMetadata processSourceFile(final File source) throws StageProcessingException {
+    protected DomElementItem processSourceFile(final File source) throws StageProcessingException {
         FileInputStream xmlIn = null;
 
         try {
             log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
             xmlIn = new FileInputStream(source);
             final Document doc = parserPool.parse(xmlIn);
-            return new DomMetadata(doc.getDocumentElement());
+            return new DomElementItem(doc.getDocumentElement());
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException(getId() + " pipeline source unable to parse XML input file "

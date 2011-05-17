@@ -16,18 +16,30 @@
 
 package net.shibboleth.metadata;
 
-import java.io.Serializable;
+import net.shibboleth.metadata.ItemId;
 
-import net.jcip.annotations.ThreadSafe;
+import org.testng.annotations.Test;
 
-/**
- * Processing information about a given {@link Metadata}. To overload the term, this is metadata about the
- * metadata element.
- * 
- * Implementations of this class <strong>MUST</strong> be immutable. When an {@link Metadata} is cloned, the
- * clone will reference the same {@link MetadataInfo} objects as the original.
- */
-@ThreadSafe
-public interface MetadataInfo extends Serializable {
 
+public class ItemIdTest {
+
+    @Test
+    public void test() {
+        ItemId info = new ItemId(" test ");
+        assert info.getId().equals("test");
+
+        try {
+            info = new ItemId("");
+            throw new AssertionError();
+        } catch (IllegalArgumentException e) {
+            // expected this
+        }
+
+        try {
+            info = new ItemId(null);
+            throw new AssertionError();
+        } catch (IllegalArgumentException e) {
+            // expected this
+        }
+    }
 }

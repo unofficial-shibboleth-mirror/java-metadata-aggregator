@@ -17,13 +17,13 @@
 package net.shibboleth.metadata;
 
 /**
- * A type of {@link StatusInfo} that indicates something may be "off" about the metadata element. This warning message
- * is stronger than the informational message that would be carried by a {@link InfoStatusInfo} but does not necessarily
- * indicate an actual defect in the metadata element. One use of this status would be if a
- * {@link net.shibboleth.metadata.pipeline.Stage} thinks something about the metadata element may be wrong but does not
- * have enough information to verify it.
+ * A type of {@link StatusMetadata} that indicates something may be "off" about the {@link Item}. This warning message
+ * is stronger than the informational message that would be carried by a {@link InfoStatus} but does not necessarily
+ * indicate an actual defect in the Item. One use of this status would be if a
+ * {@link net.shibboleth.metadata.pipeline.Stage} thinks something about the Item may be wrong but does not have enough
+ * information to verify it.
  */
-public class WarningStatusInfo extends StatusInfo {
+public class WarningStatus extends StatusMetadata {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -586972544551282634L;
@@ -34,7 +34,7 @@ public class WarningStatusInfo extends StatusInfo {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public WarningStatusInfo(String componentId, String statusMessage) {
+    public WarningStatus(String componentId, String statusMessage) {
         super(componentId, statusMessage);
     }
 }

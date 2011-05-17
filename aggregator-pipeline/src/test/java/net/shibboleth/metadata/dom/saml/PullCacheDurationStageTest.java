@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.ElementSupport;
@@ -35,14 +35,14 @@ public class PullCacheDurationStageTest extends BaseDomTest {
     /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
         stage.execute(metadataCollection);
 
-        Element entitiesDescriptor = metadataCollection.get(0).getMetadata();
+        Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
@@ -63,15 +63,15 @@ public class PullCacheDurationStageTest extends BaseDomTest {
     /** Test that the minimum cache duration is used when the shortest duration is than it. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
         stage.setMinimumCacheDuration(1000 * 60 * 60 * 2);
         stage.execute(metadataCollection);
 
-        Element entitiesDescriptor = metadataCollection.get(0).getMetadata();
+        Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
@@ -83,15 +83,15 @@ public class PullCacheDurationStageTest extends BaseDomTest {
     /** Test that the maximum cache duration is used when the shortest duration is greater than it. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
         stage.setMaximumCacheDuration(1000 * 60 * 30);
         stage.execute(metadataCollection);
 
-        Element entitiesDescriptor = metadataCollection.get(0).getMetadata();
+        Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);

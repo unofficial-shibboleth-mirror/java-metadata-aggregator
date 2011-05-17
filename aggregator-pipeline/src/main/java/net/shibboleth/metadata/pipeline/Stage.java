@@ -19,24 +19,24 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.Metadata;
+import net.shibboleth.metadata.Item;
 
 /**
- * A stage in a {@link Pipeline} that transforms data in a particular manner.
+ * A stage in a {@link Pipeline} that operates upon a collection {@link Item} in a particular manner.
  * 
  * Stages must be thread safe and reusable.
  * 
- * @param <ElementType> type of metadata element which is produced by this source
+ * @param <ItemType> type of Item upon which the stage operates
  */
 @ThreadSafe
-public interface Stage<ElementType extends Metadata<?>> extends Component {
+public interface Stage<ItemType extends Item<?>> extends Component {
 
     /**
      * Transforms the given input data.
      * 
-     * @param metadataCollection the data to be transformed
+     * @param itemCollection the data to be transformed
      * 
      * @throws StageProcessingException thrown if there is a problem running this stage on the given input
      */
-    public void execute(Collection<ElementType> metadataCollection) throws StageProcessingException;
+    public void execute(Collection<ItemType> itemCollection) throws StageProcessingException;
 }

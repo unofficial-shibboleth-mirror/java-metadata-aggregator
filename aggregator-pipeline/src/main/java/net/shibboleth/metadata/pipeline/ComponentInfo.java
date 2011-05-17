@@ -16,15 +16,14 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import net.shibboleth.metadata.MetadataInfo;
+import net.shibboleth.metadata.ItemMetadata;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.util.StringSupport;
 
-
-/** Some basic information related to component's processing metadata elements. */
-public class ComponentInfo implements MetadataInfo {
+/** Some basic information related to a component's processing of an {@link Item}. */
+public class ComponentInfo implements ItemMetadata {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -2181091708008092869L;

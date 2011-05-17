@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -28,14 +28,14 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /** Filtering stage that removes ContactPerson elements from EntityDescriptors. */
-public class RemoveContactPersonStage extends BaseIteratingStage<DomMetadata> {
+public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(RemoveContactPersonStage.class);
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
-        Element descriptor = metadata.getMetadata();
+    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+        Element descriptor = item.unwrap();
         if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
         } else if (MetadataHelper.isEntityDescriptor(descriptor)) {

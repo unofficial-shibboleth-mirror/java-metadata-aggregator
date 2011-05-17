@@ -16,7 +16,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -25,7 +25,7 @@ import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
 /** Sets a validUntil attribute for every EntityDescriptor and EntitiesDescriptor element in the collection. */
-public class SetValidUntilStage extends BaseIteratingStage<DomMetadata> {
+public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
     /** Amount of time the descriptors will be valid, expressed in milliseconds. */
     private long validityDuration;
@@ -53,8 +53,8 @@ public class SetValidUntilStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
-        Element descriptor = metadata.getMetadata();
+    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+        Element descriptor = item.unwrap();
         if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
             AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME,

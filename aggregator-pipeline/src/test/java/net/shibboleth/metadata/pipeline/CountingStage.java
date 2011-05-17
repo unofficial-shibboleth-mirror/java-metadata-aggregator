@@ -18,9 +18,9 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.Metadata;
+import net.shibboleth.metadata.Item;
 
-public class CountingStage<MetadataType extends Metadata<?>> extends AbstractComponent implements Stage<MetadataType> {
+public class CountingStage<MetadataType extends Item<?>> extends AbstractComponent implements Stage<MetadataType> {
 
     private int counter = 0;
 

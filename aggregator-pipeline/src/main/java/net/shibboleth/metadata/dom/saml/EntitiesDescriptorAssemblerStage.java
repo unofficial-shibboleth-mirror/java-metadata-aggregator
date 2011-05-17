@@ -23,7 +23,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 
 import org.opensaml.util.Assert;
@@ -36,13 +36,13 @@ import org.w3c.dom.Element;
  * to a single EntitiesDescriptor element.
  */
 @ThreadSafe
-public class EntitiesDescriptorAssemblerStage extends BaseStage<DomMetadata> {
+public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
     public static final QName NAME_ATTRIB_NAME = new QName("Name");
 
-    /** Strategy used to order a collection of metadata. The default strategy performs no ordering. */
-    private MetadataOrderingStrategy orderingStrategy;
+    /** Strategy used to order a collection of Items. The default strategy performs no ordering. */
+    private ItemOrderingStrategy orderingStrategy;
 
     /** Name to use for the EntitiesDescriptor. */
     private String descriptorName;
@@ -50,28 +50,28 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomMetadata> {
     /** Constructor. */
     public EntitiesDescriptorAssemblerStage() {
         super();
-        orderingStrategy = new NoOpMetadataOrderingStrategy();
+        orderingStrategy = new NoOpItemOrderingStrategy();
     }
 
     /**
-     * Gets the strategy used to order a collection of metadata.
+     * Gets the strategy used to order a collection of Items.
      * 
-     * @return strategy used to order a collection of metadata
+     * @return strategy used to order a collection of Items
      */
-    public MetadataOrderingStrategy getMetadataOrderingStrategy() {
+    public ItemOrderingStrategy getItemOrderingStrategy() {
         return orderingStrategy;
     }
 
     /**
-     * Sets the strategy used to order a collection of metadata.
+     * Sets the strategy used to order a collection of Items.
      * 
-     * @param strategy strategy used to order a collection of metadata, never null
+     * @param strategy strategy used to order a collection of Items, never null
      */
-    public synchronized void setMetadataOrderingStrategy(MetadataOrderingStrategy strategy) {
+    public synchronized void setItemOrderingStrategy(ItemOrderingStrategy strategy) {
         if (isInitialized()) {
             return;
         }
-        Assert.isNotNull(strategy, "Metadata ordering strategy may not be null");
+        Assert.isNotNull(strategy, "Item ordering strategy may not be null");
         orderingStrategy = strategy;
     }
 
@@ -97,17 +97,17 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<DomMetadata> metadataCollection) {
+    protected void doExecute(final Collection<DomElementItem> itemCollection) {
         final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(orderingStrategy
-                .order(metadataCollection));
+                .order(itemCollection));
 
         if (entitiesDescriptor != null) {
             addDescriptorName(entitiesDescriptor);
         }
 
-        final DomMetadata metadata = new DomMetadata(entitiesDescriptor);
-        metadataCollection.clear();
-        metadataCollection.add(metadata);
+        final DomElementItem item = new DomElementItem(entitiesDescriptor);
+        itemCollection.clear();
+        itemCollection.add(item);
     }
 
     /**
@@ -122,29 +122,25 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomMetadata> {
         }
     }
 
-    /**
-     * A strategy that defines how to order a {@link MetadataCollection}.
-     * 
-     * @param <MetadataType> type of metadata elements in the collection
-     */
-    public static interface MetadataOrderingStrategy {
+    /** A strategy that defines how to order a {@link Item} collection. */
+    public static interface ItemOrderingStrategy {
 
         /**
-         * Orders a given metadata collection.
+         * Orders a given Item collection.
          * 
-         * @param metadata collection of metadata, never null
+         * @param items collection of Item, never null
          * 
-         * @return sorted collection of metadata, never null
+         * @return sorted collection of Item, never null
          */
-        public List<DomMetadata> order(Collection<DomMetadata> metadata);
+        public List<DomElementItem> order(Collection<DomElementItem> items);
     }
 
     /** An ordering strategy that simply returns the collection in whatever order it was already in. */
-    private class NoOpMetadataOrderingStrategy implements MetadataOrderingStrategy {
+    private class NoOpItemOrderingStrategy implements ItemOrderingStrategy {
 
         /** {@inheritDoc} */
-        public List<DomMetadata> order(Collection<DomMetadata> metadata) {
-            return new ArrayList<DomMetadata>(metadata);
+        public List<DomElementItem> order(Collection<DomElementItem> items) {
+            return new ArrayList<DomElementItem>(items);
         }
     }
 }

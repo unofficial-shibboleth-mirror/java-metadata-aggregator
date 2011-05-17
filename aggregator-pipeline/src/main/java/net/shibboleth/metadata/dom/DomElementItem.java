@@ -17,17 +17,16 @@
 package net.shibboleth.metadata.dom;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.AbstractMetadata;
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataInfo;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.AbstractItem;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.metadata.util.ItemMetadataSupport;
 
 import org.w3c.dom.Element;
 
-
-/** A metadata element whose data is a DOM, version 3, {@link Element}. */
+/** A {@link Item} whose data is a DOM, version 3, {@link Element}. */
 @ThreadSafe
-public class DomMetadata extends AbstractMetadata<Element> {
+public class DomElementItem extends AbstractItem<Element> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 8677951541031584666L;
@@ -37,16 +36,16 @@ public class DomMetadata extends AbstractMetadata<Element> {
      * 
      * @param metadata DOM metadata element
      */
-    public DomMetadata(final Element metadata) {
+    public DomElementItem(final Element metadata) {
         super();
-        setMetadata(metadata);
+        setData(metadata);
     }
 
     /** {@inheritDoc} */
-    public Metadata<Element> copy() {
-        final Element domClone = (Element) getMetadata().cloneNode(true);
-        final DomMetadata clone = new DomMetadata(domClone);
-        MetadataInfoHelper.addToAll(clone, getMetadataInfo().values().toArray(new MetadataInfo[] {}));
+    public Item<Element> copy() {
+        final Element domClone = (Element) unwrap().cloneNode(true);
+        final DomElementItem clone = new DomElementItem(domClone);
+        ItemMetadataSupport.addToAll(clone, getItemMetadata().values().toArray(new ItemMetadata[] {}));
         return clone;
     }
 }

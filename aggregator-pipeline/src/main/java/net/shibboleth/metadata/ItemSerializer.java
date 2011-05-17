@@ -16,29 +16,21 @@
 
 package net.shibboleth.metadata;
 
-import net.shibboleth.metadata.TagInfo;
+import java.io.OutputStream;
+import java.util.Collection;
 
-import org.testng.annotations.Test;
+/**
+ * Serializers convert a collection of {@link Item} in to an octet stream.
+ * 
+ * @param <ItemType> type of Item that can be serialized to an {@link OutputStream}
+ */
+public interface ItemSerializer<ItemType extends Item<?>> {
 
-public class TagInfoTest {
-
-    @Test
-    public void test() {
-        TagInfo info = new TagInfo(" test ");
-        assert info.getTag().equals("test");
-
-        try {
-            info = new TagInfo("");
-            throw new AssertionError();
-        } catch (IllegalArgumentException e) {
-            // expected this
-        }
-
-        try {
-            info = new TagInfo(null);
-            throw new AssertionError();
-        } catch (IllegalArgumentException e) {
-            // expected this
-        }
-    }
+    /**
+     * Serializes the Item to the given output stream.
+     * 
+     * @param itemCollection collection of Items
+     * @param output output stream to which the Item will be written
+     */
+    public void serialize(Collection<ItemType> itemCollection, OutputStream output);
 }

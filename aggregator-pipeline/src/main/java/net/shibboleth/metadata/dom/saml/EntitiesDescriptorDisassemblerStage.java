@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.EntityIdInfo;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.ItemId;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 
 import org.opensaml.util.xml.ElementSupport;
@@ -32,35 +32,35 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /**
- * A pipeline stage that replaces any SAML EntitiesDescriptor found in the metadata collection with the EntityDescriptor
+ * A pipeline stage that replaces any SAML EntitiesDescriptor found in the Item collection with the EntityDescriptor
  * elements contained therein.
  * 
- * This stage will always add a {@link EntityIdInfo}, containing the SAML entity ID given in the EntityDescriptor, to
- * each metadata element.
+ * This stage will always add a {@link ItemId}, containing the SAML entity ID given in the EntityDescriptor, to
+ * each Element.
  */
 @ThreadSafe
-public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomMetadata> {
+public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<DomMetadata> metadataCollection) {
+    protected void doExecute(final Collection<DomElementItem> itemCollection) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
-        ArrayList<DomMetadata> metadatas = new ArrayList<DomMetadata>(metadataCollection);
-        metadataCollection.clear();
+        ArrayList<DomElementItem> items = new ArrayList<DomElementItem>(itemCollection);
+        itemCollection.clear();
 
-        Element metadataElement;
-        for (DomMetadata metadata : metadatas) {
-            metadataElement = metadata.getMetadata();
-            if (MetadataHelper.isEntitiesDescriptor(metadataElement)) {
-                processEntitiesDescriptor(metadataCollection, metadataElement);
-            } else if (MetadataHelper.isEntityDescriptor(metadataElement)) {
-                processEntityDescriptor(metadataCollection, metadataElement);
+        Element element;
+        for (DomElementItem item : items) {
+            element = item.unwrap();
+            if (MetadataHelper.isEntitiesDescriptor(element)) {
+                processEntitiesDescriptor(itemCollection, element);
+            } else if (MetadataHelper.isEntityDescriptor(element)) {
+                processEntityDescriptor(itemCollection, element);
             } else {
-                log.debug("{} pipeline stage: metadata element {} not supported, ignoring it", getId(),
-                        QNameSupport.getNodeQName(metadataElement));
+                log.debug("{} pipeline stage: DOM Element {} not supported, ignoring it", getId(),
+                        QNameSupport.getNodeQName(element));
             }
         }
     }
@@ -69,35 +69,35 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomMetadata> 
      * Processes an EntitiesDescriptor element. All child EntityDescriptor elements are processed and
      * EntitiesDescriptors are run back through this method.
      * 
-     * @param metadataCollection collection to which EntityDescriptor metadata elements are added
+     * @param itemCollection collection to which EntityDescriptor metadata elements are added
      * @param entitiesDescriptor the EntitiesDescriptor to break down
      */
-    protected void processEntitiesDescriptor(final Collection<DomMetadata> metadataCollection,
+    protected void processEntitiesDescriptor(final Collection<DomElementItem> itemCollection,
             final Element entitiesDescriptor) {
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
             if (MetadataHelper.isEntitiesDescriptor(child)) {
-                processEntitiesDescriptor(metadataCollection, child);
+                processEntitiesDescriptor(itemCollection, child);
             }
             if (MetadataHelper.isEntityDescriptor(child)) {
-                processEntityDescriptor(metadataCollection, child);
+                processEntityDescriptor(itemCollection, child);
             }
         }
     }
 
     /**
-     * Processes an EntityDescriptor element. Creates a {@link DomMetadata} element, adds it to the metadata
-     * collections, and attaches a {@link EntityIdInfo} to it.
+     * Processes an EntityDescriptor element. Creates a {@link DomElementItem} element, adds it to the item
+     * collections, and attaches a {@link ItemId} to it.
      * 
-     * @param metadataCollection collection to which metadata is added
-     * @param entityDescriptor entity descriptor to add to the metadata collection
+     * @param itemCollection collection to which metadata is added
+     * @param entityDescriptor entity descriptor to add to the item collection
      */
-    protected void processEntityDescriptor(final Collection<DomMetadata> metadataCollection,
+    protected void processEntityDescriptor(final Collection<DomElementItem> itemCollection,
             final Element entityDescriptor) {
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
-        final DomMetadata element = new DomMetadata(entityDescriptor);
-        element.getMetadataInfo().put(new EntityIdInfo(entityId));
-        metadataCollection.add(element);
+        final DomElementItem item = new DomElementItem(entityDescriptor);
+        item.getItemMetadata().put(new ItemId(entityId));
+        itemCollection.add(item);
     }
 }

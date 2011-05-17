@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.xml.SerializeSupport;
 import org.testng.annotations.Test;
@@ -35,13 +35,13 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
     @Test
     public void testAssemblingWithoutName() throws Exception {
-        Collection<DomMetadata> metadataCollection = buildMetadataCollection();
+        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.initialize();
         stage.execute(metadataCollection);
 
-        Document result = metadataCollection.iterator().next().getMetadata().getOwnerDocument();
+        Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
         String serializedResult = SerializeSupport.nodeToString(result);
         result = getParserPool().parse(new StringReader(serializedResult));
 
@@ -50,17 +50,17 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         assertXmlEqual(expectedResult, result);
     }
 
-    protected Collection<DomMetadata> buildMetadataCollection() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+    protected Collection<DomElementItem> buildMetadataCollection() throws Exception {
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
 
         Element descriptor = readXmlData("samlMetadata/entityDescriptor1.xml");
-        metadataCollection.add(new DomMetadata(descriptor));
+        metadataCollection.add(new DomElementItem(descriptor));
 
         descriptor = readXmlData("samlMetadata/entityDescriptor2.xml");
-        metadataCollection.add(new DomMetadata(descriptor));
+        metadataCollection.add(new DomElementItem(descriptor));
 
         Element fooElement = getParserPool().newDocument().createElement("foo");
-        metadataCollection.add(new DomMetadata(fooElement));
+        metadataCollection.add(new DomElementItem(fooElement));
 
         return metadataCollection;
     }

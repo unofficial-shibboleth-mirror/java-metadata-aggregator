@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -29,11 +29,11 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /**
- * For each metadata collection element that is a SAML EntitiesDescriptor this stage will scan all descendant
+ * For each Item collection element that is a SAML EntitiesDescriptor this stage will scan all descendant
  * EntitiesDescriptors and EntityDescriptors, determine the earliest valid until date, set that on the root
  * EntitiesDescriptor and remove the valid until dates from all descendants.
  */
-public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
+public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
     /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: {@value} */
     private long minValidityDuration;
@@ -91,8 +91,8 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
-        Element descriptor = metadata.getMetadata();
+    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+        Element descriptor = item.unwrap();
         Long nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);
         return true;

@@ -19,42 +19,41 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.shibboleth.metadata.Metadata;
+import net.shibboleth.metadata.Item;
 
 /**
- * Base class for {@link Stage} implementations that iterate over each metadata element in a collection and do
- * something.
+ * Base class for {@link Stage} implementations that iterate over each {@link Item} in a collection and do something.
  * 
- * @param <MetadataType> type of metadata elements this stage operates upon
+ * @param <ItemType> type of Items this stage operates upon
  */
-public abstract class BaseIteratingStage<MetadataType extends Metadata<?>> extends BaseStage<MetadataType> {
+public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /**
-     * Iterates over each element of the metadata collection and delegates the processing of that element to
-     * {@link #doExecute(Metadata)}.
+     * Iterates over each element of the Item collection and delegates the processing of that element to
+     * {@link #doExecute(Item)}.
      * 
      * {@inheritDoc}
      */
-    protected void doExecute(Collection<MetadataType> metadataCollection) throws StageProcessingException {
-        Iterator<MetadataType> metadataIterator = metadataCollection.iterator();
+    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+        Iterator<ItemType> itemIterator = itemCollection.iterator();
 
-        MetadataType metadata;
-        while (metadataIterator.hasNext()) {
-            metadata = metadataIterator.next();
-            if (!doExecute(metadata)) {
-                metadataIterator.remove();
+        ItemType item;
+        while (itemIterator.hasNext()) {
+            item = itemIterator.next();
+            if (!doExecute(item)) {
+                itemIterator.remove();
             }
         }
     }
 
     /**
-     * Processes a given metadata element.
+     * Processes a given Item.
      * 
-     * @param metadata metadata element on which to operate
+     * @param item Item on which to operate
      * 
-     * @return true if the metadata element should be retained in the collection, false if not
+     * @return true if the Item should be retained in the collection, false if not
      * 
      * @throws StageProcessingException thrown if there is a problem with the stage processing
      */
-    protected abstract boolean doExecute(MetadataType metadata) throws StageProcessingException;
+    protected abstract boolean doExecute(ItemType item) throws StageProcessingException;
 }

@@ -23,7 +23,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 
 import org.opensaml.util.ObjectSupport;
@@ -39,11 +39,11 @@ import org.w3c.dom.Element;
 /**
  * A pipeline stage that will filter SAML role descriptors from EntityDescriptors.
  * 
- * This filter will work on {@link DomMetadata} elements that are entity or entities descriptors. In the case of
+ * This filter will work on {@link DomElementItem} elements that are entity or entities descriptors. In the case of
  * EntitiesDescriptors the role filter will effect all descendant EntityDescriptors.
  */
 @ThreadSafe
-public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
+public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
 
     /** QName of the RoleDescriptor element. */
     public static final QName ROLE_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "RoleDescriptor");
@@ -75,7 +75,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
     private boolean whitelistingRoles;
 
     /**
-     * Whether EntityDescriptor metadata elements that do not contain roles, after filtering, should be removed. Default
+     * Whether EntityDescriptor elements that do not contain roles, after filtering, should be removed. Default
      * value: true
      */
     private boolean removingRolelessEntities = true;
@@ -168,8 +168,8 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) {
-        Element descriptor = metadata.getMetadata();
+    protected boolean doExecute(DomElementItem item) {
+        Element descriptor = item.unwrap();
         if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;

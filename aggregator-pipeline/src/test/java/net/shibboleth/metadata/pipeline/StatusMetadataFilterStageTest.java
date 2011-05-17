@@ -19,62 +19,62 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.shibboleth.metadata.ErrorStatusInfo;
-import net.shibboleth.metadata.InfoStatusInfo;
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MockMetadata;
-import net.shibboleth.metadata.StatusInfo;
-import net.shibboleth.metadata.WarningStatusInfo;
+import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.InfoStatus;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.StatusMetadata;
+import net.shibboleth.metadata.WarningStatus;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-/** {@link MetadataInfoFilterStage} unit test. */
-public class MetadataInfoFilterStageTest {
+/** {@link StatusMetadataFilterStage} unit test. */
+public class StatusMetadataFilterStageTest {
 
     /** Unmodifiable, prototype, collection of metadata elements. */
-    Collection<Metadata<?>> metadataCollectionPrototype;
+    Collection<Item<?>> metadataCollectionPrototype;
 
-    /** Metadata element which contains no {@link StatusInfo} items. */
-    Metadata md1;
+    /** Metadata element which contains no {@link StatusMetadata} items. */
+    Item md1;
 
-    /** Metadata element which contains a {@link WarningStatusInfo} item. */
-    Metadata md2;
+    /** Metadata element which contains a {@link WarningStatus} item. */
+    Item md2;
 
-    /** Metadata element which contains no {@link StatusInfo} items. */
-    Metadata md3;
+    /** Metadata element which contains no {@link StatusMetadata} items. */
+    Item md3;
 
-    /** Metadata element which contains a {@link WarningStatusInfo} and {@link ErrorStatusInfo} item. */
-    Metadata md4;
+    /** Metadata element which contains a {@link WarningStatus} and {@link ErrorStatus} item. */
+    Item md4;
 
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest
     public void setup() {
-        metadataCollectionPrototype = new ArrayList<Metadata<?>>();
+        metadataCollectionPrototype = new ArrayList<Item<?>>();
 
-        md1 = new MockMetadata("1");
+        md1 = new MockItem("1");
         metadataCollectionPrototype.add(md1);
 
-        md2 = new MockMetadata("2");
-        md2.getMetadataInfo().put(new WarningStatusInfo("2", "warning"));
+        md2 = new MockItem("2");
+        md2.getItemMetadata().put(new WarningStatus("2", "warning"));
         metadataCollectionPrototype.add(md2);
 
-        md3 = new MockMetadata("3");
+        md3 = new MockItem("3");
         metadataCollectionPrototype.add(md3);
 
-        md4 = new MockMetadata("4");
-        md4.getMetadataInfo().put(new WarningStatusInfo("4", "warning"));
-        md4.getMetadataInfo().put(new ErrorStatusInfo("4", "error"));
+        md4 = new MockItem("4");
+        md4.getItemMetadata().put(new WarningStatus("4", "warning"));
+        md4.getItemMetadata().put(new ErrorStatus("4", "error"));
         metadataCollectionPrototype.add(md4);
     }
 
-    /** Tests a {@link MetadataInfoFilterStage} without any filter requirements. */
+    /** Tests a {@link StatusMetadataFilterStage} without any filter requirements. */
     @Test
     public void testNoFilterRequirements() throws Exception {
-        Collection<Metadata<?>> metadataCollection = new ArrayList<Metadata<?>>(metadataCollectionPrototype);
+        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
 
-        MetadataInfoFilterStage stage = new MetadataInfoFilterStage();
+        StatusMetadataFilterStage stage = new StatusMetadataFilterStage();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 4);
@@ -84,15 +84,15 @@ public class MetadataInfoFilterStageTest {
         Assert.assertTrue(metadataCollection.contains(md4));
     }
 
-    /** Tests a {@link MetadataInfoFilterStage} containing one filter requirement. */
+    /** Tests a {@link StatusMetadataFilterStage} containing one filter requirement. */
     @Test
     public void testSingleFilterRequirement() throws Exception {
-        Collection<Metadata<?>> metadataCollection = new ArrayList<Metadata<?>>(metadataCollectionPrototype);
+        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
 
         Collection filterRequirements = new ArrayList();
-        filterRequirements.add(ErrorStatusInfo.class);
+        filterRequirements.add(ErrorStatus.class);
 
-        MetadataInfoFilterStage stage = new MetadataInfoFilterStage();
+        StatusMetadataFilterStage stage = new StatusMetadataFilterStage();
         stage.setFilterRequirements(filterRequirements);
         stage.execute(metadataCollection);
 
@@ -103,17 +103,17 @@ public class MetadataInfoFilterStageTest {
         Assert.assertFalse(metadataCollection.contains(md4));
     }
 
-    /** Tests a {@link MetadataInfoFilterStage} containing multiple filter requirements. */
+    /** Tests a {@link StatusMetadataFilterStage} containing multiple filter requirements. */
     @Test
     public void testMultiFilterRequirement() throws Exception {
-        Collection<Metadata<?>> metadataCollection = new ArrayList<Metadata<?>>(metadataCollectionPrototype);
+        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
 
         Collection filterRequirements = new ArrayList();
-        filterRequirements.add(InfoStatusInfo.class);
-        filterRequirements.add(WarningStatusInfo.class);
-        filterRequirements.add(ErrorStatusInfo.class);
+        filterRequirements.add(InfoStatus.class);
+        filterRequirements.add(WarningStatus.class);
+        filterRequirements.add(ErrorStatus.class);
 
-        MetadataInfoFilterStage stage = new MetadataInfoFilterStage();
+        StatusMetadataFilterStage stage = new StatusMetadataFilterStage();
         stage.setFilterRequirements(filterRequirements);
         stage.execute(metadataCollection);
 

@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -29,11 +29,11 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /**
- * For each metadata collection element that is a SAML EntitiesDescriptor this stage will scan all descendant
+ * For each Item collection element that is a SAML EntitiesDescriptor this stage will scan all descendant
  * EntitiesDescriptors and EntityDescriptors, determine the shortest cache duration, set that on the root
  * EntitiesDescriptor and remove the cache duration from all descendants.
  */
-public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
+public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem> {
 
     /** The minimum cache duration in milliseconds. Default value: {@value} */
     private long minCacheDuration;
@@ -90,8 +90,8 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) throws StageProcessingException {
-        Element descriptor = metadata.getMetadata();
+    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+        Element descriptor = item.unwrap();
         Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);
         return true;

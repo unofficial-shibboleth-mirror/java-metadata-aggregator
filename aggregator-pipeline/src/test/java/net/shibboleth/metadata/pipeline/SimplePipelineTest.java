@@ -19,7 +19,7 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.MockMetadata;
+import net.shibboleth.metadata.MockItem;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
@@ -29,9 +29,9 @@ public class SimplePipelineTest {
 
     @Test
     public void testInitialize() throws Exception {
-        List<Stage<MockMetadata>> stages = buildStages();
+        List<Stage<MockItem>> stages = buildStages();
 
-        SimplePipeline<MockMetadata> pipeline = new SimplePipeline<MockMetadata>();
+        SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
         pipeline.setId(" test ");
         pipeline.setStages(stages);
         assert "test".equals(pipeline.getId());
@@ -53,7 +53,7 @@ public class SimplePipelineTest {
         assert pipeline.getInitializationInstant() != null;
 
         try {
-            pipeline = new SimplePipeline<MockMetadata>();
+            pipeline = new SimplePipeline<MockItem>();
             pipeline.setStages(stages);
             pipeline.initialize();
             throw new AssertionError();
@@ -62,7 +62,7 @@ public class SimplePipelineTest {
         }
 
         try {
-            pipeline = new SimplePipeline<MockMetadata>();
+            pipeline = new SimplePipeline<MockItem>();
             pipeline.setId("");
             pipeline.setStages(stages);
             pipeline.initialize();
@@ -74,51 +74,51 @@ public class SimplePipelineTest {
 
     @Test
     public void testExecution() throws Exception {
-        List<Stage<MockMetadata>> stages = buildStages();
+        List<Stage<MockItem>> stages = buildStages();
 
-        SimplePipeline<MockMetadata> pipeline = new SimplePipeline<MockMetadata>();
+        SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
         pipeline.setId("test");
         pipeline.setStages(stages);
 
-        ArrayList<MockMetadata> metadata = new ArrayList<MockMetadata>();
+        ArrayList<MockItem> metadata = new ArrayList<MockItem>();
         pipeline.execute(metadata);
         assert metadata.size() == 2;
 
         assert ((CountingStage) stages.get(1)).getCount() == 1;
         assert ((CountingStage) stages.get(2)).getCount() == 1;
 
-        MockMetadata md = metadata.iterator().next();
-        assert md.getMetadataInfo().containsKey(ComponentInfo.class);
-        assert md.getMetadataInfo().values().size() == 2;
-        assert md.getMetadataInfo().containsKey(ComponentInfo.class);
+        MockItem md = metadata.iterator().next();
+        assert md.getItemMetadata().containsKey(ComponentInfo.class);
+        assert md.getItemMetadata().values().size() == 2;
+        assert md.getItemMetadata().containsKey(ComponentInfo.class);
 
         try {
-            List<Stage<MockMetadata>> pipelineStages = pipeline.getStages();
+            List<Stage<MockItem>> pipelineStages = pipeline.getStages();
             pipelineStages.clear();
             throw new AssertionError();
         } catch (UnsupportedOperationException e) {
             // expected this
         }
 
-        metadata = new ArrayList<MockMetadata>();
+        metadata = new ArrayList<MockItem>();
         pipeline.execute(metadata);
         assert metadata.size() == 2;
         assert ((CountingStage) stages.get(1)).getCount() == 2;
         assert ((CountingStage) stages.get(2)).getCount() == 2;
     }
 
-    protected List<Stage<MockMetadata>> buildStages() {
-        MockMetadata md1 = new MockMetadata("one");
-        MockMetadata md2 = new MockMetadata("two");
+    protected List<Stage<MockItem>> buildStages() {
+        MockItem md1 = new MockItem("one");
+        MockItem md2 = new MockItem("two");
 
-        StaticMetadataSourceStage<MockMetadata> source = new StaticMetadataSourceStage<MockMetadata>();
+        StaticItemSourceStage<MockItem> source = new StaticItemSourceStage<MockItem>();
         source.setId("src");
         source.setSourceMetadata(CollectionSupport.toList(md1, md2));
 
-        CountingStage<MockMetadata> stage1 = new CountingStage<MockMetadata>();
-        CountingStage<MockMetadata> stage2 = new CountingStage<MockMetadata>();
+        CountingStage<MockItem> stage1 = new CountingStage<MockItem>();
+        CountingStage<MockItem> stage2 = new CountingStage<MockItem>();
 
-        LazyList<? extends Stage<MockMetadata>> stages = CollectionSupport.toList(source, stage1, stage2);
-        return (List<Stage<MockMetadata>>) stages;
+        LazyList<? extends Stage<MockItem>> stages = CollectionSupport.toList(source, stage1, stage2);
+        return (List<Stage<MockItem>>) stages;
     }
 }

@@ -21,26 +21,26 @@ import java.util.Collections;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.util.ItemMetadataSupport;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
 
 /**
- * A very simple implementation of {@link Pipeline}. This implementation takes a static source and list of stages.
+ * A very simple implementation of {@link Pipeline}.
  * 
- * @param <MetadataType> the type of metadata which is produced by the source and operated upon by the stages
+ * @param <ItemType> the type of Item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractComponent implements
-        Pipeline<MetadataType> {
+public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent implements
+        Pipeline<ItemType> {
 
     /** Stages for this pipeline. */
-    private List<Stage<MetadataType>> pipelineStages = Collections.emptyList();
+    private List<Stage<ItemType>> pipelineStages = Collections.emptyList();
 
     /** {@inheritDoc} */
-    public List<Stage<MetadataType>> getStages() {
+    public List<Stage<ItemType>> getStages() {
         return pipelineStages;
     }
 
@@ -49,29 +49,29 @@ public class SimplePipeline<MetadataType extends Metadata<?>> extends AbstractCo
      * 
      * @param stages stages that make up this pipeline
      */
-    public synchronized void setStages(final List<Stage<MetadataType>> stages) {
+    public synchronized void setStages(final List<Stage<ItemType>> stages) {
         if (isInitialized()) {
             return;
         }
         pipelineStages = Collections.unmodifiableList(CollectionSupport.addNonNull(stages,
-                new LazyList<Stage<MetadataType>>()));
+                new LazyList<Stage<ItemType>>()));
     }
 
     /** {@inheritDoc} */
-    public void execute(Collection<MetadataType> metadataCollection) throws PipelineProcessingException {
+    public void execute(Collection<ItemType> itemCollection) throws PipelineProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        for (Stage<MetadataType> stage : pipelineStages) {
-            stage.execute(metadataCollection);
+        for (Stage<ItemType> stage : pipelineStages) {
+            stage.execute(itemCollection);
         }
 
         compInfo.setCompleteInstant();
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
+        ItemMetadataSupport.addToAll(itemCollection, compInfo);
     }
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        for (Stage<MetadataType> stage : pipelineStages) {
+        for (Stage<ItemType> stage : pipelineStages) {
             if (!stage.isInitialized()) {
                 stage.initialize();
             }

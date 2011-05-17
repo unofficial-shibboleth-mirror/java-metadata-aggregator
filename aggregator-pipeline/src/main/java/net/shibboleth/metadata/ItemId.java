@@ -21,32 +21,32 @@ import net.jcip.annotations.ThreadSafe;
 import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 
-/** A {@link MetadataInfo} that associates a tag with a given metadata element. */
+/** Carries a unique identifier for the data carried by an Item. */
 @ThreadSafe
-public class TagInfo implements MetadataInfo {
+public class ItemId implements ItemMetadata {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 4727990464411083511L;
+    private static final long serialVersionUID = -3907907112463674533L;
 
-    /** Metadata element tag. */
-    private final String tag;
+    /** Unique ID for the Item. */
+    private String id;
 
     /**
      * Constructor.
      * 
-     * @param elementTag a tag for a metadata element
+     * @param itemId a unique identifier for the entity, never null
      */
-    public TagInfo(final String elementTag) {
-        tag = StringSupport.trimOrNull(elementTag);
-        Assert.isNotNull(tag, "Tag may not be null or empty");
+    public ItemId(final String itemId) {
+        id = StringSupport.trimOrNull(itemId);
+        Assert.isNotNull(id, "Item ID may not be null or empty");
     }
 
     /**
-     * Gets the tag for the metadata element.
+     * Gets a unique identifier for the data carried by the Item.
      * 
-     * @return tag for the metadata element, never null
+     * @return unique identifier for the data carried by the Item
      */
-    public String getTag() {
-        return tag;
+    public String getId() {
+        return id;
     }
 }

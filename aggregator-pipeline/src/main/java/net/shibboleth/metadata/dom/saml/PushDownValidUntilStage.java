@@ -18,7 +18,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
@@ -29,10 +29,10 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * EntitiesDescriptor and EntityDescriptor, determine the earliest valid until of all a given descandant's ancestors and
  * set that on the given descendant.
  */
-public class PushDownValidUntilStage extends BaseStage<DomMetadata> {
+public class PushDownValidUntilStage extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomMetadata> metadataCollection) throws StageProcessingException {
+    protected void doExecute(Collection<DomElementItem> metadataCollection) throws StageProcessingException {
         // TODO Auto-generated method stub
         
     }

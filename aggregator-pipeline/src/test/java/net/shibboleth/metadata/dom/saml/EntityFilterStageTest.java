@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.xml.ElementSupport;
@@ -40,7 +40,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(true);
 
-        Collection<DomMetadata> metadataCollection = buildMetadataCollection();
+        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -54,7 +54,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
 
-        Collection<DomMetadata> metadataCollection = buildMetadataCollection();
+        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 2);
@@ -63,8 +63,8 @@ public class EntityFilterStageTest extends BaseDomTest {
     /** Test that filtering logic descends in to EntitiesDescriptors. */
     @Test
     public void testEntitiesDescriptorFiltering() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -72,7 +72,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setWhitelistingEntities(false);
         stage.execute(metadataCollection);
 
-        Element entitiesDescriptor = metadataCollection.iterator().next().getMetadata();
+        Element entitiesDescriptor = metadataCollection.iterator().next().unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(entitiesDescriptor).size(), 2);
     }
 
@@ -81,8 +81,8 @@ public class EntityFilterStageTest extends BaseDomTest {
      */
     @Test
     public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -100,8 +100,8 @@ public class EntityFilterStageTest extends BaseDomTest {
      */
     @Test
     public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -115,13 +115,13 @@ public class EntityFilterStageTest extends BaseDomTest {
     }
 
     /** Build up a metadata collection containing 3 EntityDescriptors. */
-    private Collection<DomMetadata> buildMetadataCollection() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+    private Collection<DomElementItem> buildMetadataCollection() throws Exception {
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
 
         List<Element> descriptors = ElementSupport
                 .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
-            metadataCollection.add(new DomMetadata(descriptor));
+            metadataCollection.add(new DomElementItem(descriptor));
         }
 
         return metadataCollection;

@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 
 import org.opensaml.util.collections.CollectionSupport;
@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
-public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
+public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);
@@ -114,9 +114,9 @@ public class EntityFilterStage extends BaseIteratingStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomMetadata metadata) {
+    protected boolean doExecute(DomElementItem item) {
         Element descriptor;
-        descriptor = metadata.getMetadata();
+        descriptor = item.unwrap();
         if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;

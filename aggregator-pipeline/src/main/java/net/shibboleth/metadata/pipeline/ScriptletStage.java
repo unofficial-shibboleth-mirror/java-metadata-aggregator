@@ -30,18 +30,18 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.Metadata;
+import net.shibboleth.metadata.Item;
 
 import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A pipeline stage that computes that transforms the collection of metadata via a script. */
+/** A pipeline stage that computes that transforms the collection of {@link Item} via a script. */
 @ThreadSafe
-public class ScriptletStage extends BaseStage<Metadata<?>> {
+public class ScriptletStage extends BaseStage<Item<?>> {
 
-    /** Name of the scriptlet attribute, {@value} , containing the metadata collection to be transformed. */
-    public static final String METADATA = "metadata";
+    /** Name of the scriptlet attribute, {@value} , containing the Item collection to be transformed. */
+    public static final String ITEM = "item";
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
@@ -101,9 +101,9 @@ public class ScriptletStage extends BaseStage<Metadata<?>> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<Metadata<?>> metadataCollection) throws StageProcessingException {
+    protected void doExecute(final Collection<Item<?>> itemCollection) throws StageProcessingException {
         final Bindings bindings = scriptEngine.createBindings();
-        bindings.put(METADATA, metadataCollection);
+        bindings.put(ITEM, itemCollection);
 
         try {
             if (compiledScript != null) {

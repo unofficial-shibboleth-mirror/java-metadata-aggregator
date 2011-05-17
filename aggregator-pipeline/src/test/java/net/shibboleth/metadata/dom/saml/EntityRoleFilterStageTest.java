@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.xml.ElementSupport;
@@ -42,12 +42,12 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setDesignatedRoles(CollectionSupport.toList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(true);
 
-        List<DomMetadata> metadataCollection = buildMetadataCollection();
+        List<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);
 
-        Element descriptor = metadataCollection.get(0).getMetadata();
+        Element descriptor = metadataCollection.get(0).unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
     }
@@ -63,16 +63,16 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setDesignatedRoles(CollectionSupport.toList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
 
-        List<DomMetadata> metadataCollection = buildMetadataCollection();
+        List<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 2);
 
-        Element descriptor = metadataCollection.get(0).getMetadata();
+        Element descriptor = metadataCollection.get(0).unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
 
-        descriptor = metadataCollection.get(1).getMetadata();
+        descriptor = metadataCollection.get(1).unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
     }
@@ -89,20 +89,20 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setWhitelistingRoles(true);
         stage.setRemoveRolelessEntities(false);
 
-        List<DomMetadata> metadataCollection = buildMetadataCollection();
+        List<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 3);
 
-        Element descriptor = metadataCollection.get(0).getMetadata();
+        Element descriptor = metadataCollection.get(0).unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
 
-        descriptor = metadataCollection.get(1).getMetadata();
+        descriptor = metadataCollection.get(1).unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 0);
 
-        descriptor = metadataCollection.get(2).getMetadata();
+        descriptor = metadataCollection.get(2).unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 0);
     }
@@ -112,8 +112,8 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
      */
     @Test
     public void testEntitiesDescriptorFiltering() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
@@ -121,7 +121,7 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setWhitelistingRoles(false);
         stage.execute(metadataCollection);
 
-        List<Element> descriptors = ElementSupport.getChildElements(metadataCollection.iterator().next().getMetadata());
+        List<Element> descriptors = ElementSupport.getChildElements(metadataCollection.iterator().next().unwrap());
         Assert.assertEquals(descriptors.size(), 2);
 
         Element descriptor = descriptors.get(0);
@@ -138,8 +138,8 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
      */
     @Test
     public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
@@ -156,8 +156,8 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
      */
     @Test
     public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
-        metadataCollection.add(new DomMetadata(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
@@ -170,13 +170,13 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
     }
 
     /** Build up a metadata collection containing 3 EntityDescriptors. */
-    private List<DomMetadata> buildMetadataCollection() throws Exception {
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+    private List<DomElementItem> buildMetadataCollection() throws Exception {
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
 
         List<Element> descriptors = ElementSupport
                 .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
-            metadataCollection.add(new DomMetadata(descriptor));
+            metadataCollection.add(new DomElementItem(descriptor));
         }
 
         return metadataCollection;

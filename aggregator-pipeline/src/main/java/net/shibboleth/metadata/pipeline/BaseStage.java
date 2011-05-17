@@ -18,38 +18,37 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.util.ItemMetadataSupport;
 
 /**
  * A base class for {@link Stage} implementations.
  * 
- * @param <MetadataType> type of metadata elements this stage operates upon
+ * @param <ItemType> type of Item this stage operates upon
  */
-public abstract class BaseStage<MetadataType extends Metadata<?>> extends AbstractComponent implements
-        Stage<MetadataType> {
+public abstract class BaseStage<ItemType extends Item<?>> extends AbstractComponent implements Stage<ItemType> {
 
     /**
      * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
-     * the {@link ComponentInfo} to all the resultant metadata elements and then sets its completion time.
+     * the {@link ComponentInfo} to all the resultant Item elements and then sets its completion time.
      * 
      * {@inheritDoc}
      */
-    public void execute(Collection<MetadataType> metadataCollection) throws StageProcessingException {
+    public void execute(Collection<ItemType> itemCollection) throws StageProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        doExecute(metadataCollection);
+        doExecute(itemCollection);
 
-        MetadataInfoHelper.addToAll(metadataCollection, compInfo);
+        ItemMetadataSupport.addToAll(itemCollection, compInfo);
         compInfo.setCompleteInstant();
     }
 
     /**
-     * Performs the stage process on the given metadata collection.
+     * Performs the stage processing on the given Item collection.
      * 
-     * @param metadataCollection collection to be processed
+     * @param itemCollection collection to be processed
      * 
      * @throws StageProcessingException thrown if there is an unrecoverable problem when processing the stage
      */
-    protected abstract void doExecute(Collection<MetadataType> metadataCollection) throws StageProcessingException;
+    protected abstract void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException;
 }

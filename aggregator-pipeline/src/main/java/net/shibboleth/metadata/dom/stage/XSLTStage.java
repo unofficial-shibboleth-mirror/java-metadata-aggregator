@@ -32,12 +32,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.MetadataInfo;
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.metadata.util.ItemMetadataSupport;
 
 import org.opensaml.util.resource.Resource;
 import org.opensaml.util.resource.ResourceException;
@@ -46,9 +46,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-/** A pipeline stage which applies and XSLT to each element in the metadata collection. */
+/** A pipeline stage which applies and XSLT to each element in the {@link DomElementItem} collection. */
 @ThreadSafe
-public class XSLTStage extends BaseStage<DomMetadata> {
+public class XSLTStage extends BaseStage<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XSLTStage.class);
@@ -56,7 +56,7 @@ public class XSLTStage extends BaseStage<DomMetadata> {
     /** Resource that provides the XSL document. */
     private Resource xslResource;
 
-    /** XSL template used to transform metadata. */
+    /** XSL template used to transform Elements. */
     private Templates xslTemplate;
     
     /**
@@ -100,7 +100,7 @@ public class XSLTStage extends BaseStage<DomMetadata> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<DomMetadata> metadataCollection) throws StageProcessingException {
+    protected void doExecute(final Collection<DomElementItem> itemCollection) throws StageProcessingException {
 
         try {
             final Transformer transform = xslTemplate.newTransformer();
@@ -110,39 +110,39 @@ public class XSLTStage extends BaseStage<DomMetadata> {
                 transform.setParameter(entry.getKey(), entry.getValue());
             }
             
-            Element metadataElement;
+            Element element;
             DOMResult result;
             List<Element> transformedElements;
 
-            ArrayList<DomMetadata> newMetadataElements = new ArrayList<DomMetadata>();
-            for (DomMetadata domMetadata: metadataCollection) {
-                metadataElement = domMetadata.getMetadata();
+            ArrayList<DomElementItem> newItems = new ArrayList<DomElementItem>();
+            for (DomElementItem domItem: itemCollection) {
+                element = domItem.unwrap();
 
                 // we put things in a doc fragment, instead of new documents, because down the line
                 // there is a good chance that at least some elements will get mashed together and this
                 // may eliminate the need to adopt them in to other documents, an expensive operation
-                result = new DOMResult(metadataElement.getOwnerDocument().createDocumentFragment());
-                transform.transform(new DOMSource(metadataElement), result);
+                result = new DOMResult(element.getOwnerDocument().createDocumentFragment());
+                transform.transform(new DOMSource(element), result);
 
                 // The result of the transform contains a number of Elements, each of which
-                // becomes a new DomMetadata in the output collection carrying the same
-                // MetadataInfo objects as the input.  The predominant case is for one
+                // becomes a new DomElementItem in the output collection carrying the same
+                // ItemMetadata objects as the input.  The predominant case is for one
                 // input element to be transformed into one output element, but it is
                 // possible to have none, or many.
                 transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
-                    DomMetadata newMetadata = new DomMetadata(transformedElement);
-                    MetadataInfoHelper.addToAll(newMetadata,
-                            domMetadata.getMetadataInfo().values().toArray(new MetadataInfo[] {}));
-                    newMetadataElements.add(newMetadata);
+                    DomElementItem newItem = new DomElementItem(transformedElement);
+                    ItemMetadataSupport.addToAll(newItem,
+                            domItem.getItemMetadata().values().toArray(new ItemMetadata[] {}));
+                    newItems.add(newItem);
                 }
             }
-            metadataCollection.clear();
-            metadataCollection.addAll(newMetadataElements);
+            itemCollection.clear();
+            itemCollection.addAll(newItems);
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException("XSL transformation engine misconfigured", e);
         } catch (TransformerException e) {
-            throw new StageProcessingException("Unable to transform metadata element", e);
+            throw new StageProcessingException("Unable to transform DOM Element", e);
         }
     }
 

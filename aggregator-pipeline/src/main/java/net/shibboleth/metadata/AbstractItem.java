@@ -20,43 +20,43 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 
 /**
- * Base implementation of a metadata element.
+ * Base implementation of an {@link Item}.
  * 
- * @param <MetadataType> type of metadata element
+ * @param <T> type of data contained in the item
  */
 @ThreadSafe
-public abstract class AbstractMetadata<MetadataType> implements Metadata<MetadataType> {
+public abstract class AbstractItem<T> implements Item<T> {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 7706700116965553475L;
+    private static final long serialVersionUID = -3694943988855243697L;
 
-    /** The actual metadata. */
-    private MetadataType metadata;
+    /** The actual data held by the item. */
+    private T data;
 
-    /** Additional information associated with the metadata. */
-    private final ClassToInstanceMultiMap<MetadataInfo> elementInfo;
+    /** Additional processing information associated with this Item. */
+    private final ClassToInstanceMultiMap<ItemMetadata> metadata;
 
     /** Constructor. */
-    protected AbstractMetadata() {
-        elementInfo = new ClassToInstanceMultiMap<MetadataInfo>(true);
+    protected AbstractItem() {
+        metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
     }
 
     /** {@inheritDoc} */
-    public MetadataType getMetadata() {
-        return metadata;
+    public T unwrap() {
+        return data;
     }
 
     /**
-     * Sets the metadata represented by this element.
+     * Sets the data wrapped by this Item.
      * 
-     * @param entityMetadata the metadata
+     * @param newData the data
      */
-    protected synchronized void setMetadata(final MetadataType entityMetadata) {
-        metadata = entityMetadata;
+    protected synchronized void setData(final T newData) {
+        data = newData;
     }
 
     /** {@inheritDoc} */
-    public ClassToInstanceMultiMap<MetadataInfo> getMetadataInfo() {
-        return elementInfo;
+    public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
+        return metadata;
     }
 }

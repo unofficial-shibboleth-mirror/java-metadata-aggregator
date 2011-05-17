@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomMetadata;
+import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.http.HttpClientBuilder;
@@ -39,10 +39,10 @@ public class DomHttpSourceTest {
 
         DomHttpSourceStage source = new DomHttpSourceStage();
         source.setId("test");
-        source.setMetadataResource(mdResource);
+        source.setDomResource(mdResource);
         source.setParserPool(parserPool);
 
-        ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
         assert metadataCollection != null;
         assert metadataCollection.size() == 1;
@@ -57,11 +57,11 @@ public class DomHttpSourceTest {
 
         DomHttpSourceStage source = new DomHttpSourceStage();
         source.setId("test");
-        source.setMetadataResource(mdResource);
+        source.setDomResource(mdResource);
         source.setParserPool(parserPool);
 
         try {
-            ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
             source.execute(metadataCollection);
             throw new AssertionError("Invalid URL marked as parsed");
         } catch (StageProcessingException e) {
@@ -78,11 +78,11 @@ public class DomHttpSourceTest {
 
         DomHttpSourceStage source = new DomHttpSourceStage();
         source.setId("test");
-        source.setMetadataResource(mdResource);
+        source.setDomResource(mdResource);
         source.setParserPool(parserPool);
 
         try {
-            ArrayList<DomMetadata> metadataCollection = new ArrayList<DomMetadata>();
+            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
             source.execute(metadataCollection);
             throw new AssertionError("Invalid URL processed");
         } catch (StageProcessingException e) {
