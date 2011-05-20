@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 
@@ -34,9 +33,6 @@ import org.w3c.dom.Element;
 /**
  * A pipeline stage that replaces any SAML EntitiesDescriptor found in the Item collection with the EntityDescriptor
  * elements contained therein.
- * 
- * This stage will always add a {@link ItemId}, containing the SAML entity ID given in the EntityDescriptor, to
- * each Element.
  */
 @ThreadSafe
 public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementItem> {
@@ -87,17 +83,15 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
     }
 
     /**
-     * Processes an EntityDescriptor element. Creates a {@link DomElementItem} element, adds it to the item
-     * collections, and attaches a {@link ItemId} to it.
+     * Processes an EntityDescriptor element. Creates a {@link DomElementItem} element and adds it to the item
+     * collections.
      * 
      * @param itemCollection collection to which metadata is added
      * @param entityDescriptor entity descriptor to add to the item collection
      */
     protected void processEntityDescriptor(final Collection<DomElementItem> itemCollection,
             final Element entityDescriptor) {
-        final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
         final DomElementItem item = new DomElementItem(entityDescriptor);
-        item.getItemMetadata().put(new ItemId(entityId));
         itemCollection.add(item);
     }
 }
