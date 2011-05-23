@@ -44,7 +44,7 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
     }
 
     /**
-     * Sets the collection of Items added to the Item collection by this stage
+     * Sets the collection of Items added to the Item collection by this stage.
      * 
      * @param items collection of Items added to the Item collection by this stage
      */

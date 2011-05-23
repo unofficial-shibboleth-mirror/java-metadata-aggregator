@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.stage;
+package net.shibboleth.metadata.dom;
 
 import java.io.File;
 import java.util.ArrayList;

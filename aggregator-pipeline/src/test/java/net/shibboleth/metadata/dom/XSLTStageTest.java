@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.stage;
+package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,6 @@ import java.util.Set;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.resource.ClasspathResource;

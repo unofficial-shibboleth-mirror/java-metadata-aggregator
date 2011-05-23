@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.stage;
+package net.shibboleth.metadata.dom;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
-import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.testng.Assert;

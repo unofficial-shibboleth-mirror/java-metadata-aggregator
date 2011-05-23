@@ -54,12 +54,12 @@ public final class ClassToInstanceMultiMap<B> {
     /**
      * Constructor.
      * 
-     * @param indexSupertypes indicates whether supertypes of a value should be indexed
+     * @param isIndexingSupertypes indicates whether supertypes of a value should be indexed
      */
-    public ClassToInstanceMultiMap(final boolean indexSupertypes) {
+    public ClassToInstanceMultiMap(final boolean isIndexingSupertypes) {
         backingMap = new HashMap<Class<?>, List<B>>();
         values = new ArrayList<B>();
-        this.indexSupertypes = indexSupertypes;
+        indexSupertypes = isIndexingSupertypes;
     }
 
     /** Removes all mappings from this map. */
@@ -111,11 +111,11 @@ public final class ClassToInstanceMultiMap<B> {
             return Collections.emptyList();
         }
 
-        final List<T> values = (List<T>) backingMap.get(type);
-        if (values == null) {
+        final List<T> indexedValues = (List<T>) backingMap.get(type);
+        if (indexedValues == null) {
             return Collections.emptyList();
         }
-        return Collections.unmodifiableList(values);
+        return Collections.unmodifiableList(indexedValues);
     }
 
     /**
@@ -179,16 +179,16 @@ public final class ClassToInstanceMultiMap<B> {
     /**
      * Adds all the values to the map.
      * 
-     * @param values values to be added
+     * @param newValues values to be added
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(final Iterable<? extends B> values) {
-        if (values == null) {
+    public void putAll(final Iterable<? extends B> newValues) {
+        if (newValues == null) {
             return;
         }
 
-        for (B value : values) {
+        for (B value : newValues) {
             put(value);
         }
     }
@@ -198,16 +198,16 @@ public final class ClassToInstanceMultiMap<B> {
      * regardless of the given map's policy on indexing by value supertypes, this map will index values based on its
      * policy.
      * 
-     * @param values values to be added
+     * @param newValues values to be added
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(final ClassToInstanceMultiMap<? extends B> values) {
-        if (values == null) {
+    public void putAll(final ClassToInstanceMultiMap<? extends B> newValues) {
+        if (newValues == null) {
             return;
         }
 
-        for (B value : values.values()) {
+        for (B value : newValues.values()) {
             put(value);
         }
     }
