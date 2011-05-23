@@ -19,10 +19,12 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemId;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.collections.CollectionSupport;
@@ -42,7 +44,7 @@ import org.opensaml.util.collections.LazyList;
 public class PipelineJoinerStage extends BaseStage<Item<?>> {
 
     /**
-     * The factory used to create the item  returned by this source. Default implementation is
+     * The factory used to create the item returned by this source. Default implementation is
      * {@link SimpleItemCollectionFacotry}.
      */
     private ItemCollectionFactory collectionFactory = new SimpleItemCollectionFacotry();
@@ -134,8 +136,7 @@ public class PipelineJoinerStage extends BaseStage<Item<?>> {
             }
         }
 
-        mergeStrategy.mergeCollection(itemCollection,
-                pipelineResults.toArray(new Collection[pipelineResults.size()]));
+        mergeStrategy.mergeCollection(itemCollection, pipelineResults.toArray(new Collection[pipelineResults.size()]));
     }
 
     /** {@inheritDoc} */
@@ -159,8 +160,8 @@ public class PipelineJoinerStage extends BaseStage<Item<?>> {
     }
 
     /**
-     * Implementation {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.ItemCollectionFactory} that
-     * produces {@link ArrayList} instances.
+     * Implementation {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.ItemCollectionFactory} that produces
+     * {@link ArrayList} instances.
      */
     public static class SimpleItemCollectionFacotry implements ItemCollectionFactory {
 
@@ -195,6 +196,65 @@ public class PipelineJoinerStage extends BaseStage<Item<?>> {
         public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources) {
             for (Collection<Item<?>> source : sources) {
                 target.addAll(source);
+            }
+        }
+    }
+
+    /**
+     * A merge strategy that adds source items to the target collection if none of the Items in the target collection
+     * have the same {@link ItemId} as source item. If the source item does not contain a {@link ItemId} it is always
+     * added to the target collection.
+     */
+    public static class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy {
+
+        /** {@inheritDoc} */
+        public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources) {
+            List<ItemId> itemIds;
+            HashSet<ItemId> presentItemIds = new HashSet<ItemId>();
+
+            for (Item item : target) {
+                itemIds = item.getItemMetadata().get(ItemId.class);
+                if (itemIds != null) {
+                    presentItemIds.addAll(itemIds);
+                }
+            }
+
+            for (Collection<Item<?>> source : sources) {
+                merge(presentItemIds, target, source);
+            }
+        }
+
+        /**
+         * Adds source items to the target collection if none of the Items in the target collection have the same
+         * {@link ItemId} as source item. If the source item does not contain a {@link ItemId} it is always added to the
+         * target collection.
+         * 
+         * @param presentItemIds IDs that are already present in the target collection
+         * @param target the collection to which items will be merged in to
+         * @param sourceItems the collection of items to be merged in to the target
+         */
+        private void merge(HashSet<ItemId> presentItemIds, Collection<Item<?>> target, Collection<Item<?>> sourceItems) {
+            boolean itemAlreadyPresent;
+            List<ItemId> itemIds;
+            for (Item sourceItem : sourceItems) {
+                itemIds = sourceItem.getItemMetadata().get(ItemId.class);
+                if (itemIds == null || itemIds.isEmpty()) {
+                    target.add(sourceItem);
+                    continue;
+                }
+
+                itemAlreadyPresent = false;
+                for (ItemId itemId : itemIds) {
+                    if (presentItemIds.contains(itemId)) {
+                        itemAlreadyPresent = true;
+                        break;
+                    }
+                }
+
+                if (!itemAlreadyPresent) {
+                    target.add(sourceItem);
+                    presentItemIds.addAll(itemIds);
+                }
             }
         }
     }

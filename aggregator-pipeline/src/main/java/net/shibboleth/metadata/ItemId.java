@@ -19,6 +19,7 @@ package net.shibboleth.metadata;
 import net.jcip.annotations.ThreadSafe;
 
 import org.opensaml.util.Assert;
+import org.opensaml.util.ObjectSupport;
 import org.opensaml.util.StringSupport;
 
 /** Carries a unique identifier for the data carried by an Item. */
@@ -48,5 +49,29 @@ public class ItemId implements ItemMetadata {
      */
     public String getId() {
         return id;
+    }
+
+    /** {@inheritDoc} */
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id.hashCode();
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ItemId)) {
+            return false;
+        }
+
+        ItemId other = (ItemId) obj;
+        return ObjectSupport.equals(id, other.id);
     }
 }
