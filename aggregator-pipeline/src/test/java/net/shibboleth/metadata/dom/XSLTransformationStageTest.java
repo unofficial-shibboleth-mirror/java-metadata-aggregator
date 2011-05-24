@@ -33,8 +33,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-/** {@link XSLTStage} unit test. */
-public class XSLTStageTest extends BaseDomTest {
+/** {@link XSLTransformationStage} unit test. */
+public class XSLTransformationStageTest extends BaseDomTest {
 
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
     private static class TestInfo implements ItemMetadata {
@@ -69,7 +69,7 @@ public class XSLTStageTest extends BaseDomTest {
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
 
-        XSLTStage stage = new XSLTStage();
+        XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.initialize();
@@ -78,7 +78,7 @@ public class XSLTStageTest extends BaseDomTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         DomElementItem result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
+        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
@@ -96,7 +96,7 @@ public class XSLTStageTest extends BaseDomTest {
 
         Resource transform = new ClasspathResource("data/xsltStageTransform0.xsl");
 
-        XSLTStage stage = new XSLTStage();
+        XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.initialize();
@@ -118,7 +118,7 @@ public class XSLTStageTest extends BaseDomTest {
 
         Resource transform = new ClasspathResource("data/xsltStageTransform2.xsl");
 
-        XSLTStage stage = new XSLTStage();
+        XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.initialize();
@@ -128,7 +128,7 @@ public class XSLTStageTest extends BaseDomTest {
 
         Set<String> names = new HashSet<String>();
         for (DomElementItem result: mdCol) {
-            AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
+            AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
             Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
             names.add(result.unwrap().getNodeName());
         }
@@ -151,17 +151,17 @@ public class XSLTStageTest extends BaseDomTest {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("fruit", "avocados");
         
-        XSLTStage stage = new XSLTStage();
+        XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
-        stage.setParameters(params);
+        stage.setTransformParameters(params);
         stage.initialize();
 
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
         DomElementItem result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTStage.class, "test");
+        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageParamOutput.xml");
