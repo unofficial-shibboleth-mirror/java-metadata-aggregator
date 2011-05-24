@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link XSLTransformationStage} unit test. */
-public class XSLTransformationStageTest extends BaseDomTest {
+public class XSLTtransformationStageTest extends BaseDomTest {
 
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
     private static class TestInfo implements ItemMetadata {

@@ -25,11 +25,17 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.InfoStatus;
+import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.dom.AbstractXSLProcessingStage.StatusInfoAppendingErrorListener;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
- * A pipeline stage which applies and XSLT to each element in the {@link DomElementItem} collection. The element that
- * served as the source of the XSLT is replaced by the elements the result from the transform.
+ * A pipeline which "validates" each element in the {@link DomElementItem} collection via an XSL stylesheet. The results
+ * of the transform are discarded but the source element receives {@link net.shibboleth.metadata.InfoStatus},
+ * {@link net.shibboleth.metadata.WarningStatus}, and {@link net.shibboleth.metadata.ErrorStatus} metadata via the
+ * {@link StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class XSLValidationStage extends AbstractXSLProcessingStage {

@@ -36,7 +36,9 @@ import org.w3c.dom.Element;
 
 /**
  * A pipeline stage which transforms each element in the {@link DomElementItem} collection via an XSL transform. The
- * element that served as the source of the XSLT is replaced by the elements that result from the transform.
+ * element that served as the source of the XSLT is replaced by the elements that result from the transform. The results
+ * elements receives {@link net.shibboleth.metadata.InfoStatus}, {@link net.shibboleth.metadata.WarningStatus}, and
+ * {@link net.shibboleth.metadata.ErrorStatus} metadata via the {@link StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class XSLTransformationStage extends AbstractXSLProcessingStage {

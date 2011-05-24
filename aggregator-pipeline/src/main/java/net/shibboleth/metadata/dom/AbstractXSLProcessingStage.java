@@ -1,11 +1,12 @@
 /*
- * Copyright 2010 University Corporation for Advanced Internet Development, Inc.
+ * Licensed to the University Corporation for Advanced Internet Development, Inc.
+ * under one or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to You under the Apache 
+ * License, Version 2.0 (the "License"); you may not use this file except in 
+ * compliance with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,6 +33,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseStage;
@@ -256,8 +258,9 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * {@link Item} depending on the {@link TransformerException} message. If the message begins with
      * {@value #ERROR_PREFIX} the remainder of the error message is used as the message for the added
      * {@link ErrorStatus}. If the message begins with {@value #WARN_PREFIX} the remainder of the error message is used
-     * as the message for the added {@link WarningStatus}. If the message does not begin with either prefix the
-     * exception is re-thrown to be handed by the {@link Transformer}.
+     * as the message for the added {@link WarningStatus}. If the message begins with {@value #INFO_PREFIX} the
+     * remainder of the error message is used as the message for the added {@link InfoStatus}. If the message does not
+     * begin with either prefix the exception is re-thrown to be handed by the {@link Transformer}.
      * 
      * This listener works well in conjunction with &lt;xsl:message&gt;
      */
@@ -268,6 +271,9 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
 
         /** Prefix used by messages that result in an {@link WarningStatus}. */
         public static final String WARN_PREFIX = "[WARN]";
+
+        /** Prefix used by messages that result in an {@link InfoStatus}. */
+        public static final String INFO_PREFIX = "[INFO]";
 
         /** Item to which the status info will be appended. */
         private Item<?> item;
@@ -314,8 +320,11 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
                 statusMessage = StringSupport.trim(errorMessage.substring(ERROR_PREFIX.length()));
                 item.getItemMetadata().put(new ErrorStatus(getId(), statusMessage));
             } else if (errorMessage.startsWith(WARN_PREFIX)) {
-                statusMessage = StringSupport.trim(errorMessage.substring(ERROR_PREFIX.length()));
+                statusMessage = StringSupport.trim(errorMessage.substring(WARN_PREFIX.length()));
                 item.getItemMetadata().put(new WarningStatus(getId(), statusMessage));
+            } else if (errorMessage.startsWith(INFO_PREFIX)) {
+                statusMessage = StringSupport.trim(errorMessage.substring(INFO_PREFIX.length()));
+                item.getItemMetadata().put(new InfoStatus(getId(), statusMessage));
             } else {
                 throw e;
             }
