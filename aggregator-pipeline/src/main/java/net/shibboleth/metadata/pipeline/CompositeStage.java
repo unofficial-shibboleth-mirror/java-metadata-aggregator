@@ -29,7 +29,7 @@ import net.shibboleth.metadata.Item;
  * 
  * @param <ItemType> type of Items this stage, and its composed stages, operate upon
  */
-public class CompositeStage<ItemType extends Item> extends AbstractComponent implements Stage<ItemType> {
+public class CompositeStage<ItemType extends Item<?>> extends AbstractComponent implements Stage<ItemType> {
 
     /** Stages which compose this stage. */
     private List<Stage<ItemType>> composedStages;
