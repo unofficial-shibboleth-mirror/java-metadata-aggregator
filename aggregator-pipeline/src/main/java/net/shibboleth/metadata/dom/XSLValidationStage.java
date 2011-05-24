@@ -25,10 +25,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.ErrorStatus;
-import net.shibboleth.metadata.InfoStatus;
-import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.metadata.dom.AbstractXSLProcessingStage.StatusInfoAppendingErrorListener;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
