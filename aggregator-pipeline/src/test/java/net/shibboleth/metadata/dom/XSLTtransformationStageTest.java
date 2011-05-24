@@ -19,12 +19,15 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.shibboleth.metadata.AssertSupport;
+import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.WarningStatus;
 
 import org.opensaml.util.resource.ClasspathResource;
 import org.opensaml.util.resource.Resource;
@@ -86,7 +89,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
     }
     
     /**
-     * Test a transform which results in a no output elements.
+     * Test a transform which results in no output elements.
      */
     @Test
     public void testTransform0() throws Exception {
@@ -169,5 +172,56 @@ public class XSLTtransformationStageTest extends BaseDomTest {
     }
     
 
+    /**
+     * Test a transform which results in Status objects being attached to each of two empty
+     * output elements.
+     */
+    @Test
+    public void testTransformListener() throws Exception {
+        
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(makeInput());
+
+        Resource transform = new ClasspathResource("data/xsltStageTransformListener.xsl");
+
+        XSLTransformationStage stage = new XSLTransformationStage();
+        stage.setId("test");
+        stage.setXslResource(transform);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 2);
+
+        Set<String> names = new HashSet<String>();
+        for (DomElementItem result: mdCol) {
+            AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+            
+            // each output item should have preserved the TestInfo that was on the input
+            Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
+            
+            // collect the name of the output item's element
+            names.add(result.unwrap().getNodeName());
+            
+            // verify the presence of the InfoStatus on the output
+            List<InfoStatus> infos = result.getItemMetadata().get(InfoStatus.class);
+            Assert.assertEquals(infos.size(), 2);
+            Assert.assertEquals(infos.get(0).getStatusMessage(), "second value");
+            Assert.assertEquals(infos.get(1).getStatusMessage(), "second value second message");
+
+            // verify the presence of the WarningStatus on the output
+            List<WarningStatus> warnings = result.getItemMetadata().get(WarningStatus.class);
+            Assert.assertEquals(warnings.size(), 1);
+            Assert.assertEquals(warnings.get(0).getStatusMessage(), "first value");
+
+            // verify the presence of the WarningStatus on the output
+            List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
+            Assert.assertEquals(errors.size(), 1);
+            Assert.assertEquals(errors.get(0).getStatusMessage(), "error value");
+        }
+        
+        Assert.assertTrue(names.contains("firstValue"));
+        Assert.assertTrue(names.contains("secondValue"));
+    }
+    
     
 }
