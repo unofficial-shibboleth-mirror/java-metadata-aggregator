@@ -244,7 +244,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
             }
 
             log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
-            xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream()));
+            xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream(),
+                    xslResource.getLocation()));
         } catch (TransformerConfigurationException e) {
             throw new ComponentInitializationException("XSL transformation engine misconfigured", e);
         } catch (ResourceException e) {
