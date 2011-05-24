@@ -43,7 +43,7 @@ public class StatusMetadata implements ItemMetadata {
         component = trimmedId;
 
         String trimmedMessage = StringSupport.trimOrNull(statusMessage);
-        Assert.isNotNull(trimmedMessage, "Status message ca not be null or empty");
+        Assert.isNotNull(trimmedMessage, "Status message can not be null or empty");
         message = trimmedMessage;
     }
 
