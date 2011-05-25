@@ -224,4 +224,32 @@ public class XSLTtransformationStageTest extends BaseDomTest {
     }
     
     
+    /**
+     * Test a transform which results from templates contained in a main
+     * stylesheet and one which is included.
+     */
+    @Test
+    public void testInclude() throws Exception {
+        
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(makeInput());
+
+        Resource transform = new ClasspathResource("data/xslIncludeMain.xsl");
+
+        XSLTransformationStage stage = new XSLTransformationStage();
+        stage.setId("test");
+        stage.setXslResource(transform);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DomElementItem result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+        Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
+
+        Element expected = readXmlData("xsltStageOutput.xml");
+        assertXmlEqual(expected, result.unwrap());
+    }
+    
 }
