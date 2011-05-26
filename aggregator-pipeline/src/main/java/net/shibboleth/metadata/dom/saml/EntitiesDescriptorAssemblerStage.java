@@ -107,6 +107,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
 
         final Element entitiesDescriptor =
                 ElementSupport.constructElement(entitiesDescriptorDocument, MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
+        entitiesDescriptorDocument.appendChild(entitiesDescriptor);
 
         Element descriptor;
         for (DomElementItem item : itemCollection) {
