@@ -215,7 +215,7 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
      */
     protected void buildItemCollectionFromCache(Collection<DomElementItem> itemCollection) {
         final Document clonedDocument = (Document) cachedDom.cloneNode(true);
-        itemCollection.add(new DomElementItem(clonedDocument.getDocumentElement()));
+        itemCollection.add(new DomElementItem(clonedDocument));
     }
 
     /** {@inheritDoc} */

@@ -29,6 +29,9 @@ import net.shibboleth.metadata.pipeline.BaseStage;
 import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 import org.opensaml.util.xml.AttributeSupport;
+import org.opensaml.util.xml.ElementSupport;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -98,14 +101,23 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
 
     /** {@inheritDoc} */
     protected void doExecute(final Collection<DomElementItem> itemCollection) {
-        final Element entitiesDescriptor = MetadataHelper.buildEntitiesDescriptor(orderingStrategy
-                .order(itemCollection));
+        final DOMImplementation domImpl =
+                itemCollection.iterator().next().unwrap().getOwnerDocument().getImplementation();
+        final Document entitiesDescriptorDocument = domImpl.createDocument(null, null, null);
 
-        if (entitiesDescriptor != null) {
-            addDescriptorName(entitiesDescriptor);
+        final Element entitiesDescriptor =
+                ElementSupport.constructElement(entitiesDescriptorDocument, MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
+
+        Element descriptor;
+        for (DomElementItem item : itemCollection) {
+            descriptor = item.unwrap();
+            if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
+                descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);
+                entitiesDescriptor.appendChild(descriptor);
+            }
         }
 
-        final DomElementItem item = new DomElementItem(entitiesDescriptor);
+        final DomElementItem item = new DomElementItem(entitiesDescriptorDocument);
         itemCollection.clear();
         itemCollection.add(item);
     }

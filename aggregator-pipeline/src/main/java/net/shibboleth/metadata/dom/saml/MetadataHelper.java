@@ -16,15 +16,11 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.Collection;
-
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.opensaml.util.xml.ElementSupport;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /** Helper class for dealing with SAML metadata. */
@@ -52,31 +48,6 @@ public final class MetadataHelper {
     /** Constructor. */
     private MetadataHelper() {
 
-    }
-
-    /**
-     * Builds a SAML EntitiesDescriptor element from a collection of EntitiesDescriptor or EntityDescriptor elements.
-     * 
-     * @param itemCollection collection containing the EntitiesDescriptor or EntityDescriptor elements, other
-     *            elements will be ignored
-     * 
-     * @return the constructed EntitiesDescriptor
-     */
-    public static Element buildEntitiesDescriptor(final Collection<DomElementItem> itemCollection) {
-        final Document owningDocument = itemCollection.iterator().next().unwrap().getOwnerDocument();
-
-        final Element entitiesDescriptor = ElementSupport.constructElement(owningDocument, ENTITIES_DESCRIPTOR_NAME);
-        ElementSupport.setDocumentElement(owningDocument, entitiesDescriptor);
-
-        Element descriptor;
-        for (DomElementItem item : itemCollection) {
-            descriptor = item.unwrap();
-            if (isEntitiesDescriptor(descriptor) || isEntityDescriptor(descriptor)) {
-                ElementSupport.appendChildElement(entitiesDescriptor, descriptor);
-            }
-        }
-
-        return entitiesDescriptor;
     }
 
     /**

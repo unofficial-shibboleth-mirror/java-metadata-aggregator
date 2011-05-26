@@ -22,29 +22,64 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 
+import org.opensaml.util.Assert;
+import org.opensaml.util.xml.ElementSupport;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/** A {@link Item} whose data is a DOM, version 3, {@link Element}. */
+/**
+ * A {@link Item} whose data is a DOM, version 3, {@link Element}.
+ * 
+ * The {@link Element} wrapped by this {@link Item} is always the document element of the document that owns the
+ * {@link Element}.
+ */
 @ThreadSafe
 public class DomElementItem extends AbstractItem<Element> {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 8677951541031584666L;
+    private static final long serialVersionUID = -5122481126094725529L;
 
     /**
-     * Constructor.
+     * Constructor. The document element of the given document becomes the {@link Element} value for this item.
      * 
-     * @param metadata DOM metadata element
+     * @param document document whose document element becomes the value for this Item; may not be null and must have a
+     *            document element
      */
-    public DomElementItem(final Element metadata) {
+    public DomElementItem(final Document document) {
         super();
-        setData(metadata);
+
+        Assert.isNotNull(document, "DOM Document can not be null");
+
+        final Element docElement = document.getDocumentElement();
+        Assert.isNotNull(docElement, "DOM Document Element may not be null");
+
+        setData(document.getDocumentElement());
+    }
+
+    /**
+     * Constructor. A new {@link Document} is created and the given {@link Element} is deep-imported in to the new
+     * document via {@link Document#importNode(org.w3c.dom.Node, boolean), and the resultant {@link Element} is set as
+     * the new document's root.
+     * 
+     * @param element element that is copied to become the value of this Item
+     */
+    public DomElementItem(final Element element) {
+        super();
+
+        Assert.isNotNull(element, "DOM Document Element may not be null");
+
+        final DOMImplementation domImpl = element.getOwnerDocument().getImplementation();
+        final Document newDocument = domImpl.createDocument(null, null, null);
+        final Element newDocumentRoot = (Element) newDocument.importNode(element, true);
+        ElementSupport.setDocumentElement(newDocument, newDocumentRoot);
+
+        setData(newDocumentRoot);
     }
 
     /** {@inheritDoc} */
     public Item<Element> copy() {
-        final Element domClone = (Element) unwrap().cloneNode(true);
-        final DomElementItem clone = new DomElementItem(domClone);
+        final DomElementItem clone = new DomElementItem(unwrap());
         ItemMetadataSupport.addToAll(clone, getItemMetadata().values().toArray(new ItemMetadata[] {}));
         return clone;
     }

@@ -266,7 +266,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
             log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
             xmlIn = new FileInputStream(source);
             final Document doc = parserPool.parse(xmlIn);
-            return new DomElementItem(doc.getDocumentElement());
+            return new DomElementItem(doc);
         } catch (Exception e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException(getId() + " pipeline source unable to parse XML input file "

@@ -33,7 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-/** Very simple serializer that serializes the first element of the given {@link DomElementItem} collection. */
+/**
+ * Very simple serializer that serializes the owning document of the first element of the given {@link DomElementItem}
+ * collection.
+ */
 @ThreadSafe
 public class DomElementSerializer implements ItemSerializer<DomElementItem> {
 
