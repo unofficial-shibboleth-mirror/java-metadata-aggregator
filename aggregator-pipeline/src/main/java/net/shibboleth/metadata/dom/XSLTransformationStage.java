@@ -61,7 +61,7 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
                 // there is a good chance that at least some elements will get mashed together and this
                 // may eliminate the need to adopt them in to other documents, an expensive operation
                 result = new DOMResult(element.getOwnerDocument().createDocumentFragment());
-                transformer.transform(new DOMSource(element), result);
+                transformer.transform(new DOMSource(element.getOwnerDocument()), result);
 
                 // The result of the transform contains a number of Elements, each of which
                 // becomes a new DomElementItem in the output collection carrying the same
