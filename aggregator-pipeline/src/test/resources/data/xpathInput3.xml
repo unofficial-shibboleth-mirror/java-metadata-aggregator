@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test id="entity3" xmlns="http://ukfederation.org.uk/2006/11/label">
+    <content>
+        <!--
+            This one will be deleted, even though the namespace is the default,
+            and inherited from the document element.
+        -->  
+        <DeletedEntity/>
+    </content>
+</test>

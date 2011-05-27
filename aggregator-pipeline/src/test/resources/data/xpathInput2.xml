@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test id="entity2">
+    <content>
+        <!-- This one will not be deleted. -->
+        
+        <!-- Despite this element: default namespace -->
+        <DeletetedEntity/>
+        
+        <!-- Despite this element: right prefix, wrong URI -->
+        <ukfedlabel:DeletedEntity xmlns:ukfedlabel="http://wrong.uri"/>
+    </content>
+</test>

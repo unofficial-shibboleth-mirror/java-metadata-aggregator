@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test id="entity1">
+    <content>
+        <!--
+            This one will be deleted, even though the prefix is not the standard one.
+        -->  
+        <dm:DeletedEntity xmlns:dm="http://ukfederation.org.uk/2006/11/label"/>
+    </content>
+</test>
