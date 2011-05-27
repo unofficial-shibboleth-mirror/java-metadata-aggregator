@@ -61,7 +61,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 /**
- * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem} collection.
+ * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem}
+ * collection.
  */
 @ThreadSafe
 public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem> {
