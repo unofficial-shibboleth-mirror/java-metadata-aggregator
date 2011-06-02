@@ -1,16 +1,14 @@
-<?xml version="1.0"  encoding="ISO-8859-1"?>
-<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
-
+<?xml version="1.0" encoding="UTF-8"?>
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
     <Set name="contextPath">/</Set>
     <Set name="copyWebDir">false</Set>
     <Set name="extractWAR">false</Set>
-    <Set name="war"><SystemProperty name="mdx.home" default="." />/war/TODO</Set>
+    <Set name="war"><SystemProperty name="mdx.home" default="."/>/war/TODO</Set>
 
     <Get name="servletContext">
-        <Call name="setInitParameter" ">
+        <Call name="setInitParameter">
             <Arg>contextConfigLocation</Arg>
-            <Arg><SystemProperty name="mdx.home" default="." />/conf/mdx-config.xml</Arg>
+            <Arg><SystemProperty name="mdx.home" default="."/>/conf/mdx-config.xml</Arg>
         </Call>
     </Get>
 

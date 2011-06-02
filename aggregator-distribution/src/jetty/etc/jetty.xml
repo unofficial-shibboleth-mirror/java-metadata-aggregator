@@ -1,6 +1,4 @@
-<?xml version="1.0"?>
-<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- =============================================================== -->
 <!-- Configure the Jetty Server                                      -->
 <!--                                                                 -->
@@ -13,8 +11,6 @@
 <!--                                                                 -->
 <!-- See start.ini file for the default configuraton files           -->
 <!-- =============================================================== -->
-
-
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
 
     <!-- =========================================================== -->
@@ -35,7 +31,7 @@
     <Call name="addConnector">
       <Arg>
           <New class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-            <Set name="host"><Property name="jetty.host" /></Set>
+            <Set name="host"><Property name="jetty.host"/></Set>
             <Set name="port"><Property name="jetty.port" default="8080"/></Set>
             <Set name="maxIdleTime">300000</Set>
             <Set name="Acceptors">2</Set>

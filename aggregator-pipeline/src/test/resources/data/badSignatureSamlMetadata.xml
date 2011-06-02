@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EntitiesDescriptor ID="1234" Name="urn:mace:switch.ch:SWITCHaai" validUntil="2010-09-20T15:59:02Z" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI="#1234"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>ZthRrkLODg4jZjtdLI1/TEJ4zWp4MKmy9enPdvYqokg=</DigestValue></Reference></SignedInfo><SignatureValue>bqZ0oZ/3o/K0yDgGUXqmowHgeWZ6cHmjyz4BZiglCLfknDlx3LEQGl3ZgmpmH+heB/Qh1/PBsjK3
+<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="1234" Name="urn:mace:switch.ch:SWITCHaai" validUntil="2010-09-20T15:59:02Z"><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI="#1234"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>ZthRrkLODg4jZjtdLI1/TEJ4zWp4MKmy9enPdvYqokg=</DigestValue></Reference></SignedInfo><SignatureValue>bqZ0oZ/3o/K0yDgGUXqmowHgeWZ6cHmjyz4BZiglCLfknDlx3LEQGl3ZgmpmH+heB/Qh1/PBsjK3
 Wx+wrnGGhvcwMIIjHVEnU9FMfoDF1XOCN3Um7IwGCBF6+s6NchGsc6igACH2l4vApaJuPRNvnfMZ
 GTvzuyOnP539zh7tTDf7jipnZ0nXwilQel6vaBX7DmSIWIbuMaojJlQGDUzhLWncGPr8OMT7rOLW
 Mvz49bGmgqhDbJgziUYmwm3ZNoy2fgSLI9W2BjWesxPdMs2ivMQ5UK7zUQ2qqc9ULp3/8Ll878ex
@@ -31,7 +31,7 @@ ky2gtKCT9MVNOm3GJ/5x</X509Certificate><X509IssuerSerial><X509IssuerName>CN=teste
 
     <EntityDescriptor entityID="https://aai.unifr.ch/idp/shibboleth">
         <Extensions>
-            <shibmd:Scope regexp="false" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0">unifr.ch</shibmd:Scope>
+            <shibmd:Scope xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" regexp="false">unifr.ch</shibmd:Scope>
         </Extensions>
         <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0">
             <KeyDescriptor use="signing">

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="Metadata Aggregator Installer" default="install">
 
-	<property name="installer.dir" value="${basedir}/installer" />
-	<property name="resources.dir" value="${installer.dir}/resources" />
-	<property file="${resources.dir}/install.properties" />
+	<property name="installer.dir" value="${basedir}/installer"/>
+	<property name="resources.dir" value="${installer.dir}/resources"/>
+	<property file="${resources.dir}/install.properties"/>
 
     <!-- Load ant-contrib tasks -->
-    <taskdef resource="net/sf/antcontrib/antlib.xml" />
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
     <!-- Load Internet2 ant extensions -->
-    <taskdef resource="edu/internet2/middleware/ant/antlib.xml" />
+    <taskdef resource="edu/internet2/middleware/ant/antlib.xml"/>
 
 	<target name="install" description="Install/upgrade the software">
 
@@ -26,7 +25,7 @@
 		<input defaultValue="${mdx.install.dir}" addProperty="input.mdx.install.dir">
 			  Where should the Shibboleth Metdata Aggregator software be installed?
 		</input>
-		<var name="mdx.install.dir" value="${input.mdx.install.dir}" />
+		<var name="mdx.install.dir" value="${input.mdx.install.dir}"/>
 		
 		
 		

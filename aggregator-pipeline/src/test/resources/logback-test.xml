@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -9,10 +8,10 @@
         </encoder>
     </appender>
 
-    <logger name="net.shibboleth.metadata" level="debug" />
+    <logger name="net.shibboleth.metadata" level="debug"/>
 
     <root level="info">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>

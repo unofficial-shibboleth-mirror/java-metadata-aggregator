@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     
     <!-- type of fruit to use when transforming firstValue; defaults to bananas -->
     <xsl:param name="fruit">bananas</xsl:param>
     
     <xsl:template match="firstValue">
-        <firstValue><xsl:value-of select="."/><xsl:text > </xsl:text><xsl:value-of select="$fruit"/></firstValue>
+        <firstValue><xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="$fruit"/></firstValue>
     </xsl:template>
     
     <xsl:template match="secondValue">

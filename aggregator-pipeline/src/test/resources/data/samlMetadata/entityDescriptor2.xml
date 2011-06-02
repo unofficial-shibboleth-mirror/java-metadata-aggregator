@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  entityID="https://hestia.switch.ch/shibboleth">
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityID="https://hestia.switch.ch/shibboleth">
     <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
         <KeyDescriptor>
             <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -39,32 +37,22 @@
                 </ds:X509Data>
             </ds:KeyInfo>
         </KeyDescriptor>
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SLO/Redirect" />
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/POST" />
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SLO/Artifact" />
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/SOAP" />
-        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-            Location="https://hestia.switch.ch/Shibboleth.sso/NIM/Redirect" />
-        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/POST" />
-        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-            Location="https://hestia.switch.ch/Shibboleth.sso/NIM/Artifact" />
-        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/SOAP" />
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/Redirect"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/POST"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/Artifact"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/SOAP"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/Redirect"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/POST"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/Artifact"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/SOAP"/>
         <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
         <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/POST" index="1" />
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/POST-SimpleSign" index="2" />
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/Artifact" index="3" />
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/ECP" index="4" />
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SAML/POST" index="5" />
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
-            Location="https://hestia.switch.ch/Shibboleth.sso/SAML/Artifact" index="6" />
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/POST" index="1"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/Artifact" index="3"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/ECP" index="4"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://hestia.switch.ch/Shibboleth.sso/SAML/POST" index="5"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://hestia.switch.ch/Shibboleth.sso/SAML/Artifact" index="6"/>
     </SPSSODescriptor>
     <Organization>
         <OrganizationName xml:lang="en">switch.ch</OrganizationName>
