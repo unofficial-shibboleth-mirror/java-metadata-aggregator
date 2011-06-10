@@ -109,6 +109,9 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         final Element entitiesDescriptor =
                 ElementSupport.constructElement(entitiesDescriptorDocument, MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
         entitiesDescriptorDocument.appendChild(entitiesDescriptor);
+        
+        // Put a newline between the start and end tags
+        ElementSupport.appendTextContent(entitiesDescriptor, "\n");
 
         Element descriptor;
         for (DomElementItem item : itemCollection) {
@@ -116,6 +119,9 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
             if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);
                 entitiesDescriptor.appendChild(descriptor);
+
+                // Put a newline after every child descriptor element
+                ElementSupport.appendTextContent(entitiesDescriptor, "\n");
             }
         }
 
