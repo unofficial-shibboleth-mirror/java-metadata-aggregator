@@ -109,6 +109,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         final Element entitiesDescriptor =
                 ElementSupport.constructElement(entitiesDescriptorDocument, MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
         entitiesDescriptorDocument.appendChild(entitiesDescriptor);
+        addDescriptorName(entitiesDescriptor);
         
         // Put a newline between the start and end tags
         ElementSupport.appendTextContent(entitiesDescriptor, "\n");

@@ -51,6 +51,24 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         assertXmlEqual(expectedResult, result);
     }
 
+    @Test
+    public void testAssemblingWithName() throws Exception {
+        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
+        stage.setId("foo");
+        stage.setDescriptorName("nameValue");
+        stage.initialize();
+        stage.execute(metadataCollection);
+
+        Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
+        String serializedResult = SerializeSupport.nodeToString(result);
+        result = getParserPool().parse(new StringReader(serializedResult));
+
+        Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2Name.xml");
+
+        assertXmlEqual(expectedResult, result);
+    }
+
     protected Collection<DomElementItem> buildMetadataCollection() throws Exception {
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
 
