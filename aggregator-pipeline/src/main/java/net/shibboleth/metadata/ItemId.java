@@ -25,7 +25,7 @@ import org.opensaml.util.StringSupport;
 
 /** Carries a unique identifier for the data carried by an Item. */
 @ThreadSafe
-public class ItemId implements ItemMetadata {
+public class ItemId implements ItemMetadata, Comparable<ItemId> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -3907907112463674533L;
@@ -54,10 +54,7 @@ public class ItemId implements ItemMetadata {
 
     /** {@inheritDoc} */
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + id.hashCode();
-        return result;
+        return id.hashCode();
     }
 
     /** {@inheritDoc} */
@@ -74,5 +71,10 @@ public class ItemId implements ItemMetadata {
 
         ItemId other = (ItemId) obj;
         return ObjectSupport.equals(id, other.id);
+    }
+
+    /** {@inheritDoc} */
+    public int compareTo(ItemId o) {
+        return id.compareTo(o.id);
     }
 }

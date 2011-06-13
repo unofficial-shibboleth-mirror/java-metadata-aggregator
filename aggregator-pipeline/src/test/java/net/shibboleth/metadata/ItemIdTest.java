@@ -17,11 +17,10 @@
 
 package net.shibboleth.metadata;
 
-import net.shibboleth.metadata.ItemId;
-
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-
+/** Unit tests for the {@link ItemId} class. */
 public class ItemIdTest {
 
     @Test
@@ -42,5 +41,32 @@ public class ItemIdTest {
         } catch (IllegalArgumentException e) {
             // expected this
         }
+    }
+    
+    /**
+     * Test the implementation of the <code>Comparable</code> interface.
+     */
+    @Test
+    public void testCompareTo() {
+        ItemId one = new ItemId("one");
+        ItemId two = new ItemId("two");
+        ItemId twoAgain = new ItemId("two");
+        
+        Assert.assertTrue(two.compareTo(two) == 0);
+        Assert.assertTrue(two.compareTo(twoAgain) == 0);
+        Assert.assertTrue(one.compareTo(two) < 0);
+        Assert.assertTrue(two.compareTo(one) > 0);
+    }
+    
+    /**
+     * Test that the hash codes for different {@link ItemId}s are different.
+     * Impossible to test for sure, because of course the strings chosen
+     * have a very very low chance have the same hashCode.
+     */
+    @Test
+    public void testHashCode() {
+        ItemId one = new ItemId("one");
+        ItemId two = new ItemId("two");
+        Assert.assertFalse(one.hashCode() == two.hashCode());
     }
 }
