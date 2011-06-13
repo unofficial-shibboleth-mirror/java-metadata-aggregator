@@ -115,7 +115,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         ElementSupport.appendTextContent(entitiesDescriptor, "\n");
 
         Element descriptor;
-        for (DomElementItem item : itemCollection) {
+        for (DomElementItem item : orderingStrategy.order(itemCollection)) {
             descriptor = item.unwrap();
             if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);

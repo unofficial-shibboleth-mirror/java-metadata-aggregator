@@ -20,20 +20,26 @@ package net.shibboleth.metadata.dom.saml;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
 import org.opensaml.util.xml.SerializeSupport;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- *
- */
+/** Unit test for the {@EntitiesDescriptorAssemblerStage} class. */
 public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
+    /**
+     * Basic test without use of the name property.
+     * 
+     * @throws Exception if anything goes wrong
+     */
     @Test
     public void testAssemblingWithoutName() throws Exception {
         Collection<DomElementItem> metadataCollection = buildMetadataCollection();
@@ -51,6 +57,11 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         assertXmlEqual(expectedResult, result);
     }
 
+    /**
+     * Test with use of the name property.
+     * 
+     * @throws Exception if anything goes wrong
+     */
     @Test
     public void testAssemblingWithName() throws Exception {
         Collection<DomElementItem> metadataCollection = buildMetadataCollection();
@@ -65,6 +76,42 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         result = getParserPool().parse(new StringReader(serializedResult));
 
         Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2Name.xml");
+
+        assertXmlEqual(expectedResult, result);
+    }
+    
+    /**
+     * Test with an ordering strategy.
+     * 
+     * @throws Exception if anything goes wrong
+     */
+    @Test
+    public void testAssemblingWithOrdering() throws Exception {
+        
+        /** Ordering strategy class which simply reverses the order of items. */
+        class ReverseOrder implements ItemOrderingStrategy {
+
+            /** {@inheritDoc} */
+            public List<DomElementItem> order(Collection<DomElementItem> items) {
+                List<DomElementItem> result = new ArrayList<DomElementItem>(items);
+                Collections.reverse(result);
+                return result;
+            }
+            
+        }
+        
+        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
+        stage.setId("foo");
+        stage.setItemOrderingStrategy(new ReverseOrder());
+        stage.initialize();
+        stage.execute(metadataCollection);
+
+        Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
+        String serializedResult = SerializeSupport.nodeToString(result);
+        result = getParserPool().parse(new StringReader(serializedResult));
+
+        Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2Reversed.xml");
 
         assertXmlEqual(expectedResult, result);
     }
