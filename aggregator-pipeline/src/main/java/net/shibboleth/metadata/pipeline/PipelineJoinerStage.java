@@ -25,7 +25,9 @@ import java.util.List;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.ItemId;
+import net.shibboleth.metadata.SimpleItemCollectionFacotry;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.collections.CollectionSupport;
@@ -36,7 +38,7 @@ import org.opensaml.util.collections.LazyList;
  * used as the input source for another pipeline.
  * 
  * This source works producing a {@link Collection} by means of the registered
- * {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.ItemCollectionFactory} . Then each of its registered
+ * {@link net.shibboleth.metadata.ItemCollectionFactory} . Then each of its registered
  * {@link Pipeline} is invoked in turn (no ordering is guaranteed and pipelines may execute concurrently). After each
  * pipeline has completed the results are merged in to the Item collection given to this stage by means of the an
  * {@link CollectionMergeStrategy}.
@@ -146,29 +148,6 @@ public class PipelineJoinerStage extends BaseStage<Item<?>> {
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }
-        }
-    }
-
-    /** Factory used to create the {@link Collection} that will be passed in to each child pipeline. */
-    public static interface ItemCollectionFactory {
-
-        /**
-         * Creates the {@link Collection}.
-         * 
-         * @return the {@link Collection}
-         */
-        public Collection<Item<?>> newCollection();
-    }
-
-    /**
-     * Implementation {@link net.shibboleth.metadata.pipeline.PipelineJoinerStage.ItemCollectionFactory} that produces
-     * {@link ArrayList} instances.
-     */
-    public static class SimpleItemCollectionFacotry implements ItemCollectionFactory {
-
-        /** {@inheritDoc} */
-        public Collection<Item<?>> newCollection() {
-            return new ArrayList<Item<?>>();
         }
     }
 
