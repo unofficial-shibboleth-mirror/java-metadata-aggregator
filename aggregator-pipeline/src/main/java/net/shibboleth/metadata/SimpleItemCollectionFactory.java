@@ -25,7 +25,7 @@ import java.util.Collection;
  * 
  * @param <ItemType> the type of items the produced collection will contain
  */
-public class SimpleItemCollectionFacotry<ItemType extends Item> implements ItemCollectionFactory<ItemType> {
+public class SimpleItemCollectionFactory<ItemType extends Item> implements ItemCollectionFactory<ItemType> {
 
     /** {@inheritDoc} */
     public Collection<ItemType> newCollection() {

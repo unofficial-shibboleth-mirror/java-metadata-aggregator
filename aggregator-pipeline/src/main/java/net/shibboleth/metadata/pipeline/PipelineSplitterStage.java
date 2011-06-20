@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.ItemSelectionStrategy;
-import net.shibboleth.metadata.SimpleItemCollectionFacotry;
+import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
@@ -42,7 +42,7 @@ import net.shibboleth.metadata.SimpleItemCollectionFacotry;
  * If no {@link ExecutorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with 6
  * threads.
  * 
- * If no {@link ItemCollectionFactory} is given, then {@link SimpleItemCollectionFacotry} is used.
+ * If no {@link ItemCollectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
  * 
  * If one or the other pipeline is null then no objects will be passed to it (obviously).
  * 
@@ -246,12 +246,12 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
             }
         }
 
-        Future selectedItemFutre = executPipeline(selectedItemPipeline, selectedItems);
-        Future nonselectedItemFuture = executPipeline(nonselectedItemPipeline, nonselectedItems);
+        Future selectedItemFuture = executePipeline(selectedItemPipeline, selectedItems);
+        Future nonselectedItemFuture = executePipeline(nonselectedItemPipeline, nonselectedItems);
 
         try {
-            if (selectedItemFutre != null && isWaitingForSelectedItemPipeline()) {
-                selectedItemFutre.get();
+            if (selectedItemFuture != null && isWaitingForSelectedItemPipeline()) {
+                selectedItemFuture.get();
             }
 
             if (nonselectedItemFuture != null && isWaitingForNonselectedItemPipeline()) {
@@ -272,13 +272,13 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
      * 
      * @return the token representing the background execution of the pipeline
      */
-    protected Future executPipeline(Pipeline<ItemType> pipeline, Collection<ItemType> items) {
+    protected Future executePipeline(Pipeline<ItemType> pipeline, Collection<ItemType> items) {
         if (pipeline == null) {
             return null;
         }
 
-        PipelineCallable runnable = new PipelineCallable(pipeline, items);
-        return executorService.submit(runnable);
+        PipelineCallable callable = new PipelineCallable(pipeline, items);
+        return executorService.submit(callable);
     }
 
     /** {@inheritDoc} */
@@ -291,8 +291,8 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
         }
 
         if (collectionFactory == null) {
-            log.debug("No collection factory specified, using {}", SimpleItemCollectionFacotry.class.getName());
-            collectionFactory = new SimpleItemCollectionFacotry();
+            log.debug("No collection factory specified, using {}", SimpleItemCollectionFactory.class.getName());
+            collectionFactory = new SimpleItemCollectionFactory();
         }
 
         if (selectionStrategy == null) {
@@ -313,5 +313,4 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
             nonselectedItemPipeline.initialize();
         }
     }
-
 }

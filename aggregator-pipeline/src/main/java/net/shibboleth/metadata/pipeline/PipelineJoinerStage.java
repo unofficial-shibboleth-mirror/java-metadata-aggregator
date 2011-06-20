@@ -27,7 +27,7 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.metadata.SimpleItemCollectionFacotry;
+import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 import org.opensaml.util.Assert;
 import org.opensaml.util.collections.CollectionSupport;
@@ -48,9 +48,9 @@ public class PipelineJoinerStage extends BaseStage<Item<?>> {
 
     /**
      * The factory used to create the item returned by this source. Default implementation is
-     * {@link SimpleItemCollectionFacotry}.
+     * {@link SimpleItemCollectionFactory}.
      */
-    private ItemCollectionFactory collectionFactory = new SimpleItemCollectionFacotry();
+    private ItemCollectionFactory collectionFactory = new SimpleItemCollectionFactory();
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
