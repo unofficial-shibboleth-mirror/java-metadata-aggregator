@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.cli;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.dom.DomElementItem;
@@ -30,7 +31,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 /**
  * A simple driver for the metadata aggregator.
  * 
- * This class takes two parameters, the first is the file: URI to the Spring configuration file. The second parameter is
+ * This class takes two parameters, the first is the file path to the Spring configuration file. The second parameter is
  * the name of bean ID of the Pipeline to be executed. If the pipeline is not initialized by Spring it will be
  * initialized by this CLI.
  * 
@@ -51,7 +52,7 @@ public class SimpleCommandLine {
     public static void main(String[] args) {
         if (args.length != 2) {
             System.err.println("This command line only supports two arguments, "
-                    + "the file: URI path to the Spring configuration file describing the processing pipeline "
+                    + "the file path to the Spring configuration file describing the processing pipeline "
                     + "and bean ID of the Pipeline to execute.");
             System.exit(1);
         }
@@ -60,8 +61,9 @@ public class SimpleCommandLine {
 
         FileSystemXmlApplicationContext appCtx = null;
         try {
-            log.debug("Initializing Spring context with configuration file {}", args[0]);
-            appCtx = new FileSystemXmlApplicationContext(args[0]);
+            String fileUri = new File(args[0]).toURI().toString();
+            log.debug("Initializing Spring context with configuration file {}", fileUri);
+            appCtx = new FileSystemXmlApplicationContext(fileUri);
         } catch (BeansException e) {
             log.error("Unable to initialize Spring context", e);
             System.exit(1);
