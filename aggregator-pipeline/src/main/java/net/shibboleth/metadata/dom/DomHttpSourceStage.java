@@ -28,8 +28,8 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
 import org.opensaml.util.StringSupport;
-import org.opensaml.util.http.HttpClientBuilder;
-import org.opensaml.util.http.HttpResource;
+import org.opensaml.util.net.HttpClientBuilder;
+import org.opensaml.util.net.HttpResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.util.xml.ParserPool;
 import org.opensaml.util.xml.XMLParserException;
