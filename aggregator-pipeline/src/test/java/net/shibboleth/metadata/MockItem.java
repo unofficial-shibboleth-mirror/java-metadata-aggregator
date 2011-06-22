@@ -17,31 +17,42 @@
 
 package net.shibboleth.metadata;
 
-import org.opensaml.util.ObjectSupport;
-
-import net.shibboleth.metadata.AbstractItem;
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 
+import org.opensaml.util.ObjectSupport;
+
+/** A mock implementation of {@link Item}. */
 public class MockItem extends AbstractItem<String> {
 
-    private static final long serialVersionUID = 7960618036577597153L;
+    /** Serial version UID. */
+    private static final long serialVersionUID = 0L;
 
+    /**
+     * Constructor.
+     * 
+     * @param str data held by this item
+     */
     public MockItem(String str) {
         setData(str);
     }
 
-    public void setData(String entityMetadata) {
-        super.setData(entityMetadata);
+    /** {@inheritDoc} */
+    public void setData(String data) {
+        super.setData(data);
     }
 
+    /**
+     * Sets the metadata for this Item.
+     * 
+     * @param info metadata for this Item
+     */
     public void setMetadataInfo(ClassToInstanceMultiMap<ItemMetadata> info) {
         getItemMetadata().clear();
         getItemMetadata().putAll(info);
     }
 
+    /** {@inheritDoc} */
     public Item<String> copy() {
         MockItem clone = new MockItem(new String(unwrap()));
         ItemMetadataSupport.addToAll(clone, getItemMetadata().values().toArray(new ItemMetadata[] {}));

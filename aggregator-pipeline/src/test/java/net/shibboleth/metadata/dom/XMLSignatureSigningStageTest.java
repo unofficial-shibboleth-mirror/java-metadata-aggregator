@@ -22,7 +22,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
-import net.shibboleth.metadata.dom.DomElementItem;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

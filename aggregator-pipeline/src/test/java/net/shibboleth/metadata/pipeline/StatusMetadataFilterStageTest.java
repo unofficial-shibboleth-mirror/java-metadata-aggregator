@@ -24,7 +24,6 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.StatusMetadata;
 import net.shibboleth.metadata.WarningStatus;
 
 import org.testng.Assert;
@@ -35,19 +34,19 @@ import org.testng.annotations.Test;
 public class StatusMetadataFilterStageTest {
 
     /** Unmodifiable, prototype, collection of metadata elements. */
-    Collection<Item<?>> metadataCollectionPrototype;
+    private Collection<Item<?>> metadataCollectionPrototype;
 
-    /** Metadata element which contains no {@link StatusMetadata} items. */
-    Item md1;
+    /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
+    private Item md1;
 
     /** Metadata element which contains a {@link WarningStatus} item. */
-    Item md2;
+    private Item md2;
 
-    /** Metadata element which contains no {@link StatusMetadata} items. */
-    Item md3;
+    /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
+    private Item md3;
 
     /** Metadata element which contains a {@link WarningStatus} and {@link ErrorStatus} item. */
-    Item md4;
+    private Item md4;
 
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest

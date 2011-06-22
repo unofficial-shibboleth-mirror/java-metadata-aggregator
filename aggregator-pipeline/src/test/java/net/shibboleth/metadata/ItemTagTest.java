@@ -17,10 +17,9 @@
 
 package net.shibboleth.metadata;
 
-import net.shibboleth.metadata.ItemTag;
-
 import org.testng.annotations.Test;
 
+/** Unit test for {@link ItemTag}. */
 public class ItemTagTest {
 
     @Test

@@ -21,25 +21,40 @@ import java.util.Collection;
 
 import net.shibboleth.metadata.Item;
 
-public class CountingStage<MetadataType extends Item<?>> extends AbstractComponent implements Stage<MetadataType> {
+/** Stages that counts the number of times it was invoked and the number of items it has observed. */
+public class CountingStage<ItemType extends Item<?>> extends AbstractComponent implements Stage<ItemType> {
 
-    private int invocationCount = 0;
-    
-    private int itemCount = 0;
+    /** Number of times the stage was invoked. */
+    private int invocationCount;
 
+    /** Number of items observed. */
+    private int itemCount;
+
+    /** Constructor. */
     public CountingStage() {
         setId("CountingStage");
     }
 
+    /**
+     * Gets the number of times the stage was invoked.
+     * 
+     * @return number of times the stage was invoked
+     */
     public int getInvocationCount() {
         return invocationCount;
     }
-    
-    public int getItemCount(){
+
+    /**
+     * Gets the number of items observed.
+     * 
+     * @return number of items observed
+     */
+    public int getItemCount() {
         return itemCount;
     }
 
-    public void execute(final Collection<MetadataType> metadataCollection) throws StageProcessingException {
+    /** {@inheritDoc} */
+    public void execute(final Collection<ItemType> metadataCollection) throws StageProcessingException {
         invocationCount += 1;
         itemCount += metadataCollection.size();
     }

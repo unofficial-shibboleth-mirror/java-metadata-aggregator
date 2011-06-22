@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.net.HttpClientBuilder;

@@ -72,7 +72,8 @@ public class PipelineMergeStageTest {
         joinSource.execute(metadataCollection);
         assert metadataCollection.size() == 2;
 
-        boolean md1CloneMatch = false, md2CloneMatch = false;
+        boolean md1CloneMatch = false;
+        boolean md2CloneMatch = false;
         for (Item<?> metadata : metadataCollection) {
             if ("one".equals(metadata.unwrap())) {
                 md1CloneMatch = true;

@@ -22,7 +22,6 @@ import java.io.FileFilter;
 import java.net.URL;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.xml.BasicParserPool;

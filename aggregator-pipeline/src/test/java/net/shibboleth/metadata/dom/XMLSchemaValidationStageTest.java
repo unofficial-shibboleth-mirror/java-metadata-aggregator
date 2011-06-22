@@ -21,8 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.shibboleth.metadata.dom.DomElementItem;
-
 import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.Resource;
 import org.opensaml.util.xml.BasicParserPool;
