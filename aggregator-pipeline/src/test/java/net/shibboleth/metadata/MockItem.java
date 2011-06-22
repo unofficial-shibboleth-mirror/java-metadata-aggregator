@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata;
 
+import org.opensaml.util.ObjectSupport;
+
 import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
@@ -27,14 +29,14 @@ public class MockItem extends AbstractItem<String> {
 
     private static final long serialVersionUID = 7960618036577597153L;
 
-    public MockItem(String str){
+    public MockItem(String str) {
         setData(str);
     }
-    
+
     public void setData(String entityMetadata) {
         super.setData(entityMetadata);
     }
-    
+
     public void setMetadataInfo(ClassToInstanceMultiMap<ItemMetadata> info) {
         getItemMetadata().clear();
         getItemMetadata().putAll(info);
@@ -44,5 +46,27 @@ public class MockItem extends AbstractItem<String> {
         MockItem clone = new MockItem(new String(unwrap()));
         ItemMetadataSupport.addToAll(clone, getItemMetadata().values().toArray(new ItemMetadata[] {}));
         return clone;
+    }
+
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return unwrap().hashCode();
+    }
+
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj instanceof MockItem) {
+            MockItem other = (MockItem) obj;
+            return ObjectSupport.equals(unwrap(), other.unwrap());
+        }
+        return false;
     }
 }

@@ -85,8 +85,8 @@ public class SimplePipelineTest {
         pipeline.execute(metadata);
         assert metadata.size() == 2;
 
-        assert ((CountingStage) stages.get(1)).getCount() == 1;
-        assert ((CountingStage) stages.get(2)).getCount() == 1;
+        assert ((CountingStage) stages.get(1)).getInvocationCount() == 1;
+        assert ((CountingStage) stages.get(2)).getInvocationCount() == 1;
 
         MockItem md = metadata.iterator().next();
         assert md.getItemMetadata().containsKey(ComponentInfo.class);
@@ -104,8 +104,8 @@ public class SimplePipelineTest {
         metadata = new ArrayList<MockItem>();
         pipeline.execute(metadata);
         assert metadata.size() == 2;
-        assert ((CountingStage) stages.get(1)).getCount() == 2;
-        assert ((CountingStage) stages.get(2)).getCount() == 2;
+        assert ((CountingStage) stages.get(1)).getInvocationCount() == 2;
+        assert ((CountingStage) stages.get(2)).getInvocationCount() == 2;
     }
 
     protected List<Stage<MockItem>> buildStages() {

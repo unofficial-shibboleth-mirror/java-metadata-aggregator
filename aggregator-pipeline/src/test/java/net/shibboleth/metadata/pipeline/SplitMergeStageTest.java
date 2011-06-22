@@ -28,12 +28,12 @@ import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/** Unit test of {@link PipelineSplitterStage}. */
-public class PipelineSplitterStageTest {
+/** Unit test of {@link SplitMergeStage}. */
+public class SplitMergeStageTest {
 
     @Test
     public void testCollectionFactory() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
+        SplitMergeStage stage = new SplitMergeStage();
 
         SimpleItemCollectionFactory factory = new SimpleItemCollectionFactory();
         stage.setCollectionFactory(factory);
@@ -42,7 +42,7 @@ public class PipelineSplitterStageTest {
 
     @Test
     public void testExecutorService() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
+        SplitMergeStage stage = new SplitMergeStage();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         stage.setExecutorService(executor);
@@ -51,7 +51,7 @@ public class PipelineSplitterStageTest {
 
     @Test
     public void testNonselectedItemPipeline() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
+        SplitMergeStage stage = new SplitMergeStage();
 
         SimplePipeline pipeline = new SimplePipeline();
         stage.setNonselectedItemPipeline(pipeline);
@@ -60,7 +60,7 @@ public class PipelineSplitterStageTest {
 
     @Test
     public void testSelectedItemPipeline() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
+        SplitMergeStage stage = new SplitMergeStage();
 
         SimplePipeline pipeline = new SimplePipeline();
         stage.setSelectedItemPipeline(pipeline);
@@ -69,7 +69,7 @@ public class PipelineSplitterStageTest {
 
     @Test
     public void testSelectionStrategy() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
+        SplitMergeStage stage = new SplitMergeStage();
 
         MockItemSelectionStrategy strategy = new MockItemSelectionStrategy();
         stage.setSelectionStrategy(strategy);
@@ -77,29 +77,13 @@ public class PipelineSplitterStageTest {
     }
 
     @Test
-    public void testWaitingForNonselectedItemPipeline() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
-
-        stage.setWaitingForNonselectedItemPipeline(true);
-        Assert.assertTrue(stage.isWaitingForNonselectedItemPipeline());
-    }
-
-    @Test
-    public void testWaitingForSelectedItemPipeline() {
-        PipelineSplitterStage stage = new PipelineSplitterStage();
-
-        stage.setWaitingForSelectedItemPipeline(true);
-        Assert.assertTrue(stage.isWaitingForSelectedItemPipeline());
-    }
-
-    @Test
     public void testInitialization() throws Exception {
         SimplePipeline pipeline = new SimplePipeline();
         pipeline.setId("pipeline");
 
-        PipelineSplitterStage stage;
+        SplitMergeStage stage;
 
-        stage = new PipelineSplitterStage();
+        stage = new SplitMergeStage();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
         stage.setSelectedItemPipeline(pipeline);
@@ -108,20 +92,20 @@ public class PipelineSplitterStageTest {
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
 
-        stage = new PipelineSplitterStage();
+        stage = new SplitMergeStage();
         stage.setId("test");
         stage.setSelectedItemPipeline(pipeline);
         stage.setSelectionStrategy(new MockItemSelectionStrategy());
         stage.initialize();
 
-        stage = new PipelineSplitterStage();
+        stage = new SplitMergeStage();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
         stage.setSelectionStrategy(new MockItemSelectionStrategy());
         stage.initialize();
 
         try {
-            stage = new PipelineSplitterStage();
+            stage = new SplitMergeStage();
             stage.setId("test");
             stage.setSelectionStrategy(new MockItemSelectionStrategy());
             stage.initialize();
@@ -131,7 +115,7 @@ public class PipelineSplitterStageTest {
         }
 
         try {
-            stage = new PipelineSplitterStage();
+            stage = new SplitMergeStage();
             stage.setId("test");
             stage.setNonselectedItemPipeline(pipeline);
             stage.setSelectedItemPipeline(pipeline);
@@ -143,34 +127,41 @@ public class PipelineSplitterStageTest {
     }
 
     @Test
-    public void testExecute() throws Exception{
+    public void testExecute() throws Exception {
         SimplePipeline selectedPipeline = new SimplePipeline();
         selectedPipeline.setId("selectedPipeline");
         CountingStage selectedCount = new CountingStage();
         selectedPipeline.setStages(Collections.singletonList(selectedCount));
-        
+
         SimplePipeline nonselectedPipeline = new SimplePipeline();
         nonselectedPipeline.setId("nonselectedPipeline");
         CountingStage nonselectedCount = new CountingStage();
         nonselectedPipeline.setStages(Collections.singletonList(nonselectedCount));
-        
+
+        MockItem item1 = new MockItem("one");
+        MockItem item2 = new MockItem("two");
+        MockItem item3 = new MockItem("three");
         ArrayList<MockItem> items = new ArrayList<MockItem>();
-        items.add(new MockItem("one"));
-        items.add(new MockItem("two"));
-        items.add(new MockItem("three"));
-        
-        PipelineSplitterStage stage = new PipelineSplitterStage();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+        SplitMergeStage stage = new SplitMergeStage();
         stage.setId("test");
         stage.setSelectionStrategy(new MockItemSelectionStrategy());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
-        stage.setWaitingForNonselectedItemPipeline(true);
         stage.setSelectedItemPipeline(selectedPipeline);
-        stage.setWaitingForSelectedItemPipeline(true);
         stage.initialize();
-        
+
         stage.execute(items);
-        
-        Assert.assertEquals(selectedCount.getCount(), 1);
-        Assert.assertEquals(nonselectedCount.getCount(), 1);
+
+        Assert.assertEquals(selectedCount.getInvocationCount(), 1);
+        Assert.assertEquals(selectedCount.getItemCount(), 3);
+        Assert.assertEquals(nonselectedCount.getInvocationCount(), 1);
+        Assert.assertEquals(nonselectedCount.getItemCount(), 0);
+        Assert.assertEquals(items.size(), 3);
+        Assert.assertTrue(items.contains(item1));
+        Assert.assertTrue(items.contains(item2));
+        Assert.assertTrue(items.contains(item3));
     }
 }

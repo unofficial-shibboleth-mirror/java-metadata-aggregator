@@ -15,32 +15,20 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.Item;
+/**
+ * A {@link CollectionMergeStrategy} that adds the Item from each source, in order, by means of the
+ * {@link Collection#addAll(Collection)} method on the target.
+ */
+public class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
 
-public class CountingStage<MetadataType extends Item<?>> extends AbstractComponent implements Stage<MetadataType> {
-
-    private int invocationCount = 0;
-    
-    private int itemCount = 0;
-
-    public CountingStage() {
-        setId("CountingStage");
-    }
-
-    public int getInvocationCount() {
-        return invocationCount;
-    }
-    
-    public int getItemCount(){
-        return itemCount;
-    }
-
-    public void execute(final Collection<MetadataType> metadataCollection) throws StageProcessingException {
-        invocationCount += 1;
-        itemCount += metadataCollection.size();
+    /** {@inheritDoc} */
+    public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources) {
+        for (Collection<Item<?>> source : sources) {
+            target.addAll(source);
+        }
     }
 }

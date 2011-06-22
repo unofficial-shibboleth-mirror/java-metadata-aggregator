@@ -114,6 +114,6 @@ public class PipelineDemultiplexerStageTest {
 
         stage.execute(items);
 
-        Assert.assertEquals(countStage.getCount(), 1);
+        Assert.assertEquals(countStage.getInvocationCount(), 1);
     }
 }

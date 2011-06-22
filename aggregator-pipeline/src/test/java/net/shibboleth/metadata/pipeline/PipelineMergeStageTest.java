@@ -21,17 +21,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.shibboleth.metadata.DeduplicatingItemIdMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.pipeline.PipelineJoinerStage.DeduplicatingItemIdMergeStrategy;
 
 import org.opensaml.util.collections.CollectionSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/** {@link PipelineJoinerStage} unit test. */
-public class PipelineJoinerStageTest {
+/** {@link PipelineMergeStage} unit test. */
+public class PipelineMergeStageTest {
 
     @Test
     public void test() throws Exception {
@@ -55,9 +55,9 @@ public class PipelineJoinerStageTest {
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
 
-        PipelineJoinerStage joinSource = new PipelineJoinerStage();
+        PipelineMergeStage joinSource = new PipelineMergeStage();
         joinSource.setId("joinSource");
-        joinSource.setJoinedPipelines((List) CollectionSupport.toList(pipeline1, pipeline2));
+        joinSource.setMergedPipelines((List) CollectionSupport.toList(pipeline1, pipeline2));
 
         assert !joinSource.isInitialized();
         assert !pipeline1.isInitialized();

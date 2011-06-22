@@ -15,32 +15,18 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.Item;
+/** Strategy used to merge the results of each child pipeline in to the collection of Items given to this stage. */
+public interface CollectionMergeStrategy {
 
-public class CountingStage<MetadataType extends Item<?>> extends AbstractComponent implements Stage<MetadataType> {
-
-    private int invocationCount = 0;
-    
-    private int itemCount = 0;
-
-    public CountingStage() {
-        setId("CountingStage");
-    }
-
-    public int getInvocationCount() {
-        return invocationCount;
-    }
-    
-    public int getItemCount(){
-        return itemCount;
-    }
-
-    public void execute(final Collection<MetadataType> metadataCollection) throws StageProcessingException {
-        invocationCount += 1;
-        itemCount += metadataCollection.size();
-    }
+    /**
+     * Merges the results of each child pipeline in to the collection of Item given to this stage.
+     * 
+     * @param target collection in to which all the Items should be merged, never null
+     * @param sources collections of Items to be merged in to the target, never null not containing any null elements
+     */
+    public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources);
 }

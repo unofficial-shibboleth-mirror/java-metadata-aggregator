@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A stage which, given an item collection and a list of {@link Pipeline} and {@link ItemSelectionStrategy} pairs, sends
  * the collection of item copies selected by the selection strategy to the associated pipeline. This stage is similar to
- * {@link PipelineSplitterStage} but a given item, or more precisely a copy of it, may end up going to more than one
+ * {@link SplitMergeStage} but a given item, or more precisely a copy of it, may end up going to more than one
  * pipeline (or no pipeline).
  * 
  * If no {@link ExecutorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with 6

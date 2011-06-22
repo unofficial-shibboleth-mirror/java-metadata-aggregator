@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -27,9 +28,11 @@ import org.opensaml.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.ItemSelectionStrategy;
+import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 /**
@@ -48,19 +51,13 @@ import net.shibboleth.metadata.SimpleItemCollectionFactory;
  * 
  * @param <ItemType> type of items upon which this stage operates
  */
-public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<ItemType> {
+public class SplitMergeStage<ItemType extends Item> extends BaseStage<ItemType> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(PipelineSplitterStage.class);
+    private final Logger log = LoggerFactory.getLogger(SplitMergeStage.class);
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
     private ExecutorService executorService;
-
-    /** Whether this stage should wait for the selected item pipeline to complete before proceeding. */
-    private boolean waitingForSelectedItemPipeline;
-
-    /** Whether this stage should wait for the non-selected item pipeline to complete before proceeding. */
-    private boolean waitingForNonselectedItemPipeline;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
     private ItemCollectionFactory<ItemType> collectionFactory;
@@ -73,6 +70,9 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
 
     /** Pipeline that receives the non-selected items. */
     private Pipeline<ItemType> nonselectedItemPipeline;
+
+    /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
+    private CollectionMergeStrategy mergeStrategy;
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -94,50 +94,6 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
         }
 
         executorService = service;
-    }
-
-    /**
-     * Gets whether this stage should wait for the selected item pipeline to complete before proceeding.
-     * 
-     * @return whether this stage should wait for the selected item pipeline to complete before proceeding
-     */
-    public boolean isWaitingForSelectedItemPipeline() {
-        return waitingForSelectedItemPipeline;
-    }
-
-    /**
-     * Sets whether this stage should wait for the selected item pipeline to complete before proceeding.
-     * 
-     * @param isWaiting whether this stage should wait for the selected item pipeline to complete before proceeding
-     */
-    public synchronized void setWaitingForSelectedItemPipeline(boolean isWaiting) {
-        if (isInitialized()) {
-            return;
-        }
-
-        waitingForSelectedItemPipeline = isWaiting;
-    }
-
-    /**
-     * Gets whether this stage should wait for the non-selected item pipeline to complete before proceeding.
-     * 
-     * @return whether this stage should wait for the non-selected item pipeline to complete before proceeding
-     */
-    public boolean isWaitingForNonselectedItemPipeline() {
-        return waitingForNonselectedItemPipeline;
-    }
-
-    /**
-     * Sets whether this stage should wait for the non-selected item pipeline to complete before proceeding.
-     * 
-     * @param isWaiting whether this stage should wait for the non-selected item pipeline to complete before proceeding
-     */
-    public synchronized void setWaitingForNonselectedItemPipeline(boolean isWaiting) {
-        if (isInitialized()) {
-            return;
-        }
-
-        waitingForNonselectedItemPipeline = isWaiting;
     }
 
     /**
@@ -229,6 +185,29 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
         nonselectedItemPipeline = pipeline;
     }
 
+    /**
+     * Gets the strategy used to merge all the joined pipeline results in to the final Item collection.
+     * 
+     * @return strategy used to merge all the joined pipeline results in to the final Item collection, never null
+     */
+    public CollectionMergeStrategy getCollectionMergeStrategy() {
+        return mergeStrategy;
+    }
+
+    /**
+     * Sets the strategy used to merge all the joined pipeline results in to the final Item collection.
+     * 
+     * @param strategy strategy used to merge all the joined pipeline results in to the final Item collection, never
+     *            null
+     */
+    public synchronized void setCollectionMergeStrategy(final CollectionMergeStrategy strategy) {
+        if (isInitialized()) {
+            return;
+        }
+        Assert.isNotNull(strategy, "Collection merge strategy may not be null");
+        mergeStrategy = strategy;
+    }
+
     /** {@inheritDoc} */
     protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
         Collection<ItemType> selectedItems = collectionFactory.newCollection();
@@ -246,22 +225,32 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
             }
         }
 
-        Future selectedItemFuture = executePipeline(selectedItemPipeline, selectedItems);
-        Future nonselectedItemFuture = executePipeline(nonselectedItemPipeline, nonselectedItems);
+        Future<Collection<? extends Item>> selectedItemFuture = executePipeline(selectedItemPipeline, selectedItems);
+        Future<Collection<? extends Item>> nonselectedItemFuture =
+                executePipeline(nonselectedItemPipeline, nonselectedItems);
 
+        ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<Collection<? extends Item>>();
         try {
-            if (selectedItemFuture != null && isWaitingForSelectedItemPipeline()) {
-                selectedItemFuture.get();
+            if (selectedItemFuture != null) {
+                pipelineResults.add(selectedItemFuture.get());
+            } else {
+                pipelineResults.add(selectedItems);
             }
 
-            if (nonselectedItemFuture != null && isWaitingForNonselectedItemPipeline()) {
-                nonselectedItemFuture.get();
+            if (nonselectedItemFuture != null) {
+                pipelineResults.add(nonselectedItemFuture.get());
+            } else {
+                pipelineResults.add(nonselectedItems);
             }
         } catch (ExecutionException e) {
             log.error("Pipeline threw an unexpected exception", e);
         } catch (InterruptedException e) {
             log.error("Execution service was interrupted", e);
         }
+
+        itemCollection.clear();
+        mergeStrategy.mergeCollection((Collection<Item<?>>) itemCollection,
+                pipelineResults.toArray(new Collection[pipelineResults.size()]));
     }
 
     /**
@@ -272,7 +261,8 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
      * 
      * @return the token representing the background execution of the pipeline
      */
-    protected Future executePipeline(Pipeline<ItemType> pipeline, Collection<ItemType> items) {
+    protected Future<Collection<? extends Item>>
+            executePipeline(Pipeline<ItemType> pipeline, Collection<ItemType> items) {
         if (pipeline == null) {
             return null;
         }
@@ -311,6 +301,11 @@ public class PipelineSplitterStage<ItemType extends Item> extends BaseStage<Item
         if (nonselectedItemPipeline != null && !nonselectedItemPipeline.isInitialized()) {
             log.debug("Non-selected item pipeline was not initialized, initializing it now.");
             nonselectedItemPipeline.initialize();
+        }
+
+        if (mergeStrategy == null) {
+            log.debug("No collection merge strategy specified, using {}", SimpleCollectionMergeStrategy.class.getName());
+            mergeStrategy = new SimpleCollectionMergeStrategy();
         }
     }
 }
