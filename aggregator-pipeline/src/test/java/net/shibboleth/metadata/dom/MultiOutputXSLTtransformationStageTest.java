@@ -36,10 +36,9 @@ import org.opensaml.util.xml.XMLParserException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-/** {@link XSLTransformationStage} unit test. */
-public class XSLTtransformationStageTest extends BaseDomTest {
+/** {@link MultiOutputXSLTransformationStage} unit test. */
+public class MultiOutputXSLTtransformationStageTest extends BaseDomTest {
 
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
     private static class TestInfo implements ItemMetadata {
@@ -78,7 +77,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
 
-        XSLTransformationStage stage = new XSLTransformationStage();
+        MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.initialize();
@@ -87,7 +86,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         DomElementItem result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+        AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
@@ -95,9 +94,65 @@ public class XSLTtransformationStageTest extends BaseDomTest {
     }
     
     /**
+     * Test a transform which results in no output elements.
+     * 
+     * @throws Exception if anything goes wrong.
+     */
+    @Test
+    public void testTransform0() throws Exception {
+        
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(makeInput());
+
+        Resource transform = new ClasspathResource("data/xsltStageTransform0.xsl");
+
+        MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
+        stage.setId("test");
+        stage.setXslResource(transform);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 0);
+    }
+    
+    /**
+     * Test a transform which results in two empty output elements, which we
+     * can test against by collecting their element names.  We also need to
+     * confirm that each output element retains the input {@link ItemMetadata}s.
+     * 
+     * @throws Exception if anything goes wrong.
+     */
+    @Test
+    public void testTransform2() throws Exception {
+        
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(makeInput());
+
+        Resource transform = new ClasspathResource("data/xsltStageTransform2.xsl");
+
+        MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
+        stage.setId("test");
+        stage.setXslResource(transform);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 2);
+
+        Set<String> names = new HashSet<String>();
+        for (DomElementItem result: mdCol) {
+            AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
+            Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
+            names.add(result.unwrap().getNodeName());
+        }
+        
+        Assert.assertTrue(names.contains("firstValue"));
+        Assert.assertTrue(names.contains("secondValue"));
+    }
+    
+    /**
      * Test a transform to which we supply a named parameter.
      * 
-     * @throws Exception if something goes wrong
+     * @throws Exception if anything goes wrong.
      */
     @Test
     public void testTransformParam() throws Exception {
@@ -110,7 +165,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("fruit", "avocados");
         
-        XSLTransformationStage stage = new XSLTransformationStage();
+        MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.setTransformParameters(params);
@@ -120,7 +175,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         DomElementItem result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+        AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageParamOutput.xml");
@@ -129,10 +184,10 @@ public class XSLTtransformationStageTest extends BaseDomTest {
     
 
     /**
-     * Test a transform which results in Status objects being attached to the
-     * output element.
+     * Test a transform which results in Status objects being attached to each of two empty
+     * output elements.
      * 
-     * @throws Exception if anything goes wrong
+     * @throws Exception if anything goes wrong.
      */
     @Test
     public void testTransformListener() throws Exception {
@@ -140,19 +195,19 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
-        Resource transform = new ClasspathResource("data/xsltStageTransformListener1.xsl");
+        Resource transform = new ClasspathResource("data/xsltStageTransformListener.xsl");
 
-        XSLTransformationStage stage = new XSLTransformationStage();
+        MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
-        Assert.assertEquals(mdCol.size(), 1);
+        Assert.assertEquals(mdCol.size(), 2);
 
         Set<String> names = new HashSet<String>();
         for (DomElementItem result: mdCol) {
-            AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+            AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
             
             // each output item should have preserved the TestInfo that was on the input
             Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
@@ -177,7 +232,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
             Assert.assertEquals(errors.get(0).getStatusMessage(), "error value");
         }
         
-        Assert.assertFalse(names.contains("firstValue"));
+        Assert.assertTrue(names.contains("firstValue"));
         Assert.assertTrue(names.contains("secondValue"));
     }
     
@@ -186,7 +241,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      * Test a transform which results from templates contained in a main
      * stylesheet and one which is included.
      * 
-     * @throws Exception if anything goes wrong
+     * @throws Exception if anything goes wrong.
      */
     @Test
     public void testInclude() throws Exception {
@@ -196,7 +251,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
 
         Resource transform = new ClasspathResource("data/xslIncludeMain.xsl");
 
-        XSLTransformationStage stage = new XSLTransformationStage();
+        MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
         stage.setId("test");
         stage.setXslResource(transform);
         stage.initialize();
@@ -205,46 +260,11 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         DomElementItem result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+        AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
         assertXmlEqual(expected, result.unwrap());
-    }
-    
-    /**
-     * Test a transform which manipulates the document's nodes that lie outside the
-     * document element.
-     * 
-     * @throws Exception if something goes wrong
-     */
-    @Test
-    public void testOutsideDocumentElement() throws Exception {
-
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
-        mdCol.add(makeInput());
-
-        Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
-
-        XSLTransformationStage stage = new XSLTransformationStage();
-        stage.setId("test");
-        stage.setXslResource(transform);
-        stage.initialize();
-
-        stage.execute(mdCol);
-        Assert.assertEquals(mdCol.size(), 1);
-
-        DomElementItem result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
-        Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
-
-        Element expected = readXmlData("xsltStageOutput.xml");
-        assertXmlEqual(expected, result.unwrap());
-        
-        // peek at the first node in the document; should be a comment
-        Node firstNode = result.unwrap().getOwnerDocument().getFirstChild();
-        Assert.assertEquals(firstNode.getNodeType(), Node.COMMENT_NODE);
-        Assert.assertEquals(firstNode.getNodeValue(), "this is a comment");
     }
     
 }

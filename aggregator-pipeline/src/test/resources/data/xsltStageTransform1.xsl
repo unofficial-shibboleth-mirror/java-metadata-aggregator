@@ -4,6 +4,12 @@
     <!-- type of fruit to use when transforming firstValue; defaults to bananas -->
     <xsl:param name="fruit">bananas</xsl:param>
     
+    <!-- Document node -->
+    <xsl:template match="/">
+        <xsl:comment>this is a comment</xsl:comment>
+        <xsl:apply-templates select="*"/>
+    </xsl:template>
+    
     <xsl:template match="firstValue">
         <firstValue><xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="$fruit"/></firstValue>
     </xsl:template>
