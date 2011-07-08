@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 
 import net.shibboleth.metadata.ItemSelectionStrategy;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.AlwaysItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 import org.opensaml.util.Pair;
@@ -78,7 +79,7 @@ public class PipelineDemultiplexerStageTest {
         stage = new PipelineDemultiplexerStage();
         stage.setId("test");
         stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline, ItemSelectionStrategy>(
-                pipeline, new MockItemSelectionStrategy())));
+                pipeline, new AlwaysItemSelectionStrategy())));
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
@@ -109,7 +110,7 @@ public class PipelineDemultiplexerStageTest {
         stage.setId("test");
         stage.setWaitingForPipelines(true);
         stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline, ItemSelectionStrategy>(
-                pipeline, new MockItemSelectionStrategy())));
+                pipeline, new AlwaysItemSelectionStrategy())));
         stage.initialize();
 
         stage.execute(items);

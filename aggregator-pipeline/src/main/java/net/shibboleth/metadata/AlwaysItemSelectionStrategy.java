@@ -15,13 +15,10 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata;
 
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemSelectionStrategy;
-
-/** A mock implementation of {@link MockItemSelectionStrategy} that always returns true. */
-public class MockItemSelectionStrategy implements ItemSelectionStrategy {
+/** An implementation of {@link ItemSelectionStrategy} that always returns true. */
+public class AlwaysItemSelectionStrategy implements ItemSelectionStrategy {
 
     /** {@inheritDoc} */
     public boolean isSelectedItem(Item item) {

@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.AlwaysItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 import org.testng.Assert;
@@ -71,7 +72,7 @@ public class SplitMergeStageTest {
     public void testSelectionStrategy() {
         SplitMergeStage stage = new SplitMergeStage();
 
-        MockItemSelectionStrategy strategy = new MockItemSelectionStrategy();
+        AlwaysItemSelectionStrategy strategy = new AlwaysItemSelectionStrategy();
         stage.setSelectionStrategy(strategy);
         Assert.assertEquals(stage.getSelectionStrategy(), strategy);
     }
@@ -87,7 +88,7 @@ public class SplitMergeStageTest {
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(new MockItemSelectionStrategy());
+        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
@@ -95,19 +96,19 @@ public class SplitMergeStageTest {
         stage = new SplitMergeStage();
         stage.setId("test");
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(new MockItemSelectionStrategy());
+        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
         stage.initialize();
 
         stage = new SplitMergeStage();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(new MockItemSelectionStrategy());
+        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
         stage.initialize();
 
         try {
             stage = new SplitMergeStage();
             stage.setId("test");
-            stage.setSelectionStrategy(new MockItemSelectionStrategy());
+            stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
             stage.initialize();
             Assert.fail();
         } catch (ComponentInitializationException e) {
@@ -148,7 +149,7 @@ public class SplitMergeStageTest {
 
         SplitMergeStage stage = new SplitMergeStage();
         stage.setId("test");
-        stage.setSelectionStrategy(new MockItemSelectionStrategy());
+        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();
