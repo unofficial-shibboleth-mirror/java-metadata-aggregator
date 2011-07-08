@@ -19,7 +19,6 @@ package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
@@ -28,6 +27,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseStage;
 
 import org.slf4j.Logger;
@@ -38,47 +38,11 @@ import org.slf4j.LoggerFactory;
  * an XPath expression.  Each {@link Item} is removed if the XPath expression
  * evaluates as {@code true}.
  */
+@ThreadSafe
 public class XPathFilteringStage extends BaseStage<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);
-
-    /**
-     * Simple implementation of {@link NamespaceContext} based on a map from
-     * prefix values to corresponding URIs.  This is not complete implementation,
-     * but does have enough functionality for use within XPath evaluation.
-     */
-    private static class SimpleNamespaceContext implements NamespaceContext {
-
-        /** Mapping from prefix values to the corresponding namespace URIs. */
-        private final Map<String, String> prefixMappings;
-
-        /**
-         * Constructor.
-         *
-         * @param mappings  Maps prefix values to the corresponding
-         *                  namespace URIs.
-         */
-        public SimpleNamespaceContext(Map<String, String> mappings) {
-            this.prefixMappings = mappings;
-        }
-
-        /** {@inheritDoc} */
-        public String getNamespaceURI(String prefix) {
-            return prefixMappings.get(prefix);
-        }
-
-        /** {@inheritDoc} */
-        public String getPrefix(String namespaceURI) {
-            throw new UnsupportedOperationException();
-        }
-
-        /** {@inheritDoc} */
-        public Iterator<String> getPrefixes(String namespaceURI) {
-            throw new UnsupportedOperationException();
-        }
-
-    }
 
     /** The XPath expression to execute on each {@link DomElementItem}. */
     private final String xpathExpression;
@@ -96,17 +60,6 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
     public XPathFilteringStage(String expression, NamespaceContext context) {
         xpathExpression = expression;
         namespaceContext = context;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param expression        XPath expression to execute.
-     * @param prefixMappings    Namespace context to use for the expression, expressed
-     *                          as a map from prefix values to namespace URIs.
-     */
-    public XPathFilteringStage(String expression, Map<String, String> prefixMappings) {
-        this(expression, new SimpleNamespaceContext(prefixMappings));
     }
 
     /** {@inheritDoc} */

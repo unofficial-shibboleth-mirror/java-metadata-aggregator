@@ -17,45 +17,41 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.shibboleth.metadata.ItemSelectionStrategy;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.w3c.dom.Element;
 
-/** {@link XPathFilteringStage} unit test. */
-public class XPathFilteringStageTest extends BaseDomTest {
+/** {@link XPathItemSelectionStrategy} unit test. */
+public class XPathItemSelectionStrategyTest extends BaseDomTest {
 
     /**
-     * Test XPathFilteringStage using an example from the UK federation build process.
+     * Test XPathItemSelectionStrategy using an example from the UK federation build process.
      * 
      * @throws Exception if something goes wrong
      */
     @Test
-    public void testExecute() throws Exception {
+    public void test() throws Exception {
         // Construct a map containing required namespace prefix definitions
         Map<String, String> prefixMappings = new HashMap<String, String>();
         prefixMappings.put("ukfedlabel", "http://ukfederation.org.uk/2006/11/label");
 
         // Construct the strategy object
-        XPathFilteringStage strategy =
-                new XPathFilteringStage("//ukfedlabel:DeletedEntity", new SimpleNamespaceContext(prefixMappings));
+        ItemSelectionStrategy<DomElementItem> strategy =
+                new XPathItemSelectionStrategy("//ukfedlabel:DeletedEntity",
+                        new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
-        metadataCollection.add(new DomElementItem(readXmlData("xpathInput1.xml")));
-        metadataCollection.add(new DomElementItem(readXmlData("xpathInput2.xml")));
-        metadataCollection.add(new DomElementItem(readXmlData("xpathInput3.xml")));
-        Assert.assertEquals(metadataCollection.size(), 3);
+        DomElementItem item1 = new DomElementItem(readXmlData("xpathInput1.xml"));
+        DomElementItem item2 = new DomElementItem(readXmlData("xpathInput2.xml"));
+        DomElementItem item3 = new DomElementItem(readXmlData("xpathInput3.xml"));
 
-        // Filter the metadata collection
-        strategy.doExecute(metadataCollection);
-        Assert.assertEquals(metadataCollection.size(), 1);
-        Element element = metadataCollection.get(0).unwrap();
-        String id = element.getAttribute("id");
-        Assert.assertEquals(id, "entity2");
+        Assert.assertTrue(strategy.isSelectedItem(item1));
+        Assert.assertFalse(strategy.isSelectedItem(item2));
+        Assert.assertTrue(strategy.isSelectedItem(item3));
     }
 
 }
