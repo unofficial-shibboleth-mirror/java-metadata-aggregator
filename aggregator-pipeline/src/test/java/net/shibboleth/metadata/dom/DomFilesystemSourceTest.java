@@ -25,11 +25,10 @@ import java.util.ArrayList;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.xml.BasicParserPool;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- *
- */
+/** Unit test for {@link DomFilesystemSourceStage}. */
 public class DomFilesystemSourceTest {
 
     @Test
@@ -47,8 +46,8 @@ public class DomFilesystemSourceTest {
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
-        assert metadataCollection != null;
-        assert metadataCollection.size() == 1;
+        Assert.assertNotNull(metadataCollection);
+        Assert.assertEquals(metadataCollection.size(), 1);
     }
 
     @Test
@@ -66,8 +65,8 @@ public class DomFilesystemSourceTest {
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
-        assert metadataCollection != null;
-        assert metadataCollection.size() == 4;
+        Assert.assertNotNull(metadataCollection);
+        Assert.assertEquals(metadataCollection.size(), 6);
     }
 
     public void testSuccessfulDirectoryFetchWithFilterAndParse() throws Exception {
@@ -91,8 +90,8 @@ public class DomFilesystemSourceTest {
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
-        assert metadataCollection != null;
-        assert metadataCollection.size() == 7;
+        Assert.assertNotNull(metadataCollection);
+        Assert.assertEquals(metadataCollection.size(), 7);
     }
 
     @Test
