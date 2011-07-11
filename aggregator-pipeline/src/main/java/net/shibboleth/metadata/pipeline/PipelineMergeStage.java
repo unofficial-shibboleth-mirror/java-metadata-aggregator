@@ -196,7 +196,8 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         }
 
         if (mergeStrategy == null) {
-            log.debug("No collection merge strategy specified, using {}", SimpleCollectionMergeStrategy.class.getName());
+            log.debug("No collection merge strategy specified, using {}",
+                    SimpleCollectionMergeStrategy.class.getName());
             mergeStrategy = new SimpleCollectionMergeStrategy();
         }
 
