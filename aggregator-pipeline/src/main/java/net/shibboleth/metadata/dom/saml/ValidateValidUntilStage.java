@@ -70,17 +70,18 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
     }
 
     /**
-     * Sets the interval, in milliseconds, from now within which the validUntil date must fall.
+     * Sets the interval, in milliseconds, from now within which the validUntil date must fall. A value of 0 indicates
+     * that there is no check on the upper bound of the validity period.
      * 
      * @param interval interval, in milliseconds, from now within which the validUntil date must fall; must be greater
-     *            than 0
+     *            than or equal to 0
      */
     public synchronized void setMaxValidityInterval(long interval) {
         if (isInitialized()) {
             return;
         }
 
-        Assert.isGreaterThan(0, interval);
+        Assert.isGreaterThanOrEqual(0, interval);
         maxValidityInterval = interval;
     }
 
@@ -88,21 +89,28 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
     protected boolean doExecute(final DomElementItem item) throws StageProcessingException {
         final Element element = item.unwrap();
 
-        if (SamlMetadataSupport.isEntitiesDescriptor(element) || SamlMetadataSupport.isEntityDescriptor(element)) {
-            final Long validUntil =
-                    AttributeSupport.getDateTimeAttributeAsLong(AttributeSupport.getAttribute(element,
-                            SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
-            if (validUntil == null) {
-                if (requireValidUntil) {
-                    item.getItemMetadata().put(new ErrorStatus(getId(),
-                            "Item does not include a validUntil attribute"));
-                }
-            } else {
-                final long lowerBound = System.currentTimeMillis();
+        if (!SamlMetadataSupport.isEntitiesDescriptor(element) || !SamlMetadataSupport.isEntityDescriptor(element)) {
+            return true;
+        }
+
+        final Long validUntil =
+                AttributeSupport.getDateTimeAttributeAsLong(AttributeSupport.getAttribute(element,
+                        SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+        if (validUntil == null) {
+            if (requireValidUntil) {
+                item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
+            }
+        } else {
+            final long lowerBound = System.currentTimeMillis();
+            if (validUntil < lowerBound) {
+                item.getItemMetadata().put(new ErrorStatus(getId(), "Item has a validUntil prior to the current time"));
+            }
+
+            if (maxValidityInterval > 0) {
                 final long upperBound = lowerBound + maxValidityInterval;
-                if (validUntil < lowerBound || validUntil > upperBound) {
+                if (validUntil > upperBound) {
                     item.getItemMetadata().put(
-                            new ErrorStatus(getId(), "Item validUntil is not within temporal bounds"));
+                            new ErrorStatus(getId(), "Item has validUntil larger than the maximum validity interval"));
                 }
             }
         }
