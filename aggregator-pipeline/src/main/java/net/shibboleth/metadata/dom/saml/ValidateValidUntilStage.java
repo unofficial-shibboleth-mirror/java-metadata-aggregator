@@ -101,7 +101,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
                 final long upperBound = lowerBound + maxValidityInterval;
                 if (validUntil < lowerBound || validUntil > upperBound) {
                     item.getItemMetadata().put(
-                            new ErrorStatus(getId(), "Item validUntil is not withing temporal bounds"));
+                            new ErrorStatus(getId(), "Item validUntil is not within temporal bounds"));
                 }
             }
         }
