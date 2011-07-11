@@ -51,9 +51,9 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
         Element element;
         for (DomElementItem item : items) {
             element = item.unwrap();
-            if (MetadataHelper.isEntitiesDescriptor(element)) {
+            if (SamlMetadataSupport.isEntitiesDescriptor(element)) {
                 processEntitiesDescriptor(itemCollection, element);
-            } else if (MetadataHelper.isEntityDescriptor(element)) {
+            } else if (SamlMetadataSupport.isEntityDescriptor(element)) {
                 processEntityDescriptor(itemCollection, element);
             } else {
                 log.debug("{} pipeline stage: DOM Element {} not supported, ignoring it", getId(),
@@ -74,10 +74,10 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
-            if (MetadataHelper.isEntitiesDescriptor(child)) {
+            if (SamlMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(itemCollection, child);
             }
-            if (MetadataHelper.isEntityDescriptor(child)) {
+            if (SamlMetadataSupport.isEntityDescriptor(child)) {
                 processEntityDescriptor(itemCollection, child);
             }
         }

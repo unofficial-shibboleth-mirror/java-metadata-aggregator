@@ -118,11 +118,11 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
     protected boolean doExecute(DomElementItem item) {
         Element descriptor;
         descriptor = item.unwrap();
-        if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
+        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;
             }
-        } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
+        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             if (processEntityDescriptor(descriptor)) {
                 return false;
             }
@@ -146,7 +146,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
         Element descriptor;
 
         final List<Element> childEntitiesDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -157,7 +157,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
         }
 
         final List<Element> childEntityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();

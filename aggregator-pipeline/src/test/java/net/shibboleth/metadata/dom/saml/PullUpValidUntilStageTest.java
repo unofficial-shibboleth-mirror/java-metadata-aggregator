@@ -45,19 +45,19 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
         Assert.assertEquals(validUntil, 2429913600000L);
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         Assert.assertEquals(entityDescriptors.size(), 3);
 
         for (Element entityDescriptor : entityDescriptors) {
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
-                    MetadataHelper.VALID_UNTIL_ATTIB_NAME));
+                    SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
         }
     }
 
@@ -76,7 +76,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -98,7 +98,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);

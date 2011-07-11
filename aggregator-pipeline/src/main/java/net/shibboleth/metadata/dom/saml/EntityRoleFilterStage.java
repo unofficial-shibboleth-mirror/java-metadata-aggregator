@@ -47,24 +47,24 @@ import org.w3c.dom.Element;
 public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
 
     /** QName of the RoleDescriptor element. */
-    public static final QName ROLE_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "RoleDescriptor");
+    public static final QName ROLE_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "RoleDescriptor");
 
     /** QName of the IDPSSODescriptor element. */
-    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "IDPSSODescriptor");
+    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "IDPSSODescriptor");
 
     /** QName of the SPSSODescriptor element. */
-    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "SPSSODescriptor");
+    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "SPSSODescriptor");
 
     /** QName of the AuthnAuthorityDescriptor element. */
-    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS,
+    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS,
             "AuthnAuthorityDescriptor");
 
     /** QName of the AttributeAuthorityDescriptor element. */
-    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS,
+    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS,
             "AttributeAuthorityDescriptor");
 
     /** QName of the PDPDescriptor element. */
-    public static final QName PDP_DESCRIPTOR_NAME = new QName(MetadataHelper.MD_NS, "PDPDescriptor");
+    public static final QName PDP_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "PDPDescriptor");
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStage.class);
@@ -171,11 +171,11 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     /** {@inheritDoc} */
     protected boolean doExecute(DomElementItem item) {
         Element descriptor = item.unwrap();
-        if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
+        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;
             }
-        } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
+        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             if (processEntityDescriptor(descriptor)) {
                 return false;
             }
@@ -199,7 +199,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
         Element descriptor;
 
         final List<Element> childEntitiesDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -210,7 +210,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
         }
 
         final List<Element> childEntityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();

@@ -42,7 +42,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
         }
         
         for (DomElementItem metadata : metadataCollection) {
-            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), MetadataHelper.MD_NS,
+            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SamlMetadataSupport.MD_NS,
                     "ContactPerson").isEmpty());
         }
 
@@ -53,7 +53,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
         Assert.assertEquals(metadataCollection.size(), 3);
 
         for (DomElementItem metadata : metadataCollection) {
-            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), MetadataHelper.MD_NS,
+            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SamlMetadataSupport.MD_NS,
                     "ContactPerson").isEmpty());
         }
     }
@@ -67,7 +67,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element entityDescriptor : entityDescriptors) {
-            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, MetadataHelper.MD_NS,
+            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS,
                     "ContactPerson").isEmpty());
         }
         
@@ -78,7 +78,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
         Assert.assertEquals(metadataCollection.size(), 1);
 
         for (Element entityDescriptor : entityDescriptors) {
-            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, MetadataHelper.MD_NS,
+            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS,
                     "ContactPerson").isEmpty());
         }
     }

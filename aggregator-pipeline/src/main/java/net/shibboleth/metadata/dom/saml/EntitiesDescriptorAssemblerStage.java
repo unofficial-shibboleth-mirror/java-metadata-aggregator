@@ -107,7 +107,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         final Document entitiesDescriptorDocument = domImpl.createDocument(null, null, null);
 
         final Element entitiesDescriptor =
-                ElementSupport.constructElement(entitiesDescriptorDocument, MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
+                ElementSupport.constructElement(entitiesDescriptorDocument, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         entitiesDescriptorDocument.appendChild(entitiesDescriptor);
         addDescriptorName(entitiesDescriptor);
         
@@ -117,7 +117,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         Element descriptor;
         for (DomElementItem item : orderingStrategy.order(itemCollection)) {
             descriptor = item.unwrap();
-            if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
+            if (SamlMetadataSupport.isEntitiesDescriptor(descriptor) || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);
                 entitiesDescriptor.appendChild(descriptor);
 

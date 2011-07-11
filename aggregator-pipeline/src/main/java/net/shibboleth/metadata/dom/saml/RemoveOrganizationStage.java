@@ -37,9 +37,9 @@ public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> 
     /** {@inheritDoc} */
     protected boolean doExecute(DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
-        if (MetadataHelper.isEntitiesDescriptor(descriptor)) {
+        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
-        } else if (MetadataHelper.isEntityDescriptor(descriptor)) {
+        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             processEntityDescriptor(descriptor);
         }
         return true;
@@ -54,9 +54,9 @@ public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> 
     protected void processEntitiesDescriptor(final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
-            if (MetadataHelper.isEntitiesDescriptor(child)) {
+            if (SamlMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
-            } else if (MetadataHelper.isEntityDescriptor(child)) {
+            } else if (SamlMetadataSupport.isEntityDescriptor(child)) {
                 processEntityDescriptor(child);
             }
         }
@@ -71,7 +71,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> 
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
         final List<Element> organizations = ElementSupport.getChildElementsByTagNameNS(entityDescriptor,
-                MetadataHelper.MD_NS, "Organization");
+                SamlMetadataSupport.MD_NS, "Organization");
         if (!organizations.isEmpty()) {
             log.debug("{} pipeline stage filtering Organization from EntityDescriptor {}", getId(), entityId);
             for (Element organization : organizations) {

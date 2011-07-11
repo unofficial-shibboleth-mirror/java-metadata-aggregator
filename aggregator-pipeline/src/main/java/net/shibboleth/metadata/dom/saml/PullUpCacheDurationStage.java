@@ -108,13 +108,13 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      */
     protected Long getShortestCacheDuration(final Element descriptor) {
         Long shortestCacheDuration = null;
-        if (!MetadataHelper.isEntitiesDescriptor(descriptor) && !MetadataHelper.isEntityDescriptor(descriptor)) {
+        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor) && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             return shortestCacheDuration;
         }
 
         Long cacheDuration = null;
         List<Element> entitiesDescriptors = ElementSupport.getChildElements(descriptor,
-                MetadataHelper.ENTITIES_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (Element entitiesDescriptor : entitiesDescriptors) {
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -123,7 +123,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
         }
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(descriptor,
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (Element entityDescriptor : entityDescriptors) {
             cacheDuration = getShortestCacheDuration(entityDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -131,7 +131,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
             }
         }
 
-        Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
+        Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         if (cacheDurationAttr != null) {
             cacheDuration = AttributeSupport.getDurationAttributeValueAsLong(cacheDurationAttr);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -159,13 +159,13 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
         }
 
         if (cacheDuration < minCacheDuration) {
-            AttributeSupport.appendDurationAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME,
+            AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     minCacheDuration);
         } else if (cacheDuration > maxCacheDuration) {
-            AttributeSupport.appendDurationAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME,
+            AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     maxCacheDuration);
         } else {
-            AttributeSupport.appendDurationAttribute(descriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME,
+            AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     cacheDuration);
         }
     }

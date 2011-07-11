@@ -56,9 +56,9 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
     /** {@inheritDoc} */
     protected boolean doExecute(DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
-        if (MetadataHelper.isEntitiesDescriptor(descriptor) || MetadataHelper.isEntityDescriptor(descriptor)) {
-            AttributeSupport.removeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME);
-            AttributeSupport.appendDateTimeAttribute(descriptor, MetadataHelper.VALID_UNTIL_ATTIB_NAME,
+        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor) || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+            AttributeSupport.removeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+            AttributeSupport.appendDateTimeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME,
                     System.currentTimeMillis() + validityDuration);
         }
 

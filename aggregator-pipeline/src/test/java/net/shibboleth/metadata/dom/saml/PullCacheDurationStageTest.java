@@ -45,19 +45,19 @@ public class PullCacheDurationStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
+                .getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
         long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
         Assert.assertEquals(duration, 1000 * 60 * 60);
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                MetadataHelper.ENTITY_DESCRIPTOR_NAME);
+                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         Assert.assertEquals(entityDescriptors.size(), 3);
 
         for (Element entityDescriptor : entityDescriptors) {
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
-                    MetadataHelper.CACHE_DURATION_ATTRIB_NAME));
+                    SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME));
         }
     }
 
@@ -74,7 +74,7 @@ public class PullCacheDurationStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
+                .getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
         long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
@@ -94,7 +94,7 @@ public class PullCacheDurationStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, MetadataHelper.CACHE_DURATION_ATTRIB_NAME);
+                .getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
         long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);

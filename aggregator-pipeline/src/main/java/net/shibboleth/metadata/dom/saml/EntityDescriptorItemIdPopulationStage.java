@@ -35,7 +35,7 @@ public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<Do
     protected boolean doExecute(DomElementItem item) throws StageProcessingException {
         Element metadataElement = item.unwrap();
 
-        if (MetadataHelper.isEntityDescriptor(metadataElement)) {
+        if (SamlMetadataSupport.isEntityDescriptor(metadataElement)) {
             String entityId = AttributeSupport.getAttributeValue(metadataElement, null, "entityID");
             item.getItemMetadata().put(new ItemId(entityId));
         }

@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 /** Helper class for dealing with SAML metadata. */
 @ThreadSafe
-public final class MetadataHelper {
+public final class SamlMetadataSupport {
 
     /** SAML Metadata namespace URI. */
     public static final String MD_NS = "urn:oasis:names:tc:SAML:2.0:metadata";
@@ -47,7 +47,7 @@ public final class MetadataHelper {
     public static final QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");
 
     /** Constructor. */
-    private MetadataHelper() {
+    private SamlMetadataSupport() {
 
     }
 
