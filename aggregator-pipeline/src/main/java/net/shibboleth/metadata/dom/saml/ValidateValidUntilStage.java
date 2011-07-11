@@ -94,7 +94,8 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
                             SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
             if (validUntil == null) {
                 if (requireValidUntil) {
-                    item.getItemMetadata().put(new ErrorStatus(getId(), "Item does include a validUntil attribute"));
+                    item.getItemMetadata().put(new ErrorStatus(getId(),
+                            "Item does not include a validUntil attribute"));
                 }
             } else {
                 final long lowerBound = System.currentTimeMillis();
