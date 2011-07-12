@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="urn:example.org:test" cacheDuration="PT4H" validUntil="2050-01-01T00:00:00Z" xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd                         urn:oasis:names:tc:SAML:metadata:ui http://www.oasis-open.org/committees/download.php/40272/sstc-saml-metadata-ui-v1.0.xsd">
+<EntitiesDescriptor Name="urn:example.org:test" cacheDuration="PT4H" validUntil="2050-01-01T00:00:00Z"
+                    xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+                    xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" 
+                    xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd                         urn:oasis:names:tc:SAML:metadata:ui http://www.oasis-open.org/committees/download.php/40272/sstc-saml-metadata-ui-v1.0.xsd">
     
     <EntityDescriptor entityID="https://idp.shibboleth.net/idp/shibboleth" cacheDuration="PT3H" validUntil="2049-01-01T00:00:00Z">
+    
+        <Extensions>
+            <mdrpi:RegistrationInfo registrationAuthority="urn:example.org:authority1" />
+        </Extensions>
         
         <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
             
@@ -10,7 +18,6 @@
                 
                 <mdui:UIInfo>
                     <mdui:DisplayName xml:lang="en">Shibboleth.net</mdui:DisplayName>
-
                     <mdui:Description xml:lang="en">An identity provider hosted and used by the developers of Shibboleth.</mdui:Description>
                     <mdui:Logo height="60" width="47">https://discovery.shibboleth.net/images/gryphon_47x60.png</mdui:Logo>
                 </mdui:UIInfo>
@@ -67,6 +74,10 @@
     </EntityDescriptor>
     
     <EntityDescriptor entityID="https://issues.shibboleth.net/shibboleth" cacheDuration="PT2H" validUntil="2048-01-01T00:00:00Z">
+    
+        <Extensions>
+            <mdrpi:RegistrationInfo registrationAuthority="urn:example.org:authority2" />
+        </Extensions>
         
         <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol urn:oasis:names:tc:SAML:2.0:protocol">
             
@@ -83,9 +94,7 @@
                         issues and comment on existing ones.
                     </mdui:Description>
                     <mdui:Logo height="90" width="62">https://discovery.shibboleth.net/images/gryphon_62x90.png</mdui:Logo>
-                </mdui:UIInfo>
-
-                
+                </mdui:UIInfo>                
             </Extensions>
             
             <KeyDescriptor>
@@ -158,22 +167,25 @@ uQfWf/K4Fj4CqCzMOU3mmvy7ricwz/4Kzas=
 
     <EntityDescriptor entityID="https://wiki.shibboleth.net/shibboleth" cacheDuration="PT1H" validUntil="2047-01-01T00:00:00Z">
         
+        <Extensions>
+            <mdrpi:RegistrationInfo registrationAuthority="urn:example.org:authority2" />
+        </Extensions>
+        
         <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol urn:oasis:names:tc:SAML:2.0:protocol">
             
             <Extensions>
                 <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://wiki.shibboleth.net/confluence/Shibboleth.sso/Login"/>
+                
                 <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://wiki.shibboleth.net/confluence/Shibboleth.sso/Login" index="1"/>
                 
                 <mdui:UIInfo>
                     <mdui:DisplayName xml:lang="en">Shibboleth.net Wiki</mdui:DisplayName>
                     <mdui:Description xml:lang="en">
-
                         The wiki hosting the documentation for Shibboleth.  Unauthenticated user may view the existing
                         documentation.  Authenticated users may create new documentation pages and edit existing ones.
                     </mdui:Description>
                     <mdui:Logo height="90" width="62">https://discovery.shibboleth.net/images/gryphon_62x90.png</mdui:Logo>
-                </mdui:UIInfo>
-                
+                </mdui:UIInfo>                
             </Extensions>
             
             <KeyDescriptor>

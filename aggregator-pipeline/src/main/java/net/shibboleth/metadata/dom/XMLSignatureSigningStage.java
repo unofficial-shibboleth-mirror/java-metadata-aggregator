@@ -72,9 +72,12 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     public static enum ShaVariant {
         SHA1, SHA256, SHA384, SHA512
     };
-
+    
     /** XML Signature base URI: {@value} . */
     public static final String XML_SIG_NS_URI = "http://www.w3.org/2000/09/xmldsig#";
+    
+    /** QName of the Signature element. */
+    public static final QName SIGNATURE_NAME = new QName(XML_SIG_NS_URI, "Signature");
 
     /** XML Encryption base URI: {@value} . */
     public static final String XML_ENC_NS_URI = "http://www.w3.org/2001/04/xmlenc#";
