@@ -89,7 +89,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
     protected boolean doExecute(final DomElementItem item) throws StageProcessingException {
         final Element element = item.unwrap();
 
-        if (!SamlMetadataSupport.isEntitiesDescriptor(element) || !SamlMetadataSupport.isEntityDescriptor(element)) {
+        if (!SamlMetadataSupport.isEntitiesDescriptor(element) && !SamlMetadataSupport.isEntityDescriptor(element)) {
             return true;
         }
 
