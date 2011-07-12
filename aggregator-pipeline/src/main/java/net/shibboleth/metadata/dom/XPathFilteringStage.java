@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import javax.xml.namespace.NamespaceContext;
@@ -28,15 +29,17 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 
+import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Pipeline stage which allows filtering of @{link DomElementItem}s according to
- * an XPath expression.  Each {@link Item} is removed if the XPath expression
- * evaluates as {@code true}.
+ * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression. Each {@link Item}
+ * is removed if the XPath expression evaluates as {@code true}.
  */
 @ThreadSafe
 public class XPathFilteringStage extends BaseStage<DomElementItem> {
@@ -45,20 +48,52 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
     private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);
 
     /** The XPath expression to execute on each {@link DomElementItem}. */
-    private final String xpathExpression;
-    
+    private String xpathExpression;
+
     /** The {@link NamespaceContext} to use in interpreting the XPath expression. */
-    private final NamespaceContext namespaceContext;
+    private NamespaceContext namespaceContext;
 
     /**
-     * Constructor.
-     *
-     * @param expression    XPath expression to execute.
-     * @param context       Namespace context to use for the expression, expressed
-     *                      as a {@link NamespaceContext}.
+     * Gets the XPath expression to execute on each {@link DomElementItem}.
+     * 
+     * @return XPath expression to execute on each {@link DomElementItem}
      */
-    public XPathFilteringStage(String expression, NamespaceContext context) {
-        xpathExpression = expression;
+    public String getXpathExpression() {
+        return xpathExpression;
+    }
+
+    /**
+     * Sets the XPath expression to execute on each {@link DomElementItem}.
+     * 
+     * @param expression XPath expression to execute on each {@link DomElementItem}
+     */
+    public synchronized void setXpathExpression(String expression) {
+        if (isInitialized()) {
+            return;
+        }
+
+        xpathExpression = StringSupport.trimOrNull(expression);
+    }
+
+    /**
+     * Gets the {@link NamespaceContext} to use in interpreting the XPath expression.
+     * 
+     * @return {@link NamespaceContext} to use in interpreting the XPath expression
+     */
+    public NamespaceContext getNamespaceContext() {
+        return namespaceContext;
+    }
+
+    /**
+     * Sets the {@link NamespaceContext} to use in interpreting the XPath expression.
+     * 
+     * @param context {@link NamespaceContext} to use in interpreting the XPath expression
+     */
+    public synchronized void setNamespaceContext(NamespaceContext context) {
+        if (isInitialized()) {
+            return;
+        }
+
         namespaceContext = context;
     }
 
@@ -82,7 +117,7 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
         while (iterator.hasNext()) {
             DomElementItem item = iterator.next();
             try {
-                Boolean filterThis = (Boolean)compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
+                Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
                 if (filterThis) {
                     log.info("removing item matching XPath condition");
                     iterator.remove();
@@ -94,4 +129,16 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
         }
     }
 
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
+        if(xpathExpression == null){
+            throw new ComponentInitializationException("XPath expression can not be null or empty");
+        }
+        
+        if(namespaceContext == null){
+            namespaceContext = new SimpleNamespaceContext();
+        }
+    }
 }

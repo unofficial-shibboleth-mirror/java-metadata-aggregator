@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.Assert;
@@ -43,13 +44,12 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
     /**
      * Sets the cache duration, in milliseconds, that will be set on each metadata element.
      * 
-     * @param duration cache duration, in milliseconds; must be greater than 0
+     * @param duration cache duration, in milliseconds
      */
     public void setCacheDuration(long duration) {
         if (isInitialized()) {
             return;
         }
-        Assert.isGreaterThan(0, duration, "Cache duration must be greater than 0");
         cacheDuration = duration;
     }
 
@@ -63,5 +63,14 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
         }
 
         return true;
+    }
+    
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
+        if(cacheDuration <= 0){
+            throw new ComponentInitializationException("Cache duration must be greater than 0");
+        }
     }
 }

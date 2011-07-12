@@ -24,16 +24,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.opensaml.util.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.ItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
@@ -137,7 +136,6 @@ public class SplitMergeStage<ItemType extends Item> extends BaseStage<ItemType> 
             return;
         }
 
-        Assert.isNotNull(strategy, "Selection strategy can not be null");
         selectionStrategy = strategy;
     }
 
@@ -204,7 +202,7 @@ public class SplitMergeStage<ItemType extends Item> extends BaseStage<ItemType> 
         if (isInitialized()) {
             return;
         }
-        Assert.isNotNull(strategy, "Collection merge strategy may not be null");
+
         mergeStrategy = strategy;
     }
 

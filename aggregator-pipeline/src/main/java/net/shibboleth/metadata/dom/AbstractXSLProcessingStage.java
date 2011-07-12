@@ -222,6 +222,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (xslResource == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", XslResource must not be null");

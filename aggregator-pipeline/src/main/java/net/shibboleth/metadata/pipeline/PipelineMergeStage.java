@@ -155,7 +155,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         if (isInitialized()) {
             return;
         }
-        Assert.isNotNull(strategy, "Collection merge strategy may not be null");
+
         mergeStrategy = strategy;
     }
 
@@ -185,6 +185,8 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (executorService == null) {
             log.debug("No ExecutorService specified, creating a fixed thread pool service with 6 threads");
             executorService = Executors.newFixedThreadPool(6);

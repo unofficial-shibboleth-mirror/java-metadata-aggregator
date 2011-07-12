@@ -221,6 +221,8 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (parserPool == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", ParserPool may not be null");

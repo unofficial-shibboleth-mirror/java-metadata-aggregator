@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -24,9 +26,11 @@ import javax.xml.namespace.NamespaceContext;
 
 import net.jcip.annotations.ThreadSafe;
 
+import org.opensaml.util.StringSupport;
+
 /**
- * Simple implementation of {@link NamespaceContext} based on a map from prefix values to corresponding URIs. This
- * is not a complete implementation, but does have enough functionality for use within XPath evaluations.
+ * Simple implementation of {@link NamespaceContext} based on a map from prefix values to corresponding URIs. This is
+ * not a complete implementation, but does have enough functionality for use within XPath evaluations.
  */
 @ThreadSafe
 public class SimpleNamespaceContext implements NamespaceContext {
@@ -34,13 +38,42 @@ public class SimpleNamespaceContext implements NamespaceContext {
     /** Mapping from prefix values to the corresponding namespace URIs. */
     private final Map<String, String> prefixMappings;
 
+    /** Constructor. */
+    public SimpleNamespaceContext() {
+        prefixMappings = Collections.emptyMap();
+    }
+
     /**
      * Constructor.
      * 
      * @param mappings Maps prefix values to the corresponding namespace URIs.
      */
     public SimpleNamespaceContext(Map<String, String> mappings) {
-        this.prefixMappings = mappings;
+        if (mappings == null || mappings.isEmpty()) {
+            prefixMappings = Collections.emptyMap();
+            return;
+        }
+
+        HashMap<String, String> checkedMappings = new HashMap<String, String>();
+        String trimmedKey;
+        String trimmedValue;
+        for (String key : mappings.keySet()) {
+            trimmedKey = StringSupport.trimOrNull(key);
+            if (trimmedKey == null) {
+                continue;
+            }
+
+            trimmedValue = StringSupport.trimOrNull(mappings.get(key));
+            if (trimmedValue != null) {
+                checkedMappings.put(trimmedKey, trimmedValue);
+            }
+        }
+
+        if (checkedMappings == null || checkedMappings.isEmpty()) {
+            prefixMappings = Collections.emptyMap();
+        } else {
+            prefixMappings = Collections.unmodifiableMap(checkedMappings);
+        }
     }
 
     /** {@inheritDoc} */
@@ -57,5 +90,4 @@ public class SimpleNamespaceContext implements NamespaceContext {
     public Iterator<String> getPrefixes(String namespaceURI) {
         throw new UnsupportedOperationException();
     }
-
 }

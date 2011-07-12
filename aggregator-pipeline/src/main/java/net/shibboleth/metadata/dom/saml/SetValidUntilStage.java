@@ -19,9 +19,9 @@ package net.shibboleth.metadata.dom.saml;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-import org.opensaml.util.Assert;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
@@ -43,13 +43,12 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
     /**
      * Sets the amount of time the descriptors will be valid, expressed in milliseconds.
      * 
-     * @param duration amount of time the descriptors will be valid, expressed in milliseconds, must be greater than 0
+     * @param duration amount of time the descriptors will be valid, expressed in milliseconds
      */
     public synchronized void setValidityDuration(long duration) {
         if (isInitialized()) {
             return;
         }
-        Assert.isGreaterThan(0, duration, "Validity duration must be greater than 0");
         validityDuration = duration;
     }
 
@@ -63,5 +62,14 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
         }
 
         return true;
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+
+        if (validityDuration <= 0) {
+            throw new ComponentInitializationException("Validity duration must be greater than 0");
+        }
     }
 }

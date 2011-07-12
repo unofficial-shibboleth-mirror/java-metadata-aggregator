@@ -28,8 +28,7 @@ import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
 
 /**
- * A {@link Stage} that filters out Items if they have a specific type of {@link ItemMetadata} attached to
- * them.
+ * A {@link Stage} that filters out Items if they have a specific type of {@link ItemMetadata} attached to them.
  * 
  * This is useful, for example, in removing all {@link Item} elements which have an associated
  * {@link net.shibboleth.metadata.ErrorStatus}.
@@ -52,15 +51,16 @@ public class StatusMetadataFilterStage extends BaseStage<Item<?>> {
     /**
      * Sets the {@link ItemMetadata} classes that, if a {@link Item} contains, will be filtered out.
      * 
-     * @param requirements {@link ItemMetadata} classes that, if a {@link Item} contains, will be filtered out, may
-     *            be null or contain null elements
+     * @param requirements {@link ItemMetadata} classes that, if a {@link Item} contains, will be filtered out, may be
+     *            null or contain null elements
      */
-    public void setFilterRequirements(Collection<Class<ItemMetadata>> requirements) {
+    public synchronized void setFilterRequirements(Collection<Class<ItemMetadata>> requirements) {
         if (isInitialized()) {
             return;
         }
-        filterRequirements = Collections.unmodifiableList(CollectionSupport.addNonNull(requirements,
-                new LazyList<Class<ItemMetadata>>()));
+        filterRequirements =
+                Collections.unmodifiableList(CollectionSupport.addNonNull(requirements,
+                        new LazyList<Class<ItemMetadata>>()));
     }
 
     /** {@inheritDoc} */

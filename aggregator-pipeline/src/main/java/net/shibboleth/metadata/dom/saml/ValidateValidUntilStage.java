@@ -20,9 +20,9 @@ package net.shibboleth.metadata.dom.saml;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-import org.opensaml.util.Assert;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
@@ -81,7 +81,6 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
             return;
         }
 
-        Assert.isGreaterThanOrEqual(0, interval);
         maxValidityInterval = interval;
     }
 
@@ -116,5 +115,14 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
         }
 
         return true;
+    }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+
+        if (maxValidityInterval < 0) {
+            throw new ComponentInitializationException("Max validity interval must be greater than or equal to 0");
+        }
     }
 }

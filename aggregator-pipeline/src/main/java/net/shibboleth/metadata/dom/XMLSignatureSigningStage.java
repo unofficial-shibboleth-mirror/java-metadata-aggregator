@@ -835,6 +835,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (!Init.isInitialized()) {
             Init.isInitialized();
         }

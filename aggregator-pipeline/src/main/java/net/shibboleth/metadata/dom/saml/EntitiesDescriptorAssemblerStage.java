@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.Assert;
@@ -85,8 +86,12 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * 
      * @param isError whether attempting to turn an empty item collection should be treated as processing error
      */
-    public void setNoChildrenAProcessingError(boolean isError) {
-        this.noChildrenAProcessingError = isError;
+    public synchronized void setNoChildrenAProcessingError(boolean isError) {
+        if(isInitialized()){
+            return;
+        }
+        
+        noChildrenAProcessingError = isError;
     }
 
     /**
@@ -101,13 +106,12 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
     /**
      * Sets the strategy used to order a collection of Items.
      * 
-     * @param strategy strategy used to order a collection of Items, never null
+     * @param strategy strategy used to order a collection of Items
      */
     public synchronized void setItemOrderingStrategy(ItemOrderingStrategy strategy) {
         if (isInitialized()) {
             return;
         }
-        Assert.isNotNull(strategy, "Item ordering strategy may not be null");
         orderingStrategy = strategy;
     }
 
@@ -185,6 +189,15 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         if (descriptorName != null) {
             AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
         }
+    }
+    
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
+        if(orderingStrategy == null){
+            orderingStrategy = new NoOpItemOrderingStrategy();
+        } 
     }
 
     /** A strategy that defines how to order a {@link net.shibboleth.metadata.Item} collection. */

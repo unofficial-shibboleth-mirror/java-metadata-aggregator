@@ -226,8 +226,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * @throws StageProcessingException thrown if there is more than one signature present
      */
     protected Element getSignatureElement(final Element root) throws StageProcessingException {
-        final List<Element> sigElements = ElementSupport.getChildElementsByTagNameNS(root,
-                XMLSignatureSigningStage.XML_SIG_NS_URI, "Signature");
+        final List<Element> sigElements =
+                ElementSupport.getChildElementsByTagNameNS(root, XMLSignatureSigningStage.XML_SIG_NS_URI, "Signature");
 
         if (sigElements.isEmpty()) {
             return null;
@@ -242,6 +242,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+
         if (verificationKey == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", VerificationKey must not be null");

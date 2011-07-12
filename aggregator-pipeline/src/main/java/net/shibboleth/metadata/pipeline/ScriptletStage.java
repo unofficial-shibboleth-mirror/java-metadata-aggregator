@@ -125,6 +125,8 @@ public class ScriptletStage extends BaseStage<Item<?>> {
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (scriptLanguage == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", ScriptLanguage may not be null");

@@ -40,8 +40,9 @@ public class XPathFilteringStageTest extends BaseDomTest {
         prefixMappings.put("ukfedlabel", "http://ukfederation.org.uk/2006/11/label");
 
         // Construct the strategy object
-        XPathFilteringStage strategy =
-                new XPathFilteringStage("//ukfedlabel:DeletedEntity", new SimpleNamespaceContext(prefixMappings));
+        XPathFilteringStage strategy = new XPathFilteringStage();
+        strategy.setXpathExpression("//ukfedlabel:DeletedEntity");
+        strategy.setNamespaceContext(new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();

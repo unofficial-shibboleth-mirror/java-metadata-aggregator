@@ -44,9 +44,9 @@ import org.xml.sax.SAXException;
 /**
  * A pipeline stage that XML schema validates the elements within the {@link DomElementItem} collection.
  * 
- * If DOM Elements are required to be valid, per {@link #isElementRequiredToBeSchemaValid()} and an Element is
- * found to be invalid than an {@link ErrorStatus} object is set on the element. If the Element is not required to
- * be valid and an Element is found to be invalid than an {@link WarningStatus} is set on the Element.
+ * If DOM Elements are required to be valid, per {@link #isElementRequiredToBeSchemaValid()} and an Element is found to
+ * be invalid than an {@link ErrorStatus} object is set on the element. If the Element is not required to be valid and
+ * an Element is found to be invalid than an {@link WarningStatus} is set on the Element.
  */
 @ThreadSafe
 public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem> {
@@ -81,8 +81,8 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        schemaResources = Collections.unmodifiableList(CollectionSupport
-                .addNonNull(resources, new LazyList<Resource>()));
+        schemaResources =
+                Collections.unmodifiableList(CollectionSupport.addNonNull(resources, new LazyList<Resource>()));
     }
 
     /**
@@ -115,8 +115,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
             validator.validate(new DOMSource(item.unwrap()));
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
-                log.debug("DOM Element was not valid:\n{}",
-                        SerializeSupport.prettyPrintXML(item.unwrap()), e);
+                log.debug("DOM Element was not valid:\n{}", SerializeSupport.prettyPrintXML(item.unwrap()), e);
             }
             if (elementRequiredToBeSchemaValid) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
@@ -130,6 +129,8 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+
         if (schemaResources == null || schemaResources.isEmpty()) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", SchemaResources may not be empty");
@@ -137,8 +138,9 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
 
         try {
             log.debug("{} pipeline stage building validation schema resources", getId());
-            validationSchema = SchemaBuilder.buildSchema(SchemaLanguage.XML,
-                    schemaResources.toArray(new Resource[schemaResources.size()]));
+            validationSchema =
+                    SchemaBuilder.buildSchema(SchemaLanguage.XML,
+                            schemaResources.toArray(new Resource[schemaResources.size()]));
         } catch (SAXException e) {
             throw new ComponentInitializationException("Unable to generate schema", e);
         }
