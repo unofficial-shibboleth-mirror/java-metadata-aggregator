@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import javax.xml.namespace.NamespaceContext;
@@ -29,7 +28,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 
@@ -38,8 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression. Each {@link Item}
- * is removed if the XPath expression evaluates as {@code true}.
+ * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression.
+ * Each {@link DomElementItem} is removed if the XPath expression evaluates as {@code true}.
  */
 @ThreadSafe
 public class XPathFilteringStage extends BaseStage<DomElementItem> {
