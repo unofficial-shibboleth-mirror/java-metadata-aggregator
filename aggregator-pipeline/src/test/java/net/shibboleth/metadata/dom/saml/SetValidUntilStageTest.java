@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.BasicParserPool;
@@ -61,7 +62,7 @@ public class SetValidUntilStageTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -95,9 +96,7 @@ public class SetValidUntilStageTest {
 
         stage.execute(metadataCollection);
 
-        System.out.println(SerializeSupport.prettyPrintXML(entitiesDescriptor));
-
-        Attr validUntilAttr = AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -144,8 +143,9 @@ public class SetValidUntilStageTest {
 
         try {
             stage.setValidityDuration(duration);
+            stage.initialize();
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (ComponentInitializationException e) {
             // expected this
         }
     }

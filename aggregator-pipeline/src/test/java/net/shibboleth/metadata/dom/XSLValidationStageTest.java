@@ -80,7 +80,7 @@ public class XSLValidationStageTest extends BaseDomTest {
 
         // The XML should be unchanged
         Element expected = readXmlData("xsltStageInput.xml");
-        assertXmlEqual(expected, result.unwrap());
+        assertXmlIdentical(expected, result.unwrap());
 
         // It should have been processed by the appropriate stage
         AssertSupport.assertValidComponentInfo(result, 1, XSLValidationStage.class, "test");

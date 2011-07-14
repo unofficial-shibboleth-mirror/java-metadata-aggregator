@@ -21,9 +21,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.shibboleth.metadata.ErrorStatus;
+
 import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.Resource;
 import org.opensaml.util.xml.BasicParserPool;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
@@ -33,31 +36,30 @@ public class XMLSchemaValidationStageTest {
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
 
-        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/samlMetadata/entitiesDescriptor1.xml");
+        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageValidInput.xml");
         stage.execute(mdCol);
-        assert mdCol.size() == 1;
+        Assert.assertEquals(mdCol.size(), 1);
     }
 
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/samlMetadata/invalidSamlMetadata.xml.xml");
+        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageInvalidInput.xml");
         stage.execute(mdCol);
-        assert mdCol.size() == 0;
+        Assert.assertEquals(mdCol.size(), 1);
+        Assert.assertTrue(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
     }
 
     protected XMLSchemaValidationStage buildStage() throws Exception {
-        ArrayList<Resource> schemas = new ArrayList<Resource>();
-        File schemaDir = new File(XMLSchemaValidationStageTest.class.getResource("/schemas").toURI());
-        for (String dirFile : schemaDir.list()) {
-            if (dirFile.endsWith(".xsd")) {
-                schemas.add(new FilesystemResource(dirFile));
-            }
-        }
+        String schemaFile =
+                new File(XMLSchemaValidationStageTest.class.getResource("/data/xmlSchemaValidationStage.xsd").toURI())
+                        .getAbsolutePath();
+        ArrayList<Resource> schemaResources = new ArrayList<Resource>();
+        schemaResources.add(new FilesystemResource(schemaFile));
 
         XMLSchemaValidationStage stage = new XMLSchemaValidationStage();
         stage.setId("test");
-        stage.setSchemaResources(schemas);
+        stage.setSchemaResources(schemaResources);
         stage.initialize();
 
         return stage;

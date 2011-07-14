@@ -165,7 +165,10 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
             } else {
                 log.debug("DOM Element is not signed, no verification performed");
             }
+            
+            return true;
         }
+        
         if (log.isDebugEnabled()) {
             log.debug("DOM Element contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
         }

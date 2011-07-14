@@ -22,7 +22,6 @@ import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-import org.opensaml.util.Assert;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 

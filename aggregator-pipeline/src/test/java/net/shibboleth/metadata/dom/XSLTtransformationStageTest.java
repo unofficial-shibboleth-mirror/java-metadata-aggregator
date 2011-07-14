@@ -91,7 +91,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
-        assertXmlEqual(expected, result.unwrap());
+        assertXmlIdentical(expected, result.unwrap());
     }
     
     /**
@@ -124,7 +124,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageParamOutput.xml");
-        assertXmlEqual(expected, result.unwrap());
+        assertXmlIdentical(expected, result.unwrap());
     }
     
 
@@ -209,7 +209,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
-        assertXmlEqual(expected, result.unwrap());
+        assertXmlIdentical(expected, result.unwrap());
     }
     
     /**
@@ -239,7 +239,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXmlData("xsltStageOutput.xml");
-        assertXmlEqual(expected, result.unwrap());
+        assertXmlIdentical(expected, result.unwrap());
         
         // peek at the first node in the document; should be a comment
         Node firstNode = result.unwrap().getOwnerDocument().getFirstChild();

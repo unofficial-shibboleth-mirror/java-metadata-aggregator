@@ -62,6 +62,6 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
         Element expected = readXmlData("signedSamlMetadata.xml");
-        assertXmlEqual(expected, result.unwrap());
+        assertXmlIdentical(expected, result.unwrap());
     }
 }

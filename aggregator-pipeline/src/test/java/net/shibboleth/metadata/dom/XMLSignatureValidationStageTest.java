@@ -21,6 +21,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.AssertSupport;
+import net.shibboleth.metadata.ErrorStatus;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -67,8 +68,9 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testInvalidSignature() throws Exception {
         Element testInput = readXmlData("badSignatureSamlMetadata.xml");
 
+        DomElementItem item = new DomElementItem(testInput);
         ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
-        mdCol.add(new DomElementItem(testInput));
+        mdCol.add(item);
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
@@ -79,7 +81,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.initialize();
 
         stage.execute(mdCol);
-        Assert.assertTrue(mdCol.isEmpty());
+        Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
     }
 
     /**
@@ -92,8 +94,10 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testRequiredSignature() throws Exception {
         Element testInput = readXmlData("samlMetadata/entitiesDescriptor2.xml");
 
+        DomElementItem item = new DomElementItem(testInput);
+        
         ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
-        mdCol.add(new DomElementItem(testInput));
+        mdCol.add(item);
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream("/data/signingCert.pem"));
@@ -110,13 +114,18 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
+        item = new DomElementItem(testInput);
+        
         mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(item);
+        
         stage = new XMLSignatureValidationStage();
         stage.setId("test");
         stage.setSignatureRequired(true);
         stage.setVerificationCertificate(signingCert);
         stage.initialize();
         stage.execute(mdCol);
-        Assert.assertTrue(mdCol.isEmpty());
+        
+        Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
     }
 }

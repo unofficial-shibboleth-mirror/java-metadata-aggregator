@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +26,6 @@ import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
-import org.opensaml.util.xml.SerializeSupport;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,12 +47,8 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         stage.execute(metadataCollection);
 
         Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
-        String serializedResult = SerializeSupport.nodeToString(result);
-        result = getParserPool().parse(new StringReader(serializedResult));
-
-        Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2.xml");
-
-        assertXmlEqual(expectedResult, result);
+        
+        assertXmlIdentical(readXmlData("samlMetadata/entitiesDescriptor2.xml"), result);
     }
 
     /**
@@ -72,12 +66,8 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         stage.execute(metadataCollection);
 
         Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
-        String serializedResult = SerializeSupport.nodeToString(result);
-        result = getParserPool().parse(new StringReader(serializedResult));
 
-        Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2Name.xml");
-
-        assertXmlEqual(expectedResult, result);
+        assertXmlIdentical(readXmlData("samlMetadata/entitiesDescriptor2Name.xml"), result);
     }
     
     /**
@@ -108,12 +98,8 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         stage.execute(metadataCollection);
 
         Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
-        String serializedResult = SerializeSupport.nodeToString(result);
-        result = getParserPool().parse(new StringReader(serializedResult));
 
-        Element expectedResult = readXmlData("samlMetadata/entitiesDescriptor2Reversed.xml");
-
-        assertXmlEqual(expectedResult, result);
+        assertXmlIdentical(readXmlData("samlMetadata/entitiesDescriptor2Reversed.xml"), result);
     }
 
     protected Collection<DomElementItem> buildMetadataCollection() throws Exception {

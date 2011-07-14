@@ -1,0 +1,14 @@
+<schema targetNamespace="urn:example.org:schema"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="unqualified" 
+    attributeFormDefault="unqualified" 
+    blockDefault="substitution" 
+    version="1.0">
+    
+    <element name="Test">
+        <complexType>
+            <attribute name="foo" type="string" use="required" />
+        </complexType>
+    </element>
+    
+</schema>

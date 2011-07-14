@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<md:EntitiesDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Name="nameValue">
-<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityID="https://aai.unifr.ch/idp/shibboleth">
+<?xml version="1.0" encoding="UTF-8"?><md:EntitiesDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Name="nameValue">
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://aai.unifr.ch/idp/shibboleth" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Extensions>
         <shibmd:Scope xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" regexp="false">unifr.ch</shibmd:Scope>
     </Extensions>
@@ -73,16 +72,16 @@
         <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
     </AttributeAuthorityDescriptor>
     <Organization>
-        <OrganizationName xml:lang="en">unifr.ch</OrganizationName>
-        <OrganizationDisplayName xml:lang="de">Université de Fribourg - Universität
+        <OrganizationName xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="en">unifr.ch</OrganizationName>
+        <OrganizationDisplayName xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="de">Universit√© de Fribourg - Universit√§t
             Freiburg</OrganizationDisplayName>
-        <OrganizationDisplayName xml:lang="en">University of Fribourg</OrganizationDisplayName>
-        <OrganizationDisplayName xml:lang="fr">Université de Fribourg - Universität
+        <OrganizationDisplayName xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="en">University of Fribourg</OrganizationDisplayName>
+        <OrganizationDisplayName xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="fr">Universit√© de Fribourg - Universit√§t
             Freiburg</OrganizationDisplayName>
-        <OrganizationURL xml:lang="fr">http://www.unifr.ch/aai</OrganizationURL>
+        <OrganizationURL xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="fr">http://www.unifr.ch/aai</OrganizationURL>
     </Organization>
 </EntityDescriptor>
-<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityID="https://hestia.switch.ch/shibboleth">
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://hestia.switch.ch/shibboleth" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
         <KeyDescriptor>
             <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -138,9 +137,9 @@
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://hestia.switch.ch/Shibboleth.sso/SAML/Artifact" index="6"/>
     </SPSSODescriptor>
     <Organization>
-        <OrganizationName xml:lang="en">switch.ch</OrganizationName>
-        <OrganizationDisplayName xml:lang="en">SWITCH</OrganizationDisplayName>
-        <OrganizationURL xml:lang="en">http://www.switch.ch/aai/help/</OrganizationURL>
+        <OrganizationName xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="en">switch.ch</OrganizationName>
+        <OrganizationDisplayName xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="en">SWITCH</OrganizationDisplayName>
+        <OrganizationURL xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="en">http://www.switch.ch/aai/help/</OrganizationURL>
     </Organization>
 </EntityDescriptor>
 </md:EntitiesDescriptor>

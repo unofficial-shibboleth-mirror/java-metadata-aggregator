@@ -20,10 +20,12 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.BasicParserPool;
 import org.opensaml.util.xml.ElementSupport;
+import org.opensaml.util.xml.SerializeSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
@@ -58,10 +60,10 @@ public class SetCacheDurationStageTest {
 
         stage.execute(metadataCollection);
 
-        Attr cacheDurationAttr = AttributeSupport.getAttribute(entitiesDescriptor,
+        Attr cacheDurationAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(),
                 SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(cacheDurationAttr);
-        Assert.assertEquals(cacheDurationAttr.getValue(), "P0Y0M0DT0H2M3.456S");
+        Assert.assertEquals(cacheDurationAttr.getValue(), "PT2M3.456S");
     }
 
     /**
@@ -93,7 +95,7 @@ public class SetCacheDurationStageTest {
         Attr cacheDurationAttr = AttributeSupport.getAttribute(entitiesDescriptor,
                 SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(cacheDurationAttr);
-        Assert.assertEquals(cacheDurationAttr.getValue(), "P0Y0M0DT0H2M3.456S");
+        Assert.assertEquals(cacheDurationAttr.getValue(), "PT16M27.654S");
     }
 
     /**
@@ -135,8 +137,9 @@ public class SetCacheDurationStageTest {
 
         try {
             stage.setCacheDuration(duration);
+            stage.initialize();
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (ComponentInitializationException e) {
             // expected this
         }
     }

@@ -18,15 +18,15 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.security.Security;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 import org.opensaml.util.xml.BasicParserPool;
 import org.opensaml.util.xml.ParserPool;
-import org.opensaml.util.xml.SerializeSupport;
 import org.opensaml.util.xml.XMLParserException;
 import org.testng.annotations.BeforeClass;
 import org.w3c.dom.Element;
@@ -45,6 +45,8 @@ public abstract class BaseDomTest {
      */
     @BeforeClass
     public void setUp() throws XMLParserException {
+        XMLUnit.setIgnoreWhitespace(true);
+
         parserPool = new BasicParserPool();
         parserPool.initialize();
 
@@ -85,27 +87,20 @@ public abstract class BaseDomTest {
 
         return parserPool.parse(input).getDocumentElement();
     }
-
+    
     /**
-     * Checks whether two nodes are equal based on {@link Node#isEqualNode(Node)}. Both nodes are serialized, re-parsed,
-     * and then compared for equality. This forces any changes made to the document that haven't yet been represented in
-     * the DOM (e.g., declaration of used namespaces) to be flushed to the DOM.
+     * Checks whether two nodes are identical based on {@link Diff#identical()}.
      * 
      * @param expected the expected node against which the actual node will be tested, never null
      * @param actual the actual node tested against the expected node, never null
-     * 
-     * @throws XMLParserException thrown if there is a problem serializing and re-parsing the nodes
      */
-    public void assertXmlEqual(Node expected, Node actual) throws XMLParserException {
-        Assert.isNotNull(actual, "Actual Node may not be null");
-        String serializedForm = SerializeSupport.nodeToString(expected);
-        Element deserializedExpected = parserPool.parse(new StringReader(serializedForm)).getDocumentElement();
-
+    public void assertXmlIdentical(Node expected, Node actual) {
         Assert.isNotNull(expected, "Expected Node may not be null");
-        serializedForm = SerializeSupport.nodeToString(actual);
-        Element deserializedActual = parserPool.parse(new StringReader(serializedForm)).getDocumentElement();
+        Assert.isNotNull(actual, "Actual Node may not be null");
 
-        org.testng.Assert.assertTrue(deserializedExpected.isEqualNode(deserializedActual),
-                "Actual Node does not equal expected Node");
+        Diff diff = new Diff(expected.getOwnerDocument(), actual.getOwnerDocument());
+        if (!diff.identical()) {
+            org.testng.Assert.fail(diff.toString());
+        }
     }
 }
