@@ -99,6 +99,6 @@ public class DomHttpSourceTest {
         File tmp = File.createTempFile(Long.toString(System.currentTimeMillis()), null);
         tmp.deleteOnExit();
 
-        return new HttpResource(url, builder.buildClient(), tmp.getAbsolutePath());
+        return new HttpResource(url, builder.buildClient(), tmp.getAbsolutePath(), false);
     }
 }
