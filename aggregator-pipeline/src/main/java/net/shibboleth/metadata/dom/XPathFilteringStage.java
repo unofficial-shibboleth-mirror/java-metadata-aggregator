@@ -117,7 +117,7 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
             try {
                 Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
                 if (filterThis) {
-                    log.info("removing item matching XPath condition");
+                    log.debug("removing item matching XPath condition");
                     iterator.remove();
                 }
             } catch (XPathExpressionException e) {
