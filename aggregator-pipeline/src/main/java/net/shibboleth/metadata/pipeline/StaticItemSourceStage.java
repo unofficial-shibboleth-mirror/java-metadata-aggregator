@@ -40,7 +40,7 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
      * 
      * @return collection of static Items added to the Item collection by this stage
      */
-    public Collection<ItemType> getSourceMetadata() {
+    public Collection<ItemType> getSourceItems() {
         return source;
     }
 
@@ -49,7 +49,7 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
      * 
      * @param items collection of Items added to the Item collection by this stage
      */
-    public synchronized void setSourceMetadata(final Collection<ItemType> items) {
+    public synchronized void setSourceItems(final Collection<ItemType> items) {
         if (isInitialized()) {
             return;
         }
@@ -69,7 +69,7 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
 
     /** {@inheritDoc} */
     protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
-        for (ItemType items : getSourceMetadata()) {
+        for (ItemType items : getSourceItems()) {
             if (items != null) {
                 itemCollection.add((ItemType) items.copy());
             }

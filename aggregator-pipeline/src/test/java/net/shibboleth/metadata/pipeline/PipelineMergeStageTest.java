@@ -38,7 +38,7 @@ public class PipelineMergeStageTest {
         MockItem md1 = new MockItem("one");
         StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
         source1.setId("src1");
-        source1.setSourceMetadata(CollectionSupport.toList(md1));
+        source1.setSourceItems(CollectionSupport.toList(md1));
         SimplePipeline<MockItem> pipeline1 = new SimplePipeline<MockItem>();
         pipeline1.setId("p1");
         pipeline1.setStages(CollectionSupport.toList((Stage<MockItem>) source1));
@@ -46,7 +46,7 @@ public class PipelineMergeStageTest {
         MockItem md2 = new MockItem("two");
         StaticItemSourceStage<MockItem> source2 = new StaticItemSourceStage<MockItem>();
         source2.setId("src2");
-        source2.setSourceMetadata(CollectionSupport.toList(md2));
+        source2.setSourceItems(CollectionSupport.toList(md2));
         SimplePipeline<MockItem> pipeline2 = new SimplePipeline<MockItem>();
         pipeline2.setId("p2");
         pipeline2.setStages(CollectionSupport.toList((Stage<MockItem>) source2));

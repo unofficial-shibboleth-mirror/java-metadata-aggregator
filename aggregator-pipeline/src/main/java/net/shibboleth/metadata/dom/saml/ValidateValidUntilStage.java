@@ -35,7 +35,10 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
     /** Whether the item is required to have a validUntil attribute. Default value: true */
     private boolean requireValidUntil = true;
 
-    /** Interval, in milliseconds, from now within which the validUntil date must fall. Default value: 1 week */
+    /**
+     * Interval, in milliseconds, from now within which the validUntil date must fall. A value of 0 indicates that no
+     * maximum interval is checked. Default value: 1 week
+     */
     private long maxValidityInterval = 1000 * 60 * 60 * 24 * 7;
 
     /**

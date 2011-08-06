@@ -114,7 +114,7 @@ public class SimplePipelineTest {
 
         StaticItemSourceStage<MockItem> source = new StaticItemSourceStage<MockItem>();
         source.setId("src");
-        source.setSourceMetadata(CollectionSupport.toList(md1, md2));
+        source.setSourceItems(CollectionSupport.toList(md1, md2));
 
         CountingStage<MockItem> stage1 = new CountingStage<MockItem>();
         CountingStage<MockItem> stage2 = new CountingStage<MockItem>();
