@@ -243,7 +243,7 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
 
             String urlHash = new MD5().digest(sourceUrl.getBytes(), new HexConverter());
             String backupFilePath = System.getProperty("java.io.tmpdir") + File.pathSeparator + urlHash;
-            domResource = new HttpResource(sourceUrl, clientBuilder.buildClient(), backupFilePath, false);
+            domResource = new HttpResource(sourceUrl, clientBuilder.buildClient(), backupFilePath);
         } else {
             sourceUrl = domResource.getLocation();
         }
