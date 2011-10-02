@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -27,38 +26,27 @@ import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 import org.opensaml.util.CloseableSupport;
-import org.opensaml.util.StringSupport;
-import org.opensaml.util.net.HttpClientBuilder;
-import org.opensaml.util.net.HttpResource;
+import org.opensaml.util.resource.Resource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.util.xml.ParserPool;
 import org.opensaml.util.xml.XMLParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
-import edu.vt.middleware.crypt.digest.MD5;
-import edu.vt.middleware.crypt.util.HexConverter;
 
 /**
- * A pipeline stage which reads an XML document from an HTTP source, parses the document, and places the resultant
+ * A pipeline stage which reads an XML document from an {@link Resource}, parses the document, and places the resultant
  * document (root) element in to the provided {@link DomElementItem} collection.
  * 
- * To initialize this stage either you must provide a {@link #parserPool} and either a {@link #domResource} or
- * {@link #sourceUrl}. If both a {@link #domResource} and {@link #sourceUrl} are specified then {@link #domResource} is
- * used.
+ * To initialize this stage either you must provide a {@link #parserPool} and a {@link #domResource}.
  */
 @ThreadSafe
-public class DomHttpSourceStage extends BaseStage<DomElementItem> {
+public class DomResourceSourceStage extends BaseStage<DomElementItem> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DomHttpSourceStage.class);
-
-    /** URL from which the XML document will be fetched. */
-    private String sourceUrl;
+    private final Logger log = LoggerFactory.getLogger(DomResourceSourceStage.class);
 
     /** Resource used to fetch remote XML document. */
-    private HttpResource domResource;
+    private Resource domResource;
 
     /** Pool of parsers used to parse incoming DOM. */
     private ParserPool parserPool;
@@ -69,36 +57,12 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
      */
     private boolean errorCausesSourceFailure = true;
 
-    /** Cached DOM. */
-    private Document cachedDom;
-
-    /**
-     * Gets the URL from which the XML document will be fetched.
-     * 
-     * @return URL from which the XML document will be fetched
-     */
-    public String getSourceUrl() {
-        return sourceUrl;
-    }
-
-    /**
-     * Sets the URL from which the XML document will be fetched.
-     * 
-     * @param url URL from which the XML document will be fetched
-     */
-    public synchronized void setSourceUrl(String url) {
-        if (isInitialized()) {
-            return;
-        }
-        sourceUrl = StringSupport.trimOrNull(url);
-    }
-
     /**
      * Gets the resource from which the XML Document will be fetched.
      * 
      * @return resource from which the XML document will be fetched
      */
-    public HttpResource getDomResource() {
+    public Resource getDomResource() {
         return domResource;
     }
 
@@ -107,7 +71,7 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
      * 
      * @param resource resource from which the XML document will be fetched
      */
-    public synchronized void setDomResource(final HttpResource resource) {
+    public synchronized void setDomResource(final Resource resource) {
         if (isInitialized()) {
             return;
         }
@@ -164,13 +128,13 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
             log.debug("Attempting to fetch XML document from '{}'", domResource.getLocation());
 
             ins = domResource.getInputStream();
-            if (ins != null) {
-                log.debug("New DOM Element available from '{}', processing it", domResource.getLocation());
-                buildItemCollectionFromNewData(itemCollection, ins);
+            if (ins == null) {
+                log.debug("Resource at location '{}' did not produce any data to parse, nothing left to do",
+                        domResource.getLocation());
             } else {
                 log.debug("DOM Element from '{}' unchanged since last request, using cached copy",
                         domResource.getLocation());
-                buildItemCollectionFromCache(itemCollection);
+                populateItemCollection(itemCollection, ins);
             }
         } catch (ResourceException e) {
             if (errorCausesSourceFailure) {
@@ -193,12 +157,11 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
      * 
      * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected void buildItemCollectionFromNewData(Collection<DomElementItem> itemCollection, final InputStream data)
+    protected void populateItemCollection(Collection<DomElementItem> itemCollection, final InputStream data)
             throws StageProcessingException {
         try {
             log.debug("Parsing XML document retrieved from '{}'", domResource.getLocation());
-            cachedDom = parserPool.parse(data);
-            buildItemCollectionFromCache(itemCollection);
+            itemCollection.add(new DomElementItem(parserPool.parse(data)));
         } catch (XMLParserException e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException("Unable to parse returned XML document", e);
@@ -209,43 +172,18 @@ public class DomHttpSourceStage extends BaseStage<DomElementItem> {
         }
     }
 
-    /**
-     * Builds the {@link DomElementItem} collection from the cached DOM Element.
-     * 
-     * @param itemCollection collection to which the cached document element is added
-     */
-    protected void buildItemCollectionFromCache(Collection<DomElementItem> itemCollection) {
-        final Document clonedDocument = (Document) cachedDom.cloneNode(true);
-        itemCollection.add(new DomElementItem(clonedDocument));
-    }
-
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
+
         if (parserPool == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", ParserPool may not be null");
         }
 
-        if (sourceUrl == null && domResource == null) {
-            throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", either a SourceUrl or DomResource must be specified");
-        }
-
         if (domResource == null) {
-            HttpClientBuilder clientBuilder = new HttpClientBuilder();
-            clientBuilder.setConnectionDisregardSslCertificate(true);
-            clientBuilder.setConnectionPooling(true);
-            clientBuilder.setConnectionTimeout(60000);
-            clientBuilder.setHttpFollowRedirects(true);
-            clientBuilder.setSocketTimeout(60000);
-
-            String urlHash = new MD5().digest(sourceUrl.getBytes(), new HexConverter());
-            String backupFilePath = System.getProperty("java.io.tmpdir") + File.pathSeparator + urlHash;
-            domResource = new HttpResource(sourceUrl, clientBuilder.buildClient(), backupFilePath);
-        } else {
-            sourceUrl = domResource.getLocation();
+            throw new ComponentInitializationException("Unable to initialize " + getId()
+                    + ", either a DomResource must be specified");
         }
 
         try {

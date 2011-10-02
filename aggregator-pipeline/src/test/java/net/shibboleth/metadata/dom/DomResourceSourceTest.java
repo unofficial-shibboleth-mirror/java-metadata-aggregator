@@ -28,7 +28,7 @@ import org.opensaml.util.net.HttpResource;
 import org.opensaml.util.xml.BasicParserPool;
 import org.testng.annotations.Test;
 
-public class DomHttpSourceTest {
+public class DomResourceSourceTest {
 
     @Test
     public void testSuccessfulFetchAndParse() throws Exception {
@@ -37,7 +37,7 @@ public class DomHttpSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSourceStage source = new DomHttpSourceStage();
+        DomResourceSourceStage source = new DomResourceSourceStage();
         source.setId("test");
         source.setDomResource(mdResource);
         source.setParserPool(parserPool);
@@ -55,7 +55,7 @@ public class DomHttpSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSourceStage source = new DomHttpSourceStage();
+        DomResourceSourceStage source = new DomResourceSourceStage();
         source.setId("test");
         source.setDomResource(mdResource);
         source.setParserPool(parserPool);
@@ -76,7 +76,7 @@ public class DomHttpSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomHttpSourceStage source = new DomHttpSourceStage();
+        DomResourceSourceStage source = new DomResourceSourceStage();
         source.setId("test");
         source.setDomResource(mdResource);
         source.setParserPool(parserPool);
@@ -99,6 +99,6 @@ public class DomHttpSourceTest {
         File tmp = File.createTempFile(Long.toString(System.currentTimeMillis()), null);
         tmp.deleteOnExit();
 
-        return new HttpResource(url, builder.buildClient(), tmp.getAbsolutePath(), false);
+        return new HttpResource(builder.buildClient(), url);
     }
 }
