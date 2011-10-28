@@ -70,4 +70,13 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractComponent 
             stage.execute(itemCollection);
         }
     }
+    
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
+        if(composedStages == null || composedStages.isEmpty()){
+            composedStages = Collections.emptyList();
+        }
+    }
 }

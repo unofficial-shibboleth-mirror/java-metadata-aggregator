@@ -23,7 +23,7 @@ import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.util.StringSupport;
 
-/** Some basic information related to a component's processing of an {@link Item}. */
+/** Some basic information related to a component's processing of an {@link net.shibboleth.metadata.Item}. */
 public class ComponentInfo implements ItemMetadata {
 
     /** Serial version UID. */

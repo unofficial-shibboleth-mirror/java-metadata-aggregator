@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  */
 public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
-    /** Whether the item is required to have a validUntil attribute. Default value: true */
+    /** Whether the item is required to have a validUntil attribute. Default value: <code>true</code> */
     private boolean requireValidUntil = true;
 
     /**

@@ -41,6 +41,12 @@ import org.w3c.dom.Element;
 /**
  * A pipeline stage which validates the XML digital signature found on DOM Elements.
  * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>verificationKey</code></li>
+ * </ul>
+ * 
  * If Element signatures are required, per {@link #signatureRequired}, and an Element does not contain a signature than
  * an {@link ErrorStatus} object is set on the Element.
  * 
@@ -57,7 +63,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
     /** Whether Elements are required to be signed. */
     private boolean signatureRequired = true;
 
-    /** Whether the signature on a Elements is required to be valid. Default value: {@value} */
+    /** Whether the signature on a Elements is required to be valid. Default value: <code>true</code> */
     private boolean validSignatureRequired = true;
 
     /** Certificate whose public key is used to verify the Element signature. */

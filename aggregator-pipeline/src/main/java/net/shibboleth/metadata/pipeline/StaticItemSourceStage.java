@@ -75,4 +75,14 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
             }
         }
     }
+    
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
+        if(source == null || source.isEmpty()){
+            source = Collections.emptyList();
+        }
+    }
+    
 }

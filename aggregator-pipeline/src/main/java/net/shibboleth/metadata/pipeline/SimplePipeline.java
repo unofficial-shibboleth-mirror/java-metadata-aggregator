@@ -72,6 +72,10 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent 
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        if(pipelineStages == null || pipelineStages.isEmpty()){
+            pipelineStages = Collections.emptyList();
+        }
+        
         for (Stage<ItemType> stage : pipelineStages) {
             if (!stage.isInitialized()) {
                 stage.initialize();

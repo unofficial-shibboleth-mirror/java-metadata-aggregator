@@ -36,11 +36,11 @@ import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Element;
 
 /**
- * A pipeline stage which transforms each item in the {@link DomElementItem} collection via an XSL transform.
- * Each of the input items may result in zero, one or more XML elements, each of which results in a
- * {@link DomElementItem} in the resulting collection.  The resulting {@link DomElementItem}s
- * receive {@link net.shibboleth.metadata.InfoStatus}, {@link net.shibboleth.metadata.WarningStatus}, and
- * {@link net.shibboleth.metadata.ErrorStatus} metadata via the {@link StatusInfoAppendingErrorListener}.
+ * A pipeline stage which transforms each item in the {@link DomElementItem} collection via an XSL transform. Each of
+ * the input items may result in zero, one or more XML elements, each of which results in a {@link DomElementItem} in
+ * the resulting collection. The resulting {@link DomElementItem}s receive {@link net.shibboleth.metadata.InfoStatus},
+ * {@link net.shibboleth.metadata.WarningStatus}, and {@link net.shibboleth.metadata.ErrorStatus} metadata via the
+ * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStage {

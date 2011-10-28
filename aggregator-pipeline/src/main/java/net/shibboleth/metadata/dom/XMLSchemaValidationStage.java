@@ -44,6 +44,12 @@ import org.xml.sax.SAXException;
 /**
  * A pipeline stage that XML schema validates the elements within the {@link DomElementItem} collection.
  * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>schemaResources</code></li>
+ * </ul>
+ * 
  * If DOM Elements are required to be valid, per {@link #isElementRequiredToBeSchemaValid()} and an Element is found to
  * be invalid than an {@link ErrorStatus} object is set on the element. If the Element is not required to be valid and
  * an Element is found to be invalid than an {@link WarningStatus} is set on the Element.
@@ -57,7 +63,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
     /** Collection of schema resources. */
     private List<Resource> schemaResources = Collections.emptyList();
 
-    /** Whether Elements are required to be schema valid. Default value: {@value} */
+    /** Whether Elements are required to be schema valid. Default value: <code>true</code> */
     private boolean elementRequiredToBeSchemaValid = true;
 
     /** Schema used to validate Elements. */

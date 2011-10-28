@@ -29,7 +29,6 @@ import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-import org.opensaml.util.Assert;
 import org.opensaml.util.StringSupport;
 import org.opensaml.util.xml.AttributeSupport;
 import org.opensaml.util.xml.ElementSupport;
@@ -54,7 +53,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
 
     /**
      * Whether attempting to turn an empty item collection, which would result in a schema-invalid childless
-     * EntitiesDescriptor, should be treated as processing error. Default value: false
+     * EntitiesDescriptor, should be treated as processing error. Default value: <code>false</code>
      */
     private boolean noChildrenAProcessingError;
 

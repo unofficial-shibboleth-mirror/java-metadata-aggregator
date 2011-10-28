@@ -40,11 +40,18 @@ import org.slf4j.LoggerFactory;
  * {@link SplitMergeStage} but a given item, or more precisely a copy of it, may end up going to more than one
  * pipeline (or no pipeline).
  * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>PipelineAndSelectionStrategies</code></li>
+ * </ul>
+ * 
+ * <p>
  * If no {@link ExecutorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with 6
  * threads.
  * 
  * If no {@link ItemCollectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
- * 
+
  * @param <ItemType> type of items upon which this stage operates
  */
 public class PipelineDemultiplexerStage<ItemType extends Item> extends BaseStage<ItemType> {

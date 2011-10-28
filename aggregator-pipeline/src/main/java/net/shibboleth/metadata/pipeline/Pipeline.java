@@ -24,12 +24,12 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
 
 /**
- * A pipeline represents an ordered list of {@link Stage}s that operate on a collection of {@link Item}. In general the
+ * A pipeline represents an ordered list of {@link Stage} that operate on a collection of {@link Item}. In general the
  * first stage is responsible for populating the collection with an initial set of Items which subsequent stages further
  * modify.
  * 
  * Each pipeline must be initialized, via the {@link #initialize()} method, before use. After a pipeline has been
- * initialized it may never be re-initialized. A pipeline is not considered initialized until all of its {@link Stages},
+ * initialized it may never be re-initialized. A pipeline is not considered initialized until all of its {@link Stage},
  * have been initialized.
  * 
  * Pipelines are reusable and threadsafe.

@@ -37,10 +37,10 @@ import org.w3c.dom.Element;
 
 /**
  * A pipeline stage which transforms each item in the {@link DomElementItem} collection via an XSL transform. Each item
- * is replaced by an item constructed from the result of the transform. The result
- * {@link DomElementItem} receives {@link net.shibboleth.metadata.InfoStatus},
- * {@link net.shibboleth.metadata.WarningStatus}, and
- * {@link net.shibboleth.metadata.ErrorStatus} metadata via the {@link StatusInfoAppendingErrorListener}.
+ * is replaced by an item constructed from the result of the transform. The result {@link DomElementItem} receives
+ * {@link net.shibboleth.metadata.InfoStatus}, {@link net.shibboleth.metadata.WarningStatus}, and
+ * {@link net.shibboleth.metadata.ErrorStatus} metadata via the
+ * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class XSLTransformationStage extends AbstractXSLProcessingStage {
@@ -64,8 +64,8 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
 
                 // Create the result Item and copy across the input's ItemMetadata objects.
                 final DomElementItem newItem = new DomElementItem(newDocument);
-                ItemMetadataSupport.addToAll(newItem,
-                        domItem.getItemMetadata().values().toArray(new ItemMetadata[] {}));
+                ItemMetadataSupport
+                        .addToAll(newItem, domItem.getItemMetadata().values().toArray(new ItemMetadata[] {}));
                 newItems.add(newItem);
             }
             itemCollection.clear();

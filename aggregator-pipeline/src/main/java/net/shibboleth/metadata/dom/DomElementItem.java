@@ -60,7 +60,7 @@ public class DomElementItem extends AbstractItem<Element> {
 
     /**
      * Constructor. A new {@link Document} is created and the given {@link Element} is deep-imported in to the new
-     * document via {@link Document#importNode(org.w3c.dom.Node, boolean), and the resultant {@link Element} is set as
+     * document via {@link Document#importNode(org.w3c.dom.Node, boolean)}, and the resultant {@link Element} is set as
      * the new document's root.
      * 
      * @param element element that is copied to become the value of this Item

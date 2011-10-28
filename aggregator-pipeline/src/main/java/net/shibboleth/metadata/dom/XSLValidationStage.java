@@ -32,7 +32,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * A pipeline which "validates" each element in the {@link DomElementItem} collection via an XSL stylesheet. The results
  * of the transform are discarded but the source element receives {@link net.shibboleth.metadata.InfoStatus},
  * {@link net.shibboleth.metadata.WarningStatus}, and {@link net.shibboleth.metadata.ErrorStatus} metadata via the
- * {@link StatusInfoAppendingErrorListener}.
+ * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class XSLValidationStage extends AbstractXSLProcessingStage {

@@ -36,10 +36,13 @@ import org.w3c.dom.Element;
  */
 public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
-    /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: {@value} */
+    /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: 0 */
     private long minValidityDuration;
 
-    /** The maximum amount of time, in milliseconds, a descriptor may be valid. Default value: {@value} */
+    /**
+     * The maximum amount of time, in milliseconds, a descriptor may be valid. Default value:
+     * {@value java.lang.Long#MAX_VALUE}
+     */
     private long maxValidityDuration = Long.MAX_VALUE;
 
     /**
@@ -109,13 +112,14 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      */
     protected Long getNearestValidUntil(final Element descriptor) {
         Long nearestValidUntil = null;
-        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor) && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor)
+                && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             return nearestValidUntil;
         }
 
         Long validUntil;
-        List<Element> entitiesDescriptors = ElementSupport.getChildElements(descriptor,
-                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+        List<Element> entitiesDescriptors =
+                ElementSupport.getChildElements(descriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (Element entitiesDescriptor : entitiesDescriptors) {
             validUntil = getNearestValidUntil(entitiesDescriptor);
             if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
@@ -123,8 +127,8 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
             }
         }
 
-        List<Element> entityDescriptors = ElementSupport.getChildElements(descriptor,
-                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+        List<Element> entityDescriptors =
+                ElementSupport.getChildElements(descriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (Element entityDescriptor : entityDescriptors) {
             validUntil = getNearestValidUntil(entityDescriptor);
             if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
@@ -132,7 +136,8 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
             }
         }
 
-        Attr validUntilAttr = descriptor.getAttributeNodeNS(null, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
+        Attr validUntilAttr =
+                descriptor.getAttributeNodeNS(null, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
         if (validUntilAttr != null) {
             validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
             if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
@@ -162,7 +167,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
         long now = System.currentTimeMillis();
         long minValidUntil = now + minValidityDuration;
         long maxValidUntil = now + maxValidityDuration;
-        if(maxValidUntil < 0){
+        if (maxValidUntil < 0) {
             maxValidUntil = Long.MAX_VALUE;
         }
 
@@ -175,6 +180,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
             boundedValidUntil = validUntil;
         }
 
-        AttributeSupport.appendDateTimeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME, boundedValidUntil);
+        AttributeSupport.appendDateTimeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME,
+                boundedValidUntil);
     }
 }

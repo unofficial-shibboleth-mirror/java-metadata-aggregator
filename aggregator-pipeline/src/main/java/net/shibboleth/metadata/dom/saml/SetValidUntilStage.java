@@ -25,7 +25,15 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
-/** Sets a validUntil attribute for every EntityDescriptor and EntitiesDescriptor element in the collection. */
+/** 
+ * Sets a validUntil attribute for every EntityDescriptor and EntitiesDescriptor element in the collection. 
+ * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>validityDuration</code></li>
+ * </ul> 
+ */
 public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
     /** Amount of time the descriptors will be valid, expressed in milliseconds. */

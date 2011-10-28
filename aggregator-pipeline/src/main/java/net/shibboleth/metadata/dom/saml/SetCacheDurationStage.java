@@ -25,7 +25,15 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
-/** Sets a cacheDuration attribute for every EntityDescriptor and EntitiesDescriptor element in the collection. */
+/**
+ * Sets a cacheDuration attribute for every EntityDescriptor and EntitiesDescriptor element in the collection.
+ * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>cacheDuration</code></li>
+ * </ul>
+ */
 public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
 
     /** Cache duration, in milliseconds, that will be set on each metadata element. */
@@ -63,12 +71,12 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
 
         return true;
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
-        if(cacheDuration <= 0){
+
+        if (cacheDuration <= 0) {
             throw new ComponentInitializationException("Cache duration must be greater than 0");
         }
     }

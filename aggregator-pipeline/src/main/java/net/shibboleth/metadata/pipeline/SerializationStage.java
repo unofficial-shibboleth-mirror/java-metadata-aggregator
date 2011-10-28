@@ -28,6 +28,13 @@ import net.shibboleth.metadata.ItemSerializer;
 /**
  * A stage which writes the given item collection out to a file.
  * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>outputFile</code></li>
+ * <li><code>serializer</code></li>
+ * </ul>
+ * 
  * @param <ItemType> type of items upon which this stage operates
  */
 public class SerializationStage<ItemType extends Item> extends BaseStage<ItemType> {
@@ -35,7 +42,7 @@ public class SerializationStage<ItemType extends Item> extends BaseStage<ItemTyp
     /** File to which the item will be written. */
     private File outputFile;
 
-    /** Whether an existing output file should be overwritten. Default value: {@link value}. */
+    /** Whether an existing output file should be overwritten. Default value: <code>true</code> */
     private boolean overwritingExistingOutputFile = true;
 
     /** Serializer used to write the item to the output stream. */

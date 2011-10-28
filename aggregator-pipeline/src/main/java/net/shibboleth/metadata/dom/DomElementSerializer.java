@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 
 /**
  * Very simple serializer that serializes the owning document of the first element of the given {@link DomElementItem}
- * collection.
+ * collection.  All other elements of the collection are ignored.
  */
 @ThreadSafe
 public class DomElementSerializer implements ItemSerializer<DomElementItem> {

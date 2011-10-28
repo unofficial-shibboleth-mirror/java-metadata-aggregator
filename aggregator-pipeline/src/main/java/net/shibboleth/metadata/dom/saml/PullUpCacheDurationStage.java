@@ -36,10 +36,10 @@ import org.w3c.dom.Element;
  */
 public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem> {
 
-    /** The minimum cache duration in milliseconds. Default value: {@value} */
+    /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
     private long minCacheDuration;
 
-    /** The maximum cache duration in milliseconds. Default value: {@value} */
+    /** The maximum cache duration in milliseconds. Default value: {@value java.lang.Long#MAX_VALUE} */
     private long maxCacheDuration = Long.MAX_VALUE;
 
     /**
@@ -108,13 +108,14 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      */
     protected Long getShortestCacheDuration(final Element descriptor) {
         Long shortestCacheDuration = null;
-        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor) && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor)
+                && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             return shortestCacheDuration;
         }
 
         Long cacheDuration = null;
-        List<Element> entitiesDescriptors = ElementSupport.getChildElements(descriptor,
-                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+        List<Element> entitiesDescriptors =
+                ElementSupport.getChildElements(descriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (Element entitiesDescriptor : entitiesDescriptors) {
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -122,8 +123,8 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
             }
         }
 
-        List<Element> entityDescriptors = ElementSupport.getChildElements(descriptor,
-                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+        List<Element> entityDescriptors =
+                ElementSupport.getChildElements(descriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (Element entityDescriptor : entityDescriptors) {
             cacheDuration = getShortestCacheDuration(entityDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -131,7 +132,8 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
             }
         }
 
-        Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+        Attr cacheDurationAttr =
+                AttributeSupport.getAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         if (cacheDurationAttr != null) {
             cacheDuration = AttributeSupport.getDurationAttributeValueAsLong(cacheDurationAttr);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {

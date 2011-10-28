@@ -64,6 +64,12 @@ import org.w3c.dom.NamedNodeMap;
 /**
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem}
  * collection.
+ * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>privateKey</code></li>
+ * </ul>
  */
 @ThreadSafe
 public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem> {
@@ -72,10 +78,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     public static enum ShaVariant {
         SHA1, SHA256, SHA384, SHA512
     };
-    
+
     /** XML Signature base URI: {@value} . */
     public static final String XML_SIG_NS_URI = "http://www.w3.org/2000/09/xmldsig#";
-    
+
     /** QName of the Signature element. */
     public static final QName SIGNATURE_NAME = new QName(XML_SIG_NS_URI, "Signature");
 
@@ -137,7 +143,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     /** Factory used to create KeyInfo objects. */
     private KeyInfoFactory keyInfoFactory;
 
-    /** SHA algorithm variant used in signature and digest algorithms. */
+    /** SHA algorithm variant used in signature and digest algorithms. Default value: <code>ShaVariant.SHA256</code> */
     private ShaVariant shaVariant = ShaVariant.SHA256;
 
     /** Private key used to sign data. */
@@ -146,11 +152,14 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     /** Public key associated with the given private key. */
     private PublicKey pubKey;
 
-    /** Certificate chain, with end entity certificate as element 0, to be included with the signature. */
-    private List<X509Certificate> certificates;
+    /**
+     * Certificate chain, with end entity certificate as element 0, to be included with the signature. Default value:
+     * empty list
+     */
+    private List<X509Certificate> certificates = Collections.emptyList();
 
-    /** CRLs to be included with the signature. */
-    private List<X509CRL> crls;
+    /** CRLs to be included with the signature. Default value: empty list */
+    private List<X509CRL> crls = Collections.emptyList();
 
     /** Signature algorithm used. */
     private String sigAlgo;
@@ -158,10 +167,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     /** Digest algorithm used. */
     private String digestAlgo;
 
-    /** Whether to use exclusive canonicalization. */
+    /** Whether to use exclusive canonicalization. Default value: <code>true</code> */
     private boolean c14nExclusive = true;
 
-    /** Whether to include comments in the canonicalized data. */
+    /** Whether to include comments in the canonicalized data. Default value: <code>false</code> */
     private boolean c14nWithComments;
 
     /**
@@ -170,34 +179,45 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      */
     private String c14nAlgo;
 
-    /** Inclusive prefix list used with exclusive canonicalization. */
-    private List<String> inclusivePrefixList;
+    /** Inclusive prefix list used with exclusive canonicalization. Default value: empty list */
+    private List<String> inclusivePrefixList = Collections.emptyList();
 
-    /** Names of attributes to treat as ID attributes for signature referencing. */
-    private List<QName> idAttributeNames;
+    /** Names of attributes to treat as ID attributes for signature referencing. Default value: empty list */
+    private List<QName> idAttributeNames = Collections.emptyList();
 
-    /** Explicit names to associate with the given signing key. */
-    private List<String> keyNames;
+    /** Explicit names to associate with the given signing key. Default value: empty list */
+    private List<String> keyNames = Collections.emptyList();
 
-    /** Whether additional key names should be derived from the end-entity certificate, if present. */
+    /**
+     * Whether additional key names should be derived from the end-entity certificate, if present. Default value:
+     * <code>true</code>
+     */
     private boolean deriveKeyNames = true;
 
-    /** Whether key names should be included in the signature's KeyInfo. */
+    /** Whether key names should be included in the signature's KeyInfo. Default value: <code>true</code> */
     private boolean includeKeyNames = true;
 
-    /** Whether the public key should be included in the signature's KeyInfo. */
+    /** Whether the public key should be included in the signature's KeyInfo. Default value: <code>false</code> */
     private boolean includeKeyValue;
 
-    /** Whether the end-entity certificate's subject name should be included in the signature's KeyInfo. */
+    /**
+     * Whether the end-entity certificate's subject name should be included in the signature's KeyInfo. Default value:
+     * <code>false</code>
+     */
     private boolean includeX509SubjectName;
 
-    /** Whether the certificates chain should be included in the signature's KeyInfo. */
+    /**
+     * Whether the certificates chain should be included in the signature's KeyInfo. Default value: <code>true</code>
+     */
     private boolean includeX509Certificates = true;
 
-    /** Whether the CRLs should be included in the signature's KeyInfo. */
+    /** Whether the CRLs should be included in the signature's KeyInfo. Default value: <code>false</code> */
     private boolean includeX509Crls;
 
-    /** Whether the end-entity certificate's issuer and serial number should be included in the signature's KeyInfo. */
+    /**
+     * Whether the end-entity certificate's issuer and serial number should be included in the signature's KeyInfo.
+     * Default value: <code>false</code>
+     */
     private boolean includeX509IssuerSerial;
 
     /**
@@ -839,7 +859,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
+
         if (!Init.isInitialized()) {
             Init.isInitialized();
         }

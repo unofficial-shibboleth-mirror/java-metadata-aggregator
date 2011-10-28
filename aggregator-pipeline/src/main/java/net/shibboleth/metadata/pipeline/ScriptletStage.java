@@ -37,7 +37,20 @@ import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A pipeline stage that computes that transforms the collection of {@link Item} via a script. */
+/**
+ * A pipeline stage that computes that transforms the collection of {@link Item} via a script.
+ *
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>scriptFile</code></li>
+ * </ul>
+ * 
+ * <p>
+ * This classes uses the JSR-223 scripting interface.  As such, in order to use a language other than 
+ * ECMAscript (a.k.a. javascript), you must ensure the scripting engine and any associated libraries
+ * necessary for its operation are on the classpath.
+ */
 @ThreadSafe
 public class ScriptletStage extends BaseStage<Item<?>> {
 
@@ -47,7 +60,7 @@ public class ScriptletStage extends BaseStage<Item<?>> {
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
 
-    /** Name of the scripting language in use. */
+    /** Name of the scripting language in use.   Default value: <code>ecmascript</code> */
     private String scriptLanguage = "ecmascript";
 
     /** Filesystem path script file. */

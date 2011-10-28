@@ -46,7 +46,15 @@ import org.opensaml.util.resource.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A pipeline stage which applies and XSLT to each element in the {@link DomElementItem} collection. */
+/** 
+ * A pipeline stage which applies and XSLT to each element in the {@link DomElementItem} collection. 
+ *
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>xslResource</code></li>
+ * </ul>
+ */
 @ThreadSafe
 public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementItem> {
 

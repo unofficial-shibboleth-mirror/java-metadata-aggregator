@@ -36,11 +36,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
- * The selected and non-selected item pipelines are executed in a separate thread and operate on collections that
- * contains clones of the (non-)selected items. By default, this stage does not wait for the other pipelines to
- * complete, but it may be configured to do so via {@link #setWaitingForSelectedItemPipeline(boolean)} and
- * {@link #setWaitingForNonselectedItemPipeline(boolean)}.
+ * The selected and non-selected item pipelines are executed via the set {@link ExecutorService} and operate on
+ * collections that contains clones of the (non-)selected items.
  * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>selectionStrategy</code></li>
+ * <li><code>selectedItemPipeline</code> or <code>nonselectedItemPipeline</code></li>
+ * </ul>
+ * 
+ * <p>
  * If no {@link ExecutorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with 6
  * threads.
  * 

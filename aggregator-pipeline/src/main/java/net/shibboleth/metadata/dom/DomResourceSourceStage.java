@@ -36,8 +36,12 @@ import org.slf4j.LoggerFactory;
 /**
  * A pipeline stage which reads an XML document from an {@link Resource}, parses the document, and places the resultant
  * document (root) element in to the provided {@link DomElementItem} collection.
- * 
- * To initialize this stage either you must provide a {@link #parserPool} and a {@link #domResource}.
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>parserPool</code></li>
+ * <li><code>domResource</code></li>
+ * </ul>
  */
 @ThreadSafe
 public class DomResourceSourceStage extends BaseStage<DomElementItem> {
@@ -53,7 +57,7 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
 
     /**
      * Whether an error parsing one source file causes this entire {@link net.shibboleth.metadata.pipeline.Stage} to
-     * fail, or just excludes the material from the offending source file. Default value: {@value}
+     * fail, or just excludes the material from the offending source file. Default value: <code>true</code>
      */
     private boolean errorCausesSourceFailure = true;
 

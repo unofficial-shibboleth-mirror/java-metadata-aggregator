@@ -38,6 +38,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression.
  * Each {@link DomElementItem} is removed if the XPath expression evaluates as {@code true}.
+ * 
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>xpathExpression</code></li>
+ * <li><code>namespaceContext</code></li>
+ * </ul>
  */
 @ThreadSafe
 public class XPathFilteringStage extends BaseStage<DomElementItem> {

@@ -37,6 +37,12 @@ import org.w3c.dom.Document;
 
 /**
  * A stage which reads XML information from the filesystem and places it in the given {@link DomElementItem} collection.
+ * <p>
+ * This stage requires the following properties be set prior to initialization:
+ * <ul>
+ * <li><code>parserPool</code></li>
+ * <li><code>sourceFile</code></li>
+ * </ul>
  */
 @ThreadSafe
 public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
@@ -56,15 +62,17 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      */
     private FileFilter sourceFileFilter;
 
-    /** Whether or not directories are recursed if the given input file is a directory. Default value: {@value} */
+    /**
+     * Whether or not directories are recursed if the given input file is a directory. Default value: <code>false</code>
+     */
     private boolean recurseDirectories;
 
-    /** Whether the lack of source files is treated as an error. Default value: {@value} */
+    /** Whether the lack of source files is treated as an error. Default value: <code>false</code> */
     private boolean noSourceFilesAnError;
 
     /**
      * Whether an error parsing one source file causes this entire {@link net.shibboleth.metadata.pipeline.Stage} to
-     * fail, or just excludes the material from the offending source file. Default value: {@value}
+     * fail, or just excludes the material from the offending source file. Default value: <code>true</code>
      */
     private boolean errorCausesSourceFailure = true;
 
@@ -274,7 +282,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
                         + source.getPath(), e);
             } else {
                 log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
-                        getId(), source.getPath(), e, });
+                        getId(), source.getPath(), e,});
                 return null;
             }
         } finally {
@@ -285,7 +293,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
+
         if (parserPool == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", ParserPool may not be null");
