@@ -21,11 +21,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link Stage} that filters out {@link Item} if they have a specific type of {@link ItemMetadata} attached to them.
@@ -42,11 +42,9 @@ public class ItemMetadataFilterStage extends AbstractItemMetadataSelectionStage 
     protected void doExecute(Collection<Item<?>> itemCollection, Item<?> matchingItem,
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
-        String serializedItem = serializeItem(matchingItem);
-        if (serializedItem != null) {
-            log.error("The following Item was removed because it was marked with {}:\n{}", matchingMetadata.keySet(),
-                    serializedItem);
-        }
+
+        final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
+        log.debug("Item {} was removed because it was marked with {}", itemId, matchingMetadata.keySet());
 
         itemCollection.remove(matchingItem);
     }

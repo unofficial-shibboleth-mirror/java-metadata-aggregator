@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,10 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.ItemSerializer;
 
+import org.opensaml.util.Assert;
 import org.opensaml.util.collections.CollectionSupport;
 import org.opensaml.util.collections.LazyList;
 
@@ -41,8 +42,8 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     /** {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be selected. */
     private Collection<Class<ItemMetadata>> selectionRequirements = Collections.emptyList();
 
-    /** {@link ItemSerializer} used to serialize Items out to log messages. */
-    private ItemSerializer<Item<?>> itemSerializer;
+    /** Strategy used to generate {@link Item} identifiers for logging purposes. */
+    private ItemIdentificationStrategy identifierStrategy = new FirstItemIdItemIdentificationStrategy();
 
     /**
      * Gets the {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be
@@ -72,25 +73,25 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     }
 
     /**
-     * Gets the {@link ItemSerializer} used to serialize Items out to log messages.
+     * Gets the strategy used to generate {@link Item} identifiers for logging purposes.
      * 
-     * @return {@link ItemSerializer} used to serialize Items out to log messages, may be null
+     * @return strategy used to generate {@link Item} identifiers for logging purposes
      */
-    public ItemSerializer<Item<?>> getItemSerializer() {
-        return itemSerializer;
+    public ItemIdentificationStrategy getItemIdentifierStrategy() {
+        return identifierStrategy;
     }
-
+    
     /**
-     * Sets the {@link ItemSerializer} used to serialize Items out to log messages.
+     * Sets the strategy used to generate {@link Item} identifiers for logging purposes.
      * 
-     * @param serializer {@link ItemSerializer} used to serialize Items out to log messages, may be null
+     * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
-    public synchronized void setItemSerializer(ItemSerializer<Item<?>> serializer) {
+    public synchronized void setIdentifierStrategy(ItemIdentificationStrategy strategy) {
         if(isInitialized()){
             return;
         }
         
-        itemSerializer = serializer;
+        identifierStrategy = Assert.isNotNull(strategy, "Item identification strategy can not be null");
     }
 
     /** {@inheritDoc} */
@@ -113,24 +114,6 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
                 doExecute(itemCollection, item, matchingMetadata);
             }
         }
-    }
-
-    /**
-     * Serializes the given item if a {@link ItemSerializer} is available.
-     * 
-     * @param item the item to serialize
-     * 
-     * @return the serialized form of the item, or null if the item or item serializer was null
-     */
-    protected String serializeItem(Item<?> item) {
-        if (item == null || getItemSerializer() == null) {
-            return null;
-        }
-
-        LazyList singletonItem = CollectionSupport.toList(item);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        getItemSerializer().serialize(singletonItem, out);
-        return out.toString();
     }
 
     /**

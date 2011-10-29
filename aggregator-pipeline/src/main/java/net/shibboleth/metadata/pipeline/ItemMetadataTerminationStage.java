@@ -41,12 +41,10 @@ public class ItemMetadataTerminationStage extends AbstractItemMetadataSelectionS
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
 
-        String serializedItem = serializeItem(matchingItem);
-        if (serializedItem != null) {
-            log.error("The following Item caused processing to terminate because it was marked with a {}:\n{}",
-                    matchingMetadata.keySet(), serializedItem);
-        }
+        final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
+            log.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
+                    matchingMetadata.keySet());
 
-        throw new StageProcessingException("Item marked with metadata of type " + matchingMetadata.keySet());
+        throw new StageProcessingException("Item " + itemId + " marked with metadata of type " + matchingMetadata.keySet());
     }
 }
