@@ -30,8 +30,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-/** {@link StatusMetadataFilterStage} unit test. */
-public class StatusMetadataFilterStageTest {
+/** {@link ItemMetadataFilterStage} unit test. */
+public class ItemMetadataFilterStageTest {
 
     /** Unmodifiable, prototype, collection of metadata elements. */
     private Collection<Item<?>> metadataCollectionPrototype;
@@ -69,12 +69,12 @@ public class StatusMetadataFilterStageTest {
         metadataCollectionPrototype.add(md4);
     }
 
-    /** Tests a {@link StatusMetadataFilterStage} without any filter requirements. */
+    /** Tests a {@link ItemMetadataFilterStage} without any filter requirements. */
     @Test
     public void testNoFilterRequirements() throws Exception {
         Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
 
-        StatusMetadataFilterStage stage = new StatusMetadataFilterStage();
+        ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 4);
@@ -84,7 +84,7 @@ public class StatusMetadataFilterStageTest {
         Assert.assertTrue(metadataCollection.contains(md4));
     }
 
-    /** Tests a {@link StatusMetadataFilterStage} containing one filter requirement. */
+    /** Tests a {@link ItemMetadataFilterStage} containing one filter requirement. */
     @Test
     public void testSingleFilterRequirement() throws Exception {
         Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
@@ -92,8 +92,8 @@ public class StatusMetadataFilterStageTest {
         Collection filterRequirements = new ArrayList();
         filterRequirements.add(ErrorStatus.class);
 
-        StatusMetadataFilterStage stage = new StatusMetadataFilterStage();
-        stage.setFilterRequirements(filterRequirements);
+        ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        stage.setSelectionRequirements(filterRequirements);
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 3);
@@ -103,7 +103,7 @@ public class StatusMetadataFilterStageTest {
         Assert.assertFalse(metadataCollection.contains(md4));
     }
 
-    /** Tests a {@link StatusMetadataFilterStage} containing multiple filter requirements. */
+    /** Tests a {@link ItemMetadataFilterStage} containing multiple filter requirements. */
     @Test
     public void testMultiFilterRequirement() throws Exception {
         Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
@@ -113,8 +113,8 @@ public class StatusMetadataFilterStageTest {
         filterRequirements.add(WarningStatus.class);
         filterRequirements.add(ErrorStatus.class);
 
-        StatusMetadataFilterStage stage = new StatusMetadataFilterStage();
-        stage.setFilterRequirements(filterRequirements);
+        ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        stage.setSelectionRequirements(filterRequirements);
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 2);
