@@ -41,7 +41,7 @@ import org.w3c.dom.Document;
  * This stage requires the following properties be set prior to initialization:
  * <ul>
  * <li><code>parserPool</code></li>
- * <li><code>sourceFile</code></li>
+ * <li><code>source</code></li>
  * </ul>
  */
 @ThreadSafe

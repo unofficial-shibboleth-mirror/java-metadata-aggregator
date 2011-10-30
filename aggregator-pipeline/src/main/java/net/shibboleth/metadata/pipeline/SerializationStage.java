@@ -37,7 +37,7 @@ import net.shibboleth.metadata.ItemSerializer;
  * 
  * @param <ItemType> type of items upon which this stage operates
  */
-public class SerializationStage<ItemType extends Item> extends BaseStage<ItemType> {
+public class SerializationStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /** File to which the item will be written. */
     private File outputFile;

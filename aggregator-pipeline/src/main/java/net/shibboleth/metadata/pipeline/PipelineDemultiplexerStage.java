@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 
  * @param <ItemType> type of items upon which this stage operates
  */
-public class PipelineDemultiplexerStage<ItemType extends Item> extends BaseStage<ItemType> {
+public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(PipelineDemultiplexerStage.class);
