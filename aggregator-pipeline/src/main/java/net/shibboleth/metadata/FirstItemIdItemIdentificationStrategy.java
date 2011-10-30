@@ -51,7 +51,7 @@ public class FirstItemIdItemIdentificationStrategy implements ItemIdentification
     }
 
     /** {@inheritDoc} */
-    public String getItemIdentifier(Item item) {
+    public String getItemIdentifier(Item<?> item) {
         List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
         if (itemIds != null && !itemIds.isEmpty()) {
             return itemIds.get(0).getId();
