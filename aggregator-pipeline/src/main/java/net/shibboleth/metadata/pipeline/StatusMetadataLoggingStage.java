@@ -50,23 +50,23 @@ public class StatusMetadataLoggingStage extends AbstractItemMetadataSelectionSta
         if (statuses != null && !statuses.isEmpty() && log.isInfoEnabled()) {
             log.info("Item {} was marked with the following Info status messages", itemId);
             for (StatusMetadata status : statuses) {
-                log.info("    Component {} reported: {}", status.getComponentId(), status.getStatusMessage());
+                log.info("    {} reported: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
 
         statuses = (List<StatusMetadata>) matchingMetadata.get(WarningStatus.class);
         if (statuses != null && !statuses.isEmpty() && log.isWarnEnabled()) {
-            log.warn("Item '{}' was marked with the following Warning status messages", itemId);
+            log.warn("Item {} was marked with the following Warning status messages", itemId);
             for (StatusMetadata status : statuses) {
-                log.warn("    Component {} reported: {}", status.getComponentId(), status.getStatusMessage());
+                log.warn("    {} reported: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
 
         statuses = (List<StatusMetadata>) matchingMetadata.get(ErrorStatus.class);
         if (statuses != null && !statuses.isEmpty() && log.isErrorEnabled()) {
-            log.error("Item '{}' was marked with the following Error status messages", itemId);
+            log.error("Item {} was marked with the following Error status messages", itemId);
             for (StatusMetadata status : statuses) {
-                log.error("    Component {} reported: {}", status.getComponentId(), status.getStatusMessage());
+                log.error("    {} reported: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }

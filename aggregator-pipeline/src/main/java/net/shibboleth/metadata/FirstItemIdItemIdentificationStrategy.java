@@ -29,7 +29,7 @@ import org.opensaml.util.StringSupport;
 public class FirstItemIdItemIdentificationStrategy implements ItemIdentificationStrategy {
 
     /** Identifier to use if an {@link Item} does have an {@link ItemId}. Default value: unidentified */
-    private String noItemIdIdentifier;
+    private String noItemIdIdentifier = "unidentified";
 
     /**
      * Gets the identifier to use if an {@link Item} does have an {@link ItemId}.
