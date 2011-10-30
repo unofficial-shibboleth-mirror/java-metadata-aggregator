@@ -763,6 +763,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         addKeyValue(keyInfoItems);
         addX509Data(keyInfoItems);
 
+        if(keyInfoItems.isEmpty()){
+            return null;
+        }
         return keyInfoFactory.newKeyInfo(keyInfoItems);
     }
 
