@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.shibboleth.metadata</groupId>
         <artifactId>aggregator-parent</artifactId>
-        <version>0.6</version>
+        <version>0.7.0-SNAPSHOT</version>
         <relativePath>../aggregator-parent</relativePath>
     </parent>
 
@@ -17,18 +17,17 @@
 
     <dependencies>
         <!-- Compile Dependencies -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>            
+        </dependency>
 
         <!-- Provided Dependencies -->
 
         <!-- Runtime Dependencies -->
 
         <!-- Test Dependencies -->
-
-        <!-- Managed Dependencies -->
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-        </dependency>
+        
     </dependencies>
 
     <build>
