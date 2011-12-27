@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazyList;
 
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazyList;
 import org.testng.annotations.Test;
 
 public class SimplePipelineTest {

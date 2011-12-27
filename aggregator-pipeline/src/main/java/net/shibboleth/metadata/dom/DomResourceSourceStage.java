@@ -24,12 +24,12 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.io.CloseableSupport;
+import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.xml.ParserPool;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
-import org.opensaml.util.CloseableSupport;
-import org.opensaml.util.resource.Resource;
-import org.opensaml.util.resource.ResourceException;
-import org.opensaml.util.xml.ParserPool;
-import org.opensaml.util.xml.XMLParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

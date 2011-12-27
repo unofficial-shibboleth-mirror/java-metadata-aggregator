@@ -28,10 +28,9 @@ import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
-
-import org.opensaml.util.Assert;
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazyList;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
 /**
  * A {@link Stage} that selects Items for further processing if they have a specific type of {@link ItemMetadata}
@@ -68,7 +67,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
             return;
         }
         selectionRequirements =
-                Collections.unmodifiableList(CollectionSupport.addNonNull(requirements,
+                Collections.unmodifiableList(CollectionSupport.nonNullAdd(requirements,
                         new LazyList<Class<ItemMetadata>>()));
     }
 

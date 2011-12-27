@@ -22,12 +22,12 @@ import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.shibboleth.metadata.AlwaysItemSelectionStrategy;
 import net.shibboleth.metadata.ItemSelectionStrategy;
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.AlwaysItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.collection.Pair;
 
-import org.opensaml.util.Pair;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

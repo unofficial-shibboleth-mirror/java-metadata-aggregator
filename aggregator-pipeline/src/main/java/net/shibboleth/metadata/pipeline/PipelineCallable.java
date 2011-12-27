@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
-import org.opensaml.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,12 +45,10 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
      * @param items the collection of items upon which the pipeline will operate, can not be null
      */
     public PipelineCallable(Pipeline invokedPipeline, Collection<? extends Item> items) {
-        Assert.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
+        pipeline = Assert.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
         Assert.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
-        pipeline = invokedPipeline;
 
-        Assert.isNotNull(items, "Item collection can not be null");
-        itemCollection = items;
+        itemCollection = Assert.isNotNull(items, "Item collection can not be null");
     }
 
     /** {@inheritDoc} */

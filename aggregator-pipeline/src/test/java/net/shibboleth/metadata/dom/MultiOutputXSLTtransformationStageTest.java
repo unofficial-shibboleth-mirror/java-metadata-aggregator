@@ -29,10 +29,10 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.utilities.java.support.resource.ClasspathResource;
+import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
-import org.opensaml.util.resource.ClasspathResource;
-import org.opensaml.util.resource.Resource;
-import org.opensaml.util.xml.XMLParserException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;

@@ -20,11 +20,10 @@ package net.shibboleth.metadata.util;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.collections.LazyList;
-
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
 /**
  * A wrapper around a delegate collection that allows the collection to carry item metadata.
@@ -51,8 +50,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
      * @param wrappedCollection the underlying collection that holds the items
      */
     public ItemCollectionWithMetadata(Collection<ItemType> wrappedCollection) {
-        Assert.isNotNull(wrappedCollection, "Wrapped collection can not be null");
-        delegate = wrappedCollection;
+        delegate = Assert.isNotNull(wrappedCollection, "Wrapped collection can not be null");
         metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
     }
 

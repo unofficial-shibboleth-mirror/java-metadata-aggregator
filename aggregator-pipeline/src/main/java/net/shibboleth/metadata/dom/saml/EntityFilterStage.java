@@ -24,10 +24,10 @@ import java.util.List;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazySet;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazySet;
-import org.opensaml.util.xml.ElementSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -67,7 +67,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
             return;
         }
 
-        designatedEntities = CollectionSupport.addNonNull(ids, new LazySet<String>());
+        designatedEntities = CollectionSupport.nonNullAdd(ids, new LazySet<String>());
     }
 
     /**

@@ -22,8 +22,8 @@ import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
-import org.opensaml.util.xml.AttributeSupport;
 import org.w3c.dom.Element;
 
 /**

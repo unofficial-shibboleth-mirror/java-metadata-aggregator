@@ -19,8 +19,7 @@ package net.shibboleth.metadata;
 
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-
-import org.opensaml.util.ObjectSupport;
+import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
 
 /** A mock implementation of {@link Item}. */
 public class MockItem extends AbstractItem<String> {

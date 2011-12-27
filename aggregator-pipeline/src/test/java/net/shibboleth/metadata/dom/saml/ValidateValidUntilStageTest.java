@@ -20,8 +20,8 @@ package net.shibboleth.metadata.dom.saml;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
-import org.opensaml.util.xml.AttributeSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;

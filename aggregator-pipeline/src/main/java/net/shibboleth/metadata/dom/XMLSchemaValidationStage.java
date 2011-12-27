@@ -30,13 +30,13 @@ import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
+import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazyList;
-import org.opensaml.util.resource.Resource;
-import org.opensaml.util.xml.SchemaBuilder;
-import org.opensaml.util.xml.SchemaBuilder.SchemaLanguage;
-import org.opensaml.util.xml.SerializeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -88,7 +88,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
             return;
         }
         schemaResources =
-                Collections.unmodifiableList(CollectionSupport.addNonNull(resources, new LazyList<Resource>()));
+                Collections.unmodifiableList(CollectionSupport.nonNullAdd(resources, new LazyList<Resource>()));
     }
 
     /**

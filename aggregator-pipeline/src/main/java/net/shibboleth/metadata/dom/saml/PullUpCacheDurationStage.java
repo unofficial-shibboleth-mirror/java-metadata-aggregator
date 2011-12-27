@@ -22,10 +22,10 @@ import java.util.List;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.xml.AttributeSupport;
-import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 

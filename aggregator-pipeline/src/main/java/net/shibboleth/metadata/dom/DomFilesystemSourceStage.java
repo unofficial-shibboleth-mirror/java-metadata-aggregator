@@ -28,9 +28,9 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.io.CloseableSupport;
+import net.shibboleth.utilities.java.support.xml.ParserPool;
 
-import org.opensaml.util.CloseableSupport;
-import org.opensaml.util.xml.ParserPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

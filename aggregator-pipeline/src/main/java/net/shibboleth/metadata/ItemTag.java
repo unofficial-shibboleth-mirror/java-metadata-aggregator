@@ -18,9 +18,8 @@
 package net.shibboleth.metadata;
 
 import net.jcip.annotations.ThreadSafe;
-
-import org.opensaml.util.Assert;
-import org.opensaml.util.StringSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** A {@link ItemMetadata} that associates a tag with a given {@link Item}. */
 @ThreadSafe
@@ -38,8 +37,7 @@ public class ItemTag implements ItemMetadata {
      * @param itemTag a tag for a metadata element
      */
     public ItemTag(final String itemTag) {
-        tag = StringSupport.trimOrNull(itemTag);
-        Assert.isNotNull(tag, "Tag may not be null or empty");
+        tag = Assert.isNotNull(StringSupport.trimOrNull(itemTag), "Tag may not be null or empty");
     }
 
     /**

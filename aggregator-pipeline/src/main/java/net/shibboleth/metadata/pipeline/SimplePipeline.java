@@ -24,9 +24,8 @@ import java.util.List;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazyList;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazyList;
 
 /**
  * A very simple implementation of {@link Pipeline}.
@@ -54,7 +53,7 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent 
         if (isInitialized()) {
             return;
         }
-        pipelineStages = Collections.unmodifiableList(CollectionSupport.addNonNull(stages,
+        pipelineStages = Collections.unmodifiableList(CollectionSupport.nonNullAdd(stages,
                 new LazyList<Stage<ItemType>>()));
     }
 

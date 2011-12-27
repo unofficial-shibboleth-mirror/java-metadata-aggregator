@@ -41,11 +41,14 @@ public final class AssertSupport {
      */
     public static void assertValidComponentInfo(Item<?> metadataElement, int expectedComponentInfos,
             Class<? extends Component> expectedComponentType, String expectedComponentId) {
-        org.opensaml.util.Assert.isNotNull(metadataElement, "Metadata element must not be null");
-        org.opensaml.util.Assert.isGreaterThan(0, expectedComponentInfos,
+        net.shibboleth.utilities.java.support.logic.Assert.isNotNull(metadataElement,
+                "Metadata element must not be null");
+        net.shibboleth.utilities.java.support.logic.Assert.isGreaterThan(0, expectedComponentInfos,
                 "Expected ComponentInfos must be greater than 0");
-        org.opensaml.util.Assert.isNotNull(expectedComponentType, "Expected Component type must not be null");
-        org.opensaml.util.Assert.isNotNull(expectedComponentId, "Expected Component ID must not be null");
+        net.shibboleth.utilities.java.support.logic.Assert.isNotNull(expectedComponentType,
+                "Expected Component type must not be null");
+        net.shibboleth.utilities.java.support.logic.Assert.isNotNull(expectedComponentId,
+                "Expected Component ID must not be null");
 
         List<ComponentInfo> compInfos = metadataElement.getItemMetadata().get(ComponentInfo.class);
         Assert.assertEquals(compInfos.size(), expectedComponentInfos);

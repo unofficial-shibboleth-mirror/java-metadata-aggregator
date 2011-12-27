@@ -18,10 +18,9 @@
 package net.shibboleth.metadata;
 
 import net.jcip.annotations.ThreadSafe;
-
-import org.opensaml.util.Assert;
-import org.opensaml.util.ObjectSupport;
-import org.opensaml.util.StringSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Carries a unique identifier for the data carried by an Item. */
 @ThreadSafe
@@ -39,8 +38,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
      * @param itemId a unique identifier for the entity, never null
      */
     public ItemId(final String itemId) {
-        id = StringSupport.trimOrNull(itemId);
-        Assert.isNotNull(id, "Item ID may not be null or empty");
+        id = Assert.isNotNull(StringSupport.trimOrNull(itemId), "Item ID may not be null or empty");
     }
 
     /**

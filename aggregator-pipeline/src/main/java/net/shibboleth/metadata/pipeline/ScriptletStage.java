@@ -32,8 +32,8 @@ import javax.script.ScriptException;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -25,8 +25,8 @@ import net.shibboleth.metadata.DeduplicatingItemIdMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 
-import org.opensaml.util.collections.CollectionSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

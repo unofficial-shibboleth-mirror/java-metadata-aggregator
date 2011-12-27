@@ -25,8 +25,7 @@ import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 
 import net.jcip.annotations.ThreadSafe;
-
-import org.opensaml.util.StringSupport;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
  * Simple implementation of {@link NamespaceContext} based on a map from prefix values to corresponding URIs. This is

@@ -23,8 +23,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
-import org.opensaml.util.xml.BasicParserPool;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

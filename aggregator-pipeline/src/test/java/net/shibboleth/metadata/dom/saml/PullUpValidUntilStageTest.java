@@ -20,15 +20,15 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opensaml.util.xml.AttributeSupport;
-import org.opensaml.util.xml.ElementSupport;
+import net.shibboleth.metadata.dom.BaseDomTest;
+import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
-
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
 
 /** Unit test for {@link PullUpValidUntilStage}. */
 public class PullUpValidUntilStageTest extends BaseDomTest {

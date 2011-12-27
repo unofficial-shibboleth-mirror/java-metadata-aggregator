@@ -29,8 +29,8 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.ItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.collection.Pair;
 
-import org.opensaml.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

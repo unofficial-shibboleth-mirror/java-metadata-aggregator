@@ -32,10 +32,10 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazyList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +111,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         }
         mergedPipelines =
                 Collections
-                        .unmodifiableList(CollectionSupport.addNonNull(pipelines, new LazyList<Pipeline<Item<?>>>()));
+                        .unmodifiableList(CollectionSupport.nonNullAdd(pipelines, new LazyList<Pipeline<Item<?>>>()));
     }
 
     /**

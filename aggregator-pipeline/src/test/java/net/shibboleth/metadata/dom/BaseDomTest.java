@@ -20,14 +20,15 @@ package net.shibboleth.metadata.dom;
 import java.io.InputStream;
 import java.security.Security;
 
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+import net.shibboleth.utilities.java.support.xml.ParserPool;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.opensaml.util.Assert;
-import org.opensaml.util.StringSupport;
-import org.opensaml.util.xml.BasicParserPool;
-import org.opensaml.util.xml.ParserPool;
-import org.opensaml.util.xml.XMLParserException;
 import org.testng.annotations.BeforeClass;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,8 +44,7 @@ public abstract class BaseDomTest {
      * 
      * @throws XMLParserException thrown if there is a problem initializing the parser pool
      */
-    @BeforeClass
-    public void setUp() throws XMLParserException {
+    @BeforeClass public void setUp() throws XMLParserException {
         XMLUnit.setIgnoreWhitespace(true);
 
         parserPool = new BasicParserPool();
@@ -87,7 +87,7 @@ public abstract class BaseDomTest {
 
         return parserPool.parse(input).getDocumentElement();
     }
-    
+
     /**
      * Checks whether two nodes are identical based on {@link Diff#identical()}.
      * 

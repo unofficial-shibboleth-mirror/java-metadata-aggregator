@@ -22,9 +22,9 @@ import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.xml.ElementSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;

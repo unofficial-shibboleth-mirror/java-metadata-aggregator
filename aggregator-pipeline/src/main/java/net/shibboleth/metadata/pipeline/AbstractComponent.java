@@ -18,11 +18,11 @@
 package net.shibboleth.metadata.pipeline;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
-import org.opensaml.util.Assert;
-import org.opensaml.util.StringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +59,7 @@ public abstract class AbstractComponent implements Component {
         if (isInitialized()) {
             return;
         }
-        id = StringSupport.trimOrNull(componentId);
-        Assert.isNotNull(id, "Component ID may not be null nor empty");
+        id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID may not be null nor empty");
     }
 
     /** {@inheritDoc} */

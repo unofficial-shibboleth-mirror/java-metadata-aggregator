@@ -31,8 +31,8 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Element;
 
 /**

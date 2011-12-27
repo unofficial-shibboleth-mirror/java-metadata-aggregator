@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.net.HttpClientBuilder;
+import net.shibboleth.utilities.java.support.net.HttpResource;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
-import org.opensaml.util.net.HttpClientBuilder;
-import org.opensaml.util.net.HttpResource;
-import org.opensaml.util.xml.BasicParserPool;
 import org.testng.annotations.Test;
 
 public class DomResourceSourceTest {

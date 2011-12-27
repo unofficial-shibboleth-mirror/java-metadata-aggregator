@@ -24,8 +24,8 @@ import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.XMLSignatureSigningStage;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.Element;
 
 /** Helper class for dealing with SAML metadata. */

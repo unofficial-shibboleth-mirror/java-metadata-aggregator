@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.utilities.java.support.resource.FilesystemResource;
+import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
-import org.opensaml.util.resource.FilesystemResource;
-import org.opensaml.util.resource.Resource;
-import org.opensaml.util.xml.BasicParserPool;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;

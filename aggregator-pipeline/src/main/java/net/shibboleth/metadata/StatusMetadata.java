@@ -17,8 +17,10 @@
 
 package net.shibboleth.metadata;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.StringSupport;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** A {@link ItemMetadata} implementation that carries status information about an {@link Item}. */
 public class StatusMetadata implements ItemMetadata {
@@ -27,10 +29,10 @@ public class StatusMetadata implements ItemMetadata {
     private static final long serialVersionUID = 9058387763020864155L;
 
     /** The component that generated this status information. */
-    private String component;
+    private final String component;
 
     /** The message associated with this status. */
-    private String message;
+    private final String message;
 
     /**
      * Constructor.
@@ -38,14 +40,9 @@ public class StatusMetadata implements ItemMetadata {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public StatusMetadata(String componentId, String statusMessage) {
-        String trimmedId = StringSupport.trimOrNull(componentId);
-        Assert.isNotNull(trimmedId, "Component ID can not be null or empty");
-        component = trimmedId;
-
-        String trimmedMessage = StringSupport.trimOrNull(statusMessage);
-        Assert.isNotNull(trimmedMessage, "Status message can not be null or empty");
-        message = trimmedMessage;
+    public StatusMetadata(@NotNull @NotEmpty final String componentId, @NotNull @NotEmpty final String statusMessage) {
+        component = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
+        message = Assert.isNotNull(StringSupport.trimOrNull(statusMessage), "Status message can not be null or empty");
     }
 
     /**

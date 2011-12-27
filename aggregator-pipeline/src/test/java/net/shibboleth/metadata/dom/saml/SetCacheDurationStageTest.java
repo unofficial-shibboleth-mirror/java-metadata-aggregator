@@ -21,11 +21,10 @@ import java.util.ArrayList;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.xml.AttributeSupport;
-import org.opensaml.util.xml.BasicParserPool;
-import org.opensaml.util.xml.ElementSupport;
-import org.opensaml.util.xml.SerializeSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;

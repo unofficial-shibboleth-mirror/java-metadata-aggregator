@@ -22,9 +22,9 @@ import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.opensaml.util.Assert;
-import org.opensaml.util.xml.ElementSupport;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
