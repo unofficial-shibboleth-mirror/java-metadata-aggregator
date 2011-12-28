@@ -20,15 +20,14 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazySet;
-import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
 import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
@@ -36,6 +35,11 @@ import net.shibboleth.utilities.java.support.xml.QNameSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import com.google.common.base.Objects;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A pipeline stage that will filter SAML role descriptors from EntityDescriptors.
@@ -69,6 +73,14 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStage.class);
 
+    /**
+     * Set containing the SAML-defined, named role descriptors: {@link #IDP_SSO_DESCRIPTOR_NAME},
+     * {@link #SP_SSO_DESCRIPTOR_NAME}, {@link #AUTHN_AUTHORITY_DESCRIPTOR_NAME},
+     * {@link #ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME}, {@link #PDP_DESCRIPTOR_NAME}.
+     */
+    private final Set<QName> namedRoles = ImmutableSet.of(IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
+            AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME);
+
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
     private Collection<QName> designatedRoles = new LazySet<QName>();
 
@@ -76,8 +88,8 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     private boolean whitelistingRoles;
 
     /**
-     * Whether EntityDescriptor elements that do not contain roles, after filtering, should be removed. Default
-     * value: true
+     * Whether EntityDescriptor elements that do not contain roles, after filtering, should be removed. Default value:
+     * true
      */
     private boolean removingRolelessEntities = true;
 
@@ -102,7 +114,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
         if (isInitialized()) {
             return;
         }
-        designatedRoles = CollectionSupport.nonNullAdd(roles, new LazySet<QName>());
+        designatedRoles = Collections2.filter(roles, Predicates.notNull());
     }
 
     /**
@@ -198,8 +210,8 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
         Iterator<Element> descriptorItr;
         Element descriptor;
 
-        final List<Element> childEntitiesDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+        final List<Element> childEntitiesDescriptors =
+                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -209,8 +221,8 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
             }
         }
 
-        final List<Element> childEntityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+        final List<Element> childEntityDescriptors =
+                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -274,10 +286,9 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
             childQName = QNameSupport.getNodeQName(child);
             roleIdentifier = null;
 
-            if (ObjectSupport.equals(childQName, ROLE_DESCRIPTOR_NAME)) {
+            if (Objects.equal(childQName, ROLE_DESCRIPTOR_NAME)) {
                 roleIdentifier = DomTypeSupport.getXSIType(child);
-            } else if (ObjectSupport.equalsAny(childQName, IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
-                    AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME)) {
+            } else if (namedRoles.contains(childQName)) {
                 roleIdentifier = childQName;
             } else {
                 childItr.remove();
@@ -287,13 +298,13 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
             boolean isDesignatedRole = designatedRoles.contains(roleIdentifier);
             if (roleIdentifier != null) {
                 if ((isWhitelistingRoles() && !isDesignatedRole) || (!isWhitelistingRoles() && isDesignatedRole)) {
-                    log.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] { getId(),
-                            roleIdentifier, entityId, });
+                    log.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] {getId(),
+                            roleIdentifier, entityId,});
                     entityDescriptor.removeChild(child);
                     childItr.remove();
                 } else {
-                    log.debug("{} pipeline did not remove role {} from EntityDescriptor {}", new Object[] { getId(),
-                            roleIdentifier, entityId, });
+                    log.debug("{} pipeline did not remove role {} from EntityDescriptor {}", new Object[] {getId(),
+                            roleIdentifier, entityId,});
                 }
             }
         }
