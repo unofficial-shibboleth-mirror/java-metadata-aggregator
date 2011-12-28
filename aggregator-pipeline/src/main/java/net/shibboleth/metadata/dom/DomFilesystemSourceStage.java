@@ -28,12 +28,13 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.io.CloseableSupport;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+
+import com.google.common.io.Closeables;
 
 /**
  * A stage which reads XML information from the filesystem and places it in the given {@link DomElementItem} collection.
@@ -286,7 +287,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
                 return null;
             }
         } finally {
-            CloseableSupport.closeQuietly(xmlIn);
+            Closeables.closeQuietly(xmlIn);
         }
     }
 

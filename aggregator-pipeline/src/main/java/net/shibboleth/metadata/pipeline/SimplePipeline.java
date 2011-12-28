@@ -24,8 +24,10 @@ import java.util.List;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
-import net.shibboleth.utilities.java.support.collection.LazyList;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * A very simple implementation of {@link Pipeline}.
@@ -33,14 +35,13 @@ import net.shibboleth.utilities.java.support.collection.LazyList;
  * @param <ItemType> the type of Item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent implements
-        Pipeline<ItemType> {
+public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent implements Pipeline<ItemType> {
 
     /** Stages for this pipeline. */
-    private List<Stage<ItemType>> pipelineStages = Collections.emptyList();
+    private List<? extends Stage<ItemType>> pipelineStages = Collections.emptyList();
 
     /** {@inheritDoc} */
-    public List<Stage<ItemType>> getStages() {
+    public List<? extends Stage<ItemType>> getStages() {
         return pipelineStages;
     }
 
@@ -49,12 +50,11 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent 
      * 
      * @param stages stages that make up this pipeline
      */
-    public synchronized void setStages(final List<Stage<ItemType>> stages) {
+    public synchronized void setStages(final List<? extends Stage<ItemType>> stages) {
         if (isInitialized()) {
             return;
         }
-        pipelineStages = Collections.unmodifiableList(CollectionSupport.nonNullAdd(stages,
-                new LazyList<Stage<ItemType>>()));
+        pipelineStages = ImmutableList.copyOf(Iterables.filter(stages, Predicates.notNull()));
     }
 
     /** {@inheritDoc} */
@@ -71,10 +71,10 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent 
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
-        if(pipelineStages == null || pipelineStages.isEmpty()){
+        if (pipelineStages == null || pipelineStages.isEmpty()) {
             pipelineStages = Collections.emptyList();
         }
-        
+
         for (Stage<ItemType> stage : pipelineStages) {
             if (!stage.isInitialized()) {
                 stage.initialize();

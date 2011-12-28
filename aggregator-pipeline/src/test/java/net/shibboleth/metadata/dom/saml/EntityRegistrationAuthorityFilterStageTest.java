@@ -23,24 +23,24 @@ import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Lists;
+
 /** Unit test for {@link EntityRegistrationAuthorityFilterStage}. */
 public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
 
     /** Tests filtering out Items based on an authority whitelist. */
-    @Test
-    public void testAuthorityWhitelist() throws Exception {
+    @Test public void testAuthorityWhitelist() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRequiringRegistrationInformation(false);
         stage.setWhitelistingRegistrationAuthorities(true);
-        stage.setDesignatedRegistrationAuthorities(CollectionSupport.toList("urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority2"));
         stage.initialize();
 
         Collection<DomElementItem> mdCollection = buildMetadataCollection();
@@ -51,13 +51,12 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
     }
 
     /** Tests filtering out Items based on an authority blacklist. */
-    @Test
-    public void testAuthorityBlacklist() throws Exception {
+    @Test public void testAuthorityBlacklist() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setWhitelistingRegistrationAuthorities(false);
         stage.setRequiringRegistrationInformation(false);
-        stage.setDesignatedRegistrationAuthorities(CollectionSupport.toList("urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority2"));
         stage.initialize();
 
         Collection<DomElementItem> mdCollection = buildMetadataCollection();
@@ -68,13 +67,12 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
     }
 
     /** Tests filtering out Items that do not contain registration information. */
-    @Test
-    public void testRequireRegistrationInfo() throws Exception {
+    @Test public void testRequireRegistrationInfo() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRequiringRegistrationInformation(true);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(CollectionSupport.toList("urn:example.org:authority1",
+        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority1",
                 "urn:example.org:authority2"));
         stage.initialize();
 
@@ -87,14 +85,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
     }
 
     /** Tests removing EntitiesDescriptors that no longer contain any EntityDescriptors. */
-    @Test
-    public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
+    @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRequiringRegistrationInformation(true);
         stage.setRemovingEntitylessEntitiesDescriptor(true);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(CollectionSupport.toList("urn:example.org:authority1",
+        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority1",
                 "urn:example.org:authority2"));
         stage.initialize();
 
@@ -107,14 +104,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
     }
 
     /** Tests not removing EntitiesDescriptors that no longer contain any EntityDescriptors. */
-    @Test
-    public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
+    @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRemovingEntitylessEntitiesDescriptor(false);
         stage.setRequiringRegistrationInformation(false);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(CollectionSupport.toList("urn:example.org:authority1",
+        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority1",
                 "urn:example.org:authority2"));
         stage.initialize();
 

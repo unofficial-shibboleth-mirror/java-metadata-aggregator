@@ -19,8 +19,9 @@ package net.shibboleth.metadata;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.logic.Assert;
-import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
+import com.google.common.base.Objects;
 
 /** Carries a unique identifier for the data carried by an Item. */
 @ThreadSafe
@@ -68,7 +69,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
         }
 
         ItemId other = (ItemId) obj;
-        return ObjectSupport.equals(id, other.id);
+        return Objects.equal(id, other.id);
     }
 
     /** {@inheritDoc} */

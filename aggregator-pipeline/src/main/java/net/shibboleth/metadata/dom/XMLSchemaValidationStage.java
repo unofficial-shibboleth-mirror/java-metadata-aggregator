@@ -30,8 +30,6 @@ import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
-import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
@@ -40,6 +38,10 @@ import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * A pipeline stage that XML schema validates the elements within the {@link DomElementItem} collection.
@@ -87,8 +89,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        schemaResources =
-                Collections.unmodifiableList(CollectionSupport.nonNullAdd(resources, new LazyList<Resource>()));
+        schemaResources = ImmutableList.copyOf(Iterables.filter(resources, Predicates.notNull()));
     }
 
     /**

@@ -23,22 +23,22 @@ import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Lists;
+
 /** Unit test for {@link EntityFilterStage}. */
 public class EntityFilterStageTest extends BaseDomTest {
 
     /** Test whitelisted entity is retained and ensure everything else is removed. */
-    @Test
-    public void testEntityWhitelist() throws Exception {
+    @Test public void testEntityWhitelist() throws Exception {
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth"));
+        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(true);
 
         Collection<DomElementItem> metadataCollection = buildMetadataCollection();
@@ -48,11 +48,10 @@ public class EntityFilterStageTest extends BaseDomTest {
     }
 
     /** Test blacklisted entity is remove and ensure everything else is retained. */
-    @Test
-    public void testEntityBlacklist() throws Exception {
+    @Test public void testEntityBlacklist() throws Exception {
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth"));
+        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
 
         Collection<DomElementItem> metadataCollection = buildMetadataCollection();
@@ -62,14 +61,13 @@ public class EntityFilterStageTest extends BaseDomTest {
     }
 
     /** Test that filtering logic descends in to EntitiesDescriptors. */
-    @Test
-    public void testEntitiesDescriptorFiltering() throws Exception {
+    @Test public void testEntitiesDescriptorFiltering() throws Exception {
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth"));
+        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
         stage.execute(metadataCollection);
 
@@ -80,14 +78,13 @@ public class EntityFilterStageTest extends BaseDomTest {
     /**
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are themselves removed.
      */
-    @Test
-    public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
+    @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth",
+        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth",
                 "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"));
         stage.setWhitelistingEntities(false);
         stage.execute(metadataCollection);
@@ -99,15 +96,14 @@ public class EntityFilterStageTest extends BaseDomTest {
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are not themselves removed
      * when {@link EntityFilterStage#isRemovingEntitylessEntitiesDescriptor()} is false.
      */
-    @Test
-    public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
+    @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
         stage.setRemovingEntitylessEntitiesDescriptor(false);
-        stage.setDesignatedEntities(CollectionSupport.toList("https://idp.shibboleth.net/idp/shibboleth",
+        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth",
                 "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"));
         stage.setWhitelistingEntities(false);
         stage.execute(metadataCollection);
@@ -119,8 +115,8 @@ public class EntityFilterStageTest extends BaseDomTest {
     private Collection<DomElementItem> buildMetadataCollection() throws Exception {
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
 
-        List<Element> descriptors = ElementSupport
-                .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
+        List<Element> descriptors =
+                ElementSupport.getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DomElementItem(descriptor));
         }

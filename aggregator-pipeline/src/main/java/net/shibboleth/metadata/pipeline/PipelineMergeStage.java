@@ -19,7 +19,6 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -32,12 +31,15 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * This {@link Stage} allows the merging of multiple pipeline outputs into a single {@link Collection} that can then be
@@ -67,7 +69,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
     private CollectionMergeStrategy mergeStrategy;
 
     /** Pipelines whose results become the output of this source. */
-    private List<Pipeline<Item<?>>> mergedPipelines = new LazyList<Pipeline<Item<?>>>();
+    private List<Pipeline<? extends Item<?>>> mergedPipelines = new LazyList<Pipeline<? extends Item<?>>>();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -96,7 +98,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @return unmodifiable set of pipelines used by this stage
      */
-    public List<Pipeline<Item<?>>> getMergedPipelines() {
+    public List<Pipeline<? extends Item<?>>> getMergedPipelines() {
         return mergedPipelines;
     }
 
@@ -105,13 +107,12 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @param pipelines pipelines joined by this stage
      */
-    public synchronized void setMergedPipelines(final List<Pipeline<Item<?>>> pipelines) {
+    public synchronized void setMergedPipelines(final List<? extends Pipeline<? extends Item<?>>> pipelines) {
         if (isInitialized()) {
             return;
         }
-        mergedPipelines =
-                Collections
-                        .unmodifiableList(CollectionSupport.nonNullAdd(pipelines, new LazyList<Pipeline<Item<?>>>()));
+        mergedPipelines = ImmutableList.copyOf(Iterables.filter(pipelines, Predicates.notNull()));
+                
     }
 
     /**
@@ -164,7 +165,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         ArrayList<Future<Collection<? extends Item>>> pipelineResultFutures =
                 new ArrayList<Future<Collection<? extends Item>>>();
 
-        for (Pipeline<Item<?>> pipeline : mergedPipelines) {
+        for (Pipeline<? extends Item<?>> pipeline : mergedPipelines) {
             pipelineResultFutures.add(executorService.submit(new PipelineCallable(pipeline, collectionFactory
                     .newCollection())));
         }
@@ -203,7 +204,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
             mergeStrategy = new SimpleCollectionMergeStrategy();
         }
 
-        for (Pipeline<Item<?>> pipeline : mergedPipelines) {
+        for (Pipeline<? extends Item<?>> pipeline : mergedPipelines) {
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }

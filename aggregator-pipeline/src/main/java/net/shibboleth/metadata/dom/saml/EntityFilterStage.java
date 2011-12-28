@@ -24,13 +24,15 @@ import java.util.List;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazySet;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
@@ -67,7 +69,7 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
             return;
         }
 
-        designatedEntities = CollectionSupport.nonNullAdd(ids, new LazySet<String>());
+        designatedEntities = Collections2.filter(ids, Predicates.notNull());
     }
 
     /**
@@ -145,8 +147,8 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
         Iterator<Element> descriptorItr;
         Element descriptor;
 
-        final List<Element> childEntitiesDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+        final List<Element> childEntitiesDescriptors =
+                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -156,8 +158,8 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
             }
         }
 
-        final List<Element> childEntityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+        final List<Element> childEntityDescriptors =
+                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();

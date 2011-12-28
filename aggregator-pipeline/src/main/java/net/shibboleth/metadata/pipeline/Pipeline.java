@@ -44,7 +44,7 @@ public interface Pipeline<ItemType extends Item<?>> extends Component {
      * 
      * @return unmodifiable list of stages within the pipeline
      */
-    public List<Stage<ItemType>> getStages();
+    public List<? extends Stage<ItemType>> getStages();
 
     /**
      * Executes each registered {@link Stage} in turn.

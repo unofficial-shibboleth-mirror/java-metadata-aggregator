@@ -25,7 +25,6 @@ import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazySet;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -33,6 +32,9 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 /** A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority. */
 public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<DomElementItem> {
@@ -92,7 +94,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
             return;
         }
 
-        designatedAuthorities = CollectionSupport.nonNullAdd(authorities, new LazySet<String>());
+        designatedAuthorities = Collections2.filter(authorities, Predicates.notNull());
     }
 
     /**

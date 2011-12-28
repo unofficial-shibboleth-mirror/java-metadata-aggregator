@@ -28,9 +28,11 @@ import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
-import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.logic.Assert;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * A {@link Stage} that selects Items for further processing if they have a specific type of {@link ItemMetadata}
@@ -66,9 +68,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
         if (isInitialized()) {
             return;
         }
-        selectionRequirements =
-                Collections.unmodifiableList(CollectionSupport.nonNullAdd(requirements,
-                        new LazyList<Class<ItemMetadata>>()));
+        selectionRequirements = ImmutableList.copyOf(Iterables.filter(requirements, Predicates.notNull()));
     }
 
     /**
@@ -79,17 +79,17 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     public ItemIdentificationStrategy getItemIdentifierStrategy() {
         return identifierStrategy;
     }
-    
+
     /**
      * Sets the strategy used to generate {@link Item} identifiers for logging purposes.
      * 
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
     public synchronized void setIdentifierStrategy(ItemIdentificationStrategy strategy) {
-        if(isInitialized()){
+        if (isInitialized()) {
             return;
         }
-        
+
         identifierStrategy = Assert.isNotNull(strategy, "Item identification strategy can not be null");
     }
 
@@ -109,7 +109,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
                 }
             }
 
-            if(!matchingMetadata.isEmpty()){
+            if (!matchingMetadata.isEmpty()) {
                 doExecute(itemCollection, item, matchingMetadata);
             }
         }

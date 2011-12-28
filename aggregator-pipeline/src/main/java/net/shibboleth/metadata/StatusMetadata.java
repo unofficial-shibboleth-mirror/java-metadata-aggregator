@@ -17,8 +17,9 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -40,7 +41,7 @@ public class StatusMetadata implements ItemMetadata {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public StatusMetadata(@NotNull @NotEmpty final String componentId, @NotNull @NotEmpty final String statusMessage) {
+    public StatusMetadata(@Nonnull @NotEmpty final String componentId, @Nonnull @NotEmpty final String statusMessage) {
         component = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
         message = Assert.isNotNull(StringSupport.trimOrNull(statusMessage), "Status message can not be null or empty");
     }

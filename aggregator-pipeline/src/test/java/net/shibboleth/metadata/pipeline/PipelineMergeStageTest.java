@@ -19,16 +19,16 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import net.shibboleth.metadata.DeduplicatingItemIdMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Lists;
 
 /** {@link PipelineMergeStage} unit test. */
 public class PipelineMergeStageTest {
@@ -38,18 +38,18 @@ public class PipelineMergeStageTest {
         MockItem md1 = new MockItem("one");
         StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
         source1.setId("src1");
-        source1.setSourceItems(CollectionSupport.toList(md1));
+        source1.setSourceItems(Lists.newArrayList(md1));
         SimplePipeline<MockItem> pipeline1 = new SimplePipeline<MockItem>();
         pipeline1.setId("p1");
-        pipeline1.setStages(CollectionSupport.toList((Stage<MockItem>) source1));
+        pipeline1.setStages(Lists.newArrayList((Stage<MockItem>) source1));
 
         MockItem md2 = new MockItem("two");
         StaticItemSourceStage<MockItem> source2 = new StaticItemSourceStage<MockItem>();
         source2.setId("src2");
-        source2.setSourceItems(CollectionSupport.toList(md2));
+        source2.setSourceItems(Lists.newArrayList(md2));
         SimplePipeline<MockItem> pipeline2 = new SimplePipeline<MockItem>();
         pipeline2.setId("p2");
-        pipeline2.setStages(CollectionSupport.toList((Stage<MockItem>) source2));
+        pipeline2.setStages(Lists.newArrayList((Stage<MockItem>) source2));
 
         Collection<Pipeline<MockItem>> joinedPipelines = new ArrayList<Pipeline<MockItem>>();
         joinedPipelines.add(pipeline1);
@@ -57,7 +57,7 @@ public class PipelineMergeStageTest {
 
         PipelineMergeStage joinSource = new PipelineMergeStage();
         joinSource.setId("joinSource");
-        joinSource.setMergedPipelines((List) CollectionSupport.toList(pipeline1, pipeline2));
+        joinSource.setMergedPipelines(Lists.newArrayList(pipeline1, pipeline2));
 
         assert !joinSource.isInitialized();
         assert !pipeline1.isInitialized();

@@ -48,8 +48,6 @@ import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
-import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 import net.shibboleth.utilities.java.support.xml.XmlConstants;
@@ -60,6 +58,10 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem}
@@ -303,7 +305,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        certificates = CollectionSupport.nonNullAdd(certs, new LazyList<X509Certificate>());
+        certificates = Lists.newArrayList(Iterables.filter(certs, Predicates.notNull()));
     }
 
     /**
@@ -324,7 +326,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        crls = CollectionSupport.nonNullAdd(revocationLists, new LazyList<X509CRL>());
+        crls = Lists.newArrayList(Iterables.filter(revocationLists, Predicates.notNull()));
     }
 
     /**
@@ -387,7 +389,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        inclusivePrefixList = CollectionSupport.nonNullAdd(prefixList, new LazyList<String>());
+        inclusivePrefixList = Lists.newArrayList(Iterables.filter(prefixList, Predicates.notNull()));
     }
 
     /**
@@ -408,7 +410,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        idAttributeNames = CollectionSupport.nonNullAdd(names, new LazyList<QName>());
+        idAttributeNames = Lists.newArrayList(Iterables.filter(names, Predicates.notNull()));
     }
 
     /**
@@ -429,7 +431,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         if (isInitialized()) {
             return;
         }
-        keyNames = CollectionSupport.nonNullAdd(names, new LazyList<String>());
+        keyNames = Lists.newArrayList(Iterables.filter(names, Predicates.notNull()));
     }
 
     /**
@@ -763,7 +765,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         addKeyValue(keyInfoItems);
         addX509Data(keyInfoItems);
 
-        if(keyInfoItems.isEmpty()){
+        if (keyInfoItems.isEmpty()) {
             return null;
         }
         return keyInfoFactory.newKeyInfo(keyInfoItems);

@@ -21,16 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
-import net.shibboleth.utilities.java.support.collection.LazyList;
 
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Lists;
+
 public class SimplePipelineTest {
 
-    @Test
-    public void testInitialize() throws Exception {
-        List<Stage<MockItem>> stages = buildStages();
+    @Test public void testInitialize() throws Exception {
+        List<? extends Stage<MockItem>> stages = buildStages();
 
         SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
         pipeline.setId(" test ");
@@ -73,9 +72,8 @@ public class SimplePipelineTest {
         }
     }
 
-    @Test
-    public void testExecution() throws Exception {
-        List<Stage<MockItem>> stages = buildStages();
+    @Test public void testExecution() throws Exception {
+        List<? extends Stage<MockItem>> stages = buildStages();
 
         SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
         pipeline.setId("test");
@@ -94,7 +92,7 @@ public class SimplePipelineTest {
         assert md.getItemMetadata().containsKey(ComponentInfo.class);
 
         try {
-            List<Stage<MockItem>> pipelineStages = pipeline.getStages();
+            List<? extends Stage<MockItem>> pipelineStages = pipeline.getStages();
             pipelineStages.clear();
             throw new AssertionError();
         } catch (UnsupportedOperationException e) {
@@ -108,18 +106,17 @@ public class SimplePipelineTest {
         assert ((CountingStage) stages.get(2)).getInvocationCount() == 2;
     }
 
-    protected List<Stage<MockItem>> buildStages() {
+    protected List<? extends Stage<MockItem>> buildStages() {
         MockItem md1 = new MockItem("one");
         MockItem md2 = new MockItem("two");
 
         StaticItemSourceStage<MockItem> source = new StaticItemSourceStage<MockItem>();
         source.setId("src");
-        source.setSourceItems(CollectionSupport.toList(md1, md2));
+        source.setSourceItems(Lists.newArrayList(md1, md2));
 
         CountingStage<MockItem> stage1 = new CountingStage<MockItem>();
         CountingStage<MockItem> stage2 = new CountingStage<MockItem>();
 
-        LazyList<? extends Stage<MockItem>> stages = CollectionSupport.toList(source, stage1, stage2);
-        return (List<Stage<MockItem>>) stages;
+        return Lists.newArrayList(source, stage1, stage2);
     }
 }
