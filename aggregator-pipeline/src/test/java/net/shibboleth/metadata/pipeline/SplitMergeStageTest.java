@@ -23,17 +23,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.AlwaysItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicates;
+
 /** Unit test of {@link SplitMergeStage}. */
 public class SplitMergeStageTest {
 
-    @Test
-    public void testCollectionFactory() {
+    @Test public void testCollectionFactory() {
         SplitMergeStage stage = new SplitMergeStage();
 
         SimpleItemCollectionFactory factory = new SimpleItemCollectionFactory();
@@ -41,8 +41,7 @@ public class SplitMergeStageTest {
         Assert.assertEquals(stage.getCollectionFactory(), factory);
     }
 
-    @Test
-    public void testExecutorService() {
+    @Test public void testExecutorService() {
         SplitMergeStage stage = new SplitMergeStage();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -50,8 +49,7 @@ public class SplitMergeStageTest {
         Assert.assertEquals(stage.getExecutorService(), executor);
     }
 
-    @Test
-    public void testNonselectedItemPipeline() {
+    @Test public void testNonselectedItemPipeline() {
         SplitMergeStage stage = new SplitMergeStage();
 
         SimplePipeline pipeline = new SimplePipeline();
@@ -59,8 +57,7 @@ public class SplitMergeStageTest {
         Assert.assertSame(stage.getNonselectedItemPipeline(), pipeline);
     }
 
-    @Test
-    public void testSelectedItemPipeline() {
+    @Test public void testSelectedItemPipeline() {
         SplitMergeStage stage = new SplitMergeStage();
 
         SimplePipeline pipeline = new SimplePipeline();
@@ -68,17 +65,14 @@ public class SplitMergeStageTest {
         Assert.assertSame(stage.getSelectedItemPipeline(), pipeline);
     }
 
-    @Test
-    public void testSelectionStrategy() {
+    @Test public void testSelectionStrategy() {
         SplitMergeStage stage = new SplitMergeStage();
 
-        AlwaysItemSelectionStrategy strategy = new AlwaysItemSelectionStrategy();
-        stage.setSelectionStrategy(strategy);
-        Assert.assertEquals(stage.getSelectionStrategy(), strategy);
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        Assert.assertEquals(stage.getSelectionStrategy(), Predicates.alwaysTrue());
     }
 
-    @Test
-    public void testInitialization() throws Exception {
+    @Test public void testInitialization() throws Exception {
         SimplePipeline pipeline = new SimplePipeline();
         pipeline.setId("pipeline");
 
@@ -88,7 +82,7 @@ public class SplitMergeStageTest {
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
@@ -96,19 +90,19 @@ public class SplitMergeStageTest {
         stage = new SplitMergeStage();
         stage.setId("test");
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
         stage.initialize();
 
         stage = new SplitMergeStage();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
         stage.initialize();
 
         try {
             stage = new SplitMergeStage();
             stage.setId("test");
-            stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
+            stage.setSelectionStrategy(Predicates.alwaysTrue());
             stage.initialize();
             Assert.fail();
         } catch (ComponentInitializationException e) {
@@ -127,8 +121,7 @@ public class SplitMergeStageTest {
         }
     }
 
-    @Test
-    public void testExecute() throws Exception {
+    @Test public void testExecute() throws Exception {
         SimplePipeline selectedPipeline = new SimplePipeline();
         selectedPipeline.setId("selectedPipeline");
         CountingStage selectedCount = new CountingStage();
@@ -149,7 +142,7 @@ public class SplitMergeStageTest {
 
         SplitMergeStage stage = new SplitMergeStage();
         stage.setId("test");
-        stage.setSelectionStrategy(new AlwaysItemSelectionStrategy());
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();

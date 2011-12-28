@@ -25,16 +25,17 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.ItemSelectionStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Predicate;
 
 /**
  * Item selection strategy which selects items on the basis of a boolean XPath expression.
  */
 @ThreadSafe
-public class XPathItemSelectionStrategy implements ItemSelectionStrategy<DomElementItem> {
+public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathItemSelectionStrategy.class);
@@ -70,7 +71,7 @@ public class XPathItemSelectionStrategy implements ItemSelectionStrategy<DomElem
     }
 
     /** {@inheritDoc} */
-    public synchronized boolean isSelectedItem(DomElementItem item) {
+    public synchronized boolean apply(DomElementItem item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {

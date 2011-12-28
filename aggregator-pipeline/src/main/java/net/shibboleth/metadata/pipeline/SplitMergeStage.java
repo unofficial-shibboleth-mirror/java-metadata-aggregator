@@ -27,12 +27,13 @@ import java.util.concurrent.Future;
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
-import net.shibboleth.metadata.ItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Predicate;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
@@ -68,7 +69,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
     private ItemCollectionFactory<ItemType> collectionFactory;
 
     /** Strategy used to split the given item collection. */
-    private ItemSelectionStrategy<ItemType> selectionStrategy;
+    private Predicate<ItemType> selectionStrategy;
 
     /** Pipeline that receives the selected items. */
     private Pipeline<ItemType> selectedItemPipeline;
@@ -128,7 +129,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return strategy used to split the given item collection
      */
-    public ItemSelectionStrategy<ItemType> getSelectionStrategy() {
+    public Predicate<ItemType> getSelectionStrategy() {
         return selectionStrategy;
     }
 
@@ -137,7 +138,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param strategy strategy used to split the given item collection, never null
      */
-    public synchronized void setSelectionStrategy(ItemSelectionStrategy<ItemType> strategy) {
+    public synchronized void setSelectionStrategy(Predicate<ItemType> strategy) {
         if (isInitialized()) {
             return;
         }
@@ -222,7 +223,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
                 continue;
             }
 
-            if (selectionStrategy.isSelectedItem(item)) {
+            if (selectionStrategy.apply(item)) {
                 selectedItems.add((ItemType) item.copy());
             } else {
                 nonselectedItems.add((ItemType) item.copy());

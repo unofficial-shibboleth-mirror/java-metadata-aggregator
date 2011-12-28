@@ -20,8 +20,6 @@ package net.shibboleth.metadata.dom;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.shibboleth.metadata.ItemSelectionStrategy;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -33,25 +31,23 @@ public class XPathItemSelectionStrategyTest extends BaseDomTest {
      * 
      * @throws Exception if something goes wrong
      */
-    @Test
-    public void test() throws Exception {
+    @Test public void test() throws Exception {
         // Construct a map containing required namespace prefix definitions
         Map<String, String> prefixMappings = new HashMap<String, String>();
         prefixMappings.put("ukfedlabel", "http://ukfederation.org.uk/2006/11/label");
 
         // Construct the strategy object
-        ItemSelectionStrategy<DomElementItem> strategy =
-                new XPathItemSelectionStrategy("//ukfedlabel:DeletedEntity",
-                        new SimpleNamespaceContext(prefixMappings));
+        XPathItemSelectionStrategy strategy =
+                new XPathItemSelectionStrategy("//ukfedlabel:DeletedEntity", new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
         DomElementItem item1 = new DomElementItem(readXmlData("xpathInput1.xml"));
         DomElementItem item2 = new DomElementItem(readXmlData("xpathInput2.xml"));
         DomElementItem item3 = new DomElementItem(readXmlData("xpathInput3.xml"));
 
-        Assert.assertTrue(strategy.isSelectedItem(item1));
-        Assert.assertFalse(strategy.isSelectedItem(item2));
-        Assert.assertTrue(strategy.isSelectedItem(item3));
+        Assert.assertTrue(strategy.apply(item1));
+        Assert.assertFalse(strategy.apply(item2));
+        Assert.assertTrue(strategy.apply(item3));
     }
 
 }

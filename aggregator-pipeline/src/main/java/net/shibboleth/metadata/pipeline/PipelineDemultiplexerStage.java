@@ -27,18 +27,19 @@ import java.util.concurrent.Future;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionFactory;
-import net.shibboleth.metadata.ItemSelectionStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.collection.Pair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicate;
+
 /**
  * A stage which, given an item collection and a list of {@link Pipeline} and {@link ItemSelectionStrategy} pairs, sends
  * the collection of item copies selected by the selection strategy to the associated pipeline. This stage is similar to
- * {@link SplitMergeStage} but a given item, or more precisely a copy of it, may end up going to more than one
- * pipeline (or no pipeline).
+ * {@link SplitMergeStage} but a given item, or more precisely a copy of it, may end up going to more than one pipeline
+ * (or no pipeline).
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
@@ -51,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * threads.
  * 
  * If no {@link ItemCollectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
-
+ * 
  * @param <ItemType> type of items upon which this stage operates
  */
 public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
@@ -69,7 +70,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     private ItemCollectionFactory<ItemType> collectionFactory;
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
-    private List<Pair<Pipeline<ItemType>, ItemSelectionStrategy<ItemType>>> pipelineAndStrategies;
+    private List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pipelineAndStrategies;
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -142,7 +143,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @return pipeline and item selection strategies used to demultiplex item collections within this stage
      */
-    public List<Pair<Pipeline<ItemType>, ItemSelectionStrategy<ItemType>>> getPipelineAndSelectionStrategies() {
+    public List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> getPipelineAndSelectionStrategies() {
         return pipelineAndStrategies;
     }
 
@@ -151,8 +152,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @param pass pipeline and item selection strategies used to demultiplex item collections within this stage
      */
-    public synchronized void setPipelineAndSelectionStrategies(
-            List<Pair<Pipeline<ItemType>, ItemSelectionStrategy<ItemType>>> pass) {
+    public synchronized void
+            setPipelineAndSelectionStrategies(List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pass) {
         if (isInitialized()) {
             return;
         }
@@ -163,17 +164,17 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     /** {@inheritDoc} */
     protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
         Pipeline<ItemType> pipeline;
-        ItemSelectionStrategy<ItemType> selectionStrategy;
+        Predicate<ItemType> selectionStrategy;
         Collection<ItemType> selectedItems;
         ArrayList<Future> pipelineFutures = new ArrayList<Future>();
 
-        for (Pair<Pipeline<ItemType>, ItemSelectionStrategy<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
+        for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();
             selectionStrategy = pipelineAndStrategy.getSecond();
             selectedItems = collectionFactory.newCollection();
 
             for (ItemType item : itemCollection) {
-                if (selectionStrategy.isSelectedItem(item)) {
+                if (selectionStrategy.apply(item)) {
                     selectedItems.add((ItemType) item.copy());
                 }
             }
@@ -214,7 +215,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         }
 
         Pipeline<ItemType> pipeline;
-        for (Pair<Pipeline<ItemType>, ItemSelectionStrategy<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
+        for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();
             if (pipeline == null) {
                 throw new ComponentInitializationException(
