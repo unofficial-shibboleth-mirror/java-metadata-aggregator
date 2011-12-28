@@ -26,7 +26,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.collection.Pair;
 
@@ -34,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 /**
  * A stage which, given an item collection and a list of {@link Pipeline} and {@link ItemSelectionStrategy} pairs, sends
@@ -67,7 +67,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     private boolean waitingForPipelines;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private ItemCollectionFactory<ItemType> collectionFactory;
+    private Supplier<Collection<ItemType>> collectionFactory;
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
     private List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pipelineAndStrategies;
@@ -121,7 +121,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    public ItemCollectionFactory getCollectionFactory() {
+    public Supplier<Collection<ItemType>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -130,7 +130,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(ItemCollectionFactory<ItemType> factory) {
+    public synchronized void setCollectionFactory(Supplier<Collection<ItemType>> factory) {
         if (isInitialized()) {
             return;
         }
@@ -171,7 +171,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();
             selectionStrategy = pipelineAndStrategy.getSecond();
-            selectedItems = collectionFactory.newCollection();
+            selectedItems = collectionFactory.get();
 
             for (ItemType item : itemCollection) {
                 if (selectionStrategy.apply(item)) {

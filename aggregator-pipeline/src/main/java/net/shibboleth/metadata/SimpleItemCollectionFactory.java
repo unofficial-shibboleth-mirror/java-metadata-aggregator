@@ -20,15 +20,17 @@ package net.shibboleth.metadata;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.google.common.base.Supplier;
+
 /**
  * Implementation {@link net.shibboleth.metadata.ItemCollectionFactory} that produces {@link ArrayList} instances.
  * 
  * @param <ItemType> the type of items the produced collection will contain
  */
-public class SimpleItemCollectionFactory<ItemType extends Item> implements ItemCollectionFactory<ItemType> {
+public class SimpleItemCollectionFactory<ItemType extends Item> implements Supplier<Collection<ItemType>> {
 
     /** {@inheritDoc} */
-    public Collection<ItemType> newCollection() {
+    public Collection<ItemType> get() {
         return new ArrayList<ItemType>();
     }
 }

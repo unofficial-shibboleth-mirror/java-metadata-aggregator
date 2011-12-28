@@ -26,7 +26,6 @@ import java.util.concurrent.Future;
 
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 
@@ -34,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
@@ -66,7 +66,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
     private ExecutorService executorService;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private ItemCollectionFactory<ItemType> collectionFactory;
+    private Supplier<Collection<ItemType>> collectionFactory;
 
     /** Strategy used to split the given item collection. */
     private Predicate<ItemType> selectionStrategy;
@@ -107,7 +107,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    public ItemCollectionFactory getCollectionFactory() {
+    public Supplier<Collection<ItemType>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -116,7 +116,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(ItemCollectionFactory<ItemType> factory) {
+    public synchronized void setCollectionFactory(Supplier<Collection<ItemType>> factory) {
         if (isInitialized()) {
             return;
         }
@@ -215,8 +215,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
 
     /** {@inheritDoc} */
     protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
-        Collection<ItemType> selectedItems = collectionFactory.newCollection();
-        Collection<ItemType> nonselectedItems = collectionFactory.newCollection();
+        Collection<ItemType> selectedItems = collectionFactory.get();
+        Collection<ItemType> nonselectedItems = collectionFactory.get();
 
         for (ItemType item : itemCollection) {
             if (item == null) {

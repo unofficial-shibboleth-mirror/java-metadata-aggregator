@@ -28,7 +28,6 @@ import java.util.concurrent.Future;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemCollectionFactory;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.collection.LazyList;
@@ -38,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
@@ -63,7 +63,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * The factory used to create the item returned by this source. Default implementation is
      * {@link SimpleItemCollectionFactory}.
      */
-    private ItemCollectionFactory collectionFactory;
+    private Supplier<Collection> collectionFactory;
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
     private CollectionMergeStrategy mergeStrategy;
@@ -112,7 +112,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
             return;
         }
         mergedPipelines = ImmutableList.copyOf(Iterables.filter(pipelines, Predicates.notNull()));
-                
+
     }
 
     /**
@@ -120,7 +120,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @return factory used to create the {@link Item} collection produced by this source
      */
-    public ItemCollectionFactory getCollectionFactory() {
+    public Supplier<Collection> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -129,7 +129,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
-    public synchronized void setCollectionFactory(final ItemCollectionFactory factory) {
+    public synchronized void setCollectionFactory(final Supplier<Collection> factory) {
         if (isInitialized()) {
             return;
         }
@@ -166,8 +166,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
                 new ArrayList<Future<Collection<? extends Item>>>();
 
         for (Pipeline<? extends Item<?>> pipeline : mergedPipelines) {
-            pipelineResultFutures.add(executorService.submit(new PipelineCallable(pipeline, collectionFactory
-                    .newCollection())));
+            pipelineResultFutures.add(executorService.submit(new PipelineCallable(pipeline, collectionFactory.get())));
         }
 
         ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<Collection<? extends Item>>();
@@ -187,7 +186,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
+
         if (executorService == null) {
             log.debug("No ExecutorService specified, creating a fixed thread pool service with 6 threads");
             executorService = Executors.newFixedThreadPool(6);
@@ -199,8 +198,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         }
 
         if (mergeStrategy == null) {
-            log.debug("No collection merge strategy specified, using {}",
-                    SimpleCollectionMergeStrategy.class.getName());
+            log.debug("No collection merge strategy specified, using {}", SimpleCollectionMergeStrategy.class.getName());
             mergeStrategy = new SimpleCollectionMergeStrategy();
         }
 
