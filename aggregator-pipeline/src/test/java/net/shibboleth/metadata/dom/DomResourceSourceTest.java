@@ -93,7 +93,6 @@ public class DomResourceSourceTest {
     protected HttpResource buildHttpResource(String url) throws IOException {
         HttpClientBuilder builder = new HttpClientBuilder();
         builder.setConnectionDisregardSslCertificate(true);
-        builder.setConnectionPooling(false);
         builder.setConnectionStalecheck(false);
 
         File tmp = File.createTempFile(Long.toString(System.currentTimeMillis()), null);
