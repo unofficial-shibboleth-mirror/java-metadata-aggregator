@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.io.InputStream;
 import java.security.Security;
 
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
@@ -44,7 +45,7 @@ public abstract class BaseDomTest {
      * 
      * @throws XMLParserException thrown if there is a problem initializing the parser pool
      */
-    @BeforeClass public void setUp() throws XMLParserException {
+    @BeforeClass public void setUp() throws ComponentInitializationException {
         XMLUnit.setIgnoreWhitespace(true);
 
         parserPool = new BasicParserPool();
