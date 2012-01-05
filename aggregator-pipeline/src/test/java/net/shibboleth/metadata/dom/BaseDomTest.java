@@ -43,7 +43,7 @@ public abstract class BaseDomTest {
     /**
      * Setup test class. Creates and initializes the parser pool. Set BouncyCastle as a JCE provider.
      * 
-     * @throws XMLParserException thrown if there is a problem initializing the parser pool
+     * @throws ComponentInitializationException thrown if there is a problem initializing the parser pool
      */
     @BeforeClass public void setUp() throws ComponentInitializationException {
         XMLUnit.setIgnoreWhitespace(true);
