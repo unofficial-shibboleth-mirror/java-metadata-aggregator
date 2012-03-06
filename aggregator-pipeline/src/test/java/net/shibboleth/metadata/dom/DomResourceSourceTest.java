@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.net.HttpClientBuilder;
-import net.shibboleth.utilities.java.support.net.HttpResource;
+import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
+import net.shibboleth.utilities.java.support.httpclient.HttpResource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.annotations.Test;
