@@ -25,7 +25,7 @@ import java.util.List;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.component.AbstractDestrucableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -36,7 +36,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <ItemType> type of Items this stage, and its composed stages, operate upon
  */
 @ThreadSafe
-public class CompositeStage<ItemType extends Item<?>> extends AbstractDestrucableIdentifiableInitializableComponent
+public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent
         implements Stage<ItemType> {
 
     /** Stages which compose this stage. */

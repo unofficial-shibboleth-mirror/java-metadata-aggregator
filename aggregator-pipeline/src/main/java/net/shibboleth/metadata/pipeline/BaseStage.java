@@ -23,7 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-import net.shibboleth.utilities.java.support.component.AbstractDestrucableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
@@ -32,7 +32,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <ItemType> type of Item this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseStage<ItemType extends Item<?>> extends AbstractDestrucableIdentifiableInitializableComponent
+public abstract class BaseStage<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent
         implements Stage<ItemType> {
 
     /** {@inheritDoc} */

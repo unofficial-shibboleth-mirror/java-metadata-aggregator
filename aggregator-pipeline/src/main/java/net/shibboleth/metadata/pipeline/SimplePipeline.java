@@ -25,7 +25,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-import net.shibboleth.utilities.java.support.component.AbstractDestrucableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -39,7 +39,7 @@ import com.google.common.collect.Iterables;
  * @param <ItemType> the type of Item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestrucableIdentifiableInitializableComponent
+public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent
         implements Pipeline<ItemType> {
 
     /** Stages for this pipeline. */
