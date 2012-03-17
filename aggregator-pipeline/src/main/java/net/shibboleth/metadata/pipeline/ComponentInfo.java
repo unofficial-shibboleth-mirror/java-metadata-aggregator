@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.pipeline;
 
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.joda.time.DateTime;
@@ -51,7 +52,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param component component which this info describes
      */
-    public ComponentInfo(final Component component) {
+    public ComponentInfo(final IdentifiableComponent component) {
         componentId = component.getId();
         componentType = component.getClass();
         startInstant = new DateTime(ISOChronology.getInstanceUTC());

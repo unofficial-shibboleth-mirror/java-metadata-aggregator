@@ -17,10 +17,13 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Element;
@@ -34,6 +37,7 @@ import org.w3c.dom.Element;
  * <li><code>cacheDuration</code></li>
  * </ul>
  */
+@ThreadSafe
 public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
 
     /** Cache duration, in milliseconds, that will be set on each metadata element. */
@@ -53,10 +57,10 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @param duration cache duration, in milliseconds
      */
-    public void setCacheDuration(long duration) {
-        if (isInitialized()) {
-            return;
-        }
+    public synchronized void setCacheDuration(long duration) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         cacheDuration = duration;
     }
 

@@ -19,9 +19,12 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -34,6 +37,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptors and EntityDescriptors, determine the shortest cache duration, set that on the root
  * EntitiesDescriptor and remove the cache duration from all descendants.
  */
+@ThreadSafe
 public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem> {
 
     /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
@@ -57,9 +61,8 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      * @param duration the minimum cache duration in milliseconds
      */
     public synchronized void setMinimumCacheDuration(long duration) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (duration < 0) {
             minCacheDuration = 0;
@@ -83,9 +86,9 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      * @param duration maximum cache duration in milliseconds, must be greater than 0
      */
     public synchronized void setMaximumCacheDuration(long duration) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         Assert.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }

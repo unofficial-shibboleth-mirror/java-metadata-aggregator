@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
@@ -40,7 +42,6 @@ public class SimplePipelineTest {
         assert pipeline.getStages().containsAll(stages);
         assert !pipeline.getStages().get(0).isInitialized();
         assert !pipeline.getStages().get(1).isInitialized();
-        assert pipeline.getInitializationInstant() == null;
 
         pipeline.initialize();
         assert "test".equals(pipeline.getId());
@@ -50,13 +51,12 @@ public class SimplePipelineTest {
         assert pipeline.getStages().get(0).isInitialized();
         assert pipeline.getStages().get(1).isInitialized();
         assert pipeline.getStages().get(2).isInitialized();
-        assert pipeline.getInitializationInstant() != null;
 
         try {
             pipeline = new SimplePipeline<MockItem>();
             pipeline.setStages(stages);
             pipeline.initialize();
-            throw new AssertionError();
+            Assert.fail();
         } catch (ComponentInitializationException e) {
             // expected this
         }
@@ -66,8 +66,8 @@ public class SimplePipelineTest {
             pipeline.setId("");
             pipeline.setStages(stages);
             pipeline.initialize();
-            throw new AssertionError();
-        } catch (IllegalArgumentException e) {
+            Assert.fail();
+        } catch (AssertionError e) {
             // expected this
         }
     }

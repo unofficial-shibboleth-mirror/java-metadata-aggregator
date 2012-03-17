@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
@@ -44,10 +45,10 @@ import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 import net.shibboleth.utilities.java.support.xml.XmlConstants;
@@ -237,9 +238,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param variant SHA algorithm variant used when computing the signature and digest
      */
     public synchronized void setShaVariant(final ShaVariant variant) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         shaVariant = variant;
     }
 
@@ -258,9 +259,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param key private key used to sign the content
      */
     public synchronized void setPrivateKey(final PrivateKey key) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         privKey = key;
     }
 
@@ -279,9 +280,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param key public key associated with private key used to sign the content
      */
     public synchronized void setPublicKey(final PublicKey key) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         pubKey = key;
     }
 
@@ -302,9 +303,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param certs certificates associated with the key used to sign the content
      */
     public synchronized void setCertificates(final List<X509Certificate> certs) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         certificates = Lists.newArrayList(Iterables.filter(certs, Predicates.notNull()));
     }
 
@@ -323,9 +324,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param revocationLists CRLs associated with certificates
      */
     public synchronized void setCrls(final List<X509CRL> revocationLists) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         crls = Lists.newArrayList(Iterables.filter(revocationLists, Predicates.notNull()));
     }
 
@@ -344,9 +345,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param isExclusive whether exclusive canonicalization will be used
      */
     public synchronized void setC14nExclusive(final boolean isExclusive) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         c14nExclusive = isExclusive;
     }
 
@@ -365,9 +366,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param withComments whether comments are canonicalized
      */
     public synchronized void setC14nWithComments(final boolean withComments) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         c14nWithComments = withComments;
     }
 
@@ -386,9 +387,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param prefixList inclusive prefix list used during exclusive canonicalization
      */
     public synchronized void setInclusivePrefixList(final List<String> prefixList) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         inclusivePrefixList = Lists.newArrayList(Iterables.filter(prefixList, Predicates.notNull()));
     }
 
@@ -407,9 +408,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param names names of the attributes treated as reference IDs
      */
     public synchronized void setIdAttributeNames(final List<QName> names) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         idAttributeNames = Lists.newArrayList(Iterables.filter(names, Predicates.notNull()));
     }
 
@@ -428,9 +429,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param names explicit key names added to the KeyInfo
      */
     public synchronized void setKeyNames(final List<String> names) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         keyNames = Lists.newArrayList(Iterables.filter(names, Predicates.notNull()));
     }
 
@@ -449,9 +450,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param deriveNames whether key names are derived from the end-entity certificate
      */
     public synchronized void setDeriveKeyNames(final boolean deriveNames) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         deriveKeyNames = deriveNames;
     }
 
@@ -470,9 +471,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param include whether key names are included in the KeyInfo
      */
     public synchronized void setIncludeKeyNames(final boolean include) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         includeKeyNames = include;
     }
 
@@ -491,9 +492,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param included whether key values are included in the KeyInfo
      */
     public synchronized void setIncludeKeyValue(final boolean included) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         includeKeyValue = included;
     }
 
@@ -512,9 +513,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param include whether end-entity certifcate's subject name is included in the KeyInfo
      */
     public synchronized void setIncludeX509SubjectName(final boolean include) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         includeX509SubjectName = include;
     }
 
@@ -533,9 +534,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param include whether X509 certificates are included in the KeyInfo
      */
     public synchronized void setIncludeX509Certificates(final boolean include) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         includeX509Certificates = include;
     }
 
@@ -554,9 +555,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param include whether CRLs are included in the KeyInfo
      */
     public synchronized void setIncludeX509Crls(final boolean include) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         includeX509Crls = include;
     }
 
@@ -575,9 +576,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @param include whether the end-entity certificate's issuer and serial number are included in the KeyInfo
      */
     public synchronized void setIncludeX509IssuerSerial(final boolean include) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         includeX509IssuerSerial = include;
     }
 
@@ -861,6 +862,24 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         }
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        xmlSigFactory = null;
+        keyInfoFactory = null;
+        privKey = null;
+        pubKey = null;
+        certificates = null;
+        crls = null;
+        sigAlgo = null;
+        digestAlgo = null;
+        c14nAlgo = null;
+        inclusivePrefixList = null;
+        idAttributeNames = null;
+        keyNames = null;        
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

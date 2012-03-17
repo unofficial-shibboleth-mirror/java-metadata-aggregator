@@ -22,16 +22,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.httpclient.HttpResource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class DomResourceSourceTest {
 
-    @Test
-    public void testSuccessfulFetchAndParse() throws Exception {
+    @Test public void testSuccessfulFetchAndParse() throws Exception {
         HttpResource mdResource = buildHttpResource("http://metadata.ukfederation.org.uk/ukfederation-metadata.xml");
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -41,6 +42,7 @@ public class DomResourceSourceTest {
         source.setId("test");
         source.setDomResource(mdResource);
         source.setParserPool(parserPool);
+        source.initialize();
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
@@ -48,8 +50,7 @@ public class DomResourceSourceTest {
         assert metadataCollection.size() == 1;
     }
 
-    @Test
-    public void testSuccessfulFetchAndFailedParse() throws Exception {
+    @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
         HttpResource mdResource = buildHttpResource("http://www.google.com/intl/en/images/about_logo.gif");
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -59,6 +60,7 @@ public class DomResourceSourceTest {
         source.setId("test");
         source.setDomResource(mdResource);
         source.setParserPool(parserPool);
+        source.initialize();
 
         try {
             ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
@@ -69,8 +71,7 @@ public class DomResourceSourceTest {
         }
     }
 
-    @Test
-    public void testFailedFetch() throws Exception {
+    @Test public void testFailedFetch() throws Exception {
         HttpResource mdResource = buildHttpResource("http://kslkjf.com/lkjlk3.dlw");
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -82,10 +83,9 @@ public class DomResourceSourceTest {
         source.setParserPool(parserPool);
 
         try {
-            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
-            source.execute(metadataCollection);
-            throw new AssertionError("Invalid URL processed");
-        } catch (StageProcessingException e) {
+            source.initialize();
+            Assert.fail();
+        } catch (ComponentInitializationException e) {
             // expected this
         }
     }

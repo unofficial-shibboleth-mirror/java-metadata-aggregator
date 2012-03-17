@@ -20,6 +20,8 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 
 /**
@@ -27,6 +29,7 @@ import net.shibboleth.metadata.Item;
  * 
  * @param <ItemType> type of Items this stage operates upon
  */
+@ThreadSafe
 public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /**

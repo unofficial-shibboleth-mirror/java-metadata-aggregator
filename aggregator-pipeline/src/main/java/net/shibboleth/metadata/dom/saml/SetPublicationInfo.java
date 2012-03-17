@@ -19,6 +19,8 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -30,6 +32,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * given descriptor already contains publication information than the existing information is moved to the publication
  * path.
  */
+@ThreadSafe
 public class SetPublicationInfo extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */

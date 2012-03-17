@@ -19,6 +19,8 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -30,6 +32,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * EntitiesDescriptor and EntityDescriptor, determine the shortest cache duration of all a given descandant's ancestors
  * and set that on the given descendant.
  */
+@ThreadSafe
 public class PushDownCacheDurationStage extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */

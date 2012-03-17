@@ -20,7 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.dom.DomElementItem;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;

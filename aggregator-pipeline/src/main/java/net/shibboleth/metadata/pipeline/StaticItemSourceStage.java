@@ -21,8 +21,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A stage which adds a static collection of Items to a {@link Item} collection.
@@ -50,9 +53,8 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
      * @param items collection of Items added to the Item collection by this stage
      */
     public synchronized void setSourceItems(final Collection<ItemType> items) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (items == null || items.isEmpty()) {
             source = Collections.emptyList();
@@ -77,12 +79,19 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
     }
     
     /** {@inheritDoc} */
+    protected void doDestroy() {
+        source = null;
+        
+        super.doDestroy();
+    }
+
+    /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
-        if(source == null || source.isEmpty()){
+
+        if (source == null || source.isEmpty()) {
             source = Collections.emptyList();
         }
     }
-    
+
 }

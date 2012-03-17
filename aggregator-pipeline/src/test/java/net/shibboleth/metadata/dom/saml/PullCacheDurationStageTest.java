@@ -41,6 +41,8 @@ public class PullCacheDurationStageTest extends BaseDomTest {
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
@@ -70,6 +72,8 @@ public class PullCacheDurationStageTest extends BaseDomTest {
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
         stage.setMinimumCacheDuration(1000 * 60 * 60 * 2);
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
@@ -90,6 +94,8 @@ public class PullCacheDurationStageTest extends BaseDomTest {
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
         stage.setMaximumCacheDuration(1000 * 60 * 30);
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();

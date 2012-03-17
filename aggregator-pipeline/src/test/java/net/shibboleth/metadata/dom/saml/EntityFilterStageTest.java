@@ -40,6 +40,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(true);
+        stage.initialize();
 
         Collection<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
@@ -53,6 +54,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
+        stage.initialize();
 
         Collection<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
@@ -69,6 +71,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
+        stage.initialize();
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.iterator().next().unwrap();
@@ -87,6 +90,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth",
                 "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"));
         stage.setWhitelistingEntities(false);
+        stage.initialize();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 0);
@@ -106,6 +110,7 @@ public class EntityFilterStageTest extends BaseDomTest {
         stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth",
                 "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"));
         stage.setWhitelistingEntities(false);
+        stage.initialize();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);

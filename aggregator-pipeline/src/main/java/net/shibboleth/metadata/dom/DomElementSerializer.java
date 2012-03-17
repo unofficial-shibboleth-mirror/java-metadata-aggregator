@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.ItemSerializer;
 
 import org.slf4j.Logger;

@@ -22,8 +22,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A stage which writes the given item collection out to a file.
@@ -37,6 +41,7 @@ import net.shibboleth.metadata.ItemSerializer;
  * 
  * @param <ItemType> type of items upon which this stage operates
  */
+@ThreadSafe
 public class SerializationStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /** File to which the item will be written. */
@@ -63,10 +68,9 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * @param file file to which the item will be written
      */
     public synchronized void setOutputFile(File file) {
-        if (isInitialized()) {
-            return;
-        }
-
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         outputFile = file;
     }
 
@@ -85,10 +89,9 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * @param isOverwriting whether an existing output file should be overwritten
      */
     public synchronized void setOverwritingExistingOutputFile(boolean isOverwriting) {
-        if (isInitialized()) {
-            return;
-        }
-
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         overwritingExistingOutputFile = isOverwriting;
     }
 
@@ -107,10 +110,9 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * @param itemSerializer serializer used to write item to the output file
      */
     public synchronized void setSerializer(ItemSerializer<ItemType> itemSerializer) {
-        if (isInitialized()) {
-            return;
-        }
-
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         serializer = itemSerializer;
     }
 
@@ -121,6 +123,14 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
         } catch (IOException e) {
             throw new StageProcessingException("Error write to output file " + outputFile.getAbsolutePath(), e);
         }
+    }
+    
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        outputFile = null;
+        serializer = null;
+        
+        super.doDestroy();
     }
 
     /** {@inheritDoc} */

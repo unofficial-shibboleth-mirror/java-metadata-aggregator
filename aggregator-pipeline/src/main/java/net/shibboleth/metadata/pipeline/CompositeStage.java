@@ -22,7 +22,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.AbstractDestrucableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A stage that is composed of other stages. This allows a collection of stages to be grouped together and for that
@@ -30,10 +35,12 @@ import net.shibboleth.metadata.Item;
  * 
  * @param <ItemType> type of Items this stage, and its composed stages, operate upon
  */
-public class CompositeStage<ItemType extends Item<?>> extends AbstractComponent implements Stage<ItemType> {
+@ThreadSafe
+public class CompositeStage<ItemType extends Item<?>> extends AbstractDestrucableIdentifiableInitializableComponent
+        implements Stage<ItemType> {
 
     /** Stages which compose this stage. */
-    private List<Stage<ItemType>> composedStages;
+    private List<Stage<ItemType>> composedStages = Collections.emptyList();
 
     /**
      * Gets an unmodifiable list the stages that compose this stage.
@@ -50,9 +57,8 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractComponent 
      * @param stages list the stages that compose this stage, may be null or contain null elements
      */
     public synchronized void setComposedStages(List<Stage<ItemType>> stages) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         ArrayList<Stage<ItemType>> newStages = new ArrayList<Stage<ItemType>>();
         for (Stage<ItemType> stage : stages) {
@@ -72,10 +78,17 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractComponent 
     }
     
     /** {@inheritDoc} */
+    protected void doDestroy() {
+        composedStages = null;
+        
+        super.doDestroy();
+    }
+
+    /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
-        if(composedStages == null || composedStages.isEmpty()){
+
+        if (composedStages == null || composedStages.isEmpty()) {
             composedStages = Collections.emptyList();
         }
     }

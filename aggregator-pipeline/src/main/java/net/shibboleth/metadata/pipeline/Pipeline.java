@@ -20,8 +20,12 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.List;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
+import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
+import net.shibboleth.utilities.java.support.component.InitializableComponent;
 
 /**
  * A pipeline represents an ordered list of {@link Stage} that operate on a collection of {@link Item}. In general the
@@ -37,7 +41,8 @@ import net.shibboleth.metadata.Item;
  * @param <ItemType> type of Item which is produced by this source
  */
 @ThreadSafe
-public interface Pipeline<ItemType extends Item<?>> extends Component {
+public interface Pipeline<ItemType extends Item<?>> extends DestructableComponent, IdentifiableComponent,
+        InitializableComponent {
 
     /**
      * Gets the list of Stages within the pipeline.

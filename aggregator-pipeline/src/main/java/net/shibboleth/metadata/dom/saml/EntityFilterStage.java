@@ -21,10 +21,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.collection.LazySet;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.slf4j.Logger;
@@ -65,9 +67,8 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param ids list of designated entity IDs
      */
     public synchronized void setDesignatedEntities(final Collection<String> ids) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         designatedEntities = Collections2.filter(ids, Predicates.notNull());
     }
@@ -87,9 +88,8 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingEntities(final boolean whitelisting) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         whitelistingEntities = whitelisting;
     }
@@ -109,13 +109,19 @@ public class EntityFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         removingEntitylessEntitiesDescriptor = remove;
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        designatedEntities = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected boolean doExecute(DomElementItem item) {
         Element descriptor;

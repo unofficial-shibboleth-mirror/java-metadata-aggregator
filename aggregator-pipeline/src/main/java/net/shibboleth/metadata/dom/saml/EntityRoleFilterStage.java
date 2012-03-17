@@ -22,12 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.collection.LazySet;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
@@ -111,9 +112,9 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param roles list of designated entity roles
      */
     public synchronized void setDesignatedRoles(final Collection<QName> roles) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         designatedRoles = Collections2.filter(roles, Predicates.notNull());
     }
 
@@ -132,9 +133,9 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingRoles(final boolean whitelisting) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         whitelistingRoles = whitelisting;
     }
 
@@ -153,9 +154,9 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param remove whether EntityDescriptor elements without roles (after filtering) should be removed altogether
      */
     public synchronized void setRemoveRolelessEntities(final boolean remove) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         removingRolelessEntities = remove;
     }
 
@@ -174,12 +175,19 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         removingEntitylessEntitiesDescriptor = remove;
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        designatedRoles = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected boolean doExecute(DomElementItem item) {
         Element descriptor = item.unwrap();

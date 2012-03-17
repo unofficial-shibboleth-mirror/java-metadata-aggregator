@@ -41,6 +41,8 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
@@ -72,6 +74,8 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
         stage.setMinimumValidityDuration(hundredYears);
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
@@ -94,6 +98,8 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
         stage.setMaximumValidityDuration(twoYears);
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();

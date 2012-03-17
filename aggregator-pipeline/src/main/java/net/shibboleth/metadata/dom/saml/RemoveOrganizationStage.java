@@ -19,6 +19,8 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /** Filtering stage that removes Organization elements from EntityDescriptors. */
+@ThreadSafe
 public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> {
 
     /** Class logger. */

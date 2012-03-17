@@ -19,18 +19,22 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
@@ -86,9 +90,8 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(ExecutorService service) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         executorService = service;
     }
@@ -108,9 +111,9 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * @param pipelines pipelines joined by this stage
      */
     public synchronized void setMergedPipelines(final List<? extends Pipeline<? extends Item<?>>> pipelines) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
         mergedPipelines = ImmutableList.copyOf(Iterables.filter(pipelines, Predicates.notNull()));
 
     }
@@ -130,11 +133,10 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
     public synchronized void setCollectionFactory(final Supplier<Collection> factory) {
-        if (isInitialized()) {
-            return;
-        }
-        Assert.isNotNull(factory, "Collection factory may not be null");
-        collectionFactory = factory;
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        collectionFactory = Assert.isNotNull(factory, "Collection factory may not be null");
     }
 
     /**
@@ -153,9 +155,8 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      *            null
      */
     public synchronized void setCollectionMergeStrategy(final CollectionMergeStrategy strategy) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         mergeStrategy = strategy;
     }
@@ -183,6 +184,16 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         mergeStrategy.mergeCollection(itemCollection, pipelineResults.toArray(new Collection[pipelineResults.size()]));
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        executorService = null;
+        collectionFactory = null;
+        mergeStrategy = null;
+        mergedPipelines = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

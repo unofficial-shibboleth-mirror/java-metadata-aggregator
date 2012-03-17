@@ -17,10 +17,13 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Element;
@@ -34,6 +37,7 @@ import org.w3c.dom.Element;
  * <li><code>validityDuration</code></li>
  * </ul> 
  */
+@ThreadSafe
 public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
     /** Amount of time the descriptors will be valid, expressed in milliseconds. */
@@ -54,9 +58,9 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * @param duration amount of time the descriptors will be valid, expressed in milliseconds
      */
     public synchronized void setValidityDuration(long duration) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         validityDuration = duration;
     }
 

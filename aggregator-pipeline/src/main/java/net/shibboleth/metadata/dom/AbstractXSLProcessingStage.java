@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -31,14 +32,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
@@ -95,9 +96,9 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * @param resource resource that provides the XSL document
      */
     public synchronized void setXslResource(final Resource resource) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         xslResource = resource;
     }
 
@@ -116,9 +117,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * @param attributes collection of attributes used by the XSLT transformer, may be null or contain null keys
      */
     public synchronized void setTransformAttributes(Map<String, Object> attributes) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (attributes == null || attributes.isEmpty()) {
             transformAttributes = Collections.emptyMap();
@@ -149,9 +149,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * @param features collection of features used by the XSLT transformer, may be null or contain null keys
      */
     public synchronized void setTransformFeatures(Map<String, Boolean> features) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (features == null || features.isEmpty()) {
             transformFeatures = Collections.emptyMap();
@@ -182,9 +181,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * @param parameters parameters for the transform, may be null or contain null keys
      */
     public synchronized void setTransformParameters(Map<String, Object> parameters) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (parameters == null) {
             transformParameters = Collections.emptyMap();
@@ -203,7 +201,6 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
 
     /** {@inheritDoc} */
     protected void doExecute(final Collection<DomElementItem> itemCollection) throws StageProcessingException {
-
         try {
             final Transformer transformer = xslTemplate.newTransformer();
             for (Map.Entry<String, Object> entry : transformParameters.entrySet()) {
@@ -229,12 +226,28 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
             throws StageProcessingException, TransformerConfigurationException;
 
     /** {@inheritDoc} */
+    protected void doDestroy() {
+        xslResource.destroy();
+        xslResource = null;
+        xslTemplate = null;
+        transformAttributes = null;
+        transformFeatures = null;
+        transformParameters = null;
+        
+        super.doDestroy();
+    }
+    
+    /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         
         if (xslResource == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", XslResource must not be null");
+        }
+        
+        if(!xslResource.isInitialized()){
+            xslResource.initialize();
         }
 
         try {

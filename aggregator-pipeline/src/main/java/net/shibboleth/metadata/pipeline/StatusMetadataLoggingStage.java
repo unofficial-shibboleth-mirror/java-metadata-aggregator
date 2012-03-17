@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A {@link Stage} that logs {@link StatusMetadata} associated with an {@link Item}.
  */
+@ThreadSafe
 public class StatusMetadataLoggingStage extends AbstractItemMetadataSelectionStage {
 
     /** Class logger. */

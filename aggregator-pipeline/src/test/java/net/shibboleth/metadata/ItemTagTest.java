@@ -30,14 +30,14 @@ public class ItemTagTest {
         try {
             info = new ItemTag("");
             throw new AssertionError();
-        } catch (IllegalArgumentException e) {
+        } catch (AssertionError e) {
             // expected this
         }
 
         try {
             info = new ItemTag(null);
             throw new AssertionError();
-        } catch (IllegalArgumentException e) {
+        } catch (AssertionError e) {
             // expected this
         }
     }

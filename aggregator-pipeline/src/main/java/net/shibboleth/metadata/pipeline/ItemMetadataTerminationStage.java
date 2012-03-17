@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
  * A {@link Stage} that terminates pipeline processing if an {@link Item} has a specific type of {@link ItemMetadata}
  * attached to it.
  */
+@ThreadSafe
 public class ItemMetadataTerminationStage extends AbstractItemMetadataSelectionStage {
 
     /** Class logger. */

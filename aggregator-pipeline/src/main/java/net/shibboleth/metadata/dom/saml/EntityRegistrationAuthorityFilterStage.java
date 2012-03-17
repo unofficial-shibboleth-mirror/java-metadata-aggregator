@@ -21,11 +21,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.collection.LazySet;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -37,6 +39,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
 /** A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority. */
+@ThreadSafe
 public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<DomElementItem> {
 
     /** Class logger. */
@@ -69,9 +72,9 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
      * @param isRequired whether a descriptor is required to have registration information
      */
     public synchronized void setRequiringRegistrationInformation(boolean isRequired) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         requiringRegistrationInformation = isRequired;
     }
 
@@ -90,9 +93,8 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
      * @param authorities list of designated registration authority
      */
     public synchronized void setDesignatedRegistrationAuthorities(final Collection<String> authorities) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         designatedAuthorities = Collections2.filter(authorities, Predicates.notNull());
     }
@@ -113,9 +115,8 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
      *            otherwise
      */
     public synchronized void setWhitelistingRegistrationAuthorities(final boolean whitelisting) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         whitelistingAuthorities = whitelisting;
     }
@@ -135,13 +136,19 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         removingEntitylessEntitiesDescriptor = remove;
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        designatedAuthorities = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected boolean doExecute(DomElementItem item) {
         Element descriptor;

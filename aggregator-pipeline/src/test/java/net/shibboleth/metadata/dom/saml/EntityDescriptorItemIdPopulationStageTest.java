@@ -38,6 +38,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
+        stage.initialize();
 
         stage.execute(metadataCollection);
         Assert.assertTrue(metadataCollection.isEmpty());
@@ -51,6 +52,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
+        stage.initialize();
 
         List<ItemId> itemIds = metadataCollection.get(0).getItemMetadata().get(ItemId.class);
         Assert.assertEquals(itemIds.size(), 0);
@@ -64,6 +66,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
+        stage.initialize();
 
         stage.execute(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -87,6 +90,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
+        stage.initialize();
 
         stage.execute(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 2);

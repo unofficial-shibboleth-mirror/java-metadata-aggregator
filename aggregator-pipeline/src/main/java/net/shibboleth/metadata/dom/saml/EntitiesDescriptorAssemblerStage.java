@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -86,9 +87,8 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * @param isError whether attempting to turn an empty item collection should be treated as processing error
      */
     public synchronized void setNoChildrenAProcessingError(boolean isError) {
-        if(isInitialized()){
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
         noChildrenAProcessingError = isError;
     }
@@ -108,9 +108,9 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * @param strategy strategy used to order a collection of Items
      */
     public synchronized void setItemOrderingStrategy(ItemOrderingStrategy strategy) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         orderingStrategy = strategy;
     }
 
@@ -129,9 +129,9 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * @param name Name used for the generated descriptor
      */
     public synchronized void setDescriptorName(final String name) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         descriptorName = StringSupport.trimOrNull(name);
     }
 
@@ -188,6 +188,14 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         if (descriptorName != null) {
             AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
         }
+    }
+    
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        orderingStrategy = null;
+        descriptorName = null;
+        
+        super.doDestroy();
     }
     
     /** {@inheritDoc} */

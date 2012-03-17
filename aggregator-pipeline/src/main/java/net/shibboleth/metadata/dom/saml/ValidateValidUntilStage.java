@@ -17,11 +17,14 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Element;
@@ -30,6 +33,7 @@ import org.w3c.dom.Element;
  * Checks that a SAML EntitiesDescriptor or EntityDescriptor's validUntil is (optionally) present and is within a given
  * range. Items which are not a SAML EntitiesDescriptor or EntityDescriptor are ignored.
  */
+@ThreadSafe
 public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
     /** Whether the item is required to have a validUntil attribute. Default value: <code>true</code> */
@@ -56,9 +60,8 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
      * @param isRequired whether the item is required to have a validUntil attribute
      */
     public synchronized void setRequireValidUntil(boolean isRequired) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         requireValidUntil = isRequired;
     }
@@ -80,9 +83,8 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
      *            than or equal to 0
      */
     public synchronized void setMaxValidityInterval(long interval) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         maxValidityInterval = interval;
     }

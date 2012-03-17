@@ -19,9 +19,12 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -34,6 +37,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptors and EntityDescriptors, determine the earliest valid until date, set that on the root
  * EntitiesDescriptor and remove the valid until dates from all descendants.
  */
+@ThreadSafe
 public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
 
     /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: 0 */
@@ -60,9 +64,8 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * @param duration minimum amount of time, in milliseconds, a descriptor may be valid
      */
     public synchronized void setMinimumValidityDuration(long duration) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (duration < 0) {
             minValidityDuration = 0;
@@ -86,9 +89,8 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * @param duration maximum amount of time, in milliseconds, a descriptor may be valid, must be greater than 0
      */
     public synchronized void setMaximumValidityDuration(long duration) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         Assert.isGreaterThan(0, duration, "Maximum validity duration must be greater than 0");
         maxValidityDuration = duration;

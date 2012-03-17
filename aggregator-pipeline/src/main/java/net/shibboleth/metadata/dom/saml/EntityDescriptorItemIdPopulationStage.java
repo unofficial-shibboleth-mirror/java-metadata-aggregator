@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
@@ -29,6 +31,7 @@ import org.w3c.dom.Element;
  * A stage which, for each EntityDescriptor collection element, adds an {@link ItemId}, with the entity's entity ID, to
  * the metadata item.
  */
+@ThreadSafe
 public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<DomElementItem> {
 
     /** {@inheritDoc} */

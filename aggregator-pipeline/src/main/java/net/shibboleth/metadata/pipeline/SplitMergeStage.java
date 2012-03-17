@@ -24,10 +24,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +61,7 @@ import com.google.common.base.Supplier;
  * 
  * @param <ItemType> type of items upon which this stage operates
  */
+@ThreadSafe
 public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /** Class logger. */
@@ -95,9 +100,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(ExecutorService service) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         executorService = service;
     }
@@ -117,9 +121,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
     public synchronized void setCollectionFactory(Supplier<Collection<ItemType>> factory) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         collectionFactory = factory;
     }
@@ -139,9 +142,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * @param strategy strategy used to split the given item collection, never null
      */
     public synchronized void setSelectionStrategy(Predicate<ItemType> strategy) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         selectionStrategy = strategy;
     }
@@ -161,9 +163,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * @param pipeline pipeline that receives the selected items
      */
     public synchronized void setSelectedItemPipeline(Pipeline<ItemType> pipeline) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         selectedItemPipeline = pipeline;
     }
@@ -183,9 +184,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * @param pipeline pipeline that receives the non-selected items
      */
     public synchronized void setNonselectedItemPipeline(Pipeline<ItemType> pipeline) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         nonselectedItemPipeline = pipeline;
     }
@@ -206,9 +206,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      *            null
      */
     public synchronized void setCollectionMergeStrategy(final CollectionMergeStrategy strategy) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         mergeStrategy = strategy;
     }
@@ -276,6 +275,18 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         return executorService.submit(callable);
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        executorService = null;
+        collectionFactory = null;
+        selectionStrategy = null;
+        selectedItemPipeline = null;
+        nonselectedItemPipeline = null;
+        mergeStrategy = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

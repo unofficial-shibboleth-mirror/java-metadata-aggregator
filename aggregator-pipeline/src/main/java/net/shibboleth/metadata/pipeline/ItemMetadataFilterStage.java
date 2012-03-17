@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * This is useful, for example, in removing all {@link Item} elements which have an associated
  * {@link net.shibboleth.metadata.ErrorStatus}.
  */
+@ThreadSafe
 public class ItemMetadataFilterStage extends AbstractItemMetadataSelectionStage {
 
     /** Class logger. */

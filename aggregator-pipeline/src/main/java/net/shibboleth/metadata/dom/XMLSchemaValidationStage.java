@@ -20,16 +20,17 @@ package net.shibboleth.metadata.dom;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
@@ -86,9 +87,9 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
      * @param resources schema resources against which Elements are validated
      */
     public synchronized void setSchemaResources(final List<Resource> resources) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         schemaResources = ImmutableList.copyOf(Iterables.filter(resources, Predicates.notNull()));
     }
 
@@ -107,9 +108,9 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
      * @param isRequired whether Elements are required to be schema valid
      */
     public synchronized void setElementRequiredToBeSchemaValid(boolean isRequired) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         elementRequiredToBeSchemaValid = isRequired;
     }
 
@@ -135,12 +136,29 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
     }
 
     /** {@inheritDoc} */
+    protected void doDestroy() {
+        for(Resource schemaResource : schemaResources){
+            schemaResource.destroy();
+        }
+        schemaResources = null;
+        validationSchema = null;
+        
+        super.doDestroy();
+    }
+    
+    /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (schemaResources == null || schemaResources.isEmpty()) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", SchemaResources may not be empty");
+        }
+        
+        for(Resource schemaResource : schemaResources){
+            if(!schemaResource.isInitialized()){
+                schemaResource.initialize();
+            }
         }
 
         try {

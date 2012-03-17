@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -27,9 +28,9 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.slf4j.Logger;
@@ -73,9 +74,8 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
      * @param expression XPath expression to execute on each {@link DomElementItem}
      */
     public synchronized void setXpathExpression(String expression) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         xpathExpression = StringSupport.trimOrNull(expression);
     }
@@ -95,9 +95,8 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
      * @param context {@link NamespaceContext} to use in interpreting the XPath expression
      */
     public synchronized void setNamespaceContext(NamespaceContext context) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         namespaceContext = context;
     }
@@ -134,6 +133,14 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
         }
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        xpathExpression = null;
+        namespaceContext = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

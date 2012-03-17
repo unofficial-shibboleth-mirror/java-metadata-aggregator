@@ -18,7 +18,7 @@
 package net.shibboleth.metadata.pipeline;
 
 /** Base exception for errors that occur within the pipeline execution. */
-public class PipelineProcessingException extends ComponentException {
+public class PipelineProcessingException extends Exception {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -430330435529063617L;

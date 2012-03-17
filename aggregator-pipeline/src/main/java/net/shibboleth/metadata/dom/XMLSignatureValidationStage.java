@@ -21,12 +21,14 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.List;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
@@ -87,9 +89,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * @param required whether the Element is required to be signed
      */
     public synchronized void setSignatureRequired(final boolean required) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         signatureRequired = required;
     }
 
@@ -108,9 +110,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * @param isRequired whether the signature on a Element element is required to be valid
      */
     public synchronized void setValidSignatureRequired(boolean isRequired) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         validSignatureRequired = isRequired;
     }
 
@@ -129,9 +131,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * @param key key used to verify the signature
      */
     public synchronized void setVerificationKey(final PublicKey key) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         verificationKey = key;
     }
 
@@ -151,9 +153,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * @param certificate certificate containing the key used to verify the signature
      */
     public synchronized void setVerificationCertificate(final Certificate certificate) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         if (certificate != null) {
             verificationCertificate = certificate;
             verificationKey = certificate.getPublicKey();
@@ -249,6 +251,14 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
         return sigElements.get(0);
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        verificationCertificate = null;
+        verificationKey = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

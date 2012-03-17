@@ -19,8 +19,8 @@ package net.shibboleth.metadata;
 
 import java.util.List;
 
-import net.shibboleth.metadata.pipeline.Component;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
+import net.shibboleth.utilities.java.support.component.Component;
 
 import org.testng.Assert;
 

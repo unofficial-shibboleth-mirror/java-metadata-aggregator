@@ -19,8 +19,12 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
+import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
+import net.shibboleth.utilities.java.support.component.InitializableComponent;
 
 /**
  * A stage in a {@link Pipeline} that operates upon a collection {@link Item} in a particular manner.
@@ -30,7 +34,8 @@ import net.shibboleth.metadata.Item;
  * @param <ItemType> type of Item upon which the stage operates
  */
 @ThreadSafe
-public interface Stage<ItemType extends Item<?>> extends Component {
+public interface Stage<ItemType extends Item<?>> extends DestructableComponent, IdentifiableComponent,
+        InitializableComponent {
 
     /**
      * Transforms the given input data.

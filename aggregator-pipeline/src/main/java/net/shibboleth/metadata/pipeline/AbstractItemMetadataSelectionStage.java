@@ -24,10 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import com.google.common.base.Predicates;
@@ -38,6 +41,7 @@ import com.google.common.collect.Iterables;
  * A {@link Stage} that selects Items for further processing if they have a specific type of {@link ItemMetadata}
  * attached to them.
  */
+@ThreadSafe
 public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<?>> {
 
     /** {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be selected. */
@@ -65,9 +69,9 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      *            {@link Item} to be selected, may be null or contain null elements
      */
     public synchronized void setSelectionRequirements(Collection<Class<ItemMetadata>> requirements) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
         selectionRequirements = ImmutableList.copyOf(Iterables.filter(requirements, Predicates.notNull()));
     }
 
@@ -86,9 +90,8 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
     public synchronized void setIdentifierStrategy(ItemIdentificationStrategy strategy) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         identifierStrategy = Assert.isNotNull(strategy, "Item identification strategy can not be null");
     }
@@ -113,6 +116,14 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
                 doExecute(itemCollection, item, matchingMetadata);
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        selectionRequirements = null;
+        identifierStrategy = null;
+
+        super.doDestroy();
     }
 
     /**

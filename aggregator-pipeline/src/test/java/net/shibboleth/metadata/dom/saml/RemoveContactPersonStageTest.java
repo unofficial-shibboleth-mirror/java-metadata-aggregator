@@ -48,6 +48,8 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
 
         RemoveContactPersonStage stage = new RemoveContactPersonStage();
         stage.setId("test");
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 3);
@@ -73,6 +75,8 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
         
         RemoveContactPersonStage stage = new RemoveContactPersonStage();
         stage.setId("test");
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);

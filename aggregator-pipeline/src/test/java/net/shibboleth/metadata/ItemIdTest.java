@@ -31,14 +31,14 @@ public class ItemIdTest {
         try {
             info = new ItemId("");
             throw new AssertionError();
-        } catch (IllegalArgumentException e) {
+        } catch (AssertionError e) {
             // expected this
         }
 
         try {
             info = new ItemId(null);
             throw new AssertionError();
-        } catch (IllegalArgumentException e) {
+        } catch (AssertionError e) {
             // expected this
         }
     }

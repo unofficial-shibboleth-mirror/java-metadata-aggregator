@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 
 import org.slf4j.Logger;
@@ -92,9 +94,9 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
     public synchronized void setParserPool(final ParserPool pool) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         parserPool = pool;
     }
 
@@ -113,9 +115,9 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param source path to the DOM material provided by this source
      */
     public synchronized void setSource(final File source) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         sourceFile = source;
     }
 
@@ -135,9 +137,9 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param filter filter used to determine if a file, in a directory, should be treated as a source file, may be null
      */
     public synchronized void setSourceFileFilter(FileFilter filter) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         sourceFileFilter = filter;
     }
 
@@ -156,9 +158,9 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param recurse whether directories will be recursively searched for XML input files
      */
     public synchronized void setRecurseDirectories(final boolean recurse) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         recurseDirectories = recurse;
     }
 
@@ -177,9 +179,9 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param isError whether the lack of source files is considered an error
      */
     public synchronized void setNoSourceFilesAnError(boolean isError) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         noSourceFilesAnError = isError;
     }
 
@@ -198,9 +200,9 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param causesFailure whether an error parsing a single file causes the source to fail
      */
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         errorCausesSourceFailure = causesFailure;
     }
 
@@ -291,6 +293,15 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
         }
     }
 
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        parserPool = null;
+        sourceFile = null;
+        sourceFileFilter = null;
+        
+        super.doDestroy();
+    }
+    
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

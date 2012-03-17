@@ -42,6 +42,7 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setDesignatedRoles(Lists.newArrayList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(true);
+        stage.initialize();
 
         List<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
@@ -62,6 +63,7 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setDesignatedRoles(Lists.newArrayList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
+        stage.initialize();
 
         List<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
@@ -87,6 +89,7 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setDesignatedRoles(Lists.newArrayList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(true);
         stage.setRemoveRolelessEntities(false);
+        stage.initialize();
 
         List<DomElementItem> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
@@ -117,6 +120,8 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setId("test");
         stage.setDesignatedRoles(Lists.newArrayList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
+        stage.initialize();
+
         stage.execute(metadataCollection);
 
         List<Element> descriptors = ElementSupport.getChildElements(metadataCollection.iterator().next().unwrap());
@@ -143,6 +148,8 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
         stage.setDesignatedRoles(Lists.newArrayList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME,
                 EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
+        stage.initialize();
+
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 0);
@@ -162,6 +169,8 @@ public class EntityRoleFilterStageTest extends BaseDomTest {
                 EntityRoleFilterStage.SP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
         stage.setRemovingEntitylessEntitiesDescriptor(false);
+        stage.initialize();
+
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);

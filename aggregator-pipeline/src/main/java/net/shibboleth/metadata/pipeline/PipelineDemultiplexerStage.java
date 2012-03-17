@@ -19,15 +19,20 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.collection.Pair;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +60,7 @@ import com.google.common.base.Supplier;
  * 
  * @param <ItemType> type of items upon which this stage operates
  */
+@ThreadSafe
 public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /** Class logger. */
@@ -87,9 +93,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(ExecutorService service) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         executorService = service;
     }
@@ -109,9 +114,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * @param isWaiting whether this child waits for all the invoked pipelines to complete before proceeding
      */
     public synchronized void setWaitingForPipelines(boolean isWaiting) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         waitingForPipelines = isWaiting;
     }
@@ -131,9 +135,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
     public synchronized void setCollectionFactory(Supplier<Collection<ItemType>> factory) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         collectionFactory = factory;
     }
@@ -154,9 +157,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      */
     public synchronized void
             setPipelineAndSelectionStrategies(List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pass) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         pipelineAndStrategies = pass;
     }
@@ -193,6 +195,15 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
                 }
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        executorService = null;
+        collectionFactory = null;
+        pipelineAndStrategies = null;
+
+        super.doDestroy();
     }
 
     /** {@inheritDoc} */

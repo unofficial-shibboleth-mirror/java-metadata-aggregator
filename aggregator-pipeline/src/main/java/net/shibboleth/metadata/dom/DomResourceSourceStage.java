@@ -20,10 +20,12 @@ package net.shibboleth.metadata.dom;
 import java.io.InputStream;
 import java.util.Collection;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.pipeline.BaseStage;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
@@ -77,9 +79,9 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * @param resource resource from which the XML document will be fetched
      */
     public synchronized void setDomResource(final Resource resource) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         domResource = resource;
     }
 
@@ -98,9 +100,9 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
     public synchronized void setParserPool(final ParserPool pool) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         parserPool = pool;
     }
 
@@ -119,9 +121,9 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * @param causesFailure whether an error reading and parsing the XML file causes this stage to fail
      */
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         errorCausesSourceFailure = causesFailure;
     }
 
@@ -178,6 +180,15 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
+    protected void doDestroy() {
+        domResource.destroy();
+        domResource = null;
+        parserPool = null;
+        
+        super.doDestroy();
+    }
+    
+    /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
@@ -189,6 +200,10 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
         if (domResource == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", either a DomResource must be specified");
+        }
+        
+        if(!domResource.isInitialized()){
+            domResource.initialize();
         }
 
         try {

@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
@@ -30,8 +31,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.slf4j.Logger;
@@ -39,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A pipeline stage that computes that transforms the collection of {@link Item} via a script.
- *
+ * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
  * <ul>
@@ -47,9 +49,9 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * 
  * <p>
- * This classes uses the JSR-223 scripting interface.  As such, in order to use a language other than 
- * ECMAscript (a.k.a. javascript), you must ensure the scripting engine and any associated libraries
- * necessary for its operation are on the classpath.
+ * This classes uses the JSR-223 scripting interface. As such, in order to use a language other than ECMAscript (a.k.a.
+ * javascript), you must ensure the scripting engine and any associated libraries necessary for its operation are on the
+ * classpath.
  */
 @ThreadSafe
 public class ScriptletStage extends BaseStage<Item<?>> {
@@ -60,7 +62,7 @@ public class ScriptletStage extends BaseStage<Item<?>> {
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
 
-    /** Name of the scripting language in use.   Default value: <code>ecmascript</code> */
+    /** Name of the scripting language in use. Default value: <code>ecmascript</code> */
     private String scriptLanguage = "ecmascript";
 
     /** Filesystem path script file. */
@@ -87,9 +89,9 @@ public class ScriptletStage extends BaseStage<Item<?>> {
      * @param language scripting language used
      */
     public synchronized void setScriptLanguage(final String language) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         scriptLanguage = StringSupport.trimOrNull(language);
     }
 
@@ -108,9 +110,9 @@ public class ScriptletStage extends BaseStage<Item<?>> {
      * @param file script file used
      */
     public synchronized void setScriptFile(final File file) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         scriptFile = file;
     }
 
@@ -139,7 +141,7 @@ public class ScriptletStage extends BaseStage<Item<?>> {
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
+
         if (scriptLanguage == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", ScriptLanguage may not be null");

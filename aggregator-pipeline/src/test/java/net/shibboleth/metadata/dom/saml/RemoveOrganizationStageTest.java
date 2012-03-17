@@ -48,6 +48,8 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
 
         RemoveOrganizationStage stage = new RemoveOrganizationStage();
         stage.setId("test");
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 3);
@@ -73,6 +75,8 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
 
         RemoveOrganizationStage stage = new RemoveOrganizationStage();
         stage.setId("test");
+        stage.initialize();
+        
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);

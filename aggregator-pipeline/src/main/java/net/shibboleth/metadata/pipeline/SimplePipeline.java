@@ -21,9 +21,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.component.AbstractDestrucableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -35,11 +39,17 @@ import com.google.common.collect.Iterables;
  * @param <ItemType> the type of Item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent implements Pipeline<ItemType> {
+public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestrucableIdentifiableInitializableComponent
+        implements Pipeline<ItemType> {
 
     /** Stages for this pipeline. */
     private List<? extends Stage<ItemType>> pipelineStages = Collections.emptyList();
 
+    /** {@inheritDoc} */
+    public synchronized void setId(String componentId) {
+        super.setId(componentId);
+    }
+    
     /** {@inheritDoc} */
     public List<? extends Stage<ItemType>> getStages() {
         return pipelineStages;
@@ -51,9 +61,9 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent 
      * @param stages stages that make up this pipeline
      */
     public synchronized void setStages(final List<? extends Stage<ItemType>> stages) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         pipelineStages = ImmutableList.copyOf(Iterables.filter(stages, Predicates.notNull()));
     }
 
@@ -68,9 +78,18 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractComponent 
         compInfo.setCompleteInstant();
         ItemMetadataSupport.addToAll(itemCollection, compInfo);
     }
+    
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        pipelineStages = null;
+        
+        super.doDestroy();
+    }
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (pipelineStages == null || pipelineStages.isEmpty()) {
             pipelineStages = Collections.emptyList();
         }

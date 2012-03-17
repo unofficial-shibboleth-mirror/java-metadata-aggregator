@@ -19,16 +19,27 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.component.AbstractDestrucableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A base class for {@link Stage} implementations.
  * 
  * @param <ItemType> type of Item this stage operates upon
  */
-public abstract class BaseStage<ItemType extends Item<?>> extends AbstractComponent implements Stage<ItemType> {
+@ThreadSafe
+public abstract class BaseStage<ItemType extends Item<?>> extends AbstractDestrucableIdentifiableInitializableComponent
+        implements Stage<ItemType> {
 
+    /** {@inheritDoc} */
+    public synchronized void setId(String componentId) {
+        super.setId(componentId);
+    }
+    
     /**
      * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
      * the {@link ComponentInfo} to all the resultant Item elements and then sets its completion time.
@@ -36,6 +47,9 @@ public abstract class BaseStage<ItemType extends Item<?>> extends AbstractCompon
      * {@inheritDoc}
      */
     public void execute(Collection<ItemType> itemCollection) throws StageProcessingException {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         final ComponentInfo compInfo = new ComponentInfo(this);
 
         doExecute(itemCollection);
@@ -46,6 +60,8 @@ public abstract class BaseStage<ItemType extends Item<?>> extends AbstractCompon
 
     /**
      * Performs the stage processing on the given Item collection.
+     * 
+     * <p>The stage is guaranteed to be have been initialized and not destroyed when this is invoked.</p>
      * 
      * @param itemCollection collection to be processed
      * 

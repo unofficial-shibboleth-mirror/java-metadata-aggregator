@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

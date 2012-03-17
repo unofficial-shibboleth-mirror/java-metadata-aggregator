@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
@@ -31,8 +32,7 @@ import org.testng.annotations.Test;
 /** Unit test for {@link DomFilesystemSourceStage}. */
 public class DomFilesystemSourceTest {
 
-    @Test
-    public void testSuccessfulFileFetchAndParse() throws Exception {
+    @Test public void testSuccessfulFileFetchAndParse() throws Exception {
         URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
         File sourceFile = new File(sourceUrl.toURI());
 
@@ -43,6 +43,7 @@ public class DomFilesystemSourceTest {
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
+        source.initialize();
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
@@ -50,8 +51,7 @@ public class DomFilesystemSourceTest {
         Assert.assertEquals(metadataCollection.size(), 1);
     }
 
-    @Test
-    public void testSuccessfulDirectoryFetchAndParse() throws Exception {
+    @Test public void testSuccessfulDirectoryFetchAndParse() throws Exception {
         URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/samlMetadata");
         File sourceFile = new File(sourceUrl.toURI());
 
@@ -62,6 +62,7 @@ public class DomFilesystemSourceTest {
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
+        source.initialize();
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
@@ -87,6 +88,7 @@ public class DomFilesystemSourceTest {
                 return pathname.getName().endsWith("xml");
             }
         });
+        source.initialize();
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
@@ -94,8 +96,7 @@ public class DomFilesystemSourceTest {
         Assert.assertEquals(metadataCollection.size(), 7);
     }
 
-    @Test
-    public void testSuccessfulFetchAndFailedParse() throws Exception {
+    @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
         URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/loremIpsum.txt");
         File sourceFile = new File(sourceUrl.toURI());
 
@@ -106,6 +107,7 @@ public class DomFilesystemSourceTest {
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
+        source.initialize();
 
         try {
             ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
@@ -116,8 +118,7 @@ public class DomFilesystemSourceTest {
         }
     }
 
-    @Test
-    public void testFailedFetch() throws Exception {
+    @Test public void testFailedFetch() throws Exception {
         File sourceFile = new File("nonExistant");
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -129,10 +130,10 @@ public class DomFilesystemSourceTest {
         source.setSource(sourceFile);
 
         try {
-            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
-            source.execute(metadataCollection);
-        } catch (StageProcessingException e) {
-            throw new AssertionError("Source did failed when given a nonexistant file");
+            source.initialize();
+            Assert.fail();
+        } catch (ComponentInitializationException e) {
+            // expected this
         }
     }
 }

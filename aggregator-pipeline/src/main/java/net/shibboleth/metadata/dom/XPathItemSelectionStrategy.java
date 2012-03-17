@@ -69,7 +69,7 @@ public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
         }
         compiledExpression = xpath.compile(expression);
     }
-
+    
     /** {@inheritDoc} */
     public synchronized boolean apply(DomElementItem item) {
         try {
@@ -79,5 +79,4 @@ public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
             return false;
         }
     }
-
 }
