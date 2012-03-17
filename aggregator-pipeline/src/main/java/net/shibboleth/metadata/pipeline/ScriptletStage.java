@@ -17,24 +17,16 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Collection;
 
 import javax.annotation.concurrent.ThreadSafe;
-import javax.script.Bindings;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,82 +49,44 @@ import org.slf4j.LoggerFactory;
 public class ScriptletStage extends BaseStage<Item<?>> {
 
     /** Name of the scriptlet attribute, {@value} , containing the Item collection to be transformed. */
-    public static final String ITEM = "item";
+    public static final String ITEMS = "items";
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
 
-    /** Name of the scripting language in use. Default value: <code>ecmascript</code> */
-    private String scriptLanguage = "ecmascript";
-
-    /** Filesystem path script file. */
-    private File scriptFile;
-
-    /** The script engine to execute the script. */
-    private ScriptEngine scriptEngine;
-
-    /** The compiled form of the script, if the script engine supports compiling. */
-    private CompiledScript compiledScript;
+    /** Script executed by this stage. */
+    private EvaluableScript script;
 
     /**
-     * Gets the scripting language used.
+     * Gets the script executed by this stage.
      * 
-     * @return scripting language used
+     * @return the script executed by this stage
      */
-    public String getScriptLanguage() {
-        return scriptLanguage;
+    public EvaluableScript getScript() {
+        return script;
     }
 
     /**
-     * Sets the scripting language used.
+     * Sets the script executed by this stage.
      * 
-     * @param language scripting language used
+     * @param stageScript the script executed by this stage
      */
-    public synchronized void setScriptLanguage(final String language) {
+    public synchronized void setScript(EvaluableScript stageScript) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        scriptLanguage = StringSupport.trimOrNull(language);
-    }
 
-    /**
-     * Gets the script file used.
-     * 
-     * @return script file used
-     */
-    public File getScriptFile() {
-        return scriptFile;
-    }
-
-    /**
-     * Sets the script file used.
-     * 
-     * @param file script file used
-     */
-    public synchronized void setScriptFile(final File file) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        scriptFile = file;
+        script = stageScript;
     }
 
     /** {@inheritDoc} */
     protected void doExecute(final Collection<Item<?>> itemCollection) throws StageProcessingException {
-        final Bindings bindings = scriptEngine.createBindings();
-        bindings.put(ITEM, itemCollection);
+        final SimpleScriptContext context = new SimpleScriptContext();
+        context.setAttribute(ITEMS, itemCollection, SimpleScriptContext.ENGINE_SCOPE);
 
         try {
-            if (compiledScript != null) {
-                compiledScript.eval(bindings);
-            } else {
-                scriptEngine.eval(new FileReader(scriptFile), bindings);
-            }
+            script.eval(context);
         } catch (ScriptException e) {
-            String errMsg = getId() + " pipeline stage unable to execut script";
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
-        } catch (FileNotFoundException e) {
-            String errMsg = getId() + " pipeline stage unable to read script file " + scriptFile.getPath();
+            String errMsg = getId() + " pipeline stage unable to execute script";
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -142,33 +96,8 @@ public class ScriptletStage extends BaseStage<Item<?>> {
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        if (scriptLanguage == null) {
-            throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", ScriptLanguage may not be null");
-        }
-
-        if (scriptFile == null) {
-            throw new ComponentInitializationException("Unable to initialize " + getId() + ", Source may not be null");
-        }
-
-        if (!scriptFile.exists() || !scriptFile.canRead()) {
-            throw new ComponentInitializationException("Unable to initialize " + getId() + ", source file/directory "
-                    + scriptFile.getPath() + " can not be read");
-        }
-
-        ScriptEngineManager sem = new ScriptEngineManager();
-        scriptEngine = sem.getEngineByName(scriptLanguage);
-
-        try {
-            if (scriptEngine != null && scriptEngine instanceof Compilable) {
-                compiledScript = ((Compilable) scriptEngine).compile(new FileReader(scriptFile));
-            }
-        } catch (ScriptException e) {
-            throw new ComponentInitializationException(
-                    "Unable to initialize " + getId() + ", unable to compile script", e);
-        } catch (IOException e) {
-            throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", unable to read script file", e);
+        if (script == null) {
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", script may not be null");
         }
     }
 }
