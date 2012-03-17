@@ -17,7 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -38,7 +41,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
      * 
      * @param itemId a unique identifier for the entity, never null
      */
-    public ItemId(final String itemId) {
+    public ItemId(@Nonnull @NotEmpty final String itemId) {
         id = Assert.isNotNull(StringSupport.trimOrNull(itemId), "Item ID may not be null or empty");
     }
 
@@ -47,7 +50,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
      * 
      * @return unique identifier for the data carried by the Item
      */
-    public String getId() {
+    @Nonnull public String getId() {
         return id;
     }
 

@@ -21,6 +21,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /**
  * A merge strategy that adds source items to the target collection if none of the Items in the target collection have
  * the same {@link ItemId} as source item. If the source item does not contain a {@link ItemId} it is always added to
@@ -29,7 +33,11 @@ import java.util.List;
 public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy {
 
     /** {@inheritDoc} */
-    public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources) {
+    public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
+            @Nonnull @NonnullElements final Collection<Item<?>>... sources) {
+        assert target != null : "Target collection can not be null";
+        assert sources != null && sources.length > 0: "Source collections can not be null or empty";
+        
         List<ItemId> itemIds;
         HashSet<ItemId> presentItemIds = new HashSet<ItemId>();
 
@@ -54,7 +62,9 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
      * @param target the collection to which items will be merged in to
      * @param sourceItems the collection of items to be merged in to the target
      */
-    private void merge(HashSet<ItemId> presentItemIds, Collection<Item<?>> target, Collection<Item<?>> sourceItems) {
+    private void merge(@Nonnull @NonnullElements final HashSet<ItemId> presentItemIds,
+            @Nonnull @NonnullElements final Collection<Item<?>> target,
+            @Nonnull @NonnullElements final Collection<Item<?>> sourceItems) {
         boolean itemAlreadyPresent;
         List<ItemId> itemIds;
         for (Item sourceItem : sourceItems) {

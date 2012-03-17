@@ -17,7 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -36,7 +39,7 @@ public class ItemTag implements ItemMetadata {
      * 
      * @param itemTag a tag for a metadata element
      */
-    public ItemTag(final String itemTag) {
+    public ItemTag(@Nonnull @NotEmpty final String itemTag) {
         tag = Assert.isNotNull(StringSupport.trimOrNull(itemTag), "Tag may not be null or empty");
     }
 
@@ -45,7 +48,7 @@ public class ItemTag implements ItemMetadata {
      * 
      * @return tag for the metadata element, never null
      */
-    public String getTag() {
+    @Nonnull public String getTag() {
         return tag;
     }
 }

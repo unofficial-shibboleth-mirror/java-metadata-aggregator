@@ -20,8 +20,12 @@ package net.shibboleth.metadata.util;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
@@ -49,20 +53,11 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
      * 
      * @param wrappedCollection the underlying collection that holds the items
      */
-    public ItemCollectionWithMetadata(Collection<ItemType> wrappedCollection) {
+    public ItemCollectionWithMetadata(@Nonnull @NonnullElements final Collection<ItemType> wrappedCollection) {
         delegate = Assert.isNotNull(wrappedCollection, "Wrapped collection can not be null");
-        metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
-    }
+        delegate.clear();
 
-    /**
-     * Gets the underlying collection used to store Items.
-     * 
-     * @param <T> type of the underlying collection
-     * 
-     * @return the underlying collection, never null
-     */
-    public <T extends Collection<ItemType>> T unwrap() {
-        return (T) delegate;
+        metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
     }
 
     /**
@@ -70,7 +65,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
      * 
      * @return the {@link ItemMetadata} for this collection, never null
      */
-    public ClassToInstanceMultiMap<ItemMetadata> getCollectionMetadata() {
+    @Nonnull @NonnullElements public ClassToInstanceMultiMap<ItemMetadata> getCollectionMetadata() {
         return metadata;
     }
 
@@ -90,47 +85,68 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
     }
 
     /** {@inheritDoc} */
-    public Iterator<ItemType> iterator() {
+    @Nonnull @NonnullElements public Iterator<ItemType> iterator() {
         return delegate.iterator();
     }
 
     /** {@inheritDoc} */
-    public Object[] toArray() {
+    @Nonnull @NonnullElements public Object[] toArray() {
         return delegate.toArray();
     }
 
     /** {@inheritDoc} */
-    public <T> T[] toArray(T[] a) {
+    @Nonnull @NonnullElements public <T> T[] toArray(@Nonnull final T[] a) {
+        assert a != null : "Target array can not be null";
         return delegate.toArray(a);
     }
 
     /** {@inheritDoc} */
-    public boolean add(ItemType e) {
+    public boolean add(@Nullable final ItemType e) {
+        if (e == null) {
+            return false;
+        }
+
         return delegate.add(e);
     }
 
     /** {@inheritDoc} */
-    public boolean remove(Object o) {
+    public boolean remove(@Nullable final Object o) {
+        if (o == null) {
+            return false;
+        }
+
         return delegate.remove(o);
     }
 
     /** {@inheritDoc} */
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(@Nonnull final Collection<?> c) {
+        assert c != null : "Collection can not be null";
+
         return delegate.containsAll(c);
     }
 
     /** {@inheritDoc} */
-    public boolean addAll(Collection<? extends ItemType> c) {
+    public boolean addAll(@Nullable final Collection<? extends ItemType> c) {
+        if (c == null) {
+            return false;
+        }
+
         return delegate.addAll(c);
     }
 
     /** {@inheritDoc} */
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(@Nullable final Collection<?> c) {
+        if (c == null) {
+            return false;
+        }
+
         return delegate.removeAll(c);
     }
 
     /** {@inheritDoc} */
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(@Nonnull Collection<?> c) {
+        assert c != null : "Collection can not be null";
+
         return delegate.retainAll(c);
     }
 

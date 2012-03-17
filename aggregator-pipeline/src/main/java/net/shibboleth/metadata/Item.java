@@ -19,6 +19,9 @@ package net.shibboleth.metadata;
 
 import java.io.Serializable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 
 /**
@@ -33,14 +36,14 @@ public interface Item<T> extends Serializable {
      * 
      * @return the wrapped item data
      */
-    public T unwrap();
+    @Nullable public T unwrap();
 
     /**
      * Gets all of the metadata attached to this Item.
      * 
      * @return metadata attached to this Item
      */
-    public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
+    @Nonnull public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
 
     /**
      * Performs a copy of this Item. All member fields, except {@link ItemMetadata}, should be deep cloned.
@@ -48,5 +51,5 @@ public interface Item<T> extends Serializable {
      * 
      * @return the clone of this element
      */
-    public Item<T> copy();
+    @Nonnull public Item<T> copy();
 }

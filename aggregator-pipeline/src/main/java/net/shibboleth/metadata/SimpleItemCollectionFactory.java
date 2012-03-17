@@ -20,6 +20,8 @@ package net.shibboleth.metadata;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.base.Supplier;
 
 /**
@@ -30,7 +32,7 @@ import com.google.common.base.Supplier;
 public class SimpleItemCollectionFactory<ItemType extends Item> implements Supplier<Collection<ItemType>> {
 
     /** {@inheritDoc} */
-    public Collection<ItemType> get() {
+    @Nonnull public Collection<ItemType> get() {
         return new ArrayList<ItemType>();
     }
 }

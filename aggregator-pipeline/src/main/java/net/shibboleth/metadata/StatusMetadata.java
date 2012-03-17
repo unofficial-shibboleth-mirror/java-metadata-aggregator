@@ -51,7 +51,7 @@ public class StatusMetadata implements ItemMetadata {
      * 
      * @return ID of the component that generated the status message, never null
      */
-    public String getComponentId() {
+    @Nonnull public String getComponentId() {
         return component;
     }
 
@@ -60,7 +60,7 @@ public class StatusMetadata implements ItemMetadata {
      * 
      * @return the status message, never null
      */
-    public String getStatusMessage() {
+    @Nonnull public String getStatusMessage() {
         return message;
     }
 }

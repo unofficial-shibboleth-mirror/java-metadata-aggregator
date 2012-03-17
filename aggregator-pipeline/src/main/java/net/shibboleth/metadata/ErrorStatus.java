@@ -17,6 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+
 /** A type of {@link StatusMetadata} that indicates something is definitely wrong with the Item. */
 public class ErrorStatus extends StatusMetadata {
 
@@ -29,7 +33,7 @@ public class ErrorStatus extends StatusMetadata {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public ErrorStatus(String componentId, String statusMessage) {
+    public ErrorStatus(@Nonnull @NotEmpty final String componentId, @Nonnull @NotEmpty final String statusMessage) {
         super(componentId, statusMessage);
     }
 }

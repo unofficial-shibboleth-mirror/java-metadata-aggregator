@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
 /** Class for getting and printing the version of the metadata pipeline. */
 public final class Version {
 
@@ -51,7 +53,7 @@ public final class Version {
      * 
      * @return version of the metadata pipeline
      */
-    public static String getVersion() {
+    @Nonnull public static String getVersion() {
         return VERSION;
     }
 

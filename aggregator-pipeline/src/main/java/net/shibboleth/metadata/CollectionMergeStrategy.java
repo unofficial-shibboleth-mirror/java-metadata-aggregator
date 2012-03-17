@@ -19,6 +19,10 @@ package net.shibboleth.metadata;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /** Strategy used to merge the results of each child pipeline in to the collection of Items given to this stage. */
 public interface CollectionMergeStrategy {
 
@@ -28,5 +32,6 @@ public interface CollectionMergeStrategy {
      * @param target collection in to which all the Items should be merged, never null
      * @param sources collections of Items to be merged in to the target, never null not containing any null elements
      */
-    public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources);
+    public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
+            @Nonnull @NonnullElements final Collection<Item<?>>... sources);
 }

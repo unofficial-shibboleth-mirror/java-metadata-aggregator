@@ -17,6 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+
 /**
  * A type of {@link StatusMetadata} that carries informational messages. These messages should never be used to carry
  * status messages that would indicate an error or failing of the Item in some way.
@@ -32,7 +36,7 @@ public class InfoStatus extends StatusMetadata {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public InfoStatus(String componentId, String statusMessage) {
+    public InfoStatus(@Nonnull @NotEmpty final String componentId, @Nonnull @NotEmpty final String statusMessage) {
         super(componentId, statusMessage);
     }
 }

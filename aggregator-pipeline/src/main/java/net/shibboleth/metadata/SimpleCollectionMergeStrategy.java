@@ -19,6 +19,10 @@ package net.shibboleth.metadata;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /**
  * A {@link CollectionMergeStrategy} that adds the Item from each source, in order, by means of the
  * {@link Collection#addAll(Collection)} method on the target.
@@ -26,7 +30,11 @@ import java.util.Collection;
 public class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
 
     /** {@inheritDoc} */
-    public void mergeCollection(Collection<Item<?>> target, Collection<Item<?>>... sources) {
+    public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
+            @Nonnull @NonnullElements final Collection<Item<?>>... sources) {
+        assert target != null : "Target collection can not be null";
+        assert sources != null && sources.length > 0 : "Source collections can not be null or empty";
+
         for (Collection<Item<?>> source : sources) {
             target.addAll(source);
         }

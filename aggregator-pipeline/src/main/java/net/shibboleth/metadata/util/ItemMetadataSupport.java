@@ -19,8 +19,11 @@ package net.shibboleth.metadata.util;
 
 import java.util.Collection;
 
+import javax.annotation.Nullable;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 
 /** Helper class for dealing with {@link ItemMetadata} operations. */
 public final class ItemMetadataSupport {
@@ -37,13 +40,14 @@ public final class ItemMetadataSupport {
      * @param metadatas collection of {@link ItemMetadata} items to be added to each {@link Item} element of the given
      *            collection
      */
-    public static void addToAll(final Collection<? extends Item> itemCollection, final ItemMetadata... metadatas) {
+    public static void addToAll(@Nullable final Collection<? extends Item> itemCollection,
+            @Nullable @NullableElements final ItemMetadata... metadatas) {
         if (itemCollection == null || metadatas == null || metadatas.length == 0) {
             return;
         }
 
-        for (Item<?> metadata : itemCollection) {
-            addToAll(metadata, metadatas);
+        for (Item<?> item : itemCollection) {
+            addToAll(item, metadatas);
         }
     }
 
@@ -53,13 +57,16 @@ public final class ItemMetadataSupport {
      * @param item element to which {@link ItemMetadata} will be added
      * @param metadatas {@link ItemMetadata} to be added to the metadata element
      */
-    public static void addToAll(final Item<?> item, final ItemMetadata... metadatas) {
+    public static void addToAll(@Nullable final Item<?> item,
+            @Nullable @NullableElements final ItemMetadata... metadatas) {
         if (item == null || metadatas == null || metadatas.length == 0) {
             return;
         }
 
-        for (ItemMetadata info : metadatas) {
-            item.getItemMetadata().put(info);
+        for (ItemMetadata metadata : metadatas) {
+            if (metadata != null) {
+                item.getItemMetadata().put(metadata);
+            }
         }
     }
 
@@ -70,8 +77,8 @@ public final class ItemMetadataSupport {
      * @param itemCollection collection to which the metadata may be added
      * @param itemMetadatas the metadata which may be added to the collection
      */
-    public static void addToCollection(final Collection<? extends Item> itemCollection,
-            final ItemMetadata... itemMetadatas) {
+    public static void addToCollection(@Nullable final Collection<? extends Item> itemCollection,
+            @Nullable @NullableElements final ItemMetadata... itemMetadatas) {
         if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata) || itemMetadatas == null
                 || itemMetadatas.length == 0) {
             return;
@@ -79,7 +86,9 @@ public final class ItemMetadataSupport {
 
         ItemCollectionWithMetadata collection = (ItemCollectionWithMetadata) itemCollection;
         for (ItemMetadata metadata : itemMetadatas) {
-            collection.getCollectionMetadata().put(metadata);
+            if (metadata != null) {
+                collection.getCollectionMetadata().put(metadata);
+            }
         }
     }
 }

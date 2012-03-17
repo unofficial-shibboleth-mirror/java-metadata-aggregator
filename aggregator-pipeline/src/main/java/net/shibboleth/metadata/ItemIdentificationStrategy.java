@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
 /** Strategy for determining a displayable identifier for a given {@link Item}. */
 public interface ItemIdentificationStrategy {
 
@@ -27,6 +29,6 @@ public interface ItemIdentificationStrategy {
      * 
      * @return the identifier, never null
      */
-    public String getItemIdentifier(Item<?> item);
+    public String getItemIdentifier(@Nonnull final Item<?> item);
 
 }

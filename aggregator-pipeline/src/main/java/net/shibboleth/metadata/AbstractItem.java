@@ -17,6 +17,9 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 
@@ -43,7 +46,7 @@ public abstract class AbstractItem<T> implements Item<T> {
     }
 
     /** {@inheritDoc} */
-    public T unwrap() {
+    @Nullable public T unwrap() {
         return data;
     }
 
@@ -52,12 +55,12 @@ public abstract class AbstractItem<T> implements Item<T> {
      * 
      * @param newData the data
      */
-    protected synchronized void setData(final T newData) {
+    protected synchronized void setData(@Nullable final T newData) {
         data = newData;
     }
 
     /** {@inheritDoc} */
-    public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
+    @Nonnull public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
         return metadata;
     }
 }

@@ -19,6 +19,9 @@ package net.shibboleth.metadata;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -45,13 +48,15 @@ public class FirstItemIdItemIdentificationStrategy implements ItemIdentification
      * 
      * @param identifier identifier to use if an {@link Item} does have an {@link ItemId}
      */
-    public void setNoItemIdIdentifier(String identifier) {
+    public void setNoItemIdIdentifier(@Nonnull @NotEmpty final String identifier) {
         noItemIdIdentifier =
                 Assert.isNotNull(StringSupport.trimOrNull(identifier), "Identifier can not be null or empty");
     }
 
     /** {@inheritDoc} */
-    public String getItemIdentifier(Item<?> item) {
+    @Nonnull public String getItemIdentifier(@Nonnull final Item<?> item) {
+        assert item != null : "Item can not equal null";
+        
         List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
         if (itemIds != null && !itemIds.isEmpty()) {
             return itemIds.get(0).getId();

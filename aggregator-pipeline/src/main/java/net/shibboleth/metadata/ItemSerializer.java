@@ -20,6 +20,10 @@ package net.shibboleth.metadata;
 import java.io.OutputStream;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /**
  * Serializers convert a collection of {@link Item} in to an octet stream.
  * 
@@ -33,5 +37,5 @@ public interface ItemSerializer<ItemType extends Item<?>> {
      * @param itemCollection collection of Items
      * @param output output stream to which the Item will be written
      */
-    public void serialize(Collection<ItemType> itemCollection, OutputStream output);
+    public void serialize(@Nonnull @NonnullElements final Collection<ItemType> itemCollection, @Nonnull final OutputStream output);
 }

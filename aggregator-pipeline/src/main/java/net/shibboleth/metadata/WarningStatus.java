@@ -17,6 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+
 /**
  * A type of {@link StatusMetadata} that indicates something may be "off" about the {@link Item}. This warning message
  * is stronger than the informational message that would be carried by a {@link InfoStatus} but does not necessarily
@@ -35,7 +39,7 @@ public class WarningStatus extends StatusMetadata {
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public WarningStatus(String componentId, String statusMessage) {
+    public WarningStatus(@Nonnull @NotEmpty final String componentId, @Nonnull @NotEmpty final String statusMessage) {
         super(componentId, statusMessage);
     }
 }
