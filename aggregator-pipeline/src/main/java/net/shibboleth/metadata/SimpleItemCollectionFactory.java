@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Supplier;
 
 /**
- * Implementation {@link net.shibboleth.metadata.ItemCollectionFactory} that produces {@link ArrayList} instances.
+ * Implementation {@link Supplier} that produces {@link ArrayList} instances.
  * 
  * @param <ItemType> the type of items the produced collection will contain
  */

@@ -50,10 +50,10 @@ import com.google.common.collect.Iterables;
  * This {@link Stage} allows the merging of multiple pipeline outputs into a single {@link Collection} that can then be
  * used as the input source for another pipeline.
  * 
- * This source works producing a {@link Collection} by means of the registered
- * {@link net.shibboleth.metadata.ItemCollectionFactory} . Then each of its registered {@link Pipeline} is invoked in
- * turn (no ordering is guaranteed and pipelines may execute concurrently). After each pipeline has completed the
- * results are merged in to the Item collection given to this stage by means of the an {@link CollectionMergeStrategy}.
+ * This source works producing a {@link Collection} by means of the registered {@link Supplier} . Then each of its
+ * registered {@link Pipeline} is invoked in turn (no ordering is guaranteed and pipelines may execute concurrently).
+ * After each pipeline has completed the results are merged in to the Item collection given to this stage by means of
+ * the an {@link CollectionMergeStrategy}.
  */
 @ThreadSafe
 public class PipelineMergeStage extends BaseStage<Item<?>> {

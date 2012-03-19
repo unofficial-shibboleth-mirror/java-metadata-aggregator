@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/** Unit test for the {@EntitiesDescriptorAssemblerStage} class. */
+/** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */
 public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
     /**

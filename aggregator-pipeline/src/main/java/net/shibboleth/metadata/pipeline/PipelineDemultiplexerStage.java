@@ -46,8 +46,8 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList.Builder;
 
 /**
- * A stage which, given an item collection and a list of {@link Pipeline} and {@link ItemSelectionStrategy} pairs, sends
- * the collection of item copies selected by the selection strategy to the associated pipeline. This stage is similar to
+ * A stage which, given an item collection and a list of {@link Pipeline} and {@link Predicate} pairs, sends the
+ * collection of item copies selected by the predicate to the associated pipeline. This stage is similar to
  * {@link SplitMergeStage} but a given item, or more precisely a copy of it, may end up going to more than one pipeline
  * (or no pipeline).
  * 
@@ -58,10 +58,10 @@ import com.google.common.collect.ImmutableList.Builder;
  * </ul>
  * 
  * <p>
- * If no {@link ExecutorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with 6
- * threads.
+ * If no {@link #executorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with
+ * 6 threads.
  * 
- * If no {@link ItemCollectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
+ * If no {@link #collectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
  * 
  * @param <ItemType> type of items upon which this stage operates
  */

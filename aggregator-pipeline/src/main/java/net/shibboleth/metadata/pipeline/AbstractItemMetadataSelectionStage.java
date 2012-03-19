@@ -49,17 +49,17 @@ import com.google.common.collect.Iterables;
 @ThreadSafe
 public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<?>> {
 
-    /** {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be selected. */
+    /** {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be selected. */
     private Collection<Class<ItemMetadata>> selectionRequirements = Collections.emptyList();
 
-    /** Strategy used to generate {@link Item} identifiers for logging purposes. */
+    /** Strategy used to generate item identifiers for logging purposes. */
     private ItemIdentificationStrategy identifierStrategy = new FirstItemIdItemIdentificationStrategy();
 
     /**
-     * Gets the {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be
+     * Gets the {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
      * selected.
      * 
-     * @return {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be
+     * @return {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
      *         selected, never null nor containing null elements
      */
     @Nonnull @NonnullElements @Unmodifiable public Collection<Class<ItemMetadata>> getSelectionRequirements() {
@@ -67,10 +67,10 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     }
 
     /**
-     * Sets the {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be
+     * Sets the {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
      * selected.
      * 
-     * @param requirements {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the
+     * @param requirements {@link ItemMetadata} classes that, if the an item contains, will cause the
      *            {@link Item} to be selected, may be null or contain null elements
      */
     public synchronized void setSelectionRequirements(

@@ -57,10 +57,10 @@ import com.google.common.base.Supplier;
  * </ul>
  * 
  * <p>
- * If no {@link ExecutorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with 6
- * threads.
+ * If no {@link #executorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with
+ * 6 threads.
  * 
- * If no {@link ItemCollectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
+ * If no {@link #collectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
  * 
  * If one or the other pipeline is null then no objects will be passed to it (obviously).
  * 
