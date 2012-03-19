@@ -19,13 +19,17 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 
 import org.slf4j.Logger;
@@ -62,7 +66,7 @@ public class ScriptletStage extends BaseStage<Item<?>> {
      * 
      * @return the script executed by this stage
      */
-    public EvaluableScript getScript() {
+    @Nullable public EvaluableScript getScript() {
         return script;
     }
 
@@ -71,15 +75,16 @@ public class ScriptletStage extends BaseStage<Item<?>> {
      * 
      * @param stageScript the script executed by this stage
      */
-    public synchronized void setScript(EvaluableScript stageScript) {
+    public synchronized void setScript(@Nonnull final EvaluableScript stageScript) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        script = stageScript;
+        script = Assert.isNotNull(stageScript, "Stage script can not be null");
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<Item<?>> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection)
+            throws StageProcessingException {
         final SimpleScriptContext context = new SimpleScriptContext();
         context.setAttribute(ITEMS, itemCollection, SimpleScriptContext.ENGINE_SCOPE);
 

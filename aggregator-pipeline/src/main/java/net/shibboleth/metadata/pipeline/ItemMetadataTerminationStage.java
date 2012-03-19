@@ -21,10 +21,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +42,15 @@ public class ItemMetadataTerminationStage extends AbstractItemMetadataSelectionS
     private final Logger log = LoggerFactory.getLogger(ItemMetadataTerminationStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<Item<?>> itemCollection, Item<?> matchingItem,
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection, Item<?> matchingItem,
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
 
         final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
-            log.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
-                    matchingMetadata.keySet());
+        log.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
+                matchingMetadata.keySet());
 
-        throw new StageProcessingException("Item " + itemId + " marked with metadata of type " + matchingMetadata.keySet());
+        throw new StageProcessingException("Item " + itemId + " marked with metadata of type "
+                + matchingMetadata.keySet());
     }
 }

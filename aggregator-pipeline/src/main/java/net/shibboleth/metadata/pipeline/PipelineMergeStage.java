@@ -26,19 +26,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
-import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
@@ -57,30 +58,27 @@ import com.google.common.collect.Iterables;
 @ThreadSafe
 public class PipelineMergeStage extends BaseStage<Item<?>> {
 
-    /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(PipelineMergeStage.class);
-
     /** Service used to execute the pipelines whose results will be merged. */
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /**
      * The factory used to create the item returned by this source. Default implementation is
      * {@link SimpleItemCollectionFactory}.
      */
-    private Supplier<Collection> collectionFactory;
+    private Supplier<Collection> collectionFactory = new SimpleItemCollectionFactory();
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
-    private CollectionMergeStrategy mergeStrategy;
+    private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /** Pipelines whose results become the output of this source. */
-    private List<Pipeline<? extends Item<?>>> mergedPipelines = new LazyList<Pipeline<? extends Item<?>>>();
+    private List<Pipeline<? extends Item<?>>> mergedPipelines = Collections.emptyList();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @return executor service used to run the selected and non-selected item pipelines
      */
-    public ExecutorService getExecutorService() {
+    @Nonnull public ExecutorService getExecutorService() {
         return executorService;
     }
 
@@ -89,11 +87,11 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @param service executor service used to run the selected and non-selected item pipelines
      */
-    public synchronized void setExecutorService(ExecutorService service) {
+    public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        executorService = service;
+        executorService = Assert.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -101,7 +99,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @return unmodifiable set of pipelines used by this stage
      */
-    public List<Pipeline<? extends Item<?>>> getMergedPipelines() {
+    @Nonnull @NonnullElements @Unmodifiable public List<Pipeline<? extends Item<?>>> getMergedPipelines() {
         return mergedPipelines;
     }
 
@@ -110,11 +108,16 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @param pipelines pipelines joined by this stage
      */
-    public synchronized void setMergedPipelines(final List<? extends Pipeline<? extends Item<?>>> pipelines) {
+    public synchronized void setMergedPipelines(
+            @Nullable @NullableElements final List<? extends Pipeline<? extends Item<?>>> pipelines) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        mergedPipelines = ImmutableList.copyOf(Iterables.filter(pipelines, Predicates.notNull()));
+        if (pipelines == null || pipelines.isEmpty()) {
+            mergedPipelines = Collections.emptyList();
+        } else {
+            mergedPipelines = ImmutableList.copyOf(Iterables.filter(pipelines, Predicates.notNull()));
+        }
 
     }
 
@@ -123,7 +126,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @return factory used to create the {@link Item} collection produced by this source
      */
-    public Supplier<Collection> getCollectionFactory() {
+    @Nonnull public Supplier<Collection> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -132,7 +135,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
-    public synchronized void setCollectionFactory(final Supplier<Collection> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection> factory) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -144,7 +147,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * 
      * @return strategy used to merge all the joined pipeline results in to the final Item collection, never null
      */
-    public CollectionMergeStrategy getCollectionMergeStrategy() {
+    @Nonnull public CollectionMergeStrategy getCollectionMergeStrategy() {
         return mergeStrategy;
     }
 
@@ -154,7 +157,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
      * @param strategy strategy used to merge all the joined pipeline results in to the final Item collection, never
      *            null
      */
-    public synchronized void setCollectionMergeStrategy(final CollectionMergeStrategy strategy) {
+    public synchronized void setCollectionMergeStrategy(@Nonnull final CollectionMergeStrategy strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -162,7 +165,8 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<Item<?>> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection)
+            throws StageProcessingException {
         ArrayList<Future<Collection<? extends Item>>> pipelineResultFutures =
                 new ArrayList<Future<Collection<? extends Item>>>();
 
@@ -190,28 +194,13 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         collectionFactory = null;
         mergeStrategy = null;
         mergedPipelines = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-
-        if (executorService == null) {
-            log.debug("No ExecutorService specified, creating a fixed thread pool service with 6 threads");
-            executorService = Executors.newFixedThreadPool(6);
-        }
-
-        if (collectionFactory == null) {
-            log.debug("No collection factory specified, using {}", SimpleItemCollectionFactory.class.getName());
-            collectionFactory = new SimpleItemCollectionFactory();
-        }
-
-        if (mergeStrategy == null) {
-            log.debug("No collection merge strategy specified, using {}", SimpleCollectionMergeStrategy.class.getName());
-            mergeStrategy = new SimpleCollectionMergeStrategy();
-        }
 
         for (Pipeline<? extends Item<?>> pipeline : mergedPipelines) {
             if (!pipeline.isInitialized()) {

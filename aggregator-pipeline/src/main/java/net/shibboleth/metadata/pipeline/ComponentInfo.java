@@ -17,6 +17,9 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -52,7 +55,8 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param component component which this info describes
      */
-    public ComponentInfo(final IdentifiableComponent component) {
+    public ComponentInfo(@Nonnull final IdentifiableComponent component) {
+        assert component != null : "Component can not be null";
         componentId = component.getId();
         componentType = component.getClass();
         startInstant = new DateTime(ISOChronology.getInstanceUTC());
@@ -63,7 +67,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @return ID of the component that operated on the element
      */
-    public String getComponentId() {
+    @Nullable public String getComponentId() {
         return componentId;
     }
 
@@ -72,7 +76,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param id ID of the component that operated on the element
      */
-    public void setComponentId(final String id) {
+    public void setComponentId(@Nullable final String id) {
         componentId = StringSupport.trimOrNull(id);
     }
 
@@ -81,7 +85,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @return type of the component that operated on the element
      */
-    public Class<?> getComponentType() {
+    @Nullable public Class<?> getComponentType() {
         return componentType;
     }
 
@@ -90,7 +94,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param type type of the component that operated on the element
      */
-    public void setComponentType(final Class<?> type) {
+    public void setComponentType(@Nullable final Class<?> type) {
         componentType = type;
     }
 
@@ -99,7 +103,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @return instant when the component operation started
      */
-    public DateTime getStartInstant() {
+    @Nullable public DateTime getStartInstant() {
         return startInstant;
     }
 
@@ -108,7 +112,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param instant instant when the component operation started
      */
-    public void setStartInstant(final DateTime instant) {
+    public void setStartInstant(@Nullable final DateTime instant) {
         startInstant = instant;
     }
 
@@ -117,7 +121,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @return instant when the component operation completed
      */
-    public DateTime getCompleteInstant() {
+    @Nullable public DateTime getCompleteInstant() {
         return completeInstant;
     }
 
@@ -131,7 +135,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param instant when the component operation completed
      */
-    public void setCompleteInstant(DateTime instant) {
+    public void setCompleteInstant(@Nullable final DateTime instant) {
         completeInstant = instant;
     }
 }

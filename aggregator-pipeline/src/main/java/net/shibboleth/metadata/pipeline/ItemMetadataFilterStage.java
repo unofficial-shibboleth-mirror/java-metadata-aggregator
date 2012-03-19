@@ -21,10 +21,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,7 @@ public class ItemMetadataFilterStage extends AbstractItemMetadataSelectionStage 
     private final Logger log = LoggerFactory.getLogger(ItemMetadataFilterStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<Item<?>> itemCollection, Item<?> matchingItem,
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection, Item<?> matchingItem,
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
 

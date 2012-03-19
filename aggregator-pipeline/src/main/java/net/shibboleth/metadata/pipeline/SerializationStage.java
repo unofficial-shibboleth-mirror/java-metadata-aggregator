@@ -22,12 +22,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
 /**
  * A stage which writes the given item collection out to a file.
@@ -58,7 +62,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @return file to which the item will be written
      */
-    public File getOutputFile() {
+    @Nullable public File getOutputFile() {
         return outputFile;
     }
 
@@ -67,11 +71,11 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @param file file to which the item will be written
      */
-    public synchronized void setOutputFile(File file) {
+    public synchronized void setOutputFile(@Nonnull final File file) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        outputFile = file;
+
+        outputFile = Assert.isNotNull(file, "Output file can not be null");
     }
 
     /**
@@ -91,7 +95,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
     public synchronized void setOverwritingExistingOutputFile(boolean isOverwriting) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         overwritingExistingOutputFile = isOverwriting;
     }
 
@@ -100,7 +104,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @return serializer used to write item to the output file
      */
-    public ItemSerializer<ItemType> getSerializer() {
+    @Nullable public ItemSerializer<ItemType> getSerializer() {
         return serializer;
     }
 
@@ -109,27 +113,28 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @param itemSerializer serializer used to write item to the output file
      */
-    public synchronized void setSerializer(ItemSerializer<ItemType> itemSerializer) {
+    public synchronized void setSerializer(@Nonnull final ItemSerializer<ItemType> itemSerializer) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        serializer = itemSerializer;
+
+        serializer = Assert.isNotNull(itemSerializer, "Item serializer can not be null");
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         try {
             serializer.serialize(itemCollection, new FileOutputStream(outputFile));
         } catch (IOException e) {
             throw new StageProcessingException("Error write to output file " + outputFile.getAbsolutePath(), e);
         }
     }
-    
+
     /** {@inheritDoc} */
     protected void doDestroy() {
         outputFile = null;
         serializer = null;
-        
+
         super.doDestroy();
     }
 
@@ -141,13 +146,19 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
             throw new ComponentInitializationException("Output file can not be null");
         }
 
+        if (!outputFile.canWrite()) {
+            throw new ComponentInitializationException("Can not write to output file '" + outputFile.getAbsolutePath()
+                    + "'");
+        }
+
+        if (outputFile.exists() && !overwritingExistingOutputFile) {
+            throw new ComponentInitializationException("Output file '" + outputFile.getAbsolutePath()
+                    + "' exist and stage is configured not to overwrite the file");
+        }
+
         if (serializer == null) {
             throw new ComponentInitializationException("Item serializer can not be null");
         }
 
-        if (outputFile.exists() && !overwritingExistingOutputFile) {
-            throw new ComponentInitializationException("Output file " + outputFile.getAbsolutePath()
-                    + " exist and stage is configured not to overwrite the file");
-        }
     }
 }

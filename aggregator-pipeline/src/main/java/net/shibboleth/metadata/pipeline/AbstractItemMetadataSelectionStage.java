@@ -24,12 +24,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
@@ -57,7 +62,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * @return {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the {@link Item} to be
      *         selected, never null nor containing null elements
      */
-    public Collection<Class<ItemMetadata>> getSelectionRequirements() {
+    @Nonnull @NonnullElements @Unmodifiable public Collection<Class<ItemMetadata>> getSelectionRequirements() {
         return selectionRequirements;
     }
 
@@ -68,11 +73,16 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * @param requirements {@link ItemMetadata} classes that, if the an {@Item} contains, will cause the
      *            {@link Item} to be selected, may be null or contain null elements
      */
-    public synchronized void setSelectionRequirements(Collection<Class<ItemMetadata>> requirements) {
+    public synchronized void setSelectionRequirements(
+            @Nullable @NullableElements final Collection<Class<ItemMetadata>> requirements) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        selectionRequirements = ImmutableList.copyOf(Iterables.filter(requirements, Predicates.notNull()));
+        if (requirements == null) {
+            selectionRequirements = Collections.emptyList();
+        } else {
+            selectionRequirements = ImmutableList.copyOf(Iterables.filter(requirements, Predicates.notNull()));
+        }
     }
 
     /**
@@ -80,7 +90,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * 
      * @return strategy used to generate {@link Item} identifiers for logging purposes
      */
-    public ItemIdentificationStrategy getItemIdentifierStrategy() {
+    @Nonnull public ItemIdentificationStrategy getItemIdentifierStrategy() {
         return identifierStrategy;
     }
 
@@ -89,7 +99,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * 
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
-    public synchronized void setIdentifierStrategy(ItemIdentificationStrategy strategy) {
+    public synchronized void setIdentifierStrategy(@Nonnull final ItemIdentificationStrategy strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -97,7 +107,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<Item<?>> itemCollection) throws StageProcessingException {
+    protected void doExecute(final Collection<Item<?>> itemCollection) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
         // to the itemCollection and thus would cause issues if we were iterating over it directly
         ArrayList<Item<?>> collectionCopy = new ArrayList<Item<?>>(itemCollection);
@@ -135,7 +145,11 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * 
      * @throws StageProcessingException thrown if there is a problem processing the item
      */
-    protected abstract void doExecute(Collection<Item<?>> itemCollection, Item<?> matchingItem,
-            Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
-            throws StageProcessingException;
+    protected abstract
+            void
+            doExecute(
+                    @Nonnull @NonnullElements final Collection<Item<?>> itemCollection,
+                    @Nonnull final Item<?> matchingItem,
+                    @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+                    throws StageProcessingException;
 }

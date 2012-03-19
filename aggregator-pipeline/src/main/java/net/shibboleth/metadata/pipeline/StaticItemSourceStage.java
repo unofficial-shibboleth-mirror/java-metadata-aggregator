@@ -17,15 +17,22 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * A stage which adds a static collection of Items to a {@link Item} collection.
@@ -36,14 +43,14 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
 
     /** Collection of static Items added to each Item collection by {@link #execute(Collection)}. */
-    private Collection<ItemType> source;
+    private Collection<ItemType> source = Collections.emptyList();
 
     /**
      * Gets the collection of static Items added to the Item collection by this stage.
      * 
      * @return collection of static Items added to the Item collection by this stage
      */
-    public Collection<ItemType> getSourceItems() {
+    @Nonnull @NonnullElements @Unmodifiable public Collection<ItemType> getSourceItems() {
         return source;
     }
 
@@ -52,46 +59,31 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
      * 
      * @param items collection of Items added to the Item collection by this stage
      */
-    public synchronized void setSourceItems(final Collection<ItemType> items) {
+    public synchronized void setSourceItems(@Nullable @NullableElements final Collection<ItemType> items) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         if (items == null || items.isEmpty()) {
             source = Collections.emptyList();
-            return;
-        }
-
-        source = new ArrayList<ItemType>();
-        for (ItemType item : items) {
-            if (item != null) {
-                source.add(item);
-            }
+        } else {
+            source = ImmutableList.copyOf(Iterables.filter(items, Predicates.notNull()));
         }
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         for (ItemType items : getSourceItems()) {
             if (items != null) {
                 itemCollection.add((ItemType) items.copy());
             }
         }
     }
-    
+
     /** {@inheritDoc} */
     protected void doDestroy() {
         source = null;
-        
+
         super.doDestroy();
     }
-
-    /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-
-        if (source == null || source.isEmpty()) {
-            source = Collections.emptyList();
-        }
-    }
-
 }

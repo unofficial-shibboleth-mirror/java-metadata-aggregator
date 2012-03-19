@@ -26,19 +26,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * A stage which, given an item collection and a list of {@link Pipeline} and {@link ItemSelectionStrategy} pairs, sends
@@ -67,23 +72,23 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     private final Logger log = LoggerFactory.getLogger(PipelineDemultiplexerStage.class);
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /** Whether this child waits for all the invoked pipelines to complete before proceeding. */
     private boolean waitingForPipelines;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private Supplier<Collection<ItemType>> collectionFactory;
+    private Supplier<Collection<ItemType>> collectionFactory = new SimpleItemCollectionFactory<ItemType>();
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
-    private List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pipelineAndStrategies;
+    private List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pipelineAndStrategies = Collections.emptyList();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @return executor service used to run the selected and non-selected item pipelines
      */
-    public ExecutorService getExecutorService() {
+    @Nonnull public ExecutorService getExecutorService() {
         return executorService;
     }
 
@@ -92,11 +97,11 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @param service executor service used to run the selected and non-selected item pipelines
      */
-    public synchronized void setExecutorService(ExecutorService service) {
+    public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        executorService = service;
+        executorService = Assert.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -125,7 +130,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    public Supplier<Collection<ItemType>> getCollectionFactory() {
+    @Nonnull public Supplier<Collection<ItemType>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -134,11 +139,11 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(Supplier<Collection<ItemType>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<ItemType>> factory) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        collectionFactory = factory;
+        collectionFactory = Assert.isNotNull(factory, "Collection factory can not be null");
     }
 
     /**
@@ -146,25 +151,41 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @return pipeline and item selection strategies used to demultiplex item collections within this stage
      */
-    public List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> getPipelineAndSelectionStrategies() {
+    @Nonnull @NonnullElements @Unmodifiable public List<Pair<Pipeline<ItemType>, Predicate<ItemType>>>
+            getPipelineAndSelectionStrategies() {
         return pipelineAndStrategies;
     }
 
     /**
      * Sets the pipeline and item selection strategies used to demultiplex item collections within this stage.
      * 
-     * @param pass pipeline and item selection strategies used to demultiplex item collections within this stage
+     * @param passes pipeline and item selection strategies used to demultiplex item collections within this stage
      */
-    public synchronized void
-            setPipelineAndSelectionStrategies(List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pass) {
+    public synchronized void setPipelineAndSelectionStrategies(
+            @Nonnull @NonnullElements final List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> passes) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        pipelineAndStrategies = pass;
+        if (passes == null || passes.isEmpty()) {
+            pipelineAndStrategies = Collections.emptyList();
+            return;
+        }
+
+        Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>> checkedPasses =
+                new Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>>();
+        for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pass : passes) {
+            assert pass.getFirst() != null : "Pipeline can not be null";
+            assert pass.getSecond() != null : "Predicate can not be null";
+
+            checkedPasses.add(new Pair<Pipeline<ItemType>, Predicate<ItemType>>(pass));
+        }
+
+        pipelineAndStrategies = checkedPasses.build();
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         Pipeline<ItemType> pipeline;
         Predicate<ItemType> selectionStrategy;
         Collection<ItemType> selectedItems;
@@ -210,17 +231,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        if (executorService == null) {
-            log.debug("No ExecutorService specified, creating a fixed thread pool service with 6 threads");
-            executorService = Executors.newFixedThreadPool(6);
-        }
-
-        if (collectionFactory == null) {
-            log.debug("No collection factory specified, using {}", SimpleItemCollectionFactory.class.getName());
-            collectionFactory = new SimpleItemCollectionFactory();
-        }
-
-        if (pipelineAndStrategies == null || pipelineAndStrategies.isEmpty()) {
+        if (pipelineAndStrategies.isEmpty()) {
             throw new ComponentInitializationException(
                     "Pipeline and selection strategy collection can not be null or empty");
         }
@@ -228,18 +239,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         Pipeline<ItemType> pipeline;
         for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();
-            if (pipeline == null) {
-                throw new ComponentInitializationException(
-                        "Pipeline of pipeline and selection strategy collection entry can not be null");
-            }
-
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
-            }
-
-            if (pipelineAndStrategy.getSecond() == null) {
-                throw new ComponentInitializationException(
-                        "Item selection strategy of pipeline and selection strategy collection entry can not be null");
             }
         }
     }

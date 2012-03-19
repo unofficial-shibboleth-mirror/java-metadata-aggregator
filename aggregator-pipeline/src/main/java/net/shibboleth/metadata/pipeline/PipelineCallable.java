@@ -20,7 +20,10 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
@@ -44,7 +47,8 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
      * @param invokedPipeline the pipeline that will be invoked; must be initialized; can not be null
      * @param items the collection of items upon which the pipeline will operate, can not be null
      */
-    public PipelineCallable(Pipeline invokedPipeline, Collection<? extends Item> items) {
+    public PipelineCallable(@Nonnull final Pipeline invokedPipeline,
+            @Nonnull @NonnullElements final Collection<? extends Item> items) {
         pipeline = Assert.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
         Assert.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
 
@@ -52,7 +56,7 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
     }
 
     /** {@inheritDoc} */
-    public Collection<? extends Item> call() {
+    @Nonnull @NonnullElements public Collection<? extends Item> call() {
         try {
             log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
                     itemCollection.size());

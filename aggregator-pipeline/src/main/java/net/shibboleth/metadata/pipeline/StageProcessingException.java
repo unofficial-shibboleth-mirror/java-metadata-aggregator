@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import javax.annotation.Nonnull;
+
 /** Exception indicating that a {@link Stage} of the pipeline encountered an error. */
 public class StageProcessingException extends PipelineProcessingException {
 
@@ -33,7 +35,7 @@ public class StageProcessingException extends PipelineProcessingException {
      * 
      * @param message exception message
      */
-    public StageProcessingException(final String message) {
+    public StageProcessingException(@Nonnull final String message) {
         super(message);
     }
 
@@ -42,7 +44,7 @@ public class StageProcessingException extends PipelineProcessingException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public StageProcessingException(final Exception wrappedException) {
+    public StageProcessingException(@Nonnull final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +54,7 @@ public class StageProcessingException extends PipelineProcessingException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public StageProcessingException(final String message, final Exception wrappedException) {
+    public StageProcessingException(@Nonnull final String message, @Nonnull final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

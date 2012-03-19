@@ -19,9 +19,11 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
@@ -44,5 +46,6 @@ public interface Stage<ItemType extends Item<?>> extends DestructableComponent, 
      * 
      * @throws StageProcessingException thrown if there is a problem running this stage on the given input
      */
-    public void execute(Collection<ItemType> itemCollection) throws StageProcessingException;
+    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException;
 }

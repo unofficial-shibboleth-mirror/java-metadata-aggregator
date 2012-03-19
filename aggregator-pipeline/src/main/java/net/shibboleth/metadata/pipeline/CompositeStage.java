@@ -22,9 +22,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -47,7 +51,7 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
      * 
      * @return list the stages that compose this stage, never null nor containing null elements
      */
-    public List<Stage<ItemType>> getComposedStages() {
+    @Nonnull @NonnullElements public List<Stage<ItemType>> getComposedStages() {
         return composedStages;
     }
 
@@ -56,14 +60,16 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
      * 
      * @param stages list the stages that compose this stage, may be null or contain null elements
      */
-    public synchronized void setComposedStages(List<Stage<ItemType>> stages) {
+    public synchronized void setComposedStages(@Nullable @NullableElements final List<Stage<ItemType>> stages) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         ArrayList<Stage<ItemType>> newStages = new ArrayList<Stage<ItemType>>();
-        for (Stage<ItemType> stage : stages) {
-            if (stage != null) {
-                newStages.add(stage);
+        if (stages != null) {
+            for (Stage<ItemType> stage : stages) {
+                if (stage != null) {
+                    newStages.add(stage);
+                }
             }
         }
 
@@ -71,16 +77,17 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
     }
 
     /** {@inheritDoc} */
-    public void execute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         for (Stage<ItemType> stage : composedStages) {
             stage.execute(itemCollection);
         }
     }
-    
+
     /** {@inheritDoc} */
     protected void doDestroy() {
         composedStages = null;
-        
+
         super.doDestroy();
     }
 

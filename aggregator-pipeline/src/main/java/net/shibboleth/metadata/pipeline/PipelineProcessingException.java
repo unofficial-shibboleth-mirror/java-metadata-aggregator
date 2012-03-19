@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import javax.annotation.Nullable;
+
 /** Base exception for errors that occur within the pipeline execution. */
 public class PipelineProcessingException extends Exception {
 
@@ -33,7 +35,7 @@ public class PipelineProcessingException extends Exception {
      * 
      * @param message exception message
      */
-    public PipelineProcessingException(final String message) {
+    public PipelineProcessingException(@Nullable final String message) {
         super(message);
     }
 
@@ -42,7 +44,7 @@ public class PipelineProcessingException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public PipelineProcessingException(final Exception wrappedException) {
+    public PipelineProcessingException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +54,7 @@ public class PipelineProcessingException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public PipelineProcessingException(final String message, final Exception wrappedException) {
+    public PipelineProcessingException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

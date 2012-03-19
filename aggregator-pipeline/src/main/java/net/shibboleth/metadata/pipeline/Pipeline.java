@@ -20,9 +20,11 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
@@ -49,7 +51,7 @@ public interface Pipeline<ItemType extends Item<?>> extends DestructableComponen
      * 
      * @return unmodifiable list of stages within the pipeline
      */
-    public List<? extends Stage<ItemType>> getStages();
+    @Nonnull @NonnullElements public List<? extends Stage<ItemType>> getStages();
 
     /**
      * Executes each registered {@link Stage} in turn.
@@ -58,5 +60,6 @@ public interface Pipeline<ItemType extends Item<?>> extends DestructableComponen
      * 
      * @throws PipelineProcessingException thrown if there is a problem processing the pipeline
      */
-    public void execute(Collection<ItemType> itemCollection) throws PipelineProcessingException;
+    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws PipelineProcessingException;
 }

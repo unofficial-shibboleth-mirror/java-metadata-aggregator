@@ -24,19 +24,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 
 /**
@@ -68,13 +73,13 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
     private final Logger log = LoggerFactory.getLogger(SplitMergeStage.class);
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private Supplier<Collection<ItemType>> collectionFactory;
+    private Supplier<Collection<ItemType>> collectionFactory = new SimpleItemCollectionFactory<ItemType>();
 
     /** Strategy used to split the given item collection. */
-    private Predicate<ItemType> selectionStrategy;
+    private Predicate<ItemType> selectionStrategy = Predicates.alwaysFalse();
 
     /** Pipeline that receives the selected items. */
     private Pipeline<ItemType> selectedItemPipeline;
@@ -83,14 +88,14 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
     private Pipeline<ItemType> nonselectedItemPipeline;
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
-    private CollectionMergeStrategy mergeStrategy;
+    private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @return executor service used to run the selected and non-selected item pipelines
      */
-    public ExecutorService getExecutorService() {
+    @Nonnull public ExecutorService getExecutorService() {
         return executorService;
     }
 
@@ -99,11 +104,11 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param service executor service used to run the selected and non-selected item pipelines
      */
-    public synchronized void setExecutorService(ExecutorService service) {
+    public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        executorService = service;
+        executorService = Assert.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -111,7 +116,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    public Supplier<Collection<ItemType>> getCollectionFactory() {
+    @Nonnull public Supplier<Collection<ItemType>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -120,11 +125,11 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(Supplier<Collection<ItemType>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<ItemType>> factory) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        collectionFactory = factory;
+        collectionFactory = Assert.isNotNull(factory, "Collection factory can not be null");
     }
 
     /**
@@ -132,7 +137,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return strategy used to split the given item collection
      */
-    public Predicate<ItemType> getSelectionStrategy() {
+    @Nonnull public Predicate<ItemType> getSelectionStrategy() {
         return selectionStrategy;
     }
 
@@ -141,11 +146,11 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param strategy strategy used to split the given item collection, never null
      */
-    public synchronized void setSelectionStrategy(Predicate<ItemType> strategy) {
+    public synchronized void setSelectionStrategy(@Nonnull final Predicate<ItemType> strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        selectionStrategy = strategy;
+        selectionStrategy = Assert.isNotNull(strategy, "Item selection strategy can not be null");
     }
 
     /**
@@ -153,7 +158,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return pipeline that receives the selected items
      */
-    public Pipeline<ItemType> getSelectedItemPipeline() {
+    @Nullable public Pipeline<ItemType> getSelectedItemPipeline() {
         return selectedItemPipeline;
     }
 
@@ -162,7 +167,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param pipeline pipeline that receives the selected items
      */
-    public synchronized void setSelectedItemPipeline(Pipeline<ItemType> pipeline) {
+    public synchronized void setSelectedItemPipeline(@Nullable final Pipeline<ItemType> pipeline) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -174,7 +179,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return pipeline that receives the non-selected items
      */
-    public Pipeline<ItemType> getNonselectedItemPipeline() {
+    @Nullable public Pipeline<ItemType> getNonselectedItemPipeline() {
         return nonselectedItemPipeline;
     }
 
@@ -183,7 +188,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @param pipeline pipeline that receives the non-selected items
      */
-    public synchronized void setNonselectedItemPipeline(Pipeline<ItemType> pipeline) {
+    public synchronized void setNonselectedItemPipeline(@Nullable final Pipeline<ItemType> pipeline) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -195,7 +200,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return strategy used to merge all the joined pipeline results in to the final Item collection, never null
      */
-    public CollectionMergeStrategy getCollectionMergeStrategy() {
+    @Nonnull public CollectionMergeStrategy getCollectionMergeStrategy() {
         return mergeStrategy;
     }
 
@@ -205,15 +210,16 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * @param strategy strategy used to merge all the joined pipeline results in to the final Item collection, never
      *            null
      */
-    public synchronized void setCollectionMergeStrategy(final CollectionMergeStrategy strategy) {
+    public synchronized void setCollectionMergeStrategy(@Nonnull final CollectionMergeStrategy strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        mergeStrategy = strategy;
+        mergeStrategy = Assert.isNotNull(strategy, "Collection merge strategy can not be null");
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         Collection<ItemType> selectedItems = collectionFactory.get();
         Collection<ItemType> nonselectedItems = collectionFactory.get();
 
@@ -265,8 +271,8 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return the token representing the background execution of the pipeline
      */
-    protected Future<Collection<? extends Item>>
-            executePipeline(Pipeline<ItemType> pipeline, Collection<ItemType> items) {
+    @Nonnull protected Future<Collection<? extends Item>> executePipeline(Pipeline<ItemType> pipeline,
+            Collection<ItemType> items) {
         if (pipeline == null) {
             return null;
         }
@@ -283,27 +289,13 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         selectedItemPipeline = null;
         nonselectedItemPipeline = null;
         mergeStrategy = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-
-        if (executorService == null) {
-            log.debug("No ExecutorService specified, creating a fixed thread pool service with 6 threads");
-            executorService = Executors.newFixedThreadPool(6);
-        }
-
-        if (collectionFactory == null) {
-            log.debug("No collection factory specified, using {}", SimpleItemCollectionFactory.class.getName());
-            collectionFactory = new SimpleItemCollectionFactory();
-        }
-
-        if (selectionStrategy == null) {
-            throw new ComponentInitializationException(getId() + " selection strategy is null");
-        }
 
         if (selectedItemPipeline == null && nonselectedItemPipeline == null) {
             throw new ComponentInitializationException(getId() + " selected and non-selected pipelines are null");
@@ -317,11 +309,6 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         if (nonselectedItemPipeline != null && !nonselectedItemPipeline.isInitialized()) {
             log.debug("Non-selected item pipeline was not initialized, initializing it now.");
             nonselectedItemPipeline.initialize();
-        }
-
-        if (mergeStrategy == null) {
-            log.debug("No collection merge strategy specified, using {}", SimpleCollectionMergeStrategy.class.getName());
-            mergeStrategy = new SimpleCollectionMergeStrategy();
         }
     }
 }

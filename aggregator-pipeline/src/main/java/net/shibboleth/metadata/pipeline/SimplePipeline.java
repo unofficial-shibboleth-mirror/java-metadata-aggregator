@@ -21,10 +21,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -46,12 +50,12 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
     private List<? extends Stage<ItemType>> pipelineStages = Collections.emptyList();
 
     /** {@inheritDoc} */
-    public synchronized void setId(String componentId) {
+    public synchronized void setId(@Nonnull @NotEmpty String componentId) {
         super.setId(componentId);
     }
-    
+
     /** {@inheritDoc} */
-    public List<? extends Stage<ItemType>> getStages() {
+    @Nonnull @NonnullElements @Unmodifiable public List<? extends Stage<ItemType>> getStages() {
         return pipelineStages;
     }
 
@@ -63,12 +67,17 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
     public synchronized void setStages(final List<? extends Stage<ItemType>> stages) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        pipelineStages = ImmutableList.copyOf(Iterables.filter(stages, Predicates.notNull()));
+
+        if (stages == null || stages.isEmpty()) {
+            pipelineStages = Collections.emptyList();
+        } else {
+            pipelineStages = ImmutableList.copyOf(Iterables.filter(stages, Predicates.notNull()));
+        }
     }
 
     /** {@inheritDoc} */
-    public void execute(Collection<ItemType> itemCollection) throws PipelineProcessingException {
+    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws PipelineProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
         for (Stage<ItemType> stage : pipelineStages) {
@@ -78,21 +87,17 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
         compInfo.setCompleteInstant();
         ItemMetadataSupport.addToAll(itemCollection, compInfo);
     }
-    
+
     /** {@inheritDoc} */
     protected void doDestroy() {
         pipelineStages = null;
-        
+
         super.doDestroy();
     }
 
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
-        if (pipelineStages == null || pipelineStages.isEmpty()) {
-            pipelineStages = Collections.emptyList();
-        }
 
         for (Stage<ItemType> stage : pipelineStages) {
             if (!stage.isInitialized()) {

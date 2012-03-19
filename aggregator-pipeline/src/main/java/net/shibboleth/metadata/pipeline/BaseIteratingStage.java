@@ -20,9 +20,11 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
  * Base class for {@link Stage} implementations that iterate over each {@link Item} in a collection and do something.
@@ -38,7 +40,8 @@ public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseS
      * 
      * {@inheritDoc}
      */
-    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         Iterator<ItemType> itemIterator = itemCollection.iterator();
 
         ItemType item;
@@ -59,5 +62,5 @@ public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseS
      * 
      * @throws StageProcessingException thrown if there is a problem with the stage processing
      */
-    protected abstract boolean doExecute(ItemType item) throws StageProcessingException;
+    protected abstract boolean doExecute(@Nonnull final ItemType item) throws StageProcessingException;
 }

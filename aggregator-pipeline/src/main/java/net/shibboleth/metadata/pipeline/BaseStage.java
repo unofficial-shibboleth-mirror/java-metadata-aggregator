@@ -19,10 +19,13 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -32,24 +35,25 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <ItemType> type of Item this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseStage<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent
-        implements Stage<ItemType> {
+public abstract class BaseStage<ItemType extends Item<?>> extends
+        AbstractDestructableIdentifiableInitializableComponent implements Stage<ItemType> {
 
     /** {@inheritDoc} */
-    public synchronized void setId(String componentId) {
+    public synchronized void setId(@Nonnull @NotEmpty final String componentId) {
         super.setId(componentId);
     }
-    
+
     /**
      * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
      * the {@link ComponentInfo} to all the resultant Item elements and then sets its completion time.
      * 
      * {@inheritDoc}
      */
-    public void execute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
-        
+
         final ComponentInfo compInfo = new ComponentInfo(this);
 
         doExecute(itemCollection);
@@ -61,11 +65,14 @@ public abstract class BaseStage<ItemType extends Item<?>> extends AbstractDestru
     /**
      * Performs the stage processing on the given Item collection.
      * 
-     * <p>The stage is guaranteed to be have been initialized and not destroyed when this is invoked.</p>
+     * <p>
+     * The stage is guaranteed to be have been initialized and not destroyed when this is invoked.
+     * </p>
      * 
      * @param itemCollection collection to be processed
      * 
      * @throws StageProcessingException thrown if there is an unrecoverable problem when processing the stage
      */
-    protected abstract void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException;
+    protected abstract void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+            throws StageProcessingException;
 }
