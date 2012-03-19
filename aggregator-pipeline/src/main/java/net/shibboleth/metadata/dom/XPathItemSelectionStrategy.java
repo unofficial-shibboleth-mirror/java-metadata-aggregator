@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
+import javax.annotation.Nonnull;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -25,6 +26,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +45,8 @@ public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
     /**
      * Compiled form of the expression.
      * 
-     * {@link XPathExpression} objects are reusable but are not thread-safe, so access to
-     * the compiled expression must be protected.
+     * {@link XPathExpression} objects are reusable but are not thread-safe, so access to the compiled expression must
+     * be protected.
      */
     private final XPathExpression compiledExpression;
 
@@ -58,9 +60,13 @@ public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
      * @param context Namespace context to use for the expression, expressed as a {@link NamespaceContext}.
      * @throws XPathExpressionException if there is a problem compiling the expression
      */
-    public XPathItemSelectionStrategy(String expression, NamespaceContext context)
-        throws XPathExpressionException {
-        namespaceContext = context;
+    public XPathItemSelectionStrategy(@Nonnull @NotEmpty final String expression,
+            @Nonnull final NamespaceContext context) throws XPathExpressionException {
+        if (context == null) {
+            namespaceContext = new SimpleNamespaceContext();
+        } else {
+            namespaceContext = context;
+        }
 
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
@@ -69,9 +75,9 @@ public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
         }
         compiledExpression = xpath.compile(expression);
     }
-    
+
     /** {@inheritDoc} */
-    public synchronized boolean apply(DomElementItem item) {
+    public synchronized boolean apply(@Nonnull DomElementItem item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {

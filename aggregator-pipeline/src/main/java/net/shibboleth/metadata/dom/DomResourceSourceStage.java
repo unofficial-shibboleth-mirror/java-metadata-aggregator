@@ -20,12 +20,16 @@ package net.shibboleth.metadata.dom;
 import java.io.InputStream;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
@@ -69,7 +73,7 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * 
      * @return resource from which the XML document will be fetched
      */
-    public Resource getDomResource() {
+    @Nullable public Resource getDomResource() {
         return domResource;
     }
 
@@ -78,11 +82,11 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * 
      * @param resource resource from which the XML document will be fetched
      */
-    public synchronized void setDomResource(final Resource resource) {
+    public synchronized void setDomResource(@Nonnull final Resource resource) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        domResource = resource;
+
+        domResource = Assert.isNotNull(resource, "DOM resource can not be null");
     }
 
     /**
@@ -90,7 +94,7 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * 
      * @return pool of DOM parsers used to parse the XML file in to a DOM
      */
-    public ParserPool getParserPool() {
+    @Nullable public ParserPool getParserPool() {
         return parserPool;
     }
 
@@ -99,11 +103,11 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * 
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
-    public synchronized void setParserPool(final ParserPool pool) {
+    public synchronized void setParserPool(@Nonnull final ParserPool pool) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        parserPool = pool;
+
+        parserPool = Assert.isNotNull(pool, "Parser pool can not be null");
     }
 
     /**
@@ -123,12 +127,13 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         errorCausesSourceFailure = causesFailure;
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomElementItem> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection)
+            throws StageProcessingException {
         InputStream ins = null;
 
         try {
@@ -164,8 +169,8 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
      * 
      * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected void populateItemCollection(Collection<DomElementItem> itemCollection, final InputStream data)
-            throws StageProcessingException {
+    protected void populateItemCollection(@Nonnull @NonnullElements Collection<DomElementItem> itemCollection,
+            final InputStream data) throws StageProcessingException {
         try {
             log.debug("Parsing XML document retrieved from '{}'", domResource.getLocation());
             itemCollection.add(new DomElementItem(parserPool.parse(data)));
@@ -184,10 +189,10 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
         domResource.destroy();
         domResource = null;
         parserPool = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
@@ -201,8 +206,8 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", either a DomResource must be specified");
         }
-        
-        if(!domResource.isInitialized()){
+
+        if (!domResource.isInitialized()) {
             domResource.initialize();
         }
 

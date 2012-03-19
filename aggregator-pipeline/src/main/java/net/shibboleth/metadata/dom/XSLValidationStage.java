@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -27,6 +28,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
  * A pipeline which "validates" each element in the {@link DomElementItem} collection via an XSL stylesheet. The results
@@ -38,8 +40,9 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 public class XSLValidationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
-    protected void executeTransformer(Transformer transformer, Collection<DomElementItem> itemCollection)
-            throws StageProcessingException, TransformerConfigurationException {
+    protected void executeTransformer(@Nonnull final Transformer transformer,
+            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            TransformerConfigurationException {
 
         try {
             for (DomElementItem domItem : itemCollection) {

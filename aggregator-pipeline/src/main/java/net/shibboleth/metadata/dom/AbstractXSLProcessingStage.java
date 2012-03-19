@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Templates;
@@ -38,8 +40,12 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
@@ -47,9 +53,9 @@ import net.shibboleth.utilities.java.support.resource.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- * A pipeline stage which applies and XSLT to each element in the {@link DomElementItem} collection. 
- *
+/**
+ * A pipeline stage which applies and XSLT to each element in the {@link DomElementItem} collection.
+ * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
  * <ul>
@@ -86,7 +92,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @return resource that provides the XSL document
      */
-    public Resource getXslResource() {
+    @Nullable public Resource getXslResource() {
         return xslResource;
     }
 
@@ -95,11 +101,11 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @param resource resource that provides the XSL document
      */
-    public synchronized void setXslResource(final Resource resource) {
+    public synchronized void setXslResource(@Nonnull final Resource resource) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        xslResource = resource;
+
+        xslResource = Assert.isNotNull(resource, "XSL resource can not be null");
     }
 
     /**
@@ -107,7 +113,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @return unmodifiable collection of attributes used by the XSLT transformer, never null nor containing null keys
      */
-    public Map<String, Object> getTransformAttributes() {
+    @Nonnull @NonnullElements @Unmodifiable public Map<String, Object> getTransformAttributes() {
         return transformAttributes;
     }
 
@@ -116,7 +122,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @param attributes collection of attributes used by the XSLT transformer, may be null or contain null keys
      */
-    public synchronized void setTransformAttributes(Map<String, Object> attributes) {
+    public synchronized void setTransformAttributes(@Nullable @NullableElements final Map<String, Object> attributes) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -139,7 +145,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @return unmodifiable collection of features used by the XSLT transformer, never null nor containing null keys
      */
-    public Map<String, Boolean> getTransformFeatures() {
+    @Nonnull @NonnullElements @Unmodifiable public Map<String, Boolean> getTransformFeatures() {
         return transformFeatures;
     }
 
@@ -148,7 +154,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @param features collection of features used by the XSLT transformer, may be null or contain null keys
      */
-    public synchronized void setTransformFeatures(Map<String, Boolean> features) {
+    public synchronized void setTransformFeatures(@Nullable @NullableElements final Map<String, Boolean> features) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -171,7 +177,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @return parameters used by the XSLT transformer, never null nor containing null keys
      */
-    public Map<String, Object> getTransformParameters() {
+    @Nonnull @NonnullElements @Unmodifiable public Map<String, Object> getTransformParameters() {
         return transformParameters;
     }
 
@@ -180,7 +186,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * 
      * @param parameters parameters for the transform, may be null or contain null keys
      */
-    public synchronized void setTransformParameters(Map<String, Object> parameters) {
+    public synchronized void setTransformParameters(@Nullable @NullableElements final Map<String, Object> parameters) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -200,7 +206,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<DomElementItem> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection)
+            throws StageProcessingException {
         try {
             final Transformer transformer = xslTemplate.newTransformer();
             for (Map.Entry<String, Object> entry : transformParameters.entrySet()) {
@@ -222,8 +229,9 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
      * @throws StageProcessingException thrown if there is a problem applying the transform to Items
      * @throws TransformerConfigurationException thrown if there is a problem with the Transform itself
      */
-    protected abstract void executeTransformer(Transformer transformer, Collection<DomElementItem> itemCollection)
-            throws StageProcessingException, TransformerConfigurationException;
+    protected abstract void executeTransformer(@Nonnull final Transformer transformer,
+            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            TransformerConfigurationException;
 
     /** {@inheritDoc} */
     protected void doDestroy() {
@@ -233,20 +241,20 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
         transformAttributes = null;
         transformFeatures = null;
         transformParameters = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
+
         if (xslResource == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", XslResource must not be null");
         }
-        
-        if(!xslResource.isInitialized()){
+
+        if (!xslResource.isInitialized()) {
             xslResource.initialize();
         }
 
@@ -267,8 +275,8 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
             }
 
             log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
-            xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream(),
-                    xslResource.getLocation()));
+            xslTemplate =
+                    tfactory.newTemplates(new StreamSource(xslResource.getInputStream(), xslResource.getLocation()));
         } catch (TransformerConfigurationException e) {
             throw new ComponentInitializationException("XSL transformation engine misconfigured", e);
         } catch (ResourceException e) {
@@ -307,22 +315,22 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
          * 
          * @param receivingItem that Item to which the status info will be appended
          */
-        public StatusInfoAppendingErrorListener(Item<?> receivingItem) {
+        public StatusInfoAppendingErrorListener(@Nonnull final Item<?> receivingItem) {
             item = receivingItem;
         }
 
         /** {@inheritDoc} */
-        public void error(TransformerException e) throws TransformerException {
+        public void error(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
         /** {@inheritDoc} */
-        public void fatalError(TransformerException e) throws TransformerException {
+        public void fatalError(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
         /** {@inheritDoc} */
-        public void warning(TransformerException e) throws TransformerException {
+        public void warning(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
@@ -333,7 +341,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
          * 
          * @throws TransformerException thrown if the error does not contain the appropriate message prefix
          */
-        private void parseAndAppendStatusInfo(TransformerException e) throws TransformerException {
+        private void parseAndAppendStatusInfo(@Nonnull final TransformerException e) throws TransformerException {
             String errorMessage = StringSupport.trimOrNull(e.getMessage());
             if (errorMessage == null) {
                 throw e;

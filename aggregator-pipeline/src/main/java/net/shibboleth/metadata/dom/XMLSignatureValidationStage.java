@@ -21,6 +21,8 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -29,6 +31,7 @@ import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
@@ -91,7 +94,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
     public synchronized void setSignatureRequired(final boolean required) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         signatureRequired = required;
     }
 
@@ -112,7 +115,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
     public synchronized void setValidSignatureRequired(boolean isRequired) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         validSignatureRequired = isRequired;
     }
 
@@ -121,7 +124,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * 
      * @return key used to verify the signature
      */
-    public PublicKey getVerificationKey() {
+    @Nullable public PublicKey getVerificationKey() {
         return verificationKey;
     }
 
@@ -130,11 +133,11 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * 
      * @param key key used to verify the signature
      */
-    public synchronized void setVerificationKey(final PublicKey key) {
+    public synchronized void setVerificationKey(@Nonnull final PublicKey key) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        verificationKey = key;
+
+        verificationKey = Assert.isNotNull(key, "Public key can not be null");
     }
 
     /**
@@ -142,7 +145,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * 
      * @return certificate whose public key is used to verify the signed Element
      */
-    public Certificate getVerificationCertificate() {
+    @Nullable public Certificate getVerificationCertificate() {
         return verificationCertificate;
     }
 
@@ -152,18 +155,17 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * 
      * @param certificate certificate containing the key used to verify the signature
      */
-    public synchronized void setVerificationCertificate(final Certificate certificate) {
+    public synchronized void setVerificationCertificate(@Nonnull final Certificate certificate) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        if (certificate != null) {
-            verificationCertificate = certificate;
-            verificationKey = certificate.getPublicKey();
-        }
+
+        assert certificate != null : "Certificate can not be null";
+        verificationCertificate = certificate;
+        verificationKey = certificate.getPublicKey();
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         final Element signatureElement = getSignatureElement(item.unwrap());
         if (signatureElement == null) {
             if (signatureRequired) {
@@ -173,10 +175,10 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
             } else {
                 log.debug("DOM Element is not signed, no verification performed");
             }
-            
+
             return true;
         }
-        
+
         if (log.isDebugEnabled()) {
             log.debug("DOM Element contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
         }
@@ -201,7 +203,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * 
      * @throws StageProcessingException thrown if the given root element contains more than on signature
      */
-    protected boolean signatureVerified(final Element signatureElement) throws StageProcessingException {
+    protected boolean signatureVerified(@Nonnull final Element signatureElement) throws StageProcessingException {
         log.debug("Creating XML security library XMLSignature object");
         final XMLSignature signature;
         try {
@@ -236,7 +238,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * 
      * @throws StageProcessingException thrown if there is more than one signature present
      */
-    protected Element getSignatureElement(final Element root) throws StageProcessingException {
+    protected Element getSignatureElement(@Nonnull final Element root) throws StageProcessingException {
         final List<Element> sigElements =
                 ElementSupport.getChildElementsByTagNameNS(root, XMLSignatureSigningStage.XML_SIG_NS_URI, "Signature");
 
@@ -255,17 +257,17 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
     protected void doDestroy() {
         verificationCertificate = null;
         verificationKey = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (verificationKey == null) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", VerificationKey must not be null");
+                    + ", no verification key was specified");
         }
 
         if (!Init.isInitialized()) {

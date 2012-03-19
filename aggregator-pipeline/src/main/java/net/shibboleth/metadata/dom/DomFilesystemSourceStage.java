@@ -24,12 +24,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.Live;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 
 import org.slf4j.Logger;
@@ -84,7 +89,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * 
      * @return pool of DOM parsers used to parse the XML file in to a DOM
      */
-    public ParserPool getParserPool() {
+    @Nullable public ParserPool getParserPool() {
         return parserPool;
     }
 
@@ -93,11 +98,11 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * 
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
-    public synchronized void setParserPool(final ParserPool pool) {
+    public synchronized void setParserPool(@Nonnull final ParserPool pool) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        parserPool = pool;
+
+        parserPool = Assert.isNotNull(pool, "Parser pool can not be null");
     }
 
     /**
@@ -105,7 +110,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * 
      * @return path to the DOM material provided by this source
      */
-    public File getSource() {
+    @Nullable public File getSource() {
         return sourceFile;
     }
 
@@ -114,11 +119,11 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * 
      * @param source path to the DOM material provided by this source
      */
-    public synchronized void setSource(final File source) {
+    public synchronized void setSource(@Nonnull final File source) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        sourceFile = source;
+
+        sourceFile = Assert.isNotNull(source, "XML source file can not be null");
     }
 
     /**
@@ -127,7 +132,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * 
      * @return filter used to determine if a file, in a directory, should be treated as a source file, may be null
      */
-    public FileFilter getSourceFileFilter() {
+    @Nullable public FileFilter getSourceFileFilter() {
         return sourceFileFilter;
     }
 
@@ -136,11 +141,11 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * 
      * @param filter filter used to determine if a file, in a directory, should be treated as a source file, may be null
      */
-    public synchronized void setSourceFileFilter(FileFilter filter) {
+    public synchronized void setSourceFileFilter(@Nonnull FileFilter filter) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        sourceFileFilter = filter;
+
+        sourceFileFilter = Assert.isNotNull(filter, "File filter can not be null");
     }
 
     /**
@@ -160,7 +165,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
     public synchronized void setRecurseDirectories(final boolean recurse) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         recurseDirectories = recurse;
     }
 
@@ -181,7 +186,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
     public synchronized void setNoSourceFilesAnError(boolean isError) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         noSourceFilesAnError = isError;
     }
 
@@ -202,12 +207,13 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         errorCausesSourceFailure = causesFailure;
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomElementItem> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection)
+            throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<File>();
         if (sourceFile.isFile()) {
             sourceFiles.add(sourceFile);
@@ -241,7 +247,8 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @param input the source input file, never null
      * @param collector the collector of XML input files
      */
-    protected void getSourceFiles(final File input, final List<File> collector) {
+    protected void
+            getSourceFiles(@Nonnull final File input, @Nonnull @NonnullElements @Live final List<File> collector) {
         if (input.isFile()) {
             if (sourceFileFilter == null || sourceFileFilter.accept(input)) {
                 collector.add(input);
@@ -271,7 +278,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
      * @throws StageProcessingException thrown if there is a problem reading in the Element and
      *             {@link #errorCausesSourceFailure} is true
      */
-    protected DomElementItem processSourceFile(final File source) throws StageProcessingException {
+    @Nonnull protected DomElementItem processSourceFile(@Nonnull final File source) throws StageProcessingException {
         FileInputStream xmlIn = null;
 
         try {
@@ -298,10 +305,10 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
         parserPool = null;
         sourceFile = null;
         sourceFileFilter = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
@@ -315,7 +322,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
             throw new ComponentInitializationException("Unable to initialize " + getId() + ", Source may not be null");
         }
 
-        if (!sourceFile.exists() || !sourceFile.canRead()) {
+        if (noSourceFilesAnError && (!sourceFile.exists() || !sourceFile.canRead())) {
             throw new ComponentInitializationException("Unable to initialize " + getId() + ", source file/directory "
                     + sourceFile.getPath() + " can not be read");
         }

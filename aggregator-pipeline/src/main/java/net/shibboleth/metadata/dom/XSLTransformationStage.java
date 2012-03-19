@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -30,6 +31,7 @@ import javax.xml.transform.dom.DOMSource;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -46,8 +48,9 @@ import org.w3c.dom.Element;
 public class XSLTransformationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
-    protected void executeTransformer(Transformer transformer, Collection<DomElementItem> itemCollection)
-            throws StageProcessingException, TransformerConfigurationException {
+    protected void executeTransformer(@Nonnull final Transformer transformer,
+            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            TransformerConfigurationException {
 
         try {
             ArrayList<DomElementItem> newItems = new ArrayList<DomElementItem>();

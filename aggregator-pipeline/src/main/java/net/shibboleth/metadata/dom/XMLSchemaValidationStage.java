@@ -20,6 +20,8 @@ package net.shibboleth.metadata.dom;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
@@ -29,6 +31,9 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
@@ -77,7 +82,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
      * 
      * @return unmodifiable list of schema resources against which Elements are validated
      */
-    public List<Resource> getSchemaResources() {
+    @Nonnull @NonnullElements @Unmodifiable public List<Resource> getSchemaResources() {
         return schemaResources;
     }
 
@@ -86,7 +91,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
      * 
      * @param resources schema resources against which Elements are validated
      */
-    public synchronized void setSchemaResources(final List<Resource> resources) {
+    public synchronized void setSchemaResources(@Nullable @NullableElements final List<Resource> resources) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
@@ -115,7 +120,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
         final Validator validator = validationSchema.newValidator();

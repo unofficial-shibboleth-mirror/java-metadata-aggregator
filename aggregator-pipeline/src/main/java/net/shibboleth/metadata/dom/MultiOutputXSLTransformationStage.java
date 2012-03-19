@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -31,6 +32,7 @@ import javax.xml.transform.dom.DOMSource;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.w3c.dom.Element;
@@ -46,8 +48,9 @@ import org.w3c.dom.Element;
 public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
-    protected void executeTransformer(Transformer transformer, Collection<DomElementItem> itemCollection)
-            throws StageProcessingException, TransformerConfigurationException {
+    protected void executeTransformer(@Nonnull final Transformer transformer,
+            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            TransformerConfigurationException {
 
         try {
             Element element;

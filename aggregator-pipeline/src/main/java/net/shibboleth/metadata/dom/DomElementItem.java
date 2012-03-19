@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import javax.annotation.Nonnull;
+
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
@@ -47,7 +49,7 @@ public class DomElementItem extends AbstractItem<Element> {
      * @param document document whose document element becomes the value for this Item; may not be null and must have a
      *            document element
      */
-    public DomElementItem(final Document document) {
+    public DomElementItem(@Nonnull final Document document) {
         super();
 
         Assert.isNotNull(document, "DOM Document can not be null");
@@ -65,7 +67,7 @@ public class DomElementItem extends AbstractItem<Element> {
      * 
      * @param element element that is copied to become the value of this Item
      */
-    public DomElementItem(final Element element) {
+    public DomElementItem(@Nonnull final Element element) {
         super();
 
         Assert.isNotNull(element, "DOM Document Element may not be null");

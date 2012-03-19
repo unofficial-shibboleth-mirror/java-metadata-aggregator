@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -29,6 +30,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,7 @@ import org.w3c.dom.Element;
 
 /**
  * Very simple serializer that serializes the owning document of the first element of the given {@link DomElementItem}
- * collection.  All other elements of the collection are ignored.
+ * collection. All other elements of the collection are ignored.
  */
 @ThreadSafe
 public class DomElementSerializer implements ItemSerializer<DomElementItem> {
@@ -45,7 +47,8 @@ public class DomElementSerializer implements ItemSerializer<DomElementItem> {
     private final Logger log = LoggerFactory.getLogger(DomElementSerializer.class);
 
     /** {@inheritDoc} */
-    public void serialize(final Collection<DomElementItem> itemCollection, OutputStream output) {
+    public void
+            serialize(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection, OutputStream output) {
         if (itemCollection == null || itemCollection.isEmpty()) {
             return;
         }

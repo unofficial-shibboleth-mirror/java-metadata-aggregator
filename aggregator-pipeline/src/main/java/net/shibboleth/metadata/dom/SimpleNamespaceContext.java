@@ -22,9 +22,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.annotation.Nullable;
 import javax.xml.namespace.NamespaceContext;
 
 import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
@@ -47,7 +49,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * 
      * @param mappings Maps prefix values to the corresponding namespace URIs.
      */
-    public SimpleNamespaceContext(Map<String, String> mappings) {
+    public SimpleNamespaceContext(@Nullable @NullableElements final Map<String, String> mappings) {
         if (mappings == null || mappings.isEmpty()) {
             prefixMappings = Collections.emptyMap();
             return;
