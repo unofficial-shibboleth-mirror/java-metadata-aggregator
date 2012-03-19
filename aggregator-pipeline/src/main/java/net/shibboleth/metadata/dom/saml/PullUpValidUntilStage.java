@@ -116,8 +116,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      */
     protected Long getNearestValidUntil(@Nonnull final Element descriptor) {
         Long nearestValidUntil = null;
-        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor)
-                && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        if (!SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return nearestValidUntil;
         }
 

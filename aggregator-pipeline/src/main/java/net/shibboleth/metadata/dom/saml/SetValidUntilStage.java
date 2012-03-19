@@ -29,14 +29,14 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Element;
 
-/** 
- * Sets a validUntil attribute for every EntityDescriptor and EntitiesDescriptor element in the collection. 
+/**
+ * Sets a validUntil attribute for every EntityDescriptor and EntitiesDescriptor element in the collection.
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
  * <ul>
  * <li><code>validityDuration</code></li>
- * </ul> 
+ * </ul>
  */
 @ThreadSafe
 public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
@@ -61,14 +61,14 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
     public synchronized void setValidityDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         validityDuration = duration;
     }
 
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
-        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor) || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        if (SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
             AttributeSupport.appendDateTimeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME,
                     System.currentTimeMillis() + validityDuration);

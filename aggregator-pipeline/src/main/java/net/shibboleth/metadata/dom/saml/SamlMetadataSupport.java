@@ -63,9 +63,21 @@ public final class SamlMetadataSupport {
     }
 
     /**
+     * Check if the given element is an EntityDescriptor or EntitiesDescriptor.
+     * 
+     * @param e element to check
+     * 
+     * @return true if the element is an EntityDescriptor or EntitiesDescriptor
+     */
+    public static boolean isEntityOrEntitiesDescriptor(@Nullable final Element e) {
+        return isEntitiesDescriptor(e) || isEntityDescriptor(e);
+    }
+
+    /**
      * Checks if the given element is an EntitiesDescriptor.
      * 
      * @param e element to check
+     * 
      * @return true if the element is an EntitiesDescriptor, false otherwise
      */
     public static boolean isEntitiesDescriptor(@Nullable final Element e) {
@@ -76,6 +88,7 @@ public final class SamlMetadataSupport {
      * Checks if the given element is an EntityDescriptor.
      * 
      * @param e element to check
+     * 
      * @return true if the element is an EntityDescriptor, false otherwise
      */
     public static boolean isEntityDescriptor(@Nullable final Element e) {

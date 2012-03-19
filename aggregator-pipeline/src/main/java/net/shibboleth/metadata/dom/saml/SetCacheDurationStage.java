@@ -68,7 +68,7 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
-        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor) || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        if (SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
             AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     cacheDuration);

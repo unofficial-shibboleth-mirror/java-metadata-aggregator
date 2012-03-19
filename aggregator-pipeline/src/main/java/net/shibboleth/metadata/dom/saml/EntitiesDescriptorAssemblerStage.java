@@ -162,8 +162,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         Element descriptor;
         for (DomElementItem item : orderedItems) {
             descriptor = item.unwrap();
-            if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)
-                    || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+            if (SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);
                 entitiesDescriptor.appendChild(descriptor);
 
