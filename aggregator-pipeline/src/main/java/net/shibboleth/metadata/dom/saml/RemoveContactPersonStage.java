@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
@@ -38,7 +39,7 @@ public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem>
     private final Logger log = LoggerFactory.getLogger(RemoveContactPersonStage.class);
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
@@ -54,7 +55,7 @@ public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem>
      * 
      * @param entitiesDescriptor EntitiesDescriptor being processed
      */
-    protected void processEntitiesDescriptor(final Element entitiesDescriptor) {
+    protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
             if (SamlMetadataSupport.isEntitiesDescriptor(child)) {
@@ -70,11 +71,12 @@ public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem>
      * 
      * @param entityDescriptor entity descriptor being processed
      */
-    protected void processEntityDescriptor(final Element entityDescriptor) {
+    protected void processEntityDescriptor(@Nonnull final Element entityDescriptor) {
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
-        final List<Element> contactPersons = ElementSupport.getChildElementsByTagNameNS(entityDescriptor,
-                SamlMetadataSupport.MD_NS, "ContactPerson");
+        final List<Element> contactPersons =
+                ElementSupport
+                        .getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS, "ContactPerson");
         if (!contactPersons.isEmpty()) {
             log.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
             for (Element contactPerson : contactPersons) {

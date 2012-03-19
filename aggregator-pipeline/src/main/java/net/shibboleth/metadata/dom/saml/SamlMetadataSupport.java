@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import net.jcip.annotations.ThreadSafe;
@@ -67,7 +68,7 @@ public final class SamlMetadataSupport {
      * @param e element to check
      * @return true if the element is an EntitiesDescriptor, false otherwise
      */
-    public static boolean isEntitiesDescriptor(final Element e) {
+    public static boolean isEntitiesDescriptor(@Nullable final Element e) {
         return ElementSupport.isElementNamed(e, ENTITIES_DESCRIPTOR_NAME);
     }
 
@@ -77,7 +78,7 @@ public final class SamlMetadataSupport {
      * @param e element to check
      * @return true if the element is an EntityDescriptor, false otherwise
      */
-    public static boolean isEntityDescriptor(final Element e) {
+    public static boolean isEntityDescriptor(@Nullable final Element e) {
         return ElementSupport.isElementNamed(e, ENTITY_DESCRIPTOR_NAME);
     }
 
@@ -90,7 +91,8 @@ public final class SamlMetadataSupport {
      * @return the first instance of the extension element or null if either argument is null, the given element is not
      *         an EntitiesDescriptor or EntityDescriptor, or no such element exists as an extension of the descriptor
      */
-    public static Element getDescriptorExtensions(final Element descriptor, final QName extensionName) {
+    public static Element getDescriptorExtensions(@Nullable final Element descriptor,
+            @Nullable final QName extensionName) {
         if (descriptor == null || extensionName == null
                 || (!isEntitiesDescriptor(descriptor) && !isEntityDescriptor(descriptor))) {
             return null;
@@ -116,7 +118,7 @@ public final class SamlMetadataSupport {
      * @param descriptor descriptor to which the extension will be added
      * @param extension extension to be added to the descriptor
      */
-    public static void addDescriptorExtension(final Element descriptor, final Element extension) {
+    public static void addDescriptorExtension(@Nullable final Element descriptor, @Nullable final Element extension) {
         if (descriptor == null || extension == null) {
             return;
         }

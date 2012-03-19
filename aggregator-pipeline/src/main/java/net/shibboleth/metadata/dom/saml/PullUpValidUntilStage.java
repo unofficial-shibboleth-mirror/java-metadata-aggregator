@@ -19,6 +19,8 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
@@ -63,7 +65,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @param duration minimum amount of time, in milliseconds, a descriptor may be valid
      */
-    public synchronized void setMinimumValidityDuration(long duration) {
+    public synchronized void setMinimumValidityDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -88,7 +90,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @param duration maximum amount of time, in milliseconds, a descriptor may be valid, must be greater than 0
      */
-    public synchronized void setMaximumValidityDuration(long duration) {
+    public synchronized void setMaximumValidityDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -97,7 +99,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);
@@ -112,7 +114,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    protected Long getNearestValidUntil(final Element descriptor) {
+    protected Long getNearestValidUntil(@Nonnull final Element descriptor) {
         Long nearestValidUntil = null;
         if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor)
                 && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
@@ -161,7 +163,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * @param descriptor entity or entities descriptor to receive the validUntil, never null
      * @param validUntil validUntil time to be set on the given descriptor
      */
-    protected void setValidUntil(final Element descriptor, final Long validUntil) {
+    protected void setValidUntil(@Nonnull final Element descriptor, @Nullable final Long validUntil) {
         if (validUntil == null) {
             return;
         }

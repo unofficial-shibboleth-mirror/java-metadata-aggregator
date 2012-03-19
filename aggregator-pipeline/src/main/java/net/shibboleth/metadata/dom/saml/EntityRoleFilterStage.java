@@ -18,15 +18,21 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.collection.LazySet;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
@@ -40,7 +46,9 @@ import org.w3c.dom.Element;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * A pipeline stage that will filter SAML role descriptors from EntityDescriptors.
@@ -83,7 +91,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
             AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME);
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
-    private Collection<QName> designatedRoles = new LazySet<QName>();
+    private Collection<QName> designatedRoles = Collections.emptyList();
 
     /** Whether {@link #designatedRoles} should be considered a whitelist or a blacklist. Default value: false */
     private boolean whitelistingRoles;
@@ -102,7 +110,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @return list of designated entity roles, never null
      */
-    public Collection<QName> getDesignatedRoles() {
+    @Nonnull @NonnullElements @Unmodifiable public Collection<QName> getDesignatedRoles() {
         return designatedRoles;
     }
 
@@ -111,11 +119,15 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @param roles list of designated entity roles
      */
-    public synchronized void setDesignatedRoles(final Collection<QName> roles) {
+    public synchronized void setDesignatedRoles(@Nullable @NullableElements final Collection<QName> roles) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        designatedRoles = Collections2.filter(roles, Predicates.notNull());
+
+        if (roles == null || roles.isEmpty()) {
+            designatedRoles = Collections.emptyList();
+        } else {
+            designatedRoles = ImmutableList.copyOf(Iterables.filter(roles, Predicates.notNull()));
+        }
     }
 
     /**
@@ -135,7 +147,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     public synchronized void setWhitelistingRoles(final boolean whitelisting) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         whitelistingRoles = whitelisting;
     }
 
@@ -156,7 +168,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     public synchronized void setRemoveRolelessEntities(final boolean remove) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         removingRolelessEntities = remove;
     }
 
@@ -177,19 +189,19 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         removingEntitylessEntitiesDescriptor = remove;
     }
 
     /** {@inheritDoc} */
     protected void doDestroy() {
         designatedRoles = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) {
+    protected boolean doExecute(@Nonnull final DomElementItem item) {
         Element descriptor = item.unwrap();
         if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
@@ -214,7 +226,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @return true if the descriptor should be removed, false otherwise
      */
-    protected boolean processEntitiesDescriptor(final Element entitiesDescriptor) {
+    protected boolean processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         Iterator<Element> descriptorItr;
         Element descriptor;
 
@@ -256,7 +268,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @return true if the entity descriptor should be removed, false otherwise
      */
-    protected boolean processEntityDescriptor(final Element entityDescriptor) {
+    protected boolean processEntityDescriptor(@Nonnull final Element entityDescriptor) {
         if (designatedRoles.isEmpty()) {
             return false;
         }
@@ -281,7 +293,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @return the list of roles remaining after processing
      */
-    protected List<Element> getFilteredRoles(final String entityId, final Element entityDescriptor) {
+    protected List<Element> getFilteredRoles(@Nonnull final String entityId, @Nonnull final Element entityDescriptor) {
         final List<Element> childElements = ElementSupport.getChildElements(entityDescriptor);
 
         final Iterator<Element> childItr = childElements.iterator();

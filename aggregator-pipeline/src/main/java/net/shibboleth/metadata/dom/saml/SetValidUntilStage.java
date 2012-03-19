@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
@@ -57,7 +58,7 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @param duration amount of time the descriptors will be valid, expressed in milliseconds
      */
-    public synchronized void setValidityDuration(long duration) {
+    public synchronized void setValidityDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
@@ -65,7 +66,7 @@ public class SetValidUntilStage extends BaseIteratingStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SamlMetadataSupport.isEntitiesDescriptor(descriptor) || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);

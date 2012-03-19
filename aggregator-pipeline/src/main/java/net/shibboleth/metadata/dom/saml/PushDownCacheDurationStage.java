@@ -19,11 +19,13 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
  * This stage is not yet implemented.
@@ -36,8 +38,9 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 public class PushDownCacheDurationStage extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomElementItem> metadataCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> metadataCollection)
+            throws StageProcessingException {
         // TODO Auto-generated method stub
-        
+
     }
 }

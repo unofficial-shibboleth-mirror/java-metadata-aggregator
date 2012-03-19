@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ItemId;
@@ -35,7 +36,7 @@ import org.w3c.dom.Element;
 public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<DomElementItem> {
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element metadataElement = item.unwrap();
 
         if (SamlMetadataSupport.isEntityDescriptor(metadataElement)) {

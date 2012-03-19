@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -59,7 +60,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
      * 
      * @param isRequired whether the item is required to have a validUntil attribute
      */
-    public synchronized void setRequireValidUntil(boolean isRequired) {
+    public synchronized void setRequireValidUntil(final boolean isRequired) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -82,7 +83,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
      * @param interval interval, in milliseconds, from now within which the validUntil date must fall; must be greater
      *            than or equal to 0
      */
-    public synchronized void setMaxValidityInterval(long interval) {
+    public synchronized void setMaxValidityInterval(final long interval) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -90,7 +91,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         final Element element = item.unwrap();
 
         if (!SamlMetadataSupport.isEntitiesDescriptor(element) && !SamlMetadataSupport.isEntityDescriptor(element)) {

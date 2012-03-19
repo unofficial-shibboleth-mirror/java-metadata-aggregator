@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
@@ -43,7 +45,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<DomElementItem> itemCollection) {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
         ArrayList<DomElementItem> items = new ArrayList<DomElementItem>(itemCollection);
@@ -70,8 +72,8 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
      * @param itemCollection collection to which EntityDescriptor metadata elements are added
      * @param entitiesDescriptor the EntitiesDescriptor to break down
      */
-    protected void processEntitiesDescriptor(final Collection<DomElementItem> itemCollection,
-            final Element entitiesDescriptor) {
+    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection,
+            @Nonnull final Element entitiesDescriptor) {
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
@@ -91,8 +93,8 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
      * @param itemCollection collection to which metadata is added
      * @param entityDescriptor entity descriptor to add to the item collection
      */
-    protected void processEntityDescriptor(final Collection<DomElementItem> itemCollection,
-            final Element entityDescriptor) {
+    protected void processEntityDescriptor(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection,
+            @Nonnull final Element entityDescriptor) {
         final DomElementItem item = new DomElementItem(entityDescriptor);
         itemCollection.add(item);
     }

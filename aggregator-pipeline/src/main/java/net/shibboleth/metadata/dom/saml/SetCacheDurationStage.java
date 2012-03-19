@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
@@ -57,15 +58,15 @@ public class SetCacheDurationStage extends BaseIteratingStage<DomElementItem> {
      * 
      * @param duration cache duration, in milliseconds
      */
-    public synchronized void setCacheDuration(long duration) {
+    public synchronized void setCacheDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         cacheDuration = duration;
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SamlMetadataSupport.isEntitiesDescriptor(descriptor) || SamlMetadataSupport.isEntityDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);

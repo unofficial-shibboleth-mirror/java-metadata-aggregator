@@ -19,6 +19,8 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
@@ -60,7 +62,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      * 
      * @param duration the minimum cache duration in milliseconds
      */
-    public synchronized void setMinimumCacheDuration(long duration) {
+    public synchronized void setMinimumCacheDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -85,16 +87,16 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      * 
      * @param duration maximum cache duration in milliseconds, must be greater than 0
      */
-    public synchronized void setMaximumCacheDuration(long duration) {
+    public synchronized void setMaximumCacheDuration(final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         Assert.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);
@@ -109,7 +111,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    protected Long getShortestCacheDuration(final Element descriptor) {
+    protected Long getShortestCacheDuration(@Nonnull final Element descriptor) {
         Long shortestCacheDuration = null;
         if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor)
                 && !SamlMetadataSupport.isEntityDescriptor(descriptor)) {
@@ -158,7 +160,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      * @param descriptor entity or entities descriptor to receive the cache duration, never null
      * @param cacheDuration cache duration to be set, may be null
      */
-    protected void setCacheDuration(final Element descriptor, final Long cacheDuration) {
+    protected void setCacheDuration(@Nonnull final Element descriptor, @Nullable final Long cacheDuration) {
         if (cacheDuration == null || cacheDuration <= 0) {
             return;
         }

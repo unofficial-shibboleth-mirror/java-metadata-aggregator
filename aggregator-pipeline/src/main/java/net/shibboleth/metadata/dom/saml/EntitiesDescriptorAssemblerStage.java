@@ -21,14 +21,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -59,16 +63,10 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
     private boolean noChildrenAProcessingError;
 
     /** Strategy used to order a collection of Items. The default strategy performs no ordering. */
-    private ItemOrderingStrategy orderingStrategy;
+    private ItemOrderingStrategy orderingStrategy = new NoOpItemOrderingStrategy();
 
     /** Name to use for the EntitiesDescriptor. */
     private String descriptorName;
-
-    /** Constructor. */
-    public EntitiesDescriptorAssemblerStage() {
-        super();
-        orderingStrategy = new NoOpItemOrderingStrategy();
-    }
 
     /**
      * Gets whether attempting to turn an empty item collection, which would result in a schema-invalid childless
@@ -89,7 +87,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
     public synchronized void setNoChildrenAProcessingError(boolean isError) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         noChildrenAProcessingError = isError;
     }
 
@@ -98,7 +96,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * 
      * @return strategy used to order a collection of Items
      */
-    public ItemOrderingStrategy getItemOrderingStrategy() {
+    @Nonnull public ItemOrderingStrategy getItemOrderingStrategy() {
         return orderingStrategy;
     }
 
@@ -107,11 +105,11 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * 
      * @param strategy strategy used to order a collection of Items
      */
-    public synchronized void setItemOrderingStrategy(ItemOrderingStrategy strategy) {
+    public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        orderingStrategy = strategy;
+
+        orderingStrategy = Assert.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 
     /**
@@ -119,7 +117,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * 
      * @return Name used for the generated descriptor, may be null
      */
-    public String getDescriptorName() {
+    @Nullable public String getDescriptorName() {
         return descriptorName;
     }
 
@@ -128,15 +126,16 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * 
      * @param name Name used for the generated descriptor
      */
-    public synchronized void setDescriptorName(final String name) {
+    public synchronized void setDescriptorName(@Nullable final String name) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+
         descriptorName = StringSupport.trimOrNull(name);
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<DomElementItem> itemCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection)
+            throws StageProcessingException {
         if (itemCollection.isEmpty()) {
             if (noChildrenAProcessingError) {
                 throw new StageProcessingException("Unable to assemble EntitiesDescriptor from an empty collection");
@@ -184,27 +183,27 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
      * 
      * @param entitiesDescriptor the entity descriptor to which the
      */
-    protected void addDescriptorName(final Element entitiesDescriptor) {
+    protected void addDescriptorName(@Nonnull final Element entitiesDescriptor) {
         if (descriptorName != null) {
             AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
         }
     }
-    
+
     /** {@inheritDoc} */
     protected void doDestroy() {
         orderingStrategy = null;
         descriptorName = null;
-        
+
         super.doDestroy();
     }
-    
+
     /** {@inheritDoc} */
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        
-        if(orderingStrategy == null){
+
+        if (orderingStrategy == null) {
             orderingStrategy = new NoOpItemOrderingStrategy();
-        } 
+        }
     }
 
     /** A strategy that defines how to order a {@link net.shibboleth.metadata.Item} collection. */
@@ -217,14 +216,14 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
          * 
          * @return sorted collection of Item, never null
          */
-        public List<DomElementItem> order(Collection<DomElementItem> items);
+        public List<DomElementItem> order(@Nonnull @NonnullElements final Collection<DomElementItem> items);
     }
 
     /** An ordering strategy that simply returns the collection in whatever order it was already in. */
     private class NoOpItemOrderingStrategy implements ItemOrderingStrategy {
 
         /** {@inheritDoc} */
-        public List<DomElementItem> order(Collection<DomElementItem> items) {
+        public List<DomElementItem> order(@Nonnull @NonnullElements final Collection<DomElementItem> items) {
             return new ArrayList<DomElementItem>(items);
         }
     }
