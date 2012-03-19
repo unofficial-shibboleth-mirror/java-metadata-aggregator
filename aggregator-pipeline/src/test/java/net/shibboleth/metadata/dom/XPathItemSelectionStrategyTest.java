@@ -20,6 +20,8 @@ package net.shibboleth.metadata.dom;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
