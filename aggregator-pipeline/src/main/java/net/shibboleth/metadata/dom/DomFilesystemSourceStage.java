@@ -257,7 +257,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
         }
 
         // file must be a directory
-        final File[] files = sourceFile.listFiles();
+        final File[] files = input.listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.isFile() || (file.isDirectory() && recurseDirectories)) {
