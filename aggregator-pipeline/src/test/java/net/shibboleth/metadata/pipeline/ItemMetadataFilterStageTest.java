@@ -75,6 +75,8 @@ public class ItemMetadataFilterStageTest {
         Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
 
         ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        stage.setId("test");
+        stage.initialize();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 4);
@@ -93,7 +95,9 @@ public class ItemMetadataFilterStageTest {
         filterRequirements.add(ErrorStatus.class);
 
         ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
+        stage.initialize();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 3);
@@ -114,7 +118,9 @@ public class ItemMetadataFilterStageTest {
         filterRequirements.add(ErrorStatus.class);
 
         ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
+        stage.initialize();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 2);
