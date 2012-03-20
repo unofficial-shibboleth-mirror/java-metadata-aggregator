@@ -75,6 +75,8 @@ public class ItemMetadataTerminationStageTest {
         Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
 
         ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
+        stage.setId("test");
+        stage.initialize();
         try {
             stage.execute(metadataCollection);
             Assert.assertEquals(metadataCollection.size(), 4);
@@ -97,7 +99,9 @@ public class ItemMetadataTerminationStageTest {
         filterRequirements.add(ErrorStatus.class);
 
         ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
+        stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
+        stage.initialize();
         try {
             stage.execute(metadataCollection);
             Assert.fail("Stage did not fail as expected");
@@ -117,7 +121,9 @@ public class ItemMetadataTerminationStageTest {
         filterRequirements.add(ErrorStatus.class);
 
         ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
+        stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
+        stage.initialize();
         try {
             stage.execute(metadataCollection);
             Assert.fail("Stage did not fail as expected");
