@@ -46,6 +46,11 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
     /** Stages which compose this stage. */
     private List<Stage<ItemType>> composedStages = Collections.emptyList();
 
+    /** {@inheritDoc} */
+    public synchronized void setId(String componentId) {
+        super.setId(componentId);
+    }
+    
     /**
      * Gets an unmodifiable list the stages that compose this stage.
      * 
