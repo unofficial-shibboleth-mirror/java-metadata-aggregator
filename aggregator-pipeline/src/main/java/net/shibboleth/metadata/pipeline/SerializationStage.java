@@ -26,6 +26,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -47,6 +50,9 @@ import net.shibboleth.utilities.java.support.logic.Assert;
  */
 @ThreadSafe
 public class SerializationStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+
+    /** Class logger. */
+    private final Logger log = LoggerFactory.getLogger(SerializationStage.class);
 
     /** File to which the item will be written. */
     private File outputFile;
@@ -146,14 +152,31 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
             throw new ComponentInitializationException("Output file can not be null");
         }
 
-        if (!outputFile.canWrite()) {
-            throw new ComponentInitializationException("Can not write to output file '" + outputFile.getAbsolutePath()
-                    + "'");
-        }
+        // canWrite() returns false if the file doesn't exist already
+        // we don't want to create the file if it doesn't exist so we check
+        // to see if the parent directory can be written to
+        if (outputFile.exists()) {
+            if (!overwritingExistingOutputFile) {
+                throw new ComponentInitializationException("Output file '" + outputFile.getAbsolutePath()
+                        + "' exist and stage is configured not to overwrite the file");
+            } else if (!outputFile.canWrite()) {
+                throw new ComponentInitializationException("Can not write to output file '"
+                        + outputFile.getAbsolutePath() + "'");
 
-        if (outputFile.exists() && !overwritingExistingOutputFile) {
-            throw new ComponentInitializationException("Output file '" + outputFile.getAbsolutePath()
-                    + "' exist and stage is configured not to overwrite the file");
+            }
+        } else {
+            File parentDirectory = outputFile.getParentFile();
+            if (parentDirectory != null) {
+                if (!parentDirectory.canWrite()) {
+                    throw new ComponentInitializationException("Can not write to parent directory of output file '"
+                            + outputFile.getAbsolutePath() + "'");
+                } else {
+                    // parent directory could be null in obscure cases that we can't really reason about
+                    log.warn(
+                            "Unable to determine parent directory for output file {}, this may result in a problem during stage execution",
+                            outputFile.getAbsolutePath());
+                }
+            }
         }
 
         if (serializer == null) {
