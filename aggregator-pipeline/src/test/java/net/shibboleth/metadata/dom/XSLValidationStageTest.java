@@ -92,12 +92,39 @@ public class XSLValidationStageTest extends BaseDomTest {
         Assert.assertEquals(warnings.size(), 1);
         Assert.assertEquals(warnings.get(0).getStatusMessage(), "first value");
 
-        // verify the presence of the WarningStatus on the output
+        // verify the presence of the ErrorStatus on the output
         List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
         Assert.assertEquals(errors.size(), 1);
         Assert.assertEquals(errors.get(0).getStatusMessage(), "error value");
     }
 
+    /**
+     * Test for MDA-45.
+     */
+    @Test public void testMDA45() throws Exception {
+
+        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        mdCol.add(makeInput());
+
+        Resource transform = new ClasspathResource("data/mda45.xsl");
+
+        XSLValidationStage stage = new XSLValidationStage();
+        stage.setId("test");
+        stage.setXslResource(transform);
+        stage.initialize();
+
+        stage.execute(mdCol);
+
+        // The input element should still be the only thing in the collection
+        Assert.assertEquals(mdCol.size(), 1);
+        DomElementItem result = mdCol.get(0);
+
+        // verify the presence of the InfoStatus on the output
+        List<InfoStatus> infos = result.getItemMetadata().get(InfoStatus.class);
+        Assert.assertEquals(infos.size(), 1);
+        Assert.assertEquals(infos.get(0).getStatusMessage(), "values");
+    }
+    
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
     private static class TestInfo implements ItemMetadata {
 

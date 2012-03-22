@@ -47,7 +47,7 @@ public class XSLValidationStage extends AbstractXSLProcessingStage {
         try {
             for (DomElementItem domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
-                transformer.transform(new DOMSource(domItem.unwrap()), new DOMResult());
+                transformer.transform(new DOMSource(domItem.unwrap().getOwnerDocument()), new DOMResult());
             }
         } catch (TransformerException e) {
             throw new StageProcessingException("Unable to validate DOM Element", e);
