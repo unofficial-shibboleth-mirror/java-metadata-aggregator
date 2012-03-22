@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rootElement xmlns:alpha="urn:namespace:alpha" xmlns:betabeta="urn:namespace:beta">
+    <nested  beta:attr="betaAttr" keepThis="1" alpha:keep="2" xmlns:beta="urn:namespace:beta">
+        <keepMe keep="keep" beta:bb="bb" alpha:a="a" beta:b="b">
+            <nested beta:removeThis="3">
+                <alsoKept/>
+            </nested>
+        </keepMe>
+    </nested>
+    <alpha:keepMe>
+        <betaxxx:removeMe xmlns:betaxxx="urn:namespace:beta">
+            <alsoRemoved/>
+        </betaxxx:removeMe>
+    </alpha:keepMe>
+</rootElement>
