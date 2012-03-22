@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:shibmeta="urn:mace:shibboleth:metadata:1.0"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    
+    <EntityDescriptor ID="uk000001" entityID="urn:mace:ac.uk:sdss.ac.uk:provider:service:target.iay.org.uk">
+        
+        <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol">
+            
+            <KeyDescriptor use="signing">
+                <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+                            MIID4zCCAsugAwIBAgIJAIYNW/M6YSHJMA0GCSqGSIb3DQEBBQUAMFQxCzAJBgNV
+                            BAYTAkdCMRIwEAYDVQQHEwlFZGluYnVyZ2gxFTATBgNVBAoTDElhbiBBLiBZb3Vu
+                            ZzEaMBgGA1UEAxMRdGFyZ2V0LmlheS5vcmcudWswHhcNMDcxMjA3MTYyNTU1WhcN
+                            MjcwMjA1MTYyNTU1WjBUMQswCQYDVQQGEwJHQjESMBAGA1UEBxMJRWRpbmJ1cmdo
+                            MRUwEwYDVQQKEwxJYW4gQS4gWW91bmcxGjAYBgNVBAMTEXRhcmdldC5pYXkub3Jn
+                            LnVrMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqEhHr9110+YbC0Fa
+                            4E7xL0oXUkUGw1r4oCWCUbhb2gYe1AvMDgsOuokRwzEN3fN65iZ913iekqElrJ4n
+                            hCEK4vDp0TwMLAqlEVGxuR9DCA7BagtvNysTmqgGCLYbDCqdXzcGGr0QqJm2VWWa
+                            p2u5uGopZWnRjEeZ2VGsxTo+we4YKQey/foxnug05Gomf9A/JCNLDc3rn+p04F1p
+                            QlcVQWvhU9eAq2nC2AdzwVRjWLmQyOSdBSGFzmSOOTiWxJFP4dX5zb9KAqhqgCFu
+                            MBTSicfHEbf6sQJTxnub6+qp+6Jjc2hcyJQJJGUDGMbVZ4+GynHKEHYWJ7hTOmJc
+                            j4ygkQIDAQABo4G3MIG0MB0GA1UdDgQWBBQgGfsf6GAGnMx60hdsFnV+PuzMkTCB
+                            hAYDVR0jBH0we4AUIBn7H+hgBpzMetIXbBZ1fj7szJGhWKRWMFQxCzAJBgNVBAYT
+                            AkdCMRIwEAYDVQQHEwlFZGluYnVyZ2gxFTATBgNVBAoTDElhbiBBLiBZb3VuZzEa
+                            MBgGA1UEAxMRdGFyZ2V0LmlheS5vcmcudWuCCQCGDVvzOmEhyTAMBgNVHRMEBTAD
+                            AQH/MA0GCSqGSIb3DQEBBQUAA4IBAQBHI3PRfPabIY7vE8BKXJXlI29um1RKtZtr
+                            OYb+4ljbHcP75PF5xMfbeCYWPsITatCJLIE/8/gEC9NyeMpu6u+8dDueevxCPC8t
+                            MQru1Uytz4QL/qLhNS5IK0ZYdXCAEQknMAhnQg+APVYzW2U2wzYArVU4giEsKu3x
+                            ZzM6IDa1jK8aFf94s65lDzzGweZPlKXa7WVXYHFSIO/JJ1pxz27uI1LTkLBNpPq7
+                            fcg+jG/NARKYkrzqg/BaCpNOeh1PedybPRlaLPY/+qz6hocX7s02iuXgU3JmLMY4
+                            QJzEekVDjq0di+Be9Tnb1aD9KWl7/92N4Sf61t5eRMlbPJ+OWCQg
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+            </KeyDescriptor>
+            <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+            <AssertionConsumerService index="3" Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
+                Location="https://target.iay.org.uk/Shibboleth.sso/SAML/POST" />
+            <AssertionConsumerService index="4" Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
+                Location="https://target.iay.org.uk/Shibboleth.sso/SAML/Artifact" />
+        </SPSSODescriptor>
+    </EntityDescriptor>
+
+    <EntityDescriptor ID="uk000002" entityID="urn:mace:ac.uk:sdss.ac.uk:provider:service:target.iay.org.uk2">
+        
+        <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol">
+            <Extensions>
+                <foo:KeepMe xmlns:foo="urn:namespaces:foo"/>
+                
+            </Extensions>
+            <KeyDescriptor use="signing">
+                <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+                            MIID4zCCAsugAwIBAgIJAIYNW/M6YSHJMA0GCSqGSIb3DQEBBQUAMFQxCzAJBgNV
+                            BAYTAkdCMRIwEAYDVQQHEwlFZGluYnVyZ2gxFTATBgNVBAoTDElhbiBBLiBZb3Vu
+                            ZzEaMBgGA1UEAxMRdGFyZ2V0LmlheS5vcmcudWswHhcNMDcxMjA3MTYyNTU1WhcN
+                            MjcwMjA1MTYyNTU1WjBUMQswCQYDVQQGEwJHQjESMBAGA1UEBxMJRWRpbmJ1cmdo
+                            MRUwEwYDVQQKEwxJYW4gQS4gWW91bmcxGjAYBgNVBAMTEXRhcmdldC5pYXkub3Jn
+                            LnVrMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqEhHr9110+YbC0Fa
+                            4E7xL0oXUkUGw1r4oCWCUbhb2gYe1AvMDgsOuokRwzEN3fN65iZ913iekqElrJ4n
+                            hCEK4vDp0TwMLAqlEVGxuR9DCA7BagtvNysTmqgGCLYbDCqdXzcGGr0QqJm2VWWa
+                            p2u5uGopZWnRjEeZ2VGsxTo+we4YKQey/foxnug05Gomf9A/JCNLDc3rn+p04F1p
+                            QlcVQWvhU9eAq2nC2AdzwVRjWLmQyOSdBSGFzmSOOTiWxJFP4dX5zb9KAqhqgCFu
+                            MBTSicfHEbf6sQJTxnub6+qp+6Jjc2hcyJQJJGUDGMbVZ4+GynHKEHYWJ7hTOmJc
+                            j4ygkQIDAQABo4G3MIG0MB0GA1UdDgQWBBQgGfsf6GAGnMx60hdsFnV+PuzMkTCB
+                            hAYDVR0jBH0we4AUIBn7H+hgBpzMetIXbBZ1fj7szJGhWKRWMFQxCzAJBgNVBAYT
+                            AkdCMRIwEAYDVQQHEwlFZGluYnVyZ2gxFTATBgNVBAoTDElhbiBBLiBZb3VuZzEa
+                            MBgGA1UEAxMRdGFyZ2V0LmlheS5vcmcudWuCCQCGDVvzOmEhyTAMBgNVHRMEBTAD
+                            AQH/MA0GCSqGSIb3DQEBBQUAA4IBAQBHI3PRfPabIY7vE8BKXJXlI29um1RKtZtr
+                            OYb+4ljbHcP75PF5xMfbeCYWPsITatCJLIE/8/gEC9NyeMpu6u+8dDueevxCPC8t
+                            MQru1Uytz4QL/qLhNS5IK0ZYdXCAEQknMAhnQg+APVYzW2U2wzYArVU4giEsKu3x
+                            ZzM6IDa1jK8aFf94s65lDzzGweZPlKXa7WVXYHFSIO/JJ1pxz27uI1LTkLBNpPq7
+                            fcg+jG/NARKYkrzqg/BaCpNOeh1PedybPRlaLPY/+qz6hocX7s02iuXgU3JmLMY4
+                            QJzEekVDjq0di+Be9Tnb1aD9KWl7/92N4Sf61t5eRMlbPJ+OWCQg
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+            </KeyDescriptor>
+            <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+            <AssertionConsumerService index="3" Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
+                Location="https://target.iay.org.uk/Shibboleth.sso/SAML/POST" />
+            <AssertionConsumerService index="4" Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
+                Location="https://target.iay.org.uk/Shibboleth.sso/SAML/Artifact" />
+        </SPSSODescriptor>
+    </EntityDescriptor>
+
+</EntitiesDescriptor>
