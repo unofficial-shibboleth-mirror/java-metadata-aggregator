@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -58,7 +59,7 @@ public abstract class BaseStage<ItemType extends Item<?>> extends
 
         doExecute(itemCollection);
 
-        ItemMetadataSupport.addToAll(itemCollection, compInfo);
+        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(compInfo));
         compInfo.setCompleteInstant();
     }
 

@@ -41,13 +41,13 @@ public final class ItemMetadataSupport {
      *            collection
      */
     public static void addToAll(@Nullable final Collection<? extends Item> itemCollection,
-            @Nullable @NullableElements final ItemMetadata... metadatas) {
-        if (itemCollection == null || metadatas == null || metadatas.length == 0) {
+            @Nullable @NullableElements Iterable<? extends ItemMetadata> metadatas) {
+        if (itemCollection == null || metadatas == null) {
             return;
         }
 
         for (Item<?> item : itemCollection) {
-            addToAll(item, metadatas);
+            addAll(item, metadatas);
         }
     }
 
@@ -57,9 +57,9 @@ public final class ItemMetadataSupport {
      * @param item element to which {@link ItemMetadata} will be added
      * @param metadatas {@link ItemMetadata} to be added to the metadata element
      */
-    public static void addToAll(@Nullable final Item<?> item,
-            @Nullable @NullableElements final ItemMetadata... metadatas) {
-        if (item == null || metadatas == null || metadatas.length == 0) {
+    public static void addAll(@Nullable final Item<?> item,
+            @Nullable @NullableElements final Iterable<? extends ItemMetadata> metadatas) {
+        if (item == null || metadatas == null) {
             return;
         }
 
@@ -78,9 +78,8 @@ public final class ItemMetadataSupport {
      * @param itemMetadatas the metadata which may be added to the collection
      */
     public static void addToCollection(@Nullable final Collection<? extends Item> itemCollection,
-            @Nullable @NullableElements final ItemMetadata... itemMetadatas) {
-        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata) || itemMetadatas == null
-                || itemMetadatas.length == 0) {
+            @Nullable @NullableElements final Iterable<? extends ItemMetadata> itemMetadatas) {
+        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata) || itemMetadatas == null) {
             return;
         }
 

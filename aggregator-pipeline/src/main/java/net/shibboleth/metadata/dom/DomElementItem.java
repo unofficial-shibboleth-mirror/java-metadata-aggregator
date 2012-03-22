@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -83,7 +82,7 @@ public class DomElementItem extends AbstractItem<Element> {
     /** {@inheritDoc} */
     public Item<Element> copy() {
         final DomElementItem clone = new DomElementItem(unwrap());
-        ItemMetadataSupport.addToAll(clone, getItemMetadata().values().toArray(new ItemMetadata[] {}));
+        ItemMetadataSupport.addAll(clone, getItemMetadata().values());
         return clone;
     }
 }

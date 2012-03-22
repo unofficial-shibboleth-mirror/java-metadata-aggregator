@@ -28,7 +28,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -67,8 +66,7 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
 
                 // Create the result Item and copy across the input's ItemMetadata objects.
                 final DomElementItem newItem = new DomElementItem(newDocument);
-                ItemMetadataSupport
-                        .addToAll(newItem, domItem.getItemMetadata().values().toArray(new ItemMetadata[] {}));
+                ItemMetadataSupport.addAll(newItem, domItem.getItemMetadata().values());
                 newItems.add(newItem);
             }
             itemCollection.clear();

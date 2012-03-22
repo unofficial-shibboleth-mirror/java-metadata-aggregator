@@ -85,7 +85,7 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
         }
 
         compInfo.setCompleteInstant();
-        ItemMetadataSupport.addToAll(itemCollection, compInfo);
+        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(compInfo));
     }
 
     /** {@inheritDoc} */

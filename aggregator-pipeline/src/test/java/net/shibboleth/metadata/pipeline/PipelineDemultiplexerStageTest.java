@@ -57,7 +57,7 @@ public class PipelineDemultiplexerStageTest {
 
         ArrayList<Pair<Pipeline, Predicate>> pass = new ArrayList<Pair<Pipeline, Predicate>>();
         stage.setPipelineAndSelectionStrategies(pass);
-        Assert.assertSame(stage.getPipelineAndSelectionStrategies(), pass);
+        Assert.assertEquals(stage.getPipelineAndSelectionStrategies(), pass);
     }
 
     @Test public void testWaitingForPipelines() {
