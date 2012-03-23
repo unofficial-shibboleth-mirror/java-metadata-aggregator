@@ -19,9 +19,11 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -33,14 +35,21 @@ import javax.xml.transform.dom.DOMSource;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.TrimOrNullStringFunction;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 /**
@@ -67,7 +76,7 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
      * name, if they are not in a namespace, or via the form '{' + namespace URI + '}' + local name if they are in a
      * namespace.
      */
-    private List<String> cdataSectionElements;
+    private List<String> cdataSectionElements = Collections.emptyList();
 
     /** The factory used to create the {@link Transformer} used to format the elements. */
     private TransformerFactory transformerFactory;
@@ -86,10 +95,15 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
      * 
      * @param seperator line separator character to use
      */
-    public synchronized void setLineSeperator(@Nonnull @NotEmpty final String seperator) {
+    public synchronized void setLineSeperator(@Nullable final String seperator) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        lineSeperator = Assert.isNotNull(StringSupport.trimOrNull(seperator), "Line seperator can not be null");
+
+        if (seperator == null) {
+            lineSeperator = "";
+        } else {
+            lineSeperator = seperator;
+        }
     }
 
     /**
@@ -132,6 +146,35 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
         indentSize = (int) Assert.isGreaterThanOrEqual(0, size, "Indentation size must be 0 or greater");
     }
 
+    /**
+     * Gets the list of elements whose content should be wrapped in CDATA sections.
+     * 
+     * <p>
+     * Elements are specified either by their local name, if they are not in a namespace, or via the form '{' +
+     * namespace URI + '}' + local name if they are in a namespace.
+     * </p>
+     * 
+     * @return list of elements whose content should be wrapped in CDATA sections
+     */
+    @Nonnull @NonnullElements @Unmodifiable public List<String> getCdataSectionElements() {
+        return cdataSectionElements;
+    }
+
+    /**
+     * Sets the list of elements whose content should be wrapped in CDATA sections.
+     * 
+     * @param elements list of elements whose content should be wrapped in CDATA sections
+     */
+    public synchronized void setCdataSectionElements(@Nullable @NullableElements final List<String> elements) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        ArrayList<String> checkedElements = new ArrayList<String>();
+        CollectionSupport.addIf(checkedElements, elements, Predicates.notNull(), new TrimOrNullStringFunction());
+
+        cdataSectionElements = ImmutableList.copyOf(checkedElements);
+    }
+
     /** {@inheritDoc} */
     protected void doExecute(Collection<DomElementItem> itemCollection) throws StageProcessingException {
         ArrayList<DomElementItem> transformedItems = Lists.newArrayListWithExpectedSize(itemCollection.size());
@@ -145,7 +188,7 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
 
             try {
                 getTransformer().transform(source, result);
-                transformedItem = new DomElementItem((Element) result.getNode());
+                transformedItem = new DomElementItem(((Document) result.getNode()).getDocumentElement());
                 ItemMetadataSupport.addAll(transformedItem, item.getItemMetadata().values());
                 transformedItems.add(transformedItem);
             } catch (TransformerException e) {
@@ -169,6 +212,8 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
         try {
             Transformer transformer = transformerFactory.newTransformer();
 
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            
             transformer.setOutputProperty("{http://xml.apache.org/xalan}line-separator", lineSeperator);
 
             if (indented) {
