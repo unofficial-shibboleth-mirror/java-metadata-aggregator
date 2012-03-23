@@ -22,43 +22,90 @@ import jargs.gnu.CmdLineParser.OptionException;
 
 import java.io.PrintStream;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /** Command line arguments for the {@link SimpleCommandLine} command line tool. */
 public class SimpleCommandLineArguments {
 
     // Non-option arguments
-    private String inFile;
+    
+    /**
+     * Provided input file name for the Spring configuration file.
+     */
+    @Nullable private String inFile;
 
-    private String pipelineName;
+    /**
+     * Provided name for the pipeline bean to execute.
+     */
+    @Nullable private String pipelineName;
 
     // Logging
+    
+    /**
+     * Verbose logging has been requested.
+     */
     private boolean verbose;
 
-    private CmdLineParser.Option VERBOSE_ARG;
+    /**
+     * Option object for the <code>--verbose</code> option.
+     */
+    @Nonnull private final CmdLineParser.Option verboseOption;
 
+    /**
+     * Quiet logging has been requested.
+     */
     private boolean quiet;
 
-    private CmdLineParser.Option QUIET_ARG;
+    /**
+     * Option object for the <code>--quiet</code> option.
+     */
+    @Nonnull private final CmdLineParser.Option quietOption;
 
-    private String logConfig;
+    /**
+     * Name of a specific logging configuration, if one has been requested.
+     */
+    @Nullable private String logConfig;
 
-    private CmdLineParser.Option LOG_CONFIG_ARG;
+    /**
+     * Option object for the <code>--logConfig</code> option.
+     */
+    @Nonnull private final CmdLineParser.Option logConfigOption;
 
     // Help
+    
+    /**
+     * Help has been requested.
+     */
     private boolean help;
 
-    private CmdLineParser.Option HELP_ARG;
+    /**
+     * Option object for the <code>--help</code> option.
+     */
+    @Nonnull private final CmdLineParser.Option helpOption;
 
-    private CmdLineParser cliParser;
+    /**
+     * The configured command line parser.
+     */
+    @Nonnull private final CmdLineParser cliParser;
 
-    public SimpleCommandLineArguments(String[] args) {
+    /**
+     * Constructor.
+     */
+    public SimpleCommandLineArguments() {
         cliParser = new CmdLineParser();
 
-        VERBOSE_ARG = cliParser.addBooleanOption("verbose");
-        QUIET_ARG = cliParser.addBooleanOption("quiet");
-        LOG_CONFIG_ARG = cliParser.addStringOption("logConfig");
-        HELP_ARG = cliParser.addBooleanOption("help");
+        verboseOption = cliParser.addBooleanOption("verbose");
+        quietOption = cliParser.addBooleanOption("quiet");
+        logConfigOption = cliParser.addStringOption("logConfig");
+        helpOption = cliParser.addBooleanOption("help");
     }
 
+    /**
+     * Parse an array of command-line arguments as passed to the main program.
+     *
+     * @param args  array of command-line arguments to parse.
+     */
     public void parseCommandLineArguments(String[] args) {
         try {
             cliParser.parse(args);
@@ -72,40 +119,75 @@ public class SimpleCommandLineArguments {
             inFile = otherArgs[0];
             pipelineName = otherArgs[1];
 
-            verbose = (Boolean) cliParser.getOptionValue(VERBOSE_ARG, Boolean.FALSE);
-            quiet = (Boolean) cliParser.getOptionValue(QUIET_ARG, Boolean.FALSE);
-            logConfig = (String) cliParser.getOptionValue(LOG_CONFIG_ARG);
-            help = (Boolean) cliParser.getOptionValue(HELP_ARG, false);
+            verbose = (Boolean) cliParser.getOptionValue(verboseOption, Boolean.FALSE);
+            quiet = (Boolean) cliParser.getOptionValue(quietOption, Boolean.FALSE);
+            logConfig = (String) cliParser.getOptionValue(logConfigOption);
+            help = (Boolean) cliParser.getOptionValue(helpOption, false);
             validateCommandLineArguments();
         } catch (OptionException e) {
             errorAndExit(e.getMessage());
         }
     }
 
-    public String getInputFile() {
+    /**
+     * Gets the parsed input file name from the command line.
+     * 
+     * @return the input file name argument
+     */
+    @Nullable public String getInputFile() {
         return inFile;
     }
 
-    public String getPipelineName() {
+    /**
+     * Returns the name of the pipeline bean to execute from the command line.
+     * 
+     * @return the pipeline bean name argument
+     */
+    @Nullable public String getPipelineName() {
         return pipelineName;
     }
 
+    /**
+     * Indicates the presence of the <code>--verbose</code> option.
+     * 
+     * @return <code>true</code> if the user requested verbose logging.
+     */
     public boolean doVerboseOutput() {
         return verbose;
     }
 
+    /**
+     * Indicates the presence of the <code>--quiet</code> option.
+     * 
+     * @return <code>true</code> if the user requested quiet logging.
+     */
     public boolean doQuietOutput() {
         return quiet;
     }
 
-    public String getLoggingConfiguration() {
+    /**
+     * Gets the name of the requested logging configuration file
+     * from the command line.
+     * 
+     * @return the logging configuration file name, or <code>null</code>.
+     */
+    @Nullable public String getLoggingConfiguration() {
         return logConfig;
     }
 
+    /**
+     * Indicates the presence of the <code>--help</code> option.
+     * 
+     * @return <code>true</code> if the user requested help.
+     */
     public boolean doHelp() {
         return help;
     }
 
+    /**
+     * Validate the provided command line arguments, for example issuing
+     * an error if they are inconsistent.
+     */
     private void validateCommandLineArguments() {
         if (doHelp()) {
             return;
@@ -132,14 +214,14 @@ public class SimpleCommandLineArguments {
         out.println();
         out.println("==== Command Line Options ====");
         out.println();
-        out.println(String.format("  --%-20s %s", HELP_ARG.longForm(), "Prints this help information"));
+        out.println(String.format("  --%-20s %s", helpOption.longForm(), "Prints this help information"));
         out.println();
 
         out.println("Logging Options - these options are mutually exclusive");
-        out.println(String.format("  --%-20s %s", VERBOSE_ARG.longForm(), "Turn on verbose messages."));
-        out.println(String.format("  --%-20s %s", QUIET_ARG.longForm(),
+        out.println(String.format("  --%-20s %s", verboseOption.longForm(), "Turn on verbose messages."));
+        out.println(String.format("  --%-20s %s", quietOption.longForm(),
                 "Restrict output messages to errors and warnings."));
-        out.println(String.format("  --%-20s %s", LOG_CONFIG_ARG.longForm(),
+        out.println(String.format("  --%-20s %s", logConfigOption.longForm(),
                 "Specifies a logback configuration file to use to configure logging."));
         out.println();
     }

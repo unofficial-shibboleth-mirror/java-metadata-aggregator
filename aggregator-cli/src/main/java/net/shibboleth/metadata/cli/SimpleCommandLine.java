@@ -66,7 +66,7 @@ public class SimpleCommandLine {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        SimpleCommandLineArguments cli = new SimpleCommandLineArguments(args);
+        SimpleCommandLineArguments cli = new SimpleCommandLineArguments();
         cli.parseCommandLineArguments(args);
 
         if (cli.doHelp()) {
