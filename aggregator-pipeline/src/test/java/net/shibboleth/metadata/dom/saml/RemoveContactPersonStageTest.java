@@ -18,72 +18,163 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
+import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
+
+import com.google.common.collect.Sets;
 
 /** Unit test for {@link RemoveContactPersonStage}. */
 public class RemoveContactPersonStageTest extends BaseDomTest {
 
-    /** Test the contact person elements are removed from top level metadata elements. */
-    @Test
-    public void testRemoveContactPerson() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
-        List<Element> descriptors = ElementSupport
-                .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
-        for (Element descriptor : descriptors) {
-            metadataCollection.add(new DomElementItem(descriptor));
-        }
-        
-        for (DomElementItem metadata : metadataCollection) {
-            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SamlMetadataSupport.MD_NS,
-                    "ContactPerson").isEmpty());
-        }
+    private final QName contactPersonQname = new QName("urn:oasis:names:tc:SAML:2.0:metadata", "ContactPerson");
+    
+    private Element entitiesDescriptor;
 
+    @BeforeClass public void setup() throws Exception {
+        entitiesDescriptor = readTestRelativeXmlData(RemoveContactPersonStage.class, "entitiesDescriptor.xml");
+
+    }
+
+    @Test public void testDesignatedTypes() throws ComponentInitializationException {
         RemoveContactPersonStage stage = new RemoveContactPersonStage();
-        stage.setId("test");
+        stage.setId("foo");
+        Assert.assertEquals(stage.getDesignateTypes().size(), 5);
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.ADMINISTRATIVE));
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.BILLING));
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.OTHER));
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.SUPPORT));
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.TECHNICAL));
+
+        stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE, null,
+                RemoveContactPersonStage.TECHNICAL, "", "foo", RemoveContactPersonStage.OTHER));
+        Assert.assertEquals(stage.getDesignateTypes().size(), 3);
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.ADMINISTRATIVE));
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.OTHER));
+        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.TECHNICAL));
+
+        stage.setDesignatedTypes(Collections.EMPTY_LIST);
+        Assert.assertEquals(stage.getDesignateTypes().size(), 0);
+
+        stage.setDesignatedTypes(null);
+        Assert.assertEquals(stage.getDesignateTypes().size(), 0);
+
         stage.initialize();
-        
-        stage.execute(metadataCollection);
+        try {
+            stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE));
+            Assert.fail();
+        } catch (UnmodifiableComponentException e) {
+            Assert.assertEquals(stage.getDesignateTypes().size(), 0);
+        }
 
-        Assert.assertEquals(metadataCollection.size(), 3);
+        stage = new RemoveContactPersonStage();
+        stage.destroy();
+        try {
+            stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE));
+            Assert.fail();
+        } catch (DestroyedComponentException e) {
+            // expected this
+        }
 
-        for (DomElementItem metadata : metadataCollection) {
-            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SamlMetadataSupport.MD_NS,
-                    "ContactPerson").isEmpty());
+        stage = new RemoveContactPersonStage();
+        try {
+            stage.getDesignateTypes().add("foo");
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            // expected this
         }
     }
 
-    /** Test that contact person elements are removed from children of top level metadata elements. */
-    @Test
-    public void testRemoveContactPersonFromNestedElements() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
-
-        Element entitiesDescriptor = metadataCollection.get(0).unwrap();
-        List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor);
-        for (Element entityDescriptor : entityDescriptors) {
-            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS,
-                    "ContactPerson").isEmpty());
-        }
-        
+    @Test public void testWhitelistingTypes() throws ComponentInitializationException {
         RemoveContactPersonStage stage = new RemoveContactPersonStage();
-        stage.setId("test");
+        stage.setId("foo");
+        Assert.assertTrue(stage.isWhitelistingTypes());
+
+        stage.setWhitelistingTypes(false);
+        Assert.assertFalse(stage.isWhitelistingTypes());
+
         stage.initialize();
-        
-        stage.execute(metadataCollection);
-
-        Assert.assertEquals(metadataCollection.size(), 1);
-
-        for (Element entityDescriptor : entityDescriptors) {
-            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS,
-                    "ContactPerson").isEmpty());
+        try {
+            stage.setWhitelistingTypes(true);
+            Assert.fail();
+        } catch (UnmodifiableComponentException e) {
+            Assert.assertFalse(stage.isWhitelistingTypes());
         }
+
+        stage = new RemoveContactPersonStage();
+        stage.destroy();
+        try {
+            stage.setWhitelistingTypes(true);
+            Assert.fail();
+        } catch (DestroyedComponentException e) {
+            // expected this
+        }
+    }
+    
+    @Test public void testWhitelistContactPersons() throws Exception {
+        RemoveContactPersonStage stage = new RemoveContactPersonStage();
+        stage.setId("foo");
+        stage.initialize();
+
+        ArrayList<DomElementItem> itemCollection = new ArrayList<DomElementItem>();
+        itemCollection.add(new DomElementItem(entitiesDescriptor));
+
+        stage.execute(itemCollection);
+
+        Element filteredEntitiesDescriptor = itemCollection.get(0).unwrap();
+        List<Element> entityDescriptors = ElementSupport.getChildElements(filteredEntitiesDescriptor);
+        
+        Element idpDescriptor = entityDescriptors.get(0);
+        List<Element> contactPersons = ElementSupport.getChildElements(idpDescriptor, contactPersonQname);
+        Assert.assertEquals(contactPersons.size(), 1);
+        
+        Element issuesDescriptor = entityDescriptors.get(1);
+        contactPersons = ElementSupport.getChildElements(issuesDescriptor, contactPersonQname);
+        Assert.assertEquals(contactPersons.size(), 5);
+        
+        Element wikiDescriptor = entityDescriptors.get(2);
+        contactPersons = ElementSupport.getChildElements(wikiDescriptor, contactPersonQname);
+        Assert.assertEquals(contactPersons.size(), 0);
+    }
+    
+    @Test public void testBlacklistContactPersons() throws Exception {
+        RemoveContactPersonStage stage = new RemoveContactPersonStage();
+        stage.setId("foo");
+        stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE, RemoveContactPersonStage.OTHER));
+        stage.setWhitelistingTypes(false);
+        stage.initialize();
+
+        ArrayList<DomElementItem> itemCollection = new ArrayList<DomElementItem>();
+        itemCollection.add(new DomElementItem(entitiesDescriptor));
+
+        stage.execute(itemCollection);
+
+        Element filteredEntitiesDescriptor = itemCollection.get(0).unwrap();
+        List<Element> entityDescriptors = ElementSupport.getChildElements(filteredEntitiesDescriptor);
+        
+        Element idpDescriptor = entityDescriptors.get(0);
+        List<Element> contactPersons = ElementSupport.getChildElements(idpDescriptor, contactPersonQname);
+        Assert.assertEquals(contactPersons.size(), 1);
+        
+        Element issuesDescriptor = entityDescriptors.get(1);
+        contactPersons = ElementSupport.getChildElements(issuesDescriptor, contactPersonQname);
+        Assert.assertEquals(contactPersons.size(), 3);
+        
+        Element wikiDescriptor = entityDescriptors.get(2);
+        contactPersons = ElementSupport.getChildElements(wikiDescriptor, contactPersonQname);
+        Assert.assertEquals(contactPersons.size(), 0);
     }
 }

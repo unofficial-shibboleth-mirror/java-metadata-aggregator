@@ -17,26 +17,140 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-/** Filtering stage that removes ContactPerson elements from EntityDescriptors. */
+import com.google.common.collect.ImmutableSet;
+
+/**
+ * Filtering stage that removes ContactPerson elements from EntityDescriptors.
+ * 
+ * <p>
+ * Note, only the values {@link #TECHNICAL}, {@link #SUPPORT}, {@link #ADMINISTRATIVE}, {@link #BILLING}, and
+ * {@link #OTHER} are valid contact person types. Attempting to designate a type other than these will result in that
+ * type being ignored. <code>ContactPerson</code> elements which do not contain the required <code>contactType</code>
+ * attribute are always removed.
+ * </p>
+ * <p>
+ * To remove all contact persons enable type whitelisting and provide an empty designated type set.
+ * </p>
+ */
 @ThreadSafe
 public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem> {
 
+    /** 'technical' person type constant. */
+    public static final String TECHNICAL = "technical";
+
+    /** 'support' person type constant. */
+    public static final String SUPPORT = "support";
+
+    /** 'administrative' person type constant. */
+    public static final String ADMINISTRATIVE = "administrative";
+
+    /** 'billing' person type constant. */
+    public static final String BILLING = "billing";
+
+    /** 'other' person type constant. */
+    public static final String OTHER = "other";
+
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(RemoveContactPersonStage.class);
+
+    /** Allowed contact person types. */
+    private Set<String> allowedTypes = ImmutableSet.copyOf(new String[] {TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING,
+            OTHER});
+
+    /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
+    private Set<String> designatedTypes = ImmutableSet.copyOf(allowedTypes);
+
+    /** Whether {@link #designatedType} should be considered a whitelist. Default value: true */
+    private boolean whitelistingTypes = true;
+
+    /**
+     * Gets the list of designated person types.
+     * 
+     * @return list of designated person types
+     */
+    @Nonnull @NonnullElements @Unmodifiable public Collection<String> getDesignateTypes() {
+        return designatedTypes;
+    }
+
+    /**
+     * Sets the list of designated entity roles. The list may contain either role element names or schema types.
+     * 
+     * @param types list of designated entity roles
+     */
+    public synchronized void setDesignatedTypes(@Nullable @NullableElements final Collection<String> types) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        if (types == null || types.isEmpty()) {
+            designatedTypes = Collections.emptySet();
+            return;
+        }
+
+        HashSet<String> checkedTypes = new HashSet<String>();
+        String checkedType;
+        for (String type : types) {
+            checkedType = StringSupport.trimOrNull(type);
+            if (checkedType == null) {
+                continue;
+            }
+
+            if (allowedTypes.contains(checkedType)) {
+                checkedTypes.add(checkedType);
+            } else {
+                log.debug("Stage {}: {} is not an allowed contact person type and so has been ignored", getId(),
+                        checkedType);
+            }
+        }
+
+        designatedTypes = Collections.unmodifiableSet(checkedTypes);
+    }
+
+    /**
+     * Gets whether the list of designated roles should be considered a whitelist.
+     * 
+     * @return true if the designated roles should be considered a whitelist, false otherwise
+     */
+    public boolean isWhitelistingTypes() {
+        return whitelistingTypes;
+    }
+
+    /**
+     * Sets whether the list of designated roles should be considered a whitelist.
+     * 
+     * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
+     */
+    public synchronized void setWhitelistingTypes(final boolean whitelisting) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        whitelistingTypes = whitelisting;
+    }
 
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
@@ -80,8 +194,55 @@ public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem>
         if (!contactPersons.isEmpty()) {
             log.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
             for (Element contactPerson : contactPersons) {
-                entityDescriptor.removeChild(contactPerson);
+                if (!isRetainedContactPersonType(contactPerson)) {
+                    entityDescriptor.removeChild(contactPerson);
+                }
             }
         }
+    }
+
+    /**
+     * Check whether the given contact person is designated as a type that is to be retained or not.
+     * 
+     * @param contactPerson the contact person
+     * 
+     * @return true if the contact person should be retained, false otherwise
+     */
+    protected boolean isRetainedContactPersonType(@Nonnull final Element contactPerson) {
+        assert contactPerson != null : "Contact person element can not be null";
+
+        String type = StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
+
+        if (type == null) {
+            log.debug(
+                    "The following ContactPerson does not contain the required contactType attribute, it will be removed:\n{}",
+                    SerializeSupport.prettyPrintXML(contactPerson));
+            return false;
+        }
+
+        if (!allowedTypes.contains(type)) {
+            log.debug("The following ContactPerson contained an invalid contactType, it will be removed:\n{}",
+                    SerializeSupport.prettyPrintXML(contactPerson));
+            return false;
+        }
+
+        if (isWhitelistingTypes() && designatedTypes.contains(type)) {
+            // if we're whitelisting types and the person's type appears in the designated type list, keep them
+            return true;
+        }
+
+        if (!isWhitelistingTypes() && !designatedTypes.contains(type)) {
+            // if we're blacklist types and the person's type does not appear in the designated type list, keep them
+            return true;
+        }
+
+        // otherwise boot them
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        designatedTypes = null;
+        super.doDestroy();
     }
 }

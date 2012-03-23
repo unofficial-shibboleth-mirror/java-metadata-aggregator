@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -39,24 +38,13 @@ public class ElementFormattingStageTest extends BaseDomTest {
     private Element unformattedElement;
 
     private Element singleLineElement;
-    
+
     private Element prettyPrintElement;
 
-    @BeforeClass public void setup() throws Exception {        
-        URL sourceUrl =
-                ElementFormattingStageTest.class
-                        .getResource("/net/shibboleth/metadata/dom/ElementFormattingStage/unformatted.xml");
-        unformattedElement = getParserPool().parse(sourceUrl.openStream()).getDocumentElement();
-
-        sourceUrl =
-                ElementFormattingStageTest.class
-                        .getResource("/net/shibboleth/metadata/dom/ElementFormattingStage/singleLine.xml");
-        singleLineElement = getParserPool().parse(sourceUrl.openStream()).getDocumentElement();
-        
-        sourceUrl =
-                ElementFormattingStageTest.class
-                        .getResource("/net/shibboleth/metadata/dom/ElementFormattingStage/prettyPrint.xml");
-        prettyPrintElement = getParserPool().parse(sourceUrl.openStream()).getDocumentElement();
+    @BeforeClass public void setup() throws Exception {
+        unformattedElement = readTestRelativeXmlData(ElementFormattingStage.class, "unformatted.xml");
+        singleLineElement = readTestRelativeXmlData(ElementFormattingStage.class, "singleLine.xml");
+        prettyPrintElement = readTestRelativeXmlData(ElementFormattingStage.class, "prettyPrint.xml");
     }
 
     @Test public void testLineSeperator() throws ComponentInitializationException {
@@ -202,10 +190,10 @@ public class ElementFormattingStageTest extends BaseDomTest {
 
         DomElementItem result = itemCollection.get(0);
         assertXmlIdentical(singleLineElement, result.unwrap());
-        
+
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));
     }
-    
+
     @Test public void testPrettyPrintFormatting() throws Exception {
         ElementFormattingStage stage = new ElementFormattingStage();
         stage.setId("foo");
@@ -220,7 +208,7 @@ public class ElementFormattingStageTest extends BaseDomTest {
 
         DomElementItem result = itemCollection.get(0);
         assertXmlIdentical(prettyPrintElement, result.unwrap());
-        
+
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));
     }
 }

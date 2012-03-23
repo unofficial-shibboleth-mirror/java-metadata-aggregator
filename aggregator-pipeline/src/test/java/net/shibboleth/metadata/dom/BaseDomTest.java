@@ -64,6 +64,32 @@ public abstract class BaseDomTest {
     }
 
     /**
+     * Parses and XML data file located in the resource directory named for the class that is being tested. For example,
+     * for the class <code>net.shibboleth.metadata.dom.saml.RemoveContactPersonStage</code>, the data file will be
+     * looked for in <code>src/test/resources/net/shibboleth/metadata/dom/saml/RemoveContactPersonStage/</code>.
+     * 
+     * @param classBeingTested the class that is being unit tested
+     * @param dataFile the data file to be loaded in and read
+     * 
+     * @return the document root element
+     * 
+     * @throws XMLParserException thrown if the data file does not exist or is not valid XML
+     */
+    public Element readTestRelativeXmlData(final Class classBeingTested, final String dataFile)
+            throws XMLParserException {
+        StringBuilder absoluteDataPath = new StringBuilder();
+        absoluteDataPath.append("/").append(classBeingTested.getName().replace('.', '/'));
+        absoluteDataPath.append("/").append(dataFile);
+
+        InputStream input = BaseDomTest.class.getResourceAsStream(absoluteDataPath.toString());
+        if (input == null) {
+            throw new XMLParserException(absoluteDataPath + " does not exist or is not readable");
+        }
+
+        return parserPool.parse(input).getDocumentElement();
+    }
+
+    /**
      * Reads in an XML file, parses it, and returns the document element. If the given path is relative (i.e., does not
      * start with a '/') it is assumed to be relative to /data.
      * 
