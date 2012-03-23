@@ -19,6 +19,7 @@ package net.shibboleth.metadata.cli;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.Pipeline;
@@ -44,37 +45,54 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 public class SimpleCommandLine {
 
+    /** Return code indicating command completed successfully, {@value} . */
+    public static final int RC_OK = 0;
+
+    /** Return code indicating an initialization error, {@value} . */
+    public static final int RC_INIT = 1;
+
+    /** Return code indicating an error reading files, {@value} . */
+    public static final int RC_IO = 2;
+
+    /** Return code indicating an unknown error occurred, {@value} . */
+    public static final int RC_UNKNOWN = -1;
+
+    /** Class logger. */
+    private static Logger log;
+
     /**
      * Main method.
      * 
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.err.println("This command line only supports two arguments, "
-                    + "the file path to the Spring configuration file describing the processing pipeline "
-                    + "and bean ID of the Pipeline to execute.");
-            System.exit(1);
-        }
+        SimpleCommandLineArguments cli = new SimpleCommandLineArguments(args);
+        cli.parseCommandLineArguments(args);
 
-        Logger log = LoggerFactory.getLogger(SimpleCommandLine.class);
+        if (cli.doHelp()) {
+            cli.printHelp(System.out);
+            System.exit(RC_OK);
+        }
+        
+        initLogging(cli);
 
         FileSystemXmlApplicationContext appCtx = null;
         try {
-            String fileUri = new File(args[0]).toURI().toString();
+            String fileUri = new File(cli.getInputFile()).toURI().toString();
             log.debug("Initializing Spring context with configuration file {}", fileUri);
             appCtx = new FileSystemXmlApplicationContext(fileUri);
         } catch (BeansException e) {
             log.error("Unable to initialize Spring context", e);
-            System.exit(1);
+            System.exit(RC_INIT);
         }
 
         log.debug("Retreiving pipeline from Spring context");
-        Pipeline pipeline = appCtx.getBean(args[1], Pipeline.class);
+        String pipelineName = cli.getPipelineName();
+        Pipeline pipeline = appCtx.getBean(pipelineName, Pipeline.class);
         if (pipeline == null) {
             log.error("No net.shibboleth.metadata.pipeline.Pipeline, with ID {}, defined in Spring configuration",
-                    args[1]);
-            System.exit(1);
+                    pipelineName);
+            System.exit(RC_INIT);
         }
 
         try {
@@ -85,15 +103,37 @@ public class SimpleCommandLine {
                 log.debug("Retrieved pipeline has already been initialized");
             }
 
-            log.debug("Executing pipeline");
             ArrayList<DomElementItem> item = new ArrayList<DomElementItem>();
+            Date startTime = new Date();
+            log.info("Pipeline {} execution starting at {}", pipelineName, startTime);
             pipeline.execute(item);
-            log.debug("Pipeline execution complete");
+            Date endTime = new Date();
+            log.info("Pipeline execution completed at {}; run time {} seconds",
+                    endTime, (endTime.getTime()-startTime.getTime())/1000f);
 
-            System.exit(0);
+            System.exit(RC_OK);
         } catch (Exception e) {
             log.error("Error processing information", e);
-            System.exit(1);
+            System.exit(RC_INIT);
         }
+    }
+
+    /**
+     * Initialize the logging subsystem.
+     * 
+     * @param cli command line arguments
+     */
+    protected static void initLogging(SimpleCommandLineArguments cli) {
+        if (cli.getLoggingConfiguration() != null) {
+            System.setProperty("logback.configurationFile", cli.getLoggingConfiguration());
+        } else if (cli.doVerboseOutput()) {
+            System.setProperty("logback.configurationFile", "logger-verbose.xml");
+        } else if (cli.doQuietOutput()) {
+            System.setProperty("logback.configurationFile", "logger-quiet.xml");
+        } else {
+            System.setProperty("logback.configurationFile", "logger-normal.xml");
+        }
+
+        log = LoggerFactory.getLogger(SimpleCommandLine.class);
     }
 }
