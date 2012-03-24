@@ -18,8 +18,8 @@
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;

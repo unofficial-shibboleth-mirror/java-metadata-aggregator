@@ -20,9 +20,6 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.dom.DomElementItem;
-import net.shibboleth.metadata.dom.ElementStrippingStage;
-
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 

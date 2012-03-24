@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import net.jcip.annotations.NotThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * An append-only multimap where each entry associates a raw type (i.e. class) to instances of that class. In addition

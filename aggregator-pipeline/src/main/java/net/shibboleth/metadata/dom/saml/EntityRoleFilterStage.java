@@ -33,7 +33,6 @@ import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.collection.LazySet;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -45,7 +44,6 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;

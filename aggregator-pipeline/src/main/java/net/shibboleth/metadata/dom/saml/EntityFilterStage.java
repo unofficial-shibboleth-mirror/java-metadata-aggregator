@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 

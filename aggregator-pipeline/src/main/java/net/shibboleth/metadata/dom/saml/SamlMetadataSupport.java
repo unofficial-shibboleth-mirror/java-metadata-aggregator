@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.dom.XMLSignatureSigningStage;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 

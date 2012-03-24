@@ -19,8 +19,8 @@ package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 
 /**

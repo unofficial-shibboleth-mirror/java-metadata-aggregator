@@ -56,8 +56,8 @@ import com.google.common.collect.Lists;
  * A stage that formats a collection of DOM Elements.
  * 
  * <p>
- * Note, this stage uses Xalan specific options and so Xalan must be included on the classpath. However, Xalan does
- * <strong>not</strong> have to be the system default {@link TransformerFactory} implementation.
+ * Note, this stage uses Xalan so Xalan must be included on the classpath. However, Xalan does <strong>not</strong> have
+ * to be the system default {@link TransformerFactory} implementation.
  * </p>
  */
 public class ElementFormattingStage extends BaseStage<DomElementItem> {

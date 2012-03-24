@@ -70,7 +70,6 @@ import org.w3c.dom.NamedNodeMap;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 /**
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem}

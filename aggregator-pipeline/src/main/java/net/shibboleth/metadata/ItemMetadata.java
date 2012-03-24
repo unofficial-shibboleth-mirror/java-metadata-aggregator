@@ -19,7 +19,7 @@ package net.shibboleth.metadata;
 
 import java.io.Serializable;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Additional information associated with an {@link Item} while it is being worked with.
