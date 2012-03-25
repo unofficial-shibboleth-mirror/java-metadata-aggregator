@@ -59,7 +59,7 @@ import com.google.common.collect.ImmutableSet;
  * </p>
  */
 @ThreadSafe
-public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem> {
+public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem> {
 
     /** 'technical' person type constant. */
     public static final String TECHNICAL = "technical";
@@ -77,11 +77,11 @@ public class RemoveContactPersonStage extends BaseIteratingStage<DomElementItem>
     public static final String OTHER = "other";
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(RemoveContactPersonStage.class);
+    private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** Allowed contact person types. */
     private Set<String> allowedTypes = ImmutableSet.copyOf(new String[] {TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING,
-            OTHER});
+            OTHER,});
 
     /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
     private Set<String> designatedTypes = ImmutableSet.copyOf(allowedTypes);

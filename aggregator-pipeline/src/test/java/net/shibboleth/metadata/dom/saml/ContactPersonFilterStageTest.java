@@ -37,34 +37,34 @@ import org.w3c.dom.Element;
 
 import com.google.common.collect.Sets;
 
-/** Unit test for {@link RemoveContactPersonStage}. */
-public class RemoveContactPersonStageTest extends BaseDomTest {
+/** Unit test for {@link ContactPersonFilterStage}. */
+public class ContactPersonFilterStageTest extends BaseDomTest {
 
     private final QName contactPersonQname = new QName("urn:oasis:names:tc:SAML:2.0:metadata", "ContactPerson");
     
     private Element entitiesDescriptor;
 
     @BeforeClass public void setup() throws Exception {
-        entitiesDescriptor = readTestRelativeXmlData(RemoveContactPersonStage.class, "entitiesDescriptor.xml");
+        entitiesDescriptor = readTestRelativeXmlData(ContactPersonFilterStage.class, "entitiesDescriptor.xml");
 
     }
 
     @Test public void testDesignatedTypes() throws ComponentInitializationException {
-        RemoveContactPersonStage stage = new RemoveContactPersonStage();
+        ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
         Assert.assertEquals(stage.getDesignateTypes().size(), 5);
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.ADMINISTRATIVE));
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.BILLING));
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.OTHER));
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.SUPPORT));
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.TECHNICAL));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.BILLING));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.OTHER));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.SUPPORT));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
-        stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE, null,
-                RemoveContactPersonStage.TECHNICAL, "", "foo", RemoveContactPersonStage.OTHER));
+        stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE, null,
+                ContactPersonFilterStage.TECHNICAL, "", "foo", ContactPersonFilterStage.OTHER));
         Assert.assertEquals(stage.getDesignateTypes().size(), 3);
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.ADMINISTRATIVE));
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.OTHER));
-        Assert.assertTrue(stage.getDesignateTypes().contains(RemoveContactPersonStage.TECHNICAL));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.OTHER));
+        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
         stage.setDesignatedTypes(Collections.EMPTY_LIST);
         Assert.assertEquals(stage.getDesignateTypes().size(), 0);
@@ -74,22 +74,22 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
 
         stage.initialize();
         try {
-            stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE));
+            stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (UnmodifiableComponentException e) {
             Assert.assertEquals(stage.getDesignateTypes().size(), 0);
         }
 
-        stage = new RemoveContactPersonStage();
+        stage = new ContactPersonFilterStage();
         stage.destroy();
         try {
-            stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE));
+            stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (DestroyedComponentException e) {
             // expected this
         }
 
-        stage = new RemoveContactPersonStage();
+        stage = new ContactPersonFilterStage();
         try {
             stage.getDesignateTypes().add("foo");
             Assert.fail();
@@ -99,7 +99,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
     }
 
     @Test public void testWhitelistingTypes() throws ComponentInitializationException {
-        RemoveContactPersonStage stage = new RemoveContactPersonStage();
+        ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
         Assert.assertTrue(stage.isWhitelistingTypes());
 
@@ -114,7 +114,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
             Assert.assertFalse(stage.isWhitelistingTypes());
         }
 
-        stage = new RemoveContactPersonStage();
+        stage = new ContactPersonFilterStage();
         stage.destroy();
         try {
             stage.setWhitelistingTypes(true);
@@ -125,7 +125,7 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
     }
     
     @Test public void testWhitelistContactPersons() throws Exception {
-        RemoveContactPersonStage stage = new RemoveContactPersonStage();
+        ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
         stage.initialize();
 
@@ -151,9 +151,9 @@ public class RemoveContactPersonStageTest extends BaseDomTest {
     }
     
     @Test public void testBlacklistContactPersons() throws Exception {
-        RemoveContactPersonStage stage = new RemoveContactPersonStage();
+        ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
-        stage.setDesignatedTypes(Sets.newHashSet(RemoveContactPersonStage.ADMINISTRATIVE, RemoveContactPersonStage.OTHER));
+        stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
         stage.setWhitelistingTypes(false);
         stage.initialize();
 

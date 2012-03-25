@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(RemoveContactPersonStage.class);
+    private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
