@@ -170,12 +170,11 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
                 if (!parentDirectory.canWrite()) {
                     throw new ComponentInitializationException("Can not write to parent directory of output file '"
                             + outputFile.getAbsolutePath() + "'");
-                } else {
-                    // parent directory could be null in obscure cases that we can't really reason about
-                    log.warn(
-                            "Unable to determine parent directory for output file {}, this may result in a problem during stage execution",
-                            outputFile.getAbsolutePath());
                 }
+            } else {
+                log.warn(
+                        "Unable to determine parent directory for output file {}, this may result in a problem during stage execution",
+                        outputFile.getAbsolutePath());
             }
         }
 
