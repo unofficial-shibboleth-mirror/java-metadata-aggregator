@@ -64,7 +64,7 @@ public class GenerateIdStage extends BaseIteratingStage<DomElementItem> {
         Attr idAttribute = AttributeSupport.getAttribute(element, ID_ATTRIB);
         if (idAttribute == null) {
             idAttribute = AttributeSupport.constructAttribute(element.getOwnerDocument(), ID_ATTRIB);
-            element.appendChild(idAttribute);
+            element.setAttributeNode(idAttribute);
         }
 
         idAttribute.setValue(idGenerator.generateIdentifier());

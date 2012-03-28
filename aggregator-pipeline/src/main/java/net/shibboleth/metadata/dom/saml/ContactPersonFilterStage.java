@@ -86,7 +86,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
     /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
     private Set<String> designatedTypes = ImmutableSet.copyOf(allowedTypes);
 
-    /** Whether {@link #designatedType} should be considered a whitelist. Default value: true */
+    /** Whether {@link #designatedTypes} should be considered a whitelist. Default value: true */
     private boolean whitelistingTypes = true;
 
     /**

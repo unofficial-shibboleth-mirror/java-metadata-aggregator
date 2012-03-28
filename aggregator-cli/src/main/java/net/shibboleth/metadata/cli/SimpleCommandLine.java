@@ -105,11 +105,11 @@ public class SimpleCommandLine {
 
             ArrayList<DomElementItem> item = new ArrayList<DomElementItem>();
             Date startTime = new Date();
-            log.info("Pipeline {} execution starting at {}", pipelineName, startTime);
+            log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
             pipeline.execute(item);
             Date endTime = new Date();
-            log.info("Pipeline execution completed at {}; run time {} seconds",
-                    endTime, (endTime.getTime()-startTime.getTime())/1000f);
+            log.info("Pipeline '{}' execution completed at {}; run time {} seconds",
+                    new Object[]{pipelineName, endTime, (endTime.getTime()-startTime.getTime())/1000f});
 
             System.exit(RC_OK);
         } catch (Exception e) {
