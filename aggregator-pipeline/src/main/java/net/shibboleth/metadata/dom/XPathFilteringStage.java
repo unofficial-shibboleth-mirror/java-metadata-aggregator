@@ -35,7 +35,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
@@ -84,7 +84,7 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         xpathExpression =
-                Assert.isNotNull(StringSupport.trimOrNull(expression), "XPath expression can not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(expression), "XPath expression can not be null or empty");
     }
 
     /**

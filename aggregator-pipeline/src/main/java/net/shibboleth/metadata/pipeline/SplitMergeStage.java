@@ -35,7 +35,7 @@ import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +108,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        executorService = Assert.isNotNull(service, "ExecutorService can not be null");
+        executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -129,7 +129,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        collectionFactory = Assert.isNotNull(factory, "Collection factory can not be null");
+        collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
 
     /**
@@ -150,7 +150,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        selectionStrategy = Assert.isNotNull(strategy, "Item selection strategy can not be null");
+        selectionStrategy = Constraint.isNotNull(strategy, "Item selection strategy can not be null");
     }
 
     /**
@@ -214,7 +214,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        mergeStrategy = Assert.isNotNull(strategy, "Collection merge strategy can not be null");
+        mergeStrategy = Constraint.isNotNull(strategy, "Collection merge strategy can not be null");
     }
 
     /** {@inheritDoc} */

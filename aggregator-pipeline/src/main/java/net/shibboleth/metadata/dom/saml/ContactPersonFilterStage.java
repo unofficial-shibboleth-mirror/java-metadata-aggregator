@@ -34,6 +34,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -209,7 +210,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
      * @return true if the contact person should be retained, false otherwise
      */
     protected boolean isRetainedContactPersonType(@Nonnull final Element contactPerson) {
-        assert contactPerson != null : "Contact person element can not be null";
+        Constraint.isNotNull(contactPerson, "Contact person element can not be null");
 
         String type = StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
 

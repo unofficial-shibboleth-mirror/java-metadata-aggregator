@@ -36,7 +36,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -103,7 +103,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        identifierStrategy = Assert.isNotNull(strategy, "Item identification strategy can not be null");
+        identifierStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
     }
 
     /** {@inheritDoc} */

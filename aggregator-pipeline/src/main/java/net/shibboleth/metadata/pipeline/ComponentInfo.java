@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.joda.time.DateTime;
@@ -56,7 +57,7 @@ public class ComponentInfo implements ItemMetadata {
      * @param component component which this info describes
      */
     public ComponentInfo(@Nonnull final IdentifiableComponent component) {
-        assert component != null : "Component can not be null";
+        Constraint.isNotNull(component, "Component can not be null");
         componentId = component.getId();
         componentType = component.getClass();
         startInstant = new DateTime(ISOChronology.getInstanceUTC());

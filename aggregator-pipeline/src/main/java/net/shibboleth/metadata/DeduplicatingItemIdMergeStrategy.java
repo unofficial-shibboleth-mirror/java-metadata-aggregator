@@ -24,6 +24,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A merge strategy that adds source items to the target collection if none of the Items in the target collection have
@@ -35,8 +36,8 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
     /** {@inheritDoc} */
     public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
             @Nonnull @NonnullElements final Collection<Item<?>>... sources) {
-        assert target != null : "Target collection can not be null";
-        assert sources != null && sources.length > 0: "Source collections can not be null or empty";
+        Constraint.isNotNull(target, "Target collection can not be null");
+        Constraint.isNotNull(sources, "Source collections can not be null or empty");
         
         List<ItemId> itemIds;
         HashSet<ItemId> presentItemIds = new HashSet<ItemId>();

@@ -29,7 +29,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
@@ -86,7 +86,7 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        domResource = Assert.isNotNull(resource, "DOM resource can not be null");
+        domResource = Constraint.isNotNull(resource, "DOM resource can not be null");
     }
 
     /**
@@ -107,7 +107,7 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        parserPool = Assert.isNotNull(pool, "Parser pool can not be null");
+        parserPool = Constraint.isNotNull(pool, "Parser pool can not be null");
     }
 
     /**

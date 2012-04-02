@@ -29,7 +29,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -67,7 +67,7 @@ public class EmptyContainerStrippingStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        elementNamespace = Assert.isNotNull(StringSupport.trimOrNull(namespace),
+        elementNamespace = Constraint.isNotNull(StringSupport.trimOrNull(namespace),
                 "target namespace can not be null or empty");
     }
 
@@ -89,7 +89,7 @@ public class EmptyContainerStrippingStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        elementName = Assert.isNotNull(StringSupport.trimOrNull(name),
+        elementName = Constraint.isNotNull(StringSupport.trimOrNull(name),
                 "target element name can not be null or empty");
     }
 
@@ -100,8 +100,7 @@ public class EmptyContainerStrippingStage extends BaseStage<DomElementItem> {
      * @return true if and only if the Element has child elements.
      */
     private boolean hasChildElements(@Nonnull final Element element) {
-        assert element != null;
-        Node firstChild = ElementSupport.getFirstChildElement(element);
+        Node firstChild = ElementSupport.getFirstChildElement(Constraint.isNotNull(element, "Element can not be null"));
         return firstChild != null;
     }
     

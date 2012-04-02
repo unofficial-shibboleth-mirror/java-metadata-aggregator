@@ -27,7 +27,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.LazyList;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A wrapper around a delegate collection that allows the collection to carry item metadata.
@@ -54,7 +54,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
      * @param wrappedCollection the underlying collection that holds the items
      */
     public ItemCollectionWithMetadata(@Nonnull @NonnullElements final Collection<ItemType> wrappedCollection) {
-        delegate = Assert.isNotNull(wrappedCollection, "Wrapped collection can not be null");
+        delegate = Constraint.isNotNull(wrappedCollection, "Wrapped collection can not be null");
         delegate.clear();
 
         metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
@@ -96,7 +96,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
 
     /** {@inheritDoc} */
     @Nonnull @NonnullElements public <T> T[] toArray(@Nonnull final T[] a) {
-        assert a != null : "Target array can not be null";
+        Constraint.isNotNull(a, "Target array can not be null");
         return delegate.toArray(a);
     }
 
@@ -120,7 +120,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
 
     /** {@inheritDoc} */
     public boolean containsAll(@Nonnull final Collection<?> c) {
-        assert c != null : "Collection can not be null";
+        Constraint.isNotNull(c, "Collection can not be null");
 
         return delegate.containsAll(c);
     }
@@ -145,7 +145,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
 
     /** {@inheritDoc} */
     public boolean retainAll(@Nonnull Collection<?> c) {
-        assert c != null : "Collection can not be null";
+        Constraint.isNotNull(c, "Collection can not be null");
 
         return delegate.retainAll(c);
     }

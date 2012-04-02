@@ -22,6 +22,7 @@ import java.util.List;
 
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -36,21 +37,21 @@ public class SimplePipelineTest {
         SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
         pipeline.setId(" test ");
         pipeline.setStages(stages);
-        assert "test".equals(pipeline.getId());
-        assert pipeline.getStages() != stages;
-        assert pipeline.getStages().size() == 3;
-        assert pipeline.getStages().containsAll(stages);
-        assert !pipeline.getStages().get(0).isInitialized();
-        assert !pipeline.getStages().get(1).isInitialized();
+        Assert.assertEquals(pipeline.getId(), "test");
+        Assert.assertFalse(pipeline.getStages() == stages);
+        Assert.assertEquals(pipeline.getStages().size(), 3);
+        Assert.assertTrue(pipeline.getStages().containsAll(stages));
+        Assert.assertFalse(pipeline.getStages().get(0).isInitialized());
+        Assert.assertFalse(pipeline.getStages().get(1).isInitialized());
 
         pipeline.initialize();
-        assert "test".equals(pipeline.getId());
-        assert pipeline.getStages() != stages;
-        assert pipeline.getStages().size() == 3;
-        assert pipeline.getStages().containsAll(stages);
-        assert pipeline.getStages().get(0).isInitialized();
-        assert pipeline.getStages().get(1).isInitialized();
-        assert pipeline.getStages().get(2).isInitialized();
+        Assert.assertEquals(pipeline.getId(), "test");
+        Assert.assertFalse(pipeline.getStages() == stages);
+        Assert.assertEquals(pipeline.getStages().size(), 3);
+        Assert.assertTrue(pipeline.getStages().containsAll(stages));
+        Assert.assertTrue(pipeline.getStages().get(0).isInitialized());
+        Assert.assertTrue(pipeline.getStages().get(1).isInitialized());
+        Assert.assertTrue(pipeline.getStages().get(2).isInitialized());
 
         try {
             pipeline = new SimplePipeline<MockItem>();
@@ -67,7 +68,7 @@ public class SimplePipelineTest {
             pipeline.setStages(stages);
             pipeline.initialize();
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
     }
@@ -78,32 +79,33 @@ public class SimplePipelineTest {
         SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
         pipeline.setId("test");
         pipeline.setStages(stages);
+        pipeline.initialize();
 
         ArrayList<MockItem> metadata = new ArrayList<MockItem>();
         pipeline.execute(metadata);
-        assert metadata.size() == 2;
+        Assert.assertEquals(metadata.size(), 2);
 
-        assert ((CountingStage) stages.get(1)).getInvocationCount() == 1;
-        assert ((CountingStage) stages.get(2)).getInvocationCount() == 1;
+        Assert.assertEquals(((CountingStage) stages.get(1)).getInvocationCount(), 1);
+        Assert.assertEquals(((CountingStage) stages.get(2)).getInvocationCount(), 1);
 
         MockItem md = metadata.iterator().next();
-        assert md.getItemMetadata().containsKey(ComponentInfo.class);
-        assert md.getItemMetadata().values().size() == 2;
-        assert md.getItemMetadata().containsKey(ComponentInfo.class);
+        Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
+        Assert.assertEquals(md.getItemMetadata().values().size(), 2);
+        Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
 
         try {
             List<? extends Stage<MockItem>> pipelineStages = pipeline.getStages();
             pipelineStages.clear();
-            throw new AssertionError();
+            Assert.fail();
         } catch (UnsupportedOperationException e) {
             // expected this
         }
 
         metadata = new ArrayList<MockItem>();
         pipeline.execute(metadata);
-        assert metadata.size() == 2;
-        assert ((CountingStage) stages.get(1)).getInvocationCount() == 2;
-        assert ((CountingStage) stages.get(2)).getInvocationCount() == 2;
+        Assert.assertEquals(metadata.size(), 2);
+        Assert.assertEquals(((CountingStage) stages.get(1)).getInvocationCount(), 2);
+        Assert.assertEquals(((CountingStage) stages.get(2)).getInvocationCount(), 2);
     }
 
     protected List<? extends Stage<MockItem>> buildStages() {

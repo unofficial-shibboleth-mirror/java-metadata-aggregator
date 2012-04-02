@@ -25,6 +25,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.httpclient.HttpResource;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
@@ -46,8 +47,8 @@ public class DomResourceSourceTest {
 
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
         source.execute(metadataCollection);
-        assert metadataCollection != null;
-        assert metadataCollection.size() == 1;
+        Assert.assertNotNull(metadataCollection);
+        Assert.assertEquals(metadataCollection.size(), 1);
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
@@ -65,7 +66,7 @@ public class DomResourceSourceTest {
         try {
             ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
             source.execute(metadataCollection);
-            throw new AssertionError("Invalid URL marked as parsed");
+            throw new ConstraintViolationException("Invalid URL marked as parsed");
         } catch (StageProcessingException e) {
             // expected this
         }

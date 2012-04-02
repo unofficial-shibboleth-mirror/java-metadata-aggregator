@@ -34,7 +34,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 
 import org.slf4j.Logger;
@@ -102,7 +102,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        parserPool = Assert.isNotNull(pool, "Parser pool can not be null");
+        parserPool = Constraint.isNotNull(pool, "Parser pool can not be null");
     }
 
     /**
@@ -123,7 +123,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        sourceFile = Assert.isNotNull(source, "XML source file can not be null");
+        sourceFile = Constraint.isNotNull(source, "XML source file can not be null");
     }
 
     /**
@@ -145,7 +145,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        sourceFileFilter = Assert.isNotNull(filter, "File filter can not be null");
+        sourceFileFilter = Constraint.isNotNull(filter, "File filter can not be null");
     }
 
     /**

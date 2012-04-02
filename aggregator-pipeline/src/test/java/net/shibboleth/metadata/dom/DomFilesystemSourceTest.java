@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
@@ -112,7 +113,7 @@ public class DomFilesystemSourceTest {
         try {
             ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
             source.execute(metadataCollection);
-            throw new AssertionError("Source did not fail when given a non-XML file");
+            throw new ConstraintViolationException("Source did not fail when given a non-XML file");
         } catch (StageProcessingException e) {
             // expected this
         }

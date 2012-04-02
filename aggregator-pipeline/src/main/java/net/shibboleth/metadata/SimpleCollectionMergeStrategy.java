@@ -22,6 +22,7 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A {@link CollectionMergeStrategy} that adds the Item from each source, in order, by means of the
@@ -32,8 +33,8 @@ public class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
     /** {@inheritDoc} */
     public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
             @Nonnull @NonnullElements final Collection<Item<?>>... sources) {
-        assert target != null : "Target collection can not be null";
-        assert sources != null && sources.length > 0 : "Source collections can not be null or empty";
+        Constraint.isNotNull(target, "Target collection can not be null");
+        Constraint.isNotNull(sources, "Source collections can not be null or empty");
 
         for (Collection<Item<?>> source : sources) {
             target.addAll(source);

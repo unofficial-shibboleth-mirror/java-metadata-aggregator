@@ -35,7 +35,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.slf4j.Logger;
@@ -78,7 +78,7 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        namespace = Assert.isNotNull(StringSupport.trimOrNull(ns),
+        namespace = Constraint.isNotNull(StringSupport.trimOrNull(ns),
                 "target namespace can not be null or empty");
     }
 
@@ -88,8 +88,7 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
      * @param item {@link DomElementItem} to process.
      */
     private void processItem(@Nonnull final DomElementItem item) {
-        assert item != null;
-        final Element element = item.unwrap();
+        final Element element = Constraint.isNotNull(item, "Item can not be null").unwrap();
 
         /*
          * We can't, by definition, remove the document element from a DomElementItem, so fail quickly if the document
@@ -113,7 +112,7 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
      * @param element the {@link Element} to process
      */
     private void processAttributes(@Nonnull final Element element) {
-        assert element != null;
+        Constraint.isNotNull(element, "Element can not be null");
         
         /*
          * Process the attributes on this element.  Because the NamedNodeMap
@@ -160,7 +159,7 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
      * @param depth processing depth, starting with 0 for the document element.
      */
     private void processElement(@Nonnull final Element element, final int depth) {
-        assert element != null;
+        Constraint.isNotNull(element, "Element can not be null");
         log.debug("{}: element {}", depth, element.getLocalName());
 
         /*

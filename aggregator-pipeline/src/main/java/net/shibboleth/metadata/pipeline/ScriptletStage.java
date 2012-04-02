@@ -29,7 +29,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public class ScriptletStage extends BaseStage<Item<?>> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        script = Assert.isNotNull(stageScript, "Stage script can not be null");
+        script = Constraint.isNotNull(stageScript, "Stage script can not be null");
     }
 
     /** {@inheritDoc} */

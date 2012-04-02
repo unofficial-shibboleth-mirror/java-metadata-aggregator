@@ -33,8 +33,7 @@ import com.google.common.collect.Lists;
 /** {@link PipelineMergeStage} unit test. */
 public class PipelineMergeStageTest {
 
-    @Test
-    public void test() throws Exception {
+    @Test public void test() throws Exception {
         MockItem md1 = new MockItem("one");
         StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
         source1.setId("src1");
@@ -59,39 +58,38 @@ public class PipelineMergeStageTest {
         joinSource.setId("joinSource");
         joinSource.setMergedPipelines(Lists.newArrayList(pipeline1, pipeline2));
 
-        assert !joinSource.isInitialized();
-        assert !pipeline1.isInitialized();
-        assert !pipeline2.isInitialized();
+        Assert.assertFalse(joinSource.isInitialized());
+        Assert.assertFalse(pipeline1.isInitialized());
+        Assert.assertFalse(pipeline2.isInitialized());
 
         joinSource.initialize();
-        assert joinSource.isInitialized();
-        assert pipeline1.isInitialized();
-        assert pipeline2.isInitialized();
+        Assert.assertTrue(joinSource.isInitialized());
+        Assert.assertTrue(pipeline1.isInitialized());
+        Assert.assertTrue(pipeline2.isInitialized());
 
         ArrayList<Item<?>> metadataCollection = new ArrayList<Item<?>>();
         joinSource.execute(metadataCollection);
-        assert metadataCollection.size() == 2;
+        Assert.assertEquals(metadataCollection.size(), 2);
 
         boolean md1CloneMatch = false;
         boolean md2CloneMatch = false;
         for (Item<?> metadata : metadataCollection) {
             if ("one".equals(metadata.unwrap())) {
                 md1CloneMatch = true;
-                assert metadata != md1;
+                Assert.assertFalse(metadata != md1);
             } else if ("two".equals(metadata.unwrap())) {
                 md2CloneMatch = true;
-                assert metadata != md2;
+                Assert.assertFalse(metadata != md2);
             }
             // two ComponentInfo: one from the pipeline, one from the static inject stage, one from the join stage
-            assert metadata.getItemMetadata().values().size() == 3;
+            Assert.assertEquals(metadata.getItemMetadata().values().size(), 3);
         }
 
-        assert md1CloneMatch;
-        assert md2CloneMatch;
+        Assert.assertTrue(md1CloneMatch);
+        Assert.assertTrue(md2CloneMatch);
     }
 
-    @Test
-    public void testDediplicatingItemIdMergeStrategySingleSource() {
+    @Test public void testDediplicatingItemIdMergeStrategySingleSource() {
         DeduplicatingItemIdMergeStrategy strategy = new DeduplicatingItemIdMergeStrategy();
 
         ArrayList<Item<?>> target = new ArrayList<Item<?>>();
@@ -125,8 +123,7 @@ public class PipelineMergeStageTest {
         Assert.assertEquals(target.size(), 5);
     }
 
-    @Test
-    public void testDediplicatingItemIdMergeStrategyMultipleSource() {
+    @Test public void testDediplicatingItemIdMergeStrategyMultipleSource() {
         DeduplicatingItemIdMergeStrategy strategy = new DeduplicatingItemIdMergeStrategy();
 
         ArrayList<Item<?>> target = new ArrayList<Item<?>>();

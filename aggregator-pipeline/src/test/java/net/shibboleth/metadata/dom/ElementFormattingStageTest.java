@@ -23,6 +23,7 @@ import java.util.Collections;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
 import org.testng.Assert;
@@ -116,7 +117,7 @@ public class ElementFormattingStageTest extends BaseDomTest {
         try {
             stage.setIndentSize(-10);
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             Assert.assertEquals(stage.getIndentSize(), 10);
         }
 

@@ -45,7 +45,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NullableEleme
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
@@ -105,7 +105,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        xslResource = Assert.isNotNull(resource, "XSL resource can not be null");
+        xslResource = Constraint.isNotNull(resource, "XSL resource can not be null");
     }
 
     /**

@@ -27,7 +27,7 @@ import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -91,7 +91,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        Assert.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
+        Constraint.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }
 

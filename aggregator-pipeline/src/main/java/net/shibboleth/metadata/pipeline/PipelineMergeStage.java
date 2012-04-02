@@ -39,7 +39,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NullableEleme
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
@@ -91,7 +91,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        executorService = Assert.isNotNull(service, "ExecutorService can not be null");
+        executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -139,7 +139,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        collectionFactory = Assert.isNotNull(factory, "Collection factory may not be null");
+        collectionFactory = Constraint.isNotNull(factory, "Collection factory may not be null");
     }
 
     /**

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import com.google.common.base.Objects;
@@ -42,7 +42,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
      * @param itemId a unique identifier for the entity, never null
      */
     public ItemId(@Nonnull @NotEmpty final String itemId) {
-        id = Assert.isNotNull(StringSupport.trimOrNull(itemId), "Item ID may not be null or empty");
+        id = Constraint.isNotNull(StringSupport.trimOrNull(itemId), "Item ID may not be null or empty");
     }
 
     /**

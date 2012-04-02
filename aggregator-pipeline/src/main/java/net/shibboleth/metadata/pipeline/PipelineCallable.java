@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +49,10 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
      */
     public PipelineCallable(@Nonnull final Pipeline invokedPipeline,
             @Nonnull @NonnullElements final Collection<? extends Item> items) {
-        pipeline = Assert.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
-        Assert.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
+        pipeline = Constraint.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
+        Constraint.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
 
-        itemCollection = Assert.isNotNull(items, "Item collection can not be null");
+        itemCollection = Constraint.isNotNull(items, "Item collection can not be null");
     }
 
     /** {@inheritDoc} */

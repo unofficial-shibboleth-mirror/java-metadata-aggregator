@@ -32,7 +32,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -109,7 +109,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        orderingStrategy = Assert.isNotNull(strategy, "Item ordering strategy can not be null");
+        orderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 
     /**

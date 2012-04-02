@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.security.Type4UuidIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -51,7 +51,7 @@ public class GenerateIdStage extends BaseIteratingStage<DomElementItem> {
      * @param generator ID generation strategy used
      */
     public GenerateIdStage(@Nonnull final IdentifierGenerationStrategy generator) {
-        idGenerator = Assert.isNotNull(generator, "ID generation strategy can not be null");
+        idGenerator = Constraint.isNotNull(generator, "ID generation strategy can not be null");
     }
 
     /** {@inheritDoc} */

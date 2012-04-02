@@ -31,7 +31,7 @@ import net.shibboleth.metadata.ItemSerializer;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +81,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        outputFile = Assert.isNotNull(file, "Output file can not be null");
+        outputFile = Constraint.isNotNull(file, "Output file can not be null");
     }
 
     /**
@@ -123,7 +123,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        serializer = Assert.isNotNull(itemSerializer, "Item serializer can not be null");
+        serializer = Constraint.isNotNull(itemSerializer, "Item serializer can not be null");
     }
 
     /** {@inheritDoc} */

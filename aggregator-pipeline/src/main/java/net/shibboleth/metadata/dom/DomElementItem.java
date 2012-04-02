@@ -23,7 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.w3c.dom.DOMImplementation;
@@ -51,10 +51,10 @@ public class DomElementItem extends AbstractItem<Element> {
     public DomElementItem(@Nonnull final Document document) {
         super();
 
-        Assert.isNotNull(document, "DOM Document can not be null");
+        Constraint.isNotNull(document, "DOM Document can not be null");
 
         final Element docElement = document.getDocumentElement();
-        Assert.isNotNull(docElement, "DOM Document Element may not be null");
+        Constraint.isNotNull(docElement, "DOM Document Element may not be null");
 
         setData(document.getDocumentElement());
     }
@@ -69,7 +69,7 @@ public class DomElementItem extends AbstractItem<Element> {
     public DomElementItem(@Nonnull final Element element) {
         super();
 
-        Assert.isNotNull(element, "DOM Document Element may not be null");
+        Constraint.isNotNull(element, "DOM Document Element may not be null");
 
         final DOMImplementation domImpl = element.getOwnerDocument().getImplementation();
         final Document newDocument = domImpl.createDocument(null, null, null);

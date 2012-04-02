@@ -31,7 +31,7 @@ import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
@@ -137,7 +137,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        verificationKey = Assert.isNotNull(key, "Public key can not be null");
+        verificationKey = Constraint.isNotNull(key, "Public key can not be null");
     }
 
     /**
@@ -159,9 +159,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        assert certificate != null : "Certificate can not be null";
-        verificationCertificate = certificate;
-        verificationKey = certificate.getPublicKey();
+        verificationCertificate = Constraint.isNotNull(certificate, "Certificate can not be null");;
+        verificationKey = verificationCertificate.getPublicKey();
     }
 
     /** {@inheritDoc} */

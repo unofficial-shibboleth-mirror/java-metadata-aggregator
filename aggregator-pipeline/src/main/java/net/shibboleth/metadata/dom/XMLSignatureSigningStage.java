@@ -55,7 +55,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NullableEleme
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 import net.shibboleth.utilities.java.support.xml.XmlConstants;
@@ -265,7 +265,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        shaVariant = Assert.isNotNull(variant, "SHA variant can not be null");
+        shaVariant = Constraint.isNotNull(variant, "SHA variant can not be null");
     }
 
     /**
@@ -286,7 +286,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        privKey = Assert.isNotNull(key, "Private key can not be null");
+        privKey = Constraint.isNotNull(key, "Private key can not be null");
     }
 
     /**

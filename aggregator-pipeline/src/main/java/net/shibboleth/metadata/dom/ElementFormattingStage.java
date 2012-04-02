@@ -41,7 +41,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.logic.TrimOrNullStringFunction;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -143,7 +143,7 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
     public synchronized void setIndentSize(int size) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        indentSize = (int) Assert.isGreaterThanOrEqual(0, size, "Indentation size must be 0 or greater");
+        indentSize = (int) Constraint.isGreaterThanOrEqual(0, size, "Indentation size must be 0 or greater");
     }
 
     /**

@@ -17,27 +17,27 @@
 
 package net.shibboleth.metadata;
 
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /** Unit test for {@link ItemTag}. */
 public class ItemTagTest {
 
-    @Test
-    public void test() {
+    @Test public void test() {
         ItemTag info = new ItemTag(" test ");
-        assert info.getTag().equals("test");
+        Assert.assertEquals(info.getTag(), "test");
 
         try {
             info = new ItemTag("");
-            throw new AssertionError();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
 
         try {
             info = new ItemTag(null);
-            throw new AssertionError();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
     }

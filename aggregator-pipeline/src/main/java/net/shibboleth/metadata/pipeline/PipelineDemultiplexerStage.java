@@ -36,7 +36,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +101,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        executorService = Assert.isNotNull(service, "ExecutorService can not be null");
+        executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -143,7 +143,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        collectionFactory = Assert.isNotNull(factory, "Collection factory can not be null");
+        collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
 
     /**
@@ -174,8 +174,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>> checkedPasses =
                 new Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>>();
         for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pass : passes) {
-            assert pass.getFirst() != null : "Pipeline can not be null";
-            assert pass.getSecond() != null : "Predicate can not be null";
+            Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
+            Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
 
             checkedPasses.add(new Pair<Pipeline<ItemType>, Predicate<ItemType>>(pass));
         }
