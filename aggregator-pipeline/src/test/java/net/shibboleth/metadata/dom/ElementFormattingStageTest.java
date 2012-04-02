@@ -50,29 +50,29 @@ public class ElementFormattingStageTest extends BaseDomTest {
     @Test public void testLineSeperator() throws ComponentInitializationException {
         ElementFormattingStage stage = new ElementFormattingStage();
         stage.setId("foo");
-        Assert.assertEquals(stage.getLineSeperator(), "\n");
+        Assert.assertEquals(stage.getLineSeparator(), "\n");
 
-        stage.setLineSeperator("\r\n");
-        Assert.assertEquals(stage.getLineSeperator(), "\r\n");
+        stage.setLineSeparator("\r\n");
+        Assert.assertEquals(stage.getLineSeparator(), "\r\n");
 
-        stage.setLineSeperator("");
-        Assert.assertEquals(stage.getLineSeperator(), "");
+        stage.setLineSeparator("");
+        Assert.assertEquals(stage.getLineSeparator(), "");
 
-        stage.setLineSeperator(null);
-        Assert.assertEquals(stage.getLineSeperator(), "");
+        stage.setLineSeparator(null);
+        Assert.assertEquals(stage.getLineSeparator(), "");
 
         stage.initialize();
         try {
-            stage.setLineSeperator("\n");
+            stage.setLineSeparator("\n");
             Assert.fail();
         } catch (UnmodifiableComponentException e) {
-            Assert.assertEquals(stage.getLineSeperator(), "");
+            Assert.assertEquals(stage.getLineSeparator(), "");
         }
 
         stage = new ElementFormattingStage();
         stage.destroy();
         try {
-            stage.setLineSeperator(null);
+            stage.setLineSeparator(null);
             Assert.fail();
         } catch (DestroyedComponentException e) {
             // expected this
@@ -181,7 +181,7 @@ public class ElementFormattingStageTest extends BaseDomTest {
         ElementFormattingStage stage = new ElementFormattingStage();
         stage.setId("foo");
         stage.setIndented(false);
-        stage.setLineSeperator(null);
+        stage.setLineSeparator(null);
         stage.initialize();
 
         ArrayList<DomElementItem> itemCollection = Lists.newArrayList(new DomElementItem(unformattedElement));
@@ -198,7 +198,7 @@ public class ElementFormattingStageTest extends BaseDomTest {
         ElementFormattingStage stage = new ElementFormattingStage();
         stage.setId("foo");
         stage.setIndented(true);
-        stage.setLineSeperator("\n");
+        stage.setLineSeparator("\n");
         stage.setIndentSize(4);
         stage.initialize();
 
