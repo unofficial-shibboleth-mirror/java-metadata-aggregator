@@ -63,7 +63,7 @@ import com.google.common.collect.Lists;
 public class ElementFormattingStage extends BaseStage<DomElementItem> {
 
     /** Line separator character to use. Default value: \n */
-    private String lineSeperator = "\n";
+    private String lineSeparator = "\n";
 
     /** Whether to indent elements. Default value: true */
     private boolean indented = true;
@@ -86,23 +86,23 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
      * 
      * @return line separator character to use
      */
-    @Nonnull public String getLineSeperator() {
-        return lineSeperator;
+    @Nonnull public String getLineSeparator() {
+        return lineSeparator;
     }
 
     /**
      * Sets the line separator character to use.
      * 
-     * @param seperator line separator character to use
+     * @param separator line separator character to use
      */
-    public synchronized void setLineSeperator(@Nullable final String seperator) {
+    public synchronized void setLineSeparator(@Nullable final String separator) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (seperator == null) {
-            lineSeperator = "";
+        if (separator == null) {
+            lineSeparator = "";
         } else {
-            lineSeperator = seperator;
+            lineSeparator = separator;
         }
     }
 
@@ -214,7 +214,7 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
 
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             
-            transformer.setOutputProperty("{http://xml.apache.org/xalan}line-separator", lineSeperator);
+            transformer.setOutputProperty("{http://xml.apache.org/xalan}line-separator", lineSeparator);
 
             if (indented) {
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
