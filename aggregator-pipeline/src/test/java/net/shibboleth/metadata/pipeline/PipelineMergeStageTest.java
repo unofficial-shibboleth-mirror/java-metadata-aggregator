@@ -76,10 +76,10 @@ public class PipelineMergeStageTest {
         for (Item<?> metadata : metadataCollection) {
             if ("one".equals(metadata.unwrap())) {
                 md1CloneMatch = true;
-                Assert.assertFalse(metadata != md1);
+                Assert.assertFalse(metadata == md1);
             } else if ("two".equals(metadata.unwrap())) {
                 md2CloneMatch = true;
-                Assert.assertFalse(metadata != md2);
+                Assert.assertFalse(metadata == md2);
             }
             // two ComponentInfo: one from the pipeline, one from the static inject stage, one from the join stage
             Assert.assertEquals(metadata.getItemMetadata().values().size(), 3);

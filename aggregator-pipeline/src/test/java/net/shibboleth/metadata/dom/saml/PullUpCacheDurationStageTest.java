@@ -31,7 +31,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link PullUpCacheDurationStage}. */
-public class PullCacheDurationStageTest extends BaseDomTest {
+public class PullUpCacheDurationStageTest extends BaseDomTest {
 
     /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */
     @Test

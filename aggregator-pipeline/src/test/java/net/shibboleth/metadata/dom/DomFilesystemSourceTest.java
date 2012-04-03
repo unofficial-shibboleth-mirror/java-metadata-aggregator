@@ -129,6 +129,7 @@ public class DomFilesystemSourceTest {
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
+        source.setNoSourceFilesAnError(true);
 
         try {
             source.initialize();

@@ -109,17 +109,6 @@ public class SplitMergeStageTest {
         } catch (ComponentInitializationException e) {
             // expected this
         }
-
-        try {
-            stage = new SplitMergeStage();
-            stage.setId("test");
-            stage.setNonselectedItemPipeline(pipeline);
-            stage.setSelectedItemPipeline(pipeline);
-            stage.initialize();
-            Assert.fail();
-        } catch (ComponentInitializationException e) {
-            // expected this
-        }
     }
 
     @Test public void testExecute() throws Exception {
