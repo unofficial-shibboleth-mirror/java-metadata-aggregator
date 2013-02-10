@@ -159,7 +159,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        verificationCertificate = Constraint.isNotNull(certificate, "Certificate can not be null");;
+        verificationCertificate = Constraint.isNotNull(certificate, "Certificate can not be null");
         verificationKey = verificationCertificate.getPublicKey();
     }
 
