@@ -27,7 +27,6 @@ import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */
@@ -46,9 +45,10 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         stage.initialize();
         stage.execute(metadataCollection);
 
-        Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
+        Element result = metadataCollection.iterator().next().unwrap();
         
-        assertXmlIdentical(readXmlData("samlMetadata/entitiesDescriptor2.xml"), result);
+        assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
+                "entitiesDescriptor2.xml"), result);
     }
 
     /**
@@ -65,9 +65,10 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         stage.initialize();
         stage.execute(metadataCollection);
 
-        Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
+        Element result = metadataCollection.iterator().next().unwrap();
 
-        assertXmlIdentical(readXmlData("samlMetadata/entitiesDescriptor2Name.xml"), result);
+        assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
+                "entitiesDescriptor2Name.xml"), result);
     }
     
     /**
@@ -97,9 +98,10 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         stage.initialize();
         stage.execute(metadataCollection);
 
-        Document result = metadataCollection.iterator().next().unwrap().getOwnerDocument();
+        Element result = metadataCollection.iterator().next().unwrap();
 
-        assertXmlIdentical(readXmlData("samlMetadata/entitiesDescriptor2Reversed.xml"), result);
+        assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
+                "entitiesDescriptor2Reversed.xml"), result);
     }
 
     protected Collection<DomElementItem> buildMetadataCollection() throws Exception {
