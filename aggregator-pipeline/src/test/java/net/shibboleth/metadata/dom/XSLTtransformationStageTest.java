@@ -179,7 +179,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
-        Resource transform = new ClasspathResource("data/xslIncludeMain.xsl");
+        Resource transform = getClasspathResource("data/xslIncludeMain.xsl");
 
         XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");

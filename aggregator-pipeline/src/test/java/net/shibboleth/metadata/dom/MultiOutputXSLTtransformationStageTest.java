@@ -231,7 +231,7 @@ public class MultiOutputXSLTtransformationStageTest extends BaseDomTest {
         ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
         mdCol.add(makeInput());
 
-        Resource transform = new ClasspathResource("data/xslIncludeMain.xsl");
+        Resource transform = getClasspathResource("data/xslIncludeMain.xsl");
 
         MultiOutputXSLTransformationStage stage = new MultiOutputXSLTransformationStage();
         stage.setId("test");

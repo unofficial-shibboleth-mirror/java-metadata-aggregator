@@ -18,11 +18,14 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.security.Security;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.resource.ClasspathResource;
+import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
@@ -63,6 +66,53 @@ public abstract class BaseDomTest {
         return parserPool;
     }
 
+    /**
+     * Variant of ClasspathResource that patches round the problem described
+     * in JSPT-21.
+     */
+    private class FixedClasspathResource extends ClasspathResource {
+    
+        /**
+         * Constructor.
+         *
+         * @param resourcePath classpath path to the resource
+         */
+        public FixedClasspathResource(final String resourcePath) {
+            super(resourcePath);
+            // Work around the fact that ClasspathResource doesn't handle location correctly
+            final URL resourceURL = this.getClass().getClassLoader().getResource(resourcePath);
+            setLocation(resourceURL.toExternalForm());
+        }
+        
+    }
+    
+    /**
+     * Helper method to acquire a ClasspathResource based on the given resource path.
+     * 
+     * @param resourcePath classpath path to the resource
+     * @return the data file as a resource
+     */
+    public Resource getClasspathResource(final String resourcePath) {
+        return new FixedClasspathResource(resourcePath);
+    }
+    
+    /**
+     * Acquires a Resource encapsulating a data file located in the resource directory named for the class that is being tested. For example,
+     * for the class <code>net.shibboleth.metadata.dom.saml.RemoveContactPersonStage</code>, the data file will be
+     * looked for in <code>src/test/resources/net/shibboleth/metadata/dom/saml/RemoveContactPersonStage/</code>.
+     * 
+     * @param classBeingTested the class that is being unit tested
+     * @param dataFile the data file to be encapsulated as a resource
+     * 
+     * @return the data file as a Resource
+     */
+    public Resource getTestRelativeClasspathResource(final Class classBeingTested, final String dataFile) {
+        StringBuilder absoluteDataPath = new StringBuilder();
+        absoluteDataPath.append("/").append(classBeingTested.getName().replace('.', '/'));
+        absoluteDataPath.append("/").append(dataFile);
+        return new FixedClasspathResource(absoluteDataPath.toString());
+    }
+    
     /**
      * Parses and XML data file located in the resource directory named for the class that is being tested. For example,
      * for the class <code>net.shibboleth.metadata.dom.saml.RemoveContactPersonStage</code>, the data file will be
