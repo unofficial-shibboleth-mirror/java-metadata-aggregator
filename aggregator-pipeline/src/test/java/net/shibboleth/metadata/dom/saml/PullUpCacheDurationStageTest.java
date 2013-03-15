@@ -63,7 +63,7 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
         }
     }
 
-    /** Test that the minimum cache duration is used when the shortest duration is than it. */
+    /** Test that the minimum cache duration is used when the shortest duration is less than it. */
     @Test
     public void testMinCacheDuration() throws Exception {
         ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
