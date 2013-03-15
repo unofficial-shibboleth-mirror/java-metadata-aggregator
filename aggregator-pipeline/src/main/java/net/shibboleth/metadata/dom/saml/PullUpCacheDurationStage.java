@@ -104,7 +104,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
     }
 
     /**
-     * Gets the shorts cache duration for a given entity and entities descriptor an all its descendant descriptors.
+     * Gets the shortest cache duration for a given entity or entities descriptor and all its descendant descriptors.
      * 
      * @param descriptor descriptor from which to get the shortest cache duration
      * 
@@ -113,7 +113,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      */
     protected Long getShortestCacheDuration(@Nonnull final Element descriptor) {
         Long shortestCacheDuration = null;
-        if (!SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
+        if (!SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return shortestCacheDuration;
         }
 
