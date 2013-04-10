@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -36,6 +37,7 @@ import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.SignatureMethod;
 import javax.xml.crypto.dsig.SignedInfo;
 import javax.xml.crypto.dsig.Transform;
+import javax.xml.crypto.dsig.XMLSignContext;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
@@ -71,6 +73,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
 
 /**
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem}
@@ -234,6 +237,12 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      */
     private boolean includeX509IssuerSerial;
 
+    /** Whether to debug digest operations by logging the pre-digest data stream. Default value: <code>false</code> */
+    private boolean debugPreDigest;
+    
+    /**
+     * Constructor.
+     */
     public XMLSignatureSigningStage() {
         shaVariant = ShaVariant.SHA256;
         certificates = Collections.emptyList();
@@ -619,6 +628,27 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     }
 
     /**
+     * Gets whether logging of the pre-digest data stream is enabled.
+     * 
+     * @return whether logging of the pre-digest data stream is enabled
+     */
+    public boolean isDebugPreDigest() {
+        return debugPreDigest;
+    }
+    
+    /**
+     * Sets whether logging of the pre-digest data stream is enabled.
+     * 
+     * @param debug whether logging of the pre-digest data stream is enabled
+     */
+    public synchronized void setDebugPreDigest(final boolean debug) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        debugPreDigest = debug;
+    }
+    
+    /**
      * Gets the signature algorithm used when signing.
      * 
      * @return signature algorithm used when signing
@@ -641,7 +671,22 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         Element element = item.unwrap();
         XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {
-            signature.sign(new DOMSignContext(privKey, element, element.getFirstChild()));
+            XMLSignContext context = new DOMSignContext(privKey, element, element.getFirstChild());
+            
+            // Enable caching reference values if required for debugging.
+            if (isDebugPreDigest() && log.isDebugEnabled()) {
+                context.setProperty("javax.xml.crypto.dsig.cacheReference", Boolean.TRUE);
+            }
+            
+            // Perform the signature operation
+            signature.sign(context);
+            
+            // Log the pre-digest data for debugging
+            if (isDebugPreDigest() && log.isDebugEnabled()) {
+                Reference ref = (Reference) signature.getSignedInfo().getReferences().get(0);
+                String preDigest = CharStreams.toString(new InputStreamReader(ref.getDigestInputStream(), "UTF-8"));
+                log.debug("pre digest: {}", preDigest);
+            }
         } catch (Exception e) {
             log.error("Unable to create signature for element", e);
             throw new StageProcessingException("Unable to create signature for element", e);
