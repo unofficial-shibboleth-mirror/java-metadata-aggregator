@@ -95,6 +95,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long twoYears = 1000L * 60 * 60 * 24 * 365 * 2;
+        long twoYearsFromNow = twoYears + System.currentTimeMillis();
         
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
@@ -109,7 +110,9 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
-        Assert.assertTrue(validUntil < System.currentTimeMillis() + twoYears,
-                "validUntil: " + validUntilAttr.getValue() + ", cur: " + new Date());
+
+        long delta = 1000 * 10; // ten seconds permitted either side to allow for test execution time
+        Assert.assertTrue(validUntil < twoYearsFromNow + delta);
+        Assert.assertTrue(validUntil > twoYearsFromNow - delta);
     }
 }
