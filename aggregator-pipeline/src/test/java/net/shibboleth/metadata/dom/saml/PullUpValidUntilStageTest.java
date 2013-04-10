@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
@@ -108,6 +109,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
-        Assert.assertTrue(validUntil < System.currentTimeMillis() + twoYears);
+        Assert.assertTrue(validUntil < System.currentTimeMillis() + twoYears,
+                "validUntil: " + validUntilAttr.getValue() + ", cur: " + new Date());
     }
 }
