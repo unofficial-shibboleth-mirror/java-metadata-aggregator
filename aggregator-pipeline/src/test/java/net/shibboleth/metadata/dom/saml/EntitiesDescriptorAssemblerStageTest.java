@@ -26,6 +26,7 @@ import net.shibboleth.metadata.dom.BaseDomTest;
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
+import org.junit.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -102,6 +103,30 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
         assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
                 "entitiesDescriptor2Reversed.xml"), result);
+    }
+    
+    /**
+     * Test for MDA-87, which turns out to be due to not constructing the document element
+     * with an appropriate namespace declaration.
+     * 
+     * @throws Exception if anything goes wrong
+     */
+    @Test
+    public void testMda87() throws Exception {
+        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
+        stage.setId("foo");
+        stage.initialize();
+        stage.execute(metadataCollection);
+
+        Element result = metadataCollection.iterator().next().unwrap();
+        
+        Assert.assertEquals(result.getLocalName(), "EntitiesDescriptor");
+        Assert.assertEquals(result.getPrefix(), "md");
+        Assert.assertEquals(result.getNamespaceURI(), "urn:oasis:names:tc:SAML:2.0:metadata");
+        
+        String nsattr = result.getAttributeNS("http://www.w3.org/2000/xmlns/", "md");
+        Assert.assertEquals("urn:oasis:names:tc:SAML:2.0:metadata", nsattr);
     }
 
     protected Collection<DomElementItem> buildMetadataCollection() throws Exception {

@@ -36,6 +36,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.utilities.java.support.xml.NamespaceSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +153,8 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         final Element entitiesDescriptor =
                 ElementSupport.constructElement(entitiesDescriptorDocument,
                         SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+        NamespaceSupport.appendNamespaceDeclaration(entitiesDescriptor,
+                entitiesDescriptor.getNamespaceURI(), entitiesDescriptor.getPrefix());
         entitiesDescriptorDocument.appendChild(entitiesDescriptor);
         addDescriptorName(entitiesDescriptor);
 
