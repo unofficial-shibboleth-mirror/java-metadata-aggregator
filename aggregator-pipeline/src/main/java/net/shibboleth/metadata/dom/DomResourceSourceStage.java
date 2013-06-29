@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -37,8 +38,6 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.io.Closeables;
 
 /**
  * A pipeline stage which reads an XML document from an {@link Resource}, parses the document, and places the resultant
@@ -150,13 +149,18 @@ public class DomResourceSourceStage extends BaseStage<DomElementItem> {
             }
         } catch (ResourceException e) {
             if (errorCausesSourceFailure) {
-                throw new StageProcessingException("Error retrieving XML document from " + domResource.getLocation(), e);
+                throw new StageProcessingException("Error retrieving XML document from " +
+                        domResource.getLocation(), e);
             } else {
                 log.warn("stage {}: unable to read in XML file");
                 log.debug("stage {}: HTTP resource exception", getId(), e);
             }
         } finally {
-            Closeables.closeQuietly(ins);
+            try {
+                ins.close();
+            } catch (IOException e) {
+                throw new StageProcessingException("Error closing resource", e);
+            }
         }
     }
 

@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,8 +41,6 @@ import net.shibboleth.utilities.java.support.xml.ParserPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-
-import com.google.common.io.Closeables;
 
 /**
  * A stage which reads XML information from the filesystem and places it in the given {@link DomElementItem} collection.
@@ -296,7 +295,11 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
                 return null;
             }
         } finally {
-            Closeables.closeQuietly(xmlIn);
+            try {
+                xmlIn.close();
+            } catch (IOException e) {
+                throw new StageProcessingException("Exception closing input stream", e);
+            }
         }
     }
 
