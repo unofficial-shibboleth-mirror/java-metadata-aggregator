@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import net.shibboleth.metadata.dom.BaseDomTest;
