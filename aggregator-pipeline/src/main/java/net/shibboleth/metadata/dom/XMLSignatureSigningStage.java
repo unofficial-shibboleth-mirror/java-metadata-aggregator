@@ -806,13 +806,13 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
             return null;
         }
 
-        Attr attribute;
-        String value;
         if (idAttributeNames != null && !idAttributeNames.isEmpty()) {
             for (int i = 0; i < attributes.getLength(); i++) {
-                attribute = (Attr) attributes.item(i);
+                final Attr attribute = (Attr) attributes.item(i);
                 if (idAttributeNames.contains(QNameSupport.getNodeQName(attribute))) {
-                    value = StringSupport.trimOrNull(attribute.getValue());
+                    // mark the attribute as an ID attribute so that it can be referenced by the signature
+                    target.setIdAttributeNode(attribute, true);
+                    final String value = StringSupport.trimOrNull(attribute.getValue());
                     if (value != null) {
                         return value;
                     }
@@ -821,9 +821,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         }
 
         for (int i = 0; i < attributes.getLength(); i++) {
-            attribute = (Attr) attributes.item(i);
+            final Attr attribute = (Attr) attributes.item(i);
             if (attribute.isId()) {
-                value = StringSupport.trimOrNull(attribute.getValue());
+                final String value = StringSupport.trimOrNull(attribute.getValue());
                 if (value != null) {
                     return value;
                 }
