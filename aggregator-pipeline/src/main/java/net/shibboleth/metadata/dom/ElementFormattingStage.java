@@ -46,7 +46,6 @@ import net.shibboleth.utilities.java.support.logic.TrimOrNullStringFunction;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
