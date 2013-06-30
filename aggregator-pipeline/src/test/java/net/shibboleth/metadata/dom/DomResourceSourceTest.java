@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 public class DomResourceSourceTest {
 
     @Test public void testSuccessfulFetchAndParse() throws Exception {
-        HttpResource mdResource = buildHttpResource("http://metadata.ukfederation.org.uk/ukfederation-metadata.xml");
+        HttpResource mdResource = buildHttpResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
 
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
