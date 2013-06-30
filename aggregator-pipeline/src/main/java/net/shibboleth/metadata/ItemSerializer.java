@@ -37,5 +37,6 @@ public interface ItemSerializer<ItemType extends Item<?>> {
      * @param itemCollection collection of Items
      * @param output output stream to which the Item will be written
      */
-    public void serialize(@Nonnull @NonnullElements final Collection<ItemType> itemCollection, @Nonnull final OutputStream output);
+    public void serialize(@Nonnull @NonnullElements final Collection<ItemType> itemCollection,
+            @Nonnull final OutputStream output);
 }
