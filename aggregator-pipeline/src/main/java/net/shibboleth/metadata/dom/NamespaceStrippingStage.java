@@ -126,15 +126,15 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
             final Attr attribute = (Attr) attributes.item(aIndex);
             final String attrNamespace = attribute.getNamespaceURI();
             final String attrLocalName = attribute.getLocalName();
-            log.debug("checking attribute {{}}:{}", attrNamespace, attrLocalName);
+            log.trace("checking attribute {{}}:{}", attrNamespace, attrLocalName);
             if (namespace.equals(attrNamespace)) {
                 // remove attribute in target namespace
-                log.debug("   in target namespace; will remove");
+                log.trace("   in target namespace; will remove");
                 removeTarget.add(attribute);
             } else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(attrNamespace)
                     && namespace.equals(attribute.getTextContent())) {
                 // remove prefix definition
-                log.debug("   prefix {} definition; will remove", attrLocalName);
+                log.trace("   prefix {} definition; will remove", attrLocalName);
                 removeTarget.add(attribute);
             }
         }
@@ -160,13 +160,13 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
      */
     private void processElement(@Nonnull final Element element, final int depth) {
         Constraint.isNotNull(element, "Element can not be null");
-        log.debug("{}: element {}", depth, element.getLocalName());
+        log.trace("{}: element {}", depth, element.getLocalName());
 
         /*
          * If this element is in the target namespace, remove it from the DOM entirely and we're done.
          */
         if (namespace.equals(element.getNamespaceURI())) {
-            log.debug("{}: removing element entirely", depth);
+            log.trace("{}: removing element entirely", depth);
             element.getParentNode().removeChild(element);
             return;
         }

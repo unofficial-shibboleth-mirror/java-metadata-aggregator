@@ -203,7 +203,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
      * @throws StageProcessingException thrown if the given root element contains more than one signature
      */
     protected boolean signatureVerified(@Nonnull final Element signatureElement) throws StageProcessingException {
-        log.debug("Creating XML security library XMLSignature object");
+        log.trace("Creating XML security library XMLSignature object");
         final XMLSignature signature;
         try {
             signature = new XMLSignature(signatureElement, "");
