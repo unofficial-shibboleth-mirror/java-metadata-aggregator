@@ -17,18 +17,26 @@
 
 package net.shibboleth.metadata.cli;
 
-import jargs.gnu.CmdLineParser;
-import jargs.gnu.CmdLineParser.OptionException;
-
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 
 /** Command line arguments for the {@link SimpleCommandLine} command line tool. */
 public class SimpleCommandLineArguments {
 
     // Non-option arguments
+    
+    /**
+     * Command-line arguments which are not part of options.
+     */
+    @Parameter
+    private List<String> otherArgs = new ArrayList<>();
     
     /**
      * Provided input file name for the Spring configuration file.
@@ -45,86 +53,48 @@ public class SimpleCommandLineArguments {
     /**
      * Verbose logging has been requested.
      */
+    @Parameter(names = "--verbose")
     private boolean verbose;
-
-    /**
-     * Option object for the <code>--verbose</code> option.
-     */
-    @Nonnull private final CmdLineParser.Option verboseOption;
 
     /**
      * Quiet logging has been requested.
      */
+    @Parameter(names = "--quiet")
     private boolean quiet;
-
-    /**
-     * Option object for the <code>--quiet</code> option.
-     */
-    @Nonnull private final CmdLineParser.Option quietOption;
 
     /**
      * Name of a specific logging configuration, if one has been requested.
      */
+    @Parameter(names = "--logConfig")
     @Nullable private String logConfig;
-
-    /**
-     * Option object for the <code>--logConfig</code> option.
-     */
-    @Nonnull private final CmdLineParser.Option logConfigOption;
 
     // Help
     
     /**
      * Help has been requested.
      */
+    @Parameter(names = "--help", help=true)
     private boolean help;
-
-    /**
-     * Option object for the <code>--help</code> option.
-     */
-    @Nonnull private final CmdLineParser.Option helpOption;
-
-    /**
-     * The configured command line parser.
-     */
-    @Nonnull private final CmdLineParser cliParser;
-
-    /**
-     * Constructor.
-     */
-    public SimpleCommandLineArguments() {
-        cliParser = new CmdLineParser();
-
-        verboseOption = cliParser.addBooleanOption("verbose");
-        quietOption = cliParser.addBooleanOption("quiet");
-        logConfigOption = cliParser.addStringOption("logConfig");
-        helpOption = cliParser.addBooleanOption("help");
-    }
 
     /**
      * Parse an array of command-line arguments as passed to the main program.
      *
      * @param args  array of command-line arguments to parse.
      */
-    public void parseCommandLineArguments(String[] args) {
+    public void parseCommandLineArguments(final String[] args) {
         try {
-            cliParser.parse(args);
+            new JCommander(this, args);
             
-            String[] otherArgs = cliParser.getRemainingArgs();
-            if (otherArgs.length != 2) {
+            if (otherArgs.size() != 2) {
                 printHelp(System.out);
                 System.out.flush();
                 System.exit(SimpleCommandLine.RC_INIT);
             }
-            inFile = otherArgs[0];
-            pipelineName = otherArgs[1];
+            inFile = otherArgs.get(0);
+            pipelineName = otherArgs.get(1);
 
-            verbose = (Boolean) cliParser.getOptionValue(verboseOption, Boolean.FALSE);
-            quiet = (Boolean) cliParser.getOptionValue(quietOption, Boolean.FALSE);
-            logConfig = (String) cliParser.getOptionValue(logConfigOption);
-            help = (Boolean) cliParser.getOptionValue(helpOption, false);
             validateCommandLineArguments();
-        } catch (OptionException e) {
+        } catch (ParameterException e) {
             errorAndExit(e.getMessage());
         }
     }
@@ -214,14 +184,15 @@ public class SimpleCommandLineArguments {
         out.println();
         out.println("==== Command Line Options ====");
         out.println();
-        out.println(String.format("  --%-20s %s", helpOption.longForm(), "Prints this help information"));
+        out.println(String.format("  --%-20s %s", "help", "Prints this help information"));
         out.println();
 
         out.println("Logging Options - these options are mutually exclusive");
-        out.println(String.format("  --%-20s %s", verboseOption.longForm(), "Turn on verbose messages."));
-        out.println(String.format("  --%-20s %s", quietOption.longForm(),
+        out.println(String.format("  --%-20s %s", "verbose", "Turn on verbose messages."));
+        out.println(String.format("  --%-20s %s", "quiet",
                 "Restrict output messages to errors and warnings."));
-        out.println(String.format("  --%-20s %s", logConfigOption.longForm(),
+        out.println();
+        out.println(String.format("  --%-20s %s", "logConfig",
                 "Specifies a logback configuration file to use to configure logging."));
         out.println();
     }

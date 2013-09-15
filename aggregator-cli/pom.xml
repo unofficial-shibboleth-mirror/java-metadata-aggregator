@@ -27,8 +27,8 @@
             <artifactId>spring-context-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>jargs</groupId>
-            <artifactId>jargs</artifactId>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
         </dependency>
 
         <!-- Provided Dependencies -->
