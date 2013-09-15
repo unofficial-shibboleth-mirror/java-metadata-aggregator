@@ -8,8 +8,10 @@
         </encoder>
     </appender>
 
+    <!--
     <logger name="net.shibboleth.metadata" level="debug"/>
-
+    -->
+    
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
