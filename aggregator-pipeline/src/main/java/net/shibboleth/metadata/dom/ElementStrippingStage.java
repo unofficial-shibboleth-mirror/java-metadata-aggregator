@@ -105,7 +105,7 @@ public class ElementStrippingStage extends BaseStage<DomElementItem> {
 
             // Copy these into a list, because a NodeList can change length at any time
             final int nNodes = nodeList.getLength();
-            List<Element> elements = new ArrayList<Element>(nNodes);
+            final List<Element> elements = new ArrayList<>(nNodes);
             for (int eIndex = 0; eIndex < nNodes; eIndex++) {
                 elements.add((Element) nodeList.item(eIndex));
             }

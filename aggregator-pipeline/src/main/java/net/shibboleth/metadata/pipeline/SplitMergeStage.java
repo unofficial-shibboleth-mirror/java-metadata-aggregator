@@ -239,7 +239,7 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
         Future<Collection<? extends Item>> nonselectedItemFuture =
                 executePipeline(nonselectedItemPipeline, nonselectedItems);
 
-        ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<Collection<? extends Item>>();
+        final ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<>();
         try {
             if (selectedItemFuture != null) {
                 pipelineResults.add(selectedItemFuture.get());

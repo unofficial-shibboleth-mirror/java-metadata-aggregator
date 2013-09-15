@@ -49,7 +49,7 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME) == null);
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -83,7 +83,7 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -117,7 +117,7 @@ public class SetValidUntilStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(root));
 
         long duration = 123456;

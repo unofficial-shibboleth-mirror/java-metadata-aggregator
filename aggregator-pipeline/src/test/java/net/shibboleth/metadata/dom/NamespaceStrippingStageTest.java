@@ -12,7 +12,7 @@ public class NamespaceStrippingStageTest extends BaseDomTest {
     public void doExecute() throws Exception {
         final Element doc = readXmlData("namespaceStripIn.xml");
         final DomElementItem item = new DomElementItem(doc);
-        final List<DomElementItem> items = new ArrayList<DomElementItem>();
+        final List<DomElementItem> items = new ArrayList<>();
         items.add(item);
         
         final NamespaceStrippingStage stage = new NamespaceStrippingStage();

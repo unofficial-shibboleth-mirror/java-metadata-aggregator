@@ -46,7 +46,7 @@ public class DomFilesystemSourceTest {
         source.setSource(sourceFile);
         source.initialize();
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -65,7 +65,7 @@ public class DomFilesystemSourceTest {
         source.setSource(sourceFile);
         source.initialize();
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 6);
@@ -91,7 +91,7 @@ public class DomFilesystemSourceTest {
         });
         source.initialize();
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 7);
@@ -111,7 +111,7 @@ public class DomFilesystemSourceTest {
         source.initialize();
 
         try {
-            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+            final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
             source.execute(metadataCollection);
             throw new ConstraintViolationException("Source did not fail when given a non-XML file");
         } catch (StageProcessingException e) {

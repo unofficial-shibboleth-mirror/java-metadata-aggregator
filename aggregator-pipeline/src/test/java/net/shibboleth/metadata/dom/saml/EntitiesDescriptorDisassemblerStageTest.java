@@ -33,7 +33,7 @@ public class EntitiesDescriptorDisassemblerStageTest extends BaseDomTest {
     public void test() throws Exception {
         Element entitiesDescriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         EntitiesDescriptorDisassemblerStage stage = new EntitiesDescriptorDisassemblerStage();

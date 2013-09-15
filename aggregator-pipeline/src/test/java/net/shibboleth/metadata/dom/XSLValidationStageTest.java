@@ -55,7 +55,7 @@ public class XSLValidationStageTest extends BaseDomTest {
      */
     @Test public void testValidation() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xslValidator.xsl");
@@ -103,7 +103,7 @@ public class XSLValidationStageTest extends BaseDomTest {
      */
     @Test public void testMDA45() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/mda45.xsl");

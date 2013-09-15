@@ -40,7 +40,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
         Constraint.isNotNull(sources, "Source collections can not be null or empty");
         
         List<ItemId> itemIds;
-        HashSet<ItemId> presentItemIds = new HashSet<ItemId>();
+        final HashSet<ItemId> presentItemIds = new HashSet<>();
 
         for (Item item : target) {
             itemIds = item.getItemMetadata().get(ItemId.class);

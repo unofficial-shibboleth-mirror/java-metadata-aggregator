@@ -48,7 +48,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
     protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
-        ArrayList<DomElementItem> items = new ArrayList<DomElementItem>(itemCollection);
+        final ArrayList<DomElementItem> items = new ArrayList<>(itemCollection);
         itemCollection.clear();
 
         Element element;

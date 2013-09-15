@@ -51,7 +51,7 @@ public class ItemMetadataFilterStageTest {
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest
     public void setup() {
-        metadataCollectionPrototype = new ArrayList<Item<?>>();
+        metadataCollectionPrototype = new ArrayList<>();
 
         md1 = new MockItem("1");
         metadataCollectionPrototype.add(md1);
@@ -72,7 +72,7 @@ public class ItemMetadataFilterStageTest {
     /** Tests a {@link ItemMetadataFilterStage} without any filter requirements. */
     @Test
     public void testNoFilterRequirements() throws Exception {
-        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
+        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
         stage.setId("test");
@@ -89,7 +89,7 @@ public class ItemMetadataFilterStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing one filter requirement. */
     @Test
     public void testSingleFilterRequirement() throws Exception {
-        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
+        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection filterRequirements = new ArrayList();
         filterRequirements.add(ErrorStatus.class);
@@ -110,7 +110,7 @@ public class ItemMetadataFilterStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing multiple filter requirements. */
     @Test
     public void testMultiFilterRequirement() throws Exception {
-        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
+        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection filterRequirements = new ArrayList();
         filterRequirements.add(InfoStatus.class);

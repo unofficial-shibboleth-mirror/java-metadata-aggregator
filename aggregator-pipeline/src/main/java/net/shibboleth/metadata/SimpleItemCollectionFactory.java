@@ -33,6 +33,6 @@ public class SimpleItemCollectionFactory<ItemType extends Item> implements Suppl
 
     /** {@inheritDoc} */
     @Nonnull public Collection<ItemType> get() {
-        return new ArrayList<ItemType>();
+        return new ArrayList<>();
     }
 }

@@ -226,7 +226,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
 
         /** {@inheritDoc} */
         public List<DomElementItem> order(@Nonnull @NonnullElements final Collection<DomElementItem> items) {
-            return new ArrayList<DomElementItem>(items);
+            return new ArrayList<>(items);
         }
     }
 }

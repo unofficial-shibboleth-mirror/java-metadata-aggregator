@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.utilities.java.support.resource.FilesystemResource;
@@ -54,7 +55,7 @@ public class XMLSchemaValidationStageTest {
         String schemaFile =
                 new File(XMLSchemaValidationStageTest.class.getResource("/data/xmlSchemaValidationStage.xsd").toURI())
                         .getAbsolutePath();
-        ArrayList<Resource> schemaResources = new ArrayList<Resource>();
+        final List<Resource> schemaResources = new ArrayList<>();
         schemaResources.add(new FilesystemResource(schemaFile));
 
         XMLSchemaValidationStage stage = new XMLSchemaValidationStage();
@@ -70,7 +71,7 @@ public class XMLSchemaValidationStageTest {
         parserPool.initialize();
         Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(new DomElementItem(doc.getDocumentElement()));
 
         return mdCol;

@@ -42,7 +42,7 @@ public abstract class AbstractItem<T> implements Item<T> {
 
     /** Constructor. */
     protected AbstractItem() {
-        metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
+        metadata = new ClassToInstanceMultiMap<>(true);
     }
 
     /** {@inheritDoc} */

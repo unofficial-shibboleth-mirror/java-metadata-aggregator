@@ -36,7 +36,7 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
     /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
@@ -66,7 +66,7 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
     /** Test that the minimum cache duration is used when the shortest duration is less than it. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
@@ -88,7 +88,7 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
     /** Test that the maximum cache duration is used when the shortest duration is greater than it. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();

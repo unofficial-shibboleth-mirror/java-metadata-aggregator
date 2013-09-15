@@ -65,7 +65,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testTransform1() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
@@ -93,12 +93,12 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testTransformParam() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("fruit", "avocados");
 
         XSLTransformationStage stage = new XSLTransformationStage();
@@ -125,7 +125,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testTransformListener() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransformListener1.xsl");
@@ -138,7 +138,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        Set<String> names = new HashSet<String>();
+        final Set<String> names = new HashSet<>();
         for (DomElementItem result : mdCol) {
             AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
 
@@ -176,7 +176,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testInclude() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = getClasspathResource("data/xslIncludeMain.xsl");
@@ -204,7 +204,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testOutsideDocumentElement() throws Exception {
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");

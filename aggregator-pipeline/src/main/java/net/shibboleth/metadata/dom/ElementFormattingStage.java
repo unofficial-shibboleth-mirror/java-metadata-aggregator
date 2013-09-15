@@ -168,7 +168,7 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        ArrayList<String> checkedElements = new ArrayList<String>();
+        final ArrayList<String> checkedElements = new ArrayList<>();
         CollectionSupport.addIf(checkedElements, elements, Predicates.notNull(), new TrimOrNullStringFunction());
 
         cdataSectionElements = ImmutableList.copyOf(checkedElements);

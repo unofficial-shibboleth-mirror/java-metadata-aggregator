@@ -113,7 +113,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
             return;
         }
 
-        HashSet<String> checkedTypes = new HashSet<String>();
+        HashSet<String> checkedTypes = new HashSet<>();
         String checkedType;
         for (String type : types) {
             checkedType = StringSupport.trimOrNull(type);

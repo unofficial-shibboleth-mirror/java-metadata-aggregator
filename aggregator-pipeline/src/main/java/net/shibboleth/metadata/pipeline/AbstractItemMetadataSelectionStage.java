@@ -110,11 +110,11 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     protected void doExecute(final Collection<Item<?>> itemCollection) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
         // to the itemCollection and thus would cause issues if we were iterating over it directly
-        ArrayList<Item<?>> collectionCopy = new ArrayList<Item<?>>(itemCollection);
+        final ArrayList<Item<?>> collectionCopy = new ArrayList<>(itemCollection);
 
-        HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata;
         for (Item<?> item : collectionCopy) {
-            matchingMetadata = new HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>>();
+            final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
+                    new HashMap<>();
 
             for (Class<ItemMetadata> infoClass : selectionRequirements) {
                 if (item.getItemMetadata().containsKey(infoClass)) {

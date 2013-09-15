@@ -130,7 +130,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
             transformAttributes = Collections.emptyMap();
         }
 
-        HashMap<String, Object> newAttributes = new HashMap<String, Object>();
+        final HashMap<String, Object> newAttributes = new HashMap<>();
         for (String attributeName : attributes.keySet()) {
             if (attributeName != null) {
                 newAttributes.put(attributeName, attributes.get(attributeName));
@@ -162,7 +162,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
             transformFeatures = Collections.emptyMap();
         }
 
-        HashMap<String, Boolean> newFeatures = new HashMap<String, Boolean>();
+        final HashMap<String, Boolean> newFeatures = new HashMap<>();
         for (String featuresName : features.keySet()) {
             if (featuresName != null) {
                 newFeatures.put(featuresName, features.get(featuresName));
@@ -195,7 +195,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DomElementIte
             return;
         }
 
-        HashMap<String, Object> newParams = new HashMap<String, Object>();
+        final HashMap<String, Object> newParams = new HashMap<>();
         for (String paramName : parameters.keySet()) {
             if (paramName != null) {
                 newParams.put(paramName, parameters.get(paramName));

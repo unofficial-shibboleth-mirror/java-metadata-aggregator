@@ -40,12 +40,12 @@ public class GenerateIdStageTest {
         doc.appendChild(element);
         
         final DomElementItem item = new DomElementItem(doc);
-        final List<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final List<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(item);
 
         final Pattern ncNamePattern = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_\\-\\.]+$");
         final int howMany = 1000;
-        final Set<String> values = new HashSet<String>(howMany);
+        final Set<String> values = new HashSet<>(howMany);
         for (int iteration = 1; iteration<=howMany; iteration++) {
             stage.execute(metadataCollection);
             final Element el = item.unwrap();

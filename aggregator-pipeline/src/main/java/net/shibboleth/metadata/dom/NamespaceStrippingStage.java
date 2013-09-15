@@ -120,8 +120,8 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
          * we want to remove and do that at the end.
          */
         final NamedNodeMap attributes = element.getAttributes();
-        final List<Attr> removeTarget = new ArrayList<Attr>();
-        final List<Attr> removePrefix = new ArrayList<Attr>();
+        final List<Attr> removeTarget = new ArrayList<>();
+        final List<Attr> removePrefix = new ArrayList<>();
         for (int aIndex = 0; aIndex < attributes.getLength(); aIndex++) {
             final Attr attribute = (Attr) attributes.item(aIndex);
             final String attrNamespace = attribute.getNamespaceURI();

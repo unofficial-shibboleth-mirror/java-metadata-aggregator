@@ -48,7 +48,7 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -80,7 +80,7 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME) != null);
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -111,7 +111,7 @@ public class SetCacheDurationStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(root));
 
         long duration = 123456;

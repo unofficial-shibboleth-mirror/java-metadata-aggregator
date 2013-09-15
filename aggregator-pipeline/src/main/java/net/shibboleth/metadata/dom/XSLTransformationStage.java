@@ -52,7 +52,7 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
             TransformerConfigurationException {
 
         try {
-            ArrayList<DomElementItem> newItems = new ArrayList<DomElementItem>();
+            final ArrayList<DomElementItem> newItems = new ArrayList<>();
             for (DomElementItem domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 final Element element = domItem.unwrap();

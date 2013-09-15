@@ -34,7 +34,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
     /** Tests running the stage on an empty collection. */
     @Test
     public void testEmptyCollection() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
@@ -47,7 +47,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
     /** Tests running the stage on a collection that does not contain EntityDescriptors. */
     @Test
     public void testDifferentElement() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
@@ -61,7 +61,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
     /** Tests running the stage on a collection that contains a single EntityDescriptor. */
     @Test
     public void testSingleRecord() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entityDescriptor1.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
@@ -84,7 +84,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDomTest {
     /** Tests running the stage on a collection that contains multiple EntityDescriptors. */
     @Test
     public void testMultipleRecords() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entityDescriptor1.xml")));
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entityDescriptor2.xml")));
 

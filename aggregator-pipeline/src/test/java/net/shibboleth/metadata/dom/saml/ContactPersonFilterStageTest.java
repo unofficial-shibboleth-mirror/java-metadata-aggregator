@@ -129,7 +129,7 @@ public class ContactPersonFilterStageTest extends BaseDomTest {
         stage.setId("foo");
         stage.initialize();
 
-        ArrayList<DomElementItem> itemCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> itemCollection = new ArrayList<>();
         itemCollection.add(new DomElementItem(entitiesDescriptor));
 
         stage.execute(itemCollection);
@@ -157,7 +157,7 @@ public class ContactPersonFilterStageTest extends BaseDomTest {
         stage.setWhitelistingTypes(false);
         stage.initialize();
 
-        ArrayList<DomElementItem> itemCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> itemCollection = new ArrayList<>();
         itemCollection.add(new DomElementItem(entitiesDescriptor));
 
         stage.execute(itemCollection);

@@ -36,7 +36,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
     /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
@@ -66,7 +66,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
     /** Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration + now. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long hundredYears = 1000L * 60 * 60 * 24 * 365 * 100;
@@ -90,7 +90,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
     /** Test that the maximum validUntil is used when the nearest validUntil is later than max duration + now. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long twoYears = 1000L * 60 * 60 * 24 * 365 * 2;

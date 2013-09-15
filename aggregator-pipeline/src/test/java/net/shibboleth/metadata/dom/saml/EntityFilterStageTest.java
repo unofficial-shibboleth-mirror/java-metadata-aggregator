@@ -64,7 +64,7 @@ public class EntityFilterStageTest extends BaseDomTest {
 
     /** Test that filtering logic descends in to EntitiesDescriptors. */
     @Test public void testEntitiesDescriptorFiltering() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
@@ -82,7 +82,7 @@ public class EntityFilterStageTest extends BaseDomTest {
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are themselves removed.
      */
     @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
@@ -101,7 +101,7 @@ public class EntityFilterStageTest extends BaseDomTest {
      * when {@link EntityFilterStage#isRemovingEntitylessEntitiesDescriptor()} is false.
      */
     @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
@@ -118,7 +118,7 @@ public class EntityFilterStageTest extends BaseDomTest {
 
     /** Build up a metadata collection containing 3 EntityDescriptors. */
     private Collection<DomElementItem> buildMetadataCollection() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
                 ElementSupport.getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));

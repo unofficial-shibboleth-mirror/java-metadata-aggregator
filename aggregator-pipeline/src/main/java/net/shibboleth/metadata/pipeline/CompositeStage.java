@@ -69,7 +69,7 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        ArrayList<Stage<ItemType>> newStages = new ArrayList<Stage<ItemType>>();
+        ArrayList<Stage<ItemType>> newStages = new ArrayList<>();
         if (stages != null) {
             for (Stage<ItemType> stage : stages) {
                 if (stage != null) {

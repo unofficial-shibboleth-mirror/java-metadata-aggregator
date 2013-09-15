@@ -213,7 +213,7 @@ public class DomFilesystemSourceStage extends BaseStage<DomElementItem> {
     /** {@inheritDoc} */
     protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection)
             throws StageProcessingException {
-        final ArrayList<File> sourceFiles = new ArrayList<File>();
+        final ArrayList<File> sourceFiles = new ArrayList<>();
         if (sourceFile.isFile()) {
             sourceFiles.add(sourceFile);
         } else {

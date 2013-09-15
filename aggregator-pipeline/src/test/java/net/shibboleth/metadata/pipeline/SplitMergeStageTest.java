@@ -19,6 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -125,7 +126,7 @@ public class SplitMergeStageTest {
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");
         MockItem item3 = new MockItem("three");
-        ArrayList<MockItem> items = new ArrayList<MockItem>();
+        final List<MockItem> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);
         items.add(item3);

@@ -35,7 +35,7 @@ public class XPathItemSelectionStrategyTest extends BaseDomTest {
      */
     @Test public void test() throws Exception {
         // Construct a map containing required namespace prefix definitions
-        Map<String, String> prefixMappings = new HashMap<String, String>();
+        final Map<String, String> prefixMappings = new HashMap<>();
         prefixMappings.put("ukfedlabel", "http://ukfederation.org.uk/2006/11/label");
 
         // Construct the strategy object

@@ -19,6 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -55,7 +56,7 @@ public class PipelineDemultiplexerStageTest {
     @Test public void testPipelineAndSelectionStrategies() {
         PipelineDemultiplexerStage stage = new PipelineDemultiplexerStage();
 
-        ArrayList<Pair<Pipeline, Predicate>> pass = new ArrayList<Pair<Pipeline, Predicate>>();
+        final List<Pair<Pipeline, Predicate>> pass = new ArrayList<>();
         stage.setPipelineAndSelectionStrategies(pass);
         Assert.assertEquals(stage.getPipelineAndSelectionStrategies(), pass);
     }
@@ -97,7 +98,7 @@ public class PipelineDemultiplexerStageTest {
         CountingStage countStage = new CountingStage();
         pipeline.setStages(Collections.singletonList(countStage));
 
-        ArrayList<MockItem> items = new ArrayList<MockItem>();
+        final List<MockItem> items = new ArrayList<>();
         items.add(new MockItem("one"));
         items.add(new MockItem("two"));
         items.add(new MockItem("three"));

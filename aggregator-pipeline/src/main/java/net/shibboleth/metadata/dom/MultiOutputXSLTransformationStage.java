@@ -56,7 +56,7 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
             DOMResult result;
             List<Element> transformedElements;
 
-            ArrayList<DomElementItem> newItems = new ArrayList<DomElementItem>();
+            final ArrayList<DomElementItem> newItems = new ArrayList<>();
             for (DomElementItem domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 element = domItem.unwrap();

@@ -85,7 +85,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
             /** {@inheritDoc} */
             public List<DomElementItem> order(Collection<DomElementItem> items) {
-                List<DomElementItem> result = new ArrayList<DomElementItem>(items);
+                final List<DomElementItem> result = new ArrayList<>(items);
                 Collections.reverse(result);
                 return result;
             }
@@ -130,7 +130,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
     }
 
     protected Collection<DomElementItem> buildMetadataCollection() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
 
         Element descriptor = readXmlData("samlMetadata/entityDescriptor1.xml");
         metadataCollection.add(new DomElementItem(descriptor));

@@ -81,7 +81,7 @@ public class SimplePipelineTest {
         pipeline.setStages(stages);
         pipeline.initialize();
 
-        ArrayList<MockItem> metadata = new ArrayList<MockItem>();
+        final List<MockItem> metadata = new ArrayList<>();
         pipeline.execute(metadata);
         Assert.assertEquals(metadata.size(), 2);
 
@@ -101,7 +101,7 @@ public class SimplePipelineTest {
             // expected this
         }
 
-        metadata = new ArrayList<MockItem>();
+        metadata.clear();
         pipeline.execute(metadata);
         Assert.assertEquals(metadata.size(), 2);
         Assert.assertEquals(((CountingStage) stages.get(1)).getInvocationCount(), 2);

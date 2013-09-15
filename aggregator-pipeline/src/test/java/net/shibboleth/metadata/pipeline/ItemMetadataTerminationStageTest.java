@@ -51,7 +51,7 @@ public class ItemMetadataTerminationStageTest {
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest
     public void setup() {
-        metadataCollectionPrototype = new ArrayList<Item<?>>();
+        metadataCollectionPrototype = new ArrayList<>();
 
         md1 = new MockItem("1");
         metadataCollectionPrototype.add(md1);
@@ -72,7 +72,7 @@ public class ItemMetadataTerminationStageTest {
     /** Tests a {@link ItemMetadataFilterStage} without any selection requirements. */
     @Test
     public void testNoSelectionRequirements() throws Exception {
-        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
+        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
         stage.setId("test");
@@ -93,7 +93,7 @@ public class ItemMetadataTerminationStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing one selection requirement. */
     @Test
     public void testSingleSelectionRequirement() throws Exception {
-        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
+        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection filterRequirements = new ArrayList();
         filterRequirements.add(ErrorStatus.class);
@@ -113,7 +113,7 @@ public class ItemMetadataTerminationStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing multiple selection requirements. */
     @Test
     public void testMultiSelectionRequirement() throws Exception {
-        Collection<Item<?>> metadataCollection = new ArrayList<Item<?>>(metadataCollectionPrototype);
+        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection filterRequirements = new ArrayList();
         filterRequirements.add(InfoStatus.class);

@@ -34,7 +34,7 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
     /** Test the organization elements are removed from top level metadata elements. */
     @Test
     public void testRemoveOrganization() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         List<Element> descriptors = ElementSupport
                 .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
@@ -63,7 +63,7 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
     /** Test that contact person elements are removed from children of top level metadata elements. */
     @Test
     public void testRemoveOrganizationFromNestedElements() throws Exception {
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();

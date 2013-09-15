@@ -45,7 +45,7 @@ public class DomResourceSourceTest {
         source.setParserPool(parserPool);
         source.initialize();
 
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -64,7 +64,7 @@ public class DomResourceSourceTest {
         source.initialize();
 
         try {
-            ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+            final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
             source.execute(metadataCollection);
             throw new ConstraintViolationException("Invalid URL marked as parsed");
         } catch (StageProcessingException e) {

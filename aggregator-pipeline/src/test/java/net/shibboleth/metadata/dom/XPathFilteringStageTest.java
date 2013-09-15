@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
@@ -38,7 +39,7 @@ public class XPathFilteringStageTest extends BaseDomTest {
     @Test
     public void testExecute() throws Exception {
         // Construct a map containing required namespace prefix definitions
-        Map<String, String> prefixMappings = new HashMap<String, String>();
+        final Map<String, String> prefixMappings = new HashMap<>();
         prefixMappings.put("ukfedlabel", "http://ukfederation.org.uk/2006/11/label");
 
         // Construct the strategy object
@@ -47,7 +48,7 @@ public class XPathFilteringStageTest extends BaseDomTest {
         strategy.setNamespaceContext(new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
-        ArrayList<DomElementItem> metadataCollection = new ArrayList<DomElementItem>();
+        final List<DomElementItem> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DomElementItem(readXmlData("xpathInput1.xml")));
         metadataCollection.add(new DomElementItem(readXmlData("xpathInput2.xml")));
         metadataCollection.add(new DomElementItem(readXmlData("xpathInput3.xml")));

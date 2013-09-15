@@ -167,14 +167,13 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
     /** {@inheritDoc} */
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection)
             throws StageProcessingException {
-        ArrayList<Future<Collection<? extends Item>>> pipelineResultFutures =
-                new ArrayList<Future<Collection<? extends Item>>>();
+        final ArrayList<Future<Collection<? extends Item>>> pipelineResultFutures = new ArrayList<>();
 
         for (Pipeline<? extends Item<?>> pipeline : mergedPipelines) {
             pipelineResultFutures.add(executorService.submit(new PipelineCallable(pipeline, collectionFactory.get())));
         }
 
-        ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<Collection<? extends Item>>();
+        final ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<>();
         for (Future<Collection<? extends Item>> future : pipelineResultFutures) {
             try {
                 pipelineResults.add(future.get());

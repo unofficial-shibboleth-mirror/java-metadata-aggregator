@@ -763,7 +763,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         }
 
         TransformParameterSpec transformSpec;
-        final ArrayList<Transform> transforms = new ArrayList<Transform>();
+        final ArrayList<Transform> transforms = new ArrayList<>();
 
         try {
             transformSpec = null;
@@ -841,7 +841,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * @throws StageProcessingException thrown if there is a problem creating the KeyInfo descriptor
      */
     @Nonnull protected KeyInfo buildKeyInfo() throws StageProcessingException {
-        final ArrayList<Object> keyInfoItems = new ArrayList<Object>();
+        final ArrayList<Object> keyInfoItems = new ArrayList<>();
 
         addKeyNames(keyInfoItems);
         addKeyValue(keyInfoItems);
@@ -916,7 +916,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      */
     protected void addX509Data(@Nonnull @NonnullElements @Live final ArrayList<Object> keyInfoItems)
             throws StageProcessingException {
-        final ArrayList<Object> x509Data = new ArrayList<Object>();
+        final ArrayList<Object> x509Data = new ArrayList<>();
 
         if (certificates != null && !certificates.isEmpty()) {
             X509Certificate endEntityCert = certificates.get(0);
@@ -1012,7 +1012,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
         }
 
         if (idAttributeNames == null) {
-            idAttributeNames = new ArrayList<QName>();
+            idAttributeNames = new ArrayList<>();
             idAttributeNames.add(new QName("id"));
             idAttributeNames.add(new QName("Id"));
             idAttributeNames.add(new QName("ID"));

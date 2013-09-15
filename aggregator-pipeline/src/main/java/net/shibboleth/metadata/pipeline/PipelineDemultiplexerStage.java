@@ -189,7 +189,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
         Pipeline<ItemType> pipeline;
         Predicate<ItemType> selectionStrategy;
         Collection<ItemType> selectedItems;
-        ArrayList<Future> pipelineFutures = new ArrayList<Future>();
+        final ArrayList<Future> pipelineFutures = new ArrayList<>();
 
         for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();

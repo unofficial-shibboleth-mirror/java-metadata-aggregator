@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import java.security.cert.Certificate;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
@@ -41,7 +42,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testValidSignature() throws Exception {
         Element testInput = readXmlData("signedSamlMetadata.xml");
 
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(new DomElementItem(testInput));
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -69,7 +70,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         Element testInput = readXmlData("badSignatureSamlMetadata.xml");
 
         DomElementItem item = new DomElementItem(testInput);
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -96,7 +97,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
 
         DomElementItem item = new DomElementItem(testInput);
         
-        ArrayList<DomElementItem> mdCol = new ArrayList<DomElementItem>();
+        final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         Certificate signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
@@ -116,7 +117,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
 
         item = new DomElementItem(testInput);
         
-        mdCol = new ArrayList<DomElementItem>();
+        mdCol.clear();
         mdCol.add(item);
         
         stage = new XMLSignatureValidationStage();

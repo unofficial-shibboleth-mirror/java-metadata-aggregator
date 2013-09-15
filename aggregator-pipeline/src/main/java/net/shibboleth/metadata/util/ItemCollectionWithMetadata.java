@@ -45,8 +45,8 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
 
     /** Constructor. */
     public ItemCollectionWithMetadata() {
-        delegate = new LazyList<ItemType>();
-        metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
+        delegate = new LazyList<>();
+        metadata = new ClassToInstanceMultiMap<>(true);
     }
 
     /**
@@ -58,7 +58,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item> implements Collec
         delegate = Constraint.isNotNull(wrappedCollection, "Wrapped collection can not be null");
         delegate.clear();
 
-        metadata = new ClassToInstanceMultiMap<ItemMetadata>(true);
+        metadata = new ClassToInstanceMultiMap<>(true);
     }
 
     /**

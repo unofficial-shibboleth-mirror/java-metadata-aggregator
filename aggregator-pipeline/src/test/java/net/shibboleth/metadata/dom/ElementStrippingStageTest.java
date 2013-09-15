@@ -29,7 +29,7 @@ public class ElementStrippingStageTest extends BaseDomTest {
     public void doExecute() throws Exception {
         final Element doc = readXmlData("elementStripIn.xml");
         final DomElementItem item = new DomElementItem(doc);
-        final List<DomElementItem> items = new ArrayList<DomElementItem>();
+        final List<DomElementItem> items = new ArrayList<>();
         items.add(item);
         
         final ElementStrippingStage stage = new ElementStrippingStage();
