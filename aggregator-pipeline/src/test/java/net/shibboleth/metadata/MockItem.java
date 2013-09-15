@@ -17,8 +17,8 @@
 
 package net.shibboleth.metadata;
 
-import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 import com.google.common.base.Objects;
 

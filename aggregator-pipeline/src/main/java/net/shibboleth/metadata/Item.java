@@ -22,7 +22,7 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.metadata.util.ClassToInstanceMultiMap;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /**
  * A wrapper around a piece of information processed by pipeline stages.
