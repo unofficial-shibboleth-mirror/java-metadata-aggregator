@@ -67,6 +67,10 @@
             <groupId>edu.vt.middleware</groupId>
             <artifactId>vt-crypt</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
 
         <!-- Provided Dependencies -->
         <dependency>
