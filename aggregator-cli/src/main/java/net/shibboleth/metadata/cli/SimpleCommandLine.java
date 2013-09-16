@@ -43,7 +43,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * This CLI is not terribly robust nor does it really offer much in the way of features. It's mostly meant for testing
  * purposes and will be replaced before the 1.0 release of the software.
  */
-public class SimpleCommandLine {
+public final class SimpleCommandLine {
 
     /** Return code indicating command completed successfully, {@value} . */
     public static final int RC_OK = 0;
@@ -60,6 +60,11 @@ public class SimpleCommandLine {
     /** Class logger. */
     private static Logger log;
 
+    /** Constructor. */
+    private SimpleCommandLine() {
+        
+    }
+    
     /**
      * Main method.
      * 
