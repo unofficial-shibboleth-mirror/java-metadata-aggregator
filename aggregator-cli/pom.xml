@@ -24,7 +24,13 @@
         </dependency>
         <dependency>
             <groupId>${spring.groupId}</groupId>
-            <artifactId>spring-context-support</artifactId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>com.beust</groupId>
