@@ -40,6 +40,10 @@
         <!-- Provided Dependencies -->
 
         <!-- Runtime Dependencies -->
+        <dependency>
+            <groupId>net.shibboleth.ext</groupId>
+            <artifactId>spring-extensions</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         
