@@ -743,7 +743,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
      * 
      * @throws StageProcessingException thrown if there is a problem creating the reference to the element
      */
-    @Nonnull protected Reference buildSignatureReference(@Nonnull final Element target) throws StageProcessingException {
+    @Nonnull protected Reference buildSignatureReference(@Nonnull final Element target)
+            throws StageProcessingException {
         final String id = getElementId(target);
         final String refUri;
         if (id == null) {
