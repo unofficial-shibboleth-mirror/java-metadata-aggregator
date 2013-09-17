@@ -23,6 +23,7 @@ import java.util.Date;
 
 import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.pipeline.Pipeline;
+import net.shibboleth.metadata.pipeline.TerminationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,6 +118,15 @@ public final class SimpleCommandLine {
                     new Object[]{pipelineName, endTime, (endTime.getTime()-startTime.getTime())/1000f});
 
             System.exit(RC_OK);
+            
+        } catch (TerminationException e) {
+            if (cli.doVerboseOutput()) {
+                log.error("TerminationException during processing", e);
+            } else {
+                log.error("Terminated: {}", e.getMessage());
+            }
+            System.exit(RC_INIT);
+            
         } catch (Exception e) {
             log.error("Error processing information", e);
             System.exit(RC_INIT);

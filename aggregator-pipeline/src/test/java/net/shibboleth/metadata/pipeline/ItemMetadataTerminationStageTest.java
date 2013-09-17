@@ -84,7 +84,7 @@ public class ItemMetadataTerminationStageTest {
             Assert.assertTrue(metadataCollection.contains(md2));
             Assert.assertTrue(metadataCollection.contains(md3));
             Assert.assertTrue(metadataCollection.contains(md4));
-        } catch (StageProcessingException e) {
+        } catch (TerminationException e) {
             Assert.fail("Stage failed unexpectedly");
         }
 
@@ -105,7 +105,7 @@ public class ItemMetadataTerminationStageTest {
         try {
             stage.execute(metadataCollection);
             Assert.fail("Stage did not fail as expected");
-        } catch (StageProcessingException e) {
+        } catch (TerminationException e) {
             // expected this
         }
     }
@@ -127,7 +127,7 @@ public class ItemMetadataTerminationStageTest {
         try {
             stage.execute(metadataCollection);
             Assert.fail("Stage did not fail as expected");
-        } catch (StageProcessingException e) {
+        } catch (TerminationException e) {
             // expected this
         }
     }
