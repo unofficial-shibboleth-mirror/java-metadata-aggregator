@@ -48,7 +48,8 @@ public class StatusMetadataLoggingStage extends AbstractItemMetadataSelectionSta
     protected void doExecute(
                     @Nonnull @NonnullElements final Collection<Item<?>> itemCollection,
                     @Nonnull final Item<?> matchingItem,
-                    @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+                    @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>,
+                        List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException {
 
         final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
