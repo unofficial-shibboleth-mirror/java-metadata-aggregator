@@ -55,16 +55,15 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
         itemCollection = Constraint.isNotNull(items, "Item collection can not be null");
     }
 
-    /** {@inheritDoc} */
-    @Nonnull @NonnullElements public Collection<? extends Item> call() {
-        try {
-            log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
-                    itemCollection.size());
-            pipeline.execute(itemCollection);
-            return itemCollection;
-        } catch (PipelineProcessingException e) {
-            log.error("Execution of pipeline {} failed.", pipeline.getId(), e);
-            return null;
-        }
+    /**
+     * {@inheritDoc}
+     * 
+     * @throws PipelineProcessingException
+     */
+    @Nonnull @NonnullElements public Collection<? extends Item> call() throws PipelineProcessingException {
+        log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
+                itemCollection.size());
+        pipeline.execute(itemCollection);
+        return itemCollection;
     }
 }

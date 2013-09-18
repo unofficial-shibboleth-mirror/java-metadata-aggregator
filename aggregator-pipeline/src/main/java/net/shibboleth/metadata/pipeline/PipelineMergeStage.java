@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -175,13 +174,7 @@ public class PipelineMergeStage extends BaseStage<Item<?>> {
 
         final ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<>();
         for (Future<Collection<? extends Item>> future : pipelineResultFutures) {
-            try {
-                pipelineResults.add(future.get());
-            } catch (ExecutionException e) {
-                throw new StageProcessingException(e);
-            } catch (InterruptedException e) {
-                throw new StageProcessingException(e);
-            }
+            pipelineResults.add(FutureSupport.futureItems(future));
         }
 
         mergeStrategy.mergeCollection(itemCollection, pipelineResults.toArray(new Collection[pipelineResults.size()]));

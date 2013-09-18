@@ -114,4 +114,30 @@ public class PipelineDemultiplexerStageTest {
 
         Assert.assertEquals(countStage.getInvocationCount(), 1);
     }
+    
+    @Test public void testThrow() throws Exception {
+        SimplePipeline pipeline = new SimplePipeline();
+        pipeline.setId("selectedPipeline");
+        final TerminatingStage terminatingStage = new TerminatingStage();
+        pipeline.setStages(Collections.singletonList(terminatingStage));
+
+        final List<MockItem> items = new ArrayList<>();
+        items.add(new MockItem("one"));
+        items.add(new MockItem("two"));
+        items.add(new MockItem("three"));
+
+        PipelineDemultiplexerStage stage = new PipelineDemultiplexerStage();
+        stage.setId("test");
+        stage.setWaitingForPipelines(true);
+        stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline, Predicate>(pipeline,
+                Predicates.alwaysTrue())));
+        stage.initialize();
+
+        try {
+            stage.execute(items);
+            Assert.fail("expected exception to be thrown");
+        } catch (TerminationException e) {
+            // this was expected
+        }
+    }
 }

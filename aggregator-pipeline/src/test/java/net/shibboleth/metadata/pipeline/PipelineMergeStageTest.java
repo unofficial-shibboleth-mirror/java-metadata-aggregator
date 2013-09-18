@@ -170,4 +170,53 @@ public class PipelineMergeStageTest {
         Assert.assertFalse(target.contains(item9));
         Assert.assertEquals(target.size(), 6);
     }
+    
+    /** Tests the case where one of the pipelines throws an exception. */
+    @Test public void testThrow() throws Exception {
+        MockItem md1 = new MockItem("one");
+        StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
+        source1.setId("src1");
+        source1.setSourceItems(Lists.newArrayList(md1));
+        SimplePipeline<MockItem> pipeline1 = new SimplePipeline<MockItem>();
+        pipeline1.setId("p1");
+        pipeline1.setStages(Lists.newArrayList((Stage<MockItem>) source1));
+
+        MockItem md2 = new MockItem("two");
+        StaticItemSourceStage<MockItem> source2 = new StaticItemSourceStage<MockItem>();
+        source2.setId("src2");
+        source2.setSourceItems(Lists.newArrayList(md2));
+        final TerminatingStage term = new TerminatingStage();
+        SimplePipeline<MockItem> pipeline2 = new SimplePipeline<MockItem>();
+        pipeline2.setId("p2");
+        final List<Stage<MockItem>> stages = new ArrayList<>();
+        stages.add(source2);
+        stages.add(term);
+        pipeline2.setStages(stages);
+
+        final Collection<Pipeline<MockItem>> joinedPipelines = new ArrayList<>();
+        joinedPipelines.add(pipeline1);
+        joinedPipelines.add(pipeline2);
+
+        PipelineMergeStage joinSource = new PipelineMergeStage();
+        joinSource.setId("joinSource");
+        joinSource.setMergedPipelines(Lists.newArrayList(pipeline1, pipeline2));
+
+        Assert.assertFalse(joinSource.isInitialized());
+        Assert.assertFalse(pipeline1.isInitialized());
+        Assert.assertFalse(pipeline2.isInitialized());
+
+        joinSource.initialize();
+        Assert.assertTrue(joinSource.isInitialized());
+        Assert.assertTrue(pipeline1.isInitialized());
+        Assert.assertTrue(pipeline2.isInitialized());
+
+        final ArrayList<Item<?>> metadataCollection = new ArrayList<>();
+        try {
+            joinSource.execute(metadataCollection);
+            Assert.fail("expected exception not thrown");
+        } catch (TerminationException e) {
+            // this is expected
+        }
+    }
+
 }

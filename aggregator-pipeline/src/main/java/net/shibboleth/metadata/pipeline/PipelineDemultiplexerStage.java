@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -37,9 +36,6 @@ import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -67,9 +63,6 @@ import com.google.common.collect.ImmutableList.Builder;
  */
 @ThreadSafe
 public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
-
-    /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(PipelineDemultiplexerStage.class);
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -207,13 +200,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
 
         if (isWaitingForPipelines()) {
             for (Future pipelineFuture : pipelineFutures) {
-                try {
-                    pipelineFuture.get();
-                } catch (ExecutionException e) {
-                    log.error("Pipeline threw an unexpected exception", e);
-                } catch (InterruptedException e) {
-                    log.error("Execution service was interrupted", e);
-                }
+                FutureSupport.futureItems(pipelineFuture);
             }
         }
     }

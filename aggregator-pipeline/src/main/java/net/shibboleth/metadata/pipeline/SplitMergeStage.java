@@ -19,7 +19,6 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -229,9 +228,9 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
             }
 
             if (selectionStrategy.apply(item)) {
-                selectedItems.add((ItemType) item.copy());
+                selectedItems.add(item);
             } else {
-                nonselectedItems.add((ItemType) item.copy());
+                nonselectedItems.add(item);
             }
         }
 
@@ -240,23 +239,10 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
                 executePipeline(nonselectedItemPipeline, nonselectedItems);
 
         final ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<>();
-        try {
-            if (selectedItemFuture != null) {
-                pipelineResults.add(selectedItemFuture.get());
-            } else {
-                pipelineResults.add(selectedItems);
-            }
-
-            if (nonselectedItemFuture != null) {
-                pipelineResults.add(nonselectedItemFuture.get());
-            } else {
-                pipelineResults.add(nonselectedItems);
-            }
-        } catch (ExecutionException e) {
-            log.error("Pipeline threw an unexpected exception", e);
-        } catch (InterruptedException e) {
-            log.error("Execution service was interrupted", e);
-        }
+        
+        // resolve results from the pipelines
+        pipelineResults.add(FutureSupport.futureItems(selectedItemFuture));
+        pipelineResults.add(FutureSupport.futureItems(nonselectedItemFuture));
 
         itemCollection.clear();
         mergeStrategy.mergeCollection((Collection<Item<?>>) itemCollection,

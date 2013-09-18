@@ -149,4 +149,75 @@ public class SplitMergeStageTest {
         Assert.assertTrue(items.contains(item2));
         Assert.assertTrue(items.contains(item3));
     }
+    
+    /** Tests case where the selected items pipeline throws a {@link TerminationException}. */
+    @Test public void testThrowSelected() throws Exception {
+        final SimplePipeline selectedPipeline = new SimplePipeline();
+        selectedPipeline.setId("selectedPipeline");
+        final TerminatingStage selectedTerm = new TerminatingStage();
+        selectedPipeline.setStages(Collections.singletonList(selectedTerm));
+
+        SimplePipeline nonselectedPipeline = new SimplePipeline();
+        nonselectedPipeline.setId("nonselectedPipeline");
+        CountingStage nonselectedCount = new CountingStage();
+        nonselectedPipeline.setStages(Collections.singletonList(nonselectedCount));
+
+        MockItem item1 = new MockItem("one");
+        MockItem item2 = new MockItem("two");
+        MockItem item3 = new MockItem("three");
+        final List<MockItem> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+        SplitMergeStage stage = new SplitMergeStage();
+        stage.setId("test");
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setNonselectedItemPipeline(nonselectedPipeline);
+        stage.setSelectedItemPipeline(selectedPipeline);
+        stage.initialize();
+
+        try {
+            stage.execute(items);
+            Assert.fail("did not throw expected exception");
+        } catch (TerminationException e) {
+            // this was expected
+        }
+    }
+    
+    /** Tests case where the nonselected items pipeline throws a {@link TerminationException}. */
+    @Test public void testThrowNonselected() throws Exception {
+        final SimplePipeline selectedPipeline = new SimplePipeline();
+        selectedPipeline.setId("selectedPipeline");
+        CountingStage selectedCount = new CountingStage();
+        selectedPipeline.setStages(Collections.singletonList(selectedCount));
+
+        SimplePipeline nonselectedPipeline = new SimplePipeline();
+        nonselectedPipeline.setId("nonselectedPipeline");
+        final TerminatingStage selectedTerm = new TerminatingStage();
+        nonselectedPipeline.setStages(Collections.singletonList(selectedTerm));
+
+        MockItem item1 = new MockItem("one");
+        MockItem item2 = new MockItem("two");
+        MockItem item3 = new MockItem("three");
+        final List<MockItem> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+        SplitMergeStage stage = new SplitMergeStage();
+        stage.setId("test");
+        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setNonselectedItemPipeline(nonselectedPipeline);
+        stage.setSelectedItemPipeline(selectedPipeline);
+        stage.initialize();
+
+        try {
+            stage.execute(items);
+            Assert.fail("did not throw expected exception");
+        } catch (TerminationException e) {
+            // this was expected
+        }
+    }
+
 }
