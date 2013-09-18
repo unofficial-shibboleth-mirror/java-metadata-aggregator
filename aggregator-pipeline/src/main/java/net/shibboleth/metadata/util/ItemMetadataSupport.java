@@ -79,7 +79,10 @@ public final class ItemMetadataSupport {
      */
     public static void addToCollection(@Nullable final Collection<? extends Item> itemCollection,
             @Nullable @NullableElements final Iterable<? extends ItemMetadata> itemMetadatas) {
-        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata) || itemMetadatas == null) {
+        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata)) {
+            return;
+        }
+        if (itemMetadatas == null) {
             return;
         }
 

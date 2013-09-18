@@ -216,7 +216,8 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
 
         if (type == null) {
             log.debug(
-                    "The following ContactPerson does not contain the required contactType attribute, it will be removed:\n{}",
+                    "The following ContactPerson does not contain the required contactType attribute, " +
+                            "it will be removed:\n{}",
                     SerializeSupport.prettyPrintXML(contactPerson));
             return false;
         }

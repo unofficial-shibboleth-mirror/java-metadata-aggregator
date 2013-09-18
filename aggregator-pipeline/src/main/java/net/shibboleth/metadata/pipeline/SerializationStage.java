@@ -173,7 +173,8 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
                 }
             } else {
                 log.warn(
-                        "Unable to determine parent directory for output file {}, this may result in a problem during stage execution",
+                        "Unable to determine parent directory for output file {}, " +
+                            "this may result in a problem during stage execution",
                         outputFile.getAbsolutePath());
             }
         }

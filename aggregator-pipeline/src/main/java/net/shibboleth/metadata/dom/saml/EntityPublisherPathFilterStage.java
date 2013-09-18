@@ -36,7 +36,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 public class EntityPublisherPathFilterStage extends BaseStage<DomElementItem> {
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> metadataCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> metadataCollection)
+            throws StageProcessingException {
         // TODO Auto-generated method stub
 
     }

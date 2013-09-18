@@ -240,7 +240,8 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
         if (registrationInfoElement == null) {
             if (requiringRegistrationInformation) {
                 log.debug(
-                        "{} pipeline stage removing Item because it did not have required registration information extension",
+                        "{} pipeline stage removing Item because it did not have " +
+                                "required registration information extension",
                         getId());
                 return true;
             } else {
@@ -252,7 +253,8 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
                 AttributeSupport.getAttributeValue(registrationInfoElement, null, "registrationAuthority");
         if (registrationAuthority == null) {
             log.debug(
-                    "{} pipeline stage removing Item because it contained a registration info extension but no authority attribute",
+                    "{} pipeline stage removing Item because it contained a registration info extension " +
+                            "but no authority attribute",
                     getId());
             return true;
         }

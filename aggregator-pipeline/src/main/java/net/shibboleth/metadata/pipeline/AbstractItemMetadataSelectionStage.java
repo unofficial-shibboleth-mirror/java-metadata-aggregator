@@ -150,6 +150,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
             doExecute(
                     @Nonnull @NonnullElements final Collection<Item<?>> itemCollection,
                     @Nonnull final Item<?> matchingItem,
-                    @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+                    @Nonnull @NonnullElements
+                    final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException;
 }
