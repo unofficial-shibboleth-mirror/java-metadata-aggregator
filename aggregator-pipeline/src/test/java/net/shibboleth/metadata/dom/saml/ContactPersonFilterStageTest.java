@@ -40,13 +40,17 @@ import com.google.common.collect.Sets;
 /** Unit test for {@link ContactPersonFilterStage}. */
 public class ContactPersonFilterStageTest extends BaseDomTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(ContactPersonFilterStage.class);
+    }
+
     private final QName contactPersonQname = new QName("urn:oasis:names:tc:SAML:2.0:metadata", "ContactPerson");
     
     private Element entitiesDescriptor;
 
     @BeforeClass public void setup() throws Exception {
-        entitiesDescriptor = readTestRelativeXmlData(ContactPersonFilterStage.class, "entitiesDescriptor.xml");
-
+        entitiesDescriptor = readXmlData("entities.xml");
     }
 
     @Test public void testDesignatedTypes() throws ComponentInitializationException {

@@ -36,6 +36,11 @@ import com.google.common.collect.Lists;
 /** {@link ElementFormattingStage} unit test. */
 public class ElementFormattingStageTest extends BaseDomTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(ElementFormattingStage.class);
+    }
+
     private Element unformattedElement;
 
     private Element singleLineElement;
@@ -43,9 +48,9 @@ public class ElementFormattingStageTest extends BaseDomTest {
     private Element prettyPrintElement;
 
     @BeforeClass public void setup() throws Exception {
-        unformattedElement = readTestRelativeXmlData(ElementFormattingStage.class, "unformatted.xml");
-        singleLineElement = readTestRelativeXmlData(ElementFormattingStage.class, "singleLine.xml");
-        prettyPrintElement = readTestRelativeXmlData(ElementFormattingStage.class, "prettyPrint.xml");
+        unformattedElement = readXmlData("unformatted.xml");
+        singleLineElement = readXmlData("singleLine.xml");
+        prettyPrintElement = readXmlData("prettyPrint.xml");
     }
 
     @Test public void testLineSeperator() throws ComponentInitializationException {

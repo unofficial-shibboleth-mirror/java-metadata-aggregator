@@ -27,11 +27,17 @@ import net.shibboleth.metadata.dom.DomElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */
 public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
+    
+    @BeforeClass
+    private void init() {
+        setTestingClass(EntitiesDescriptorAssemblerStage.class);
+    }
 
     /**
      * Basic test without use of the name property.
@@ -48,8 +54,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
         Element result = metadataCollection.iterator().next().unwrap();
         
-        assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
-                "entitiesDescriptor2.xml"), result);
+        assertXmlIdentical(readXmlData("entities.xml"), result);
     }
 
     /**
@@ -68,8 +73,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
         Element result = metadataCollection.iterator().next().unwrap();
 
-        assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
-                "entitiesDescriptor2Name.xml"), result);
+        assertXmlIdentical(readXmlData("name.xml"), result);
     }
     
     /**
@@ -101,8 +105,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
 
         Element result = metadataCollection.iterator().next().unwrap();
 
-        assertXmlIdentical(readTestRelativeXmlData(EntitiesDescriptorAssemblerStage.class,
-                "entitiesDescriptor2Reversed.xml"), result);
+        assertXmlIdentical(readXmlData("reversed.xml"), result);
     }
     
     /**
@@ -132,10 +135,10 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
     protected Collection<DomElementItem> buildMetadataCollection() throws Exception {
         final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
 
-        Element descriptor = readXmlData("samlMetadata/entityDescriptor1.xml");
+        Element descriptor = readXmlData("entity1.xml");
         metadataCollection.add(new DomElementItem(descriptor));
 
-        descriptor = readXmlData("samlMetadata/entityDescriptor2.xml");
+        descriptor = readXmlData("entity2.xml");
         metadataCollection.add(new DomElementItem(descriptor));
 
         Element fooElement = getParserPool().newDocument().createElement("foo");
