@@ -24,6 +24,7 @@ import java.util.List;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.WarningStatus;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -48,8 +49,6 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
 
     /**
      * Tests verifying a file with a valid signature.
-     * 
-     * @throws Exception thrown if there is a problem verifying the data
      */
     @Test
     public void testValidSignature() throws Exception {
@@ -70,12 +69,18 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
 
         DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
+        
+        // There should not have been any errors.
+        final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
+        Assert.assertEquals(errors.size(), 0);
+
+        // There should not have been any warnings either.
+        final List<WarningStatus> warnings = result.getItemMetadata().get(WarningStatus.class);
+        Assert.assertEquals(warnings.size(), 0);
     }
 
     /**
-     * Test that a metadata element with an invalid signature is removed from the collection.
-     * 
-     * @throws Exception thrown if there is a problem checking the signature
+     * Test that a metadata element with an invalid signature is labelled with an error.
      */
     @Test
     public void testInvalidSignature() throws Exception {
@@ -97,10 +102,8 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     }
 
     /**
-     * Test that metadata elements that do not contain signature are appropriately filtered out when valid signatures
+     * Test that metadata elements that do not contain signature are appropriately labelled when valid signatures
      * are required.
-     * 
-     * @throws Exception thrown if there is a problem checking signatures
      */
     @Test
     public void testRequiredSignature() throws Exception {
