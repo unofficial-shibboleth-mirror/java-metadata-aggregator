@@ -25,6 +25,7 @@ import java.util.List;
 import net.shibboleth.metadata.AssertSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -33,18 +34,23 @@ import edu.vt.middleware.crypt.util.CryptReader;
 /** {@link XMLSignatureSigningStage} unit test. */
 public class XMLSignatureSigningStageTest extends BaseDomTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(XMLSignatureSigningStage.class);
+    }
+
     /** Test signing with and verifying the result against a known good. */
     @Test
     public void testSigning() throws Exception {
-        Element testInput = readXmlData("samlMetadata.xml");
+        Element testInput = readXmlData("input.xml");
 
         final List<DomElementItem> mdCol = new ArrayList<>();
         mdCol.add(new DomElementItem(testInput));
 
         PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/signingKey.pem"));
+                .getResourceAsStream(classRelativeResource("signingKey.pem")));
         X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
-                .getResourceAsStream("/data/signingCert.pem"));
+                .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
         certs.add(signingCert);
 
@@ -62,7 +68,7 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
         DomElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
-        Element expected = readXmlData("signedSamlMetadata.xml");
+        Element expected = readXmlData("output.xml");
         assertXmlIdentical(expected, result.unwrap());
     }
 }
