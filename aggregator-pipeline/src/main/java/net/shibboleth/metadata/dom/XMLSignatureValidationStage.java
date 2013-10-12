@@ -19,7 +19,6 @@ package net.shibboleth.metadata.dom;
 
 import java.security.PublicKey;
 import java.security.cert.Certificate;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,18 +26,15 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.dom.XMLSignatureValidator.ValidationException;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
 import org.apache.xml.security.Init;
-import org.apache.xml.security.exceptions.XMLSecurityException;
-import org.apache.xml.security.signature.XMLSignature;
-import org.apache.xml.security.signature.XMLSignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -76,6 +72,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
 
     /** Public key used to verify the Element signature. */
     private PublicKey verificationKey;
+    
+    /** Validator used for all signatures validated by this stage instance. */
+    private XMLSignatureValidator validator;
 
     /**
      * Gets whether the Element is required to be signed.
@@ -165,16 +164,27 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
 
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
-        final Element signatureElement = getSignatureElement(item.unwrap());
-        if (signatureElement == null) {
-            if (signatureRequired) {
-                log.debug("DOM Element was not signed and signature is required");
-                item.getItemMetadata().put(
-                        new ErrorStatus(getId(), "DOM Element was not signed but signatures are required"));
-            } else {
-                log.debug("DOM Element is not signed, no verification performed");
+        
+        final Element docElement = item.unwrap();
+        
+        // Step 1: locate the signature element within the document.
+        Element signatureElement;
+        try {
+            signatureElement = validator.getSignatureElement(docElement);
+            if (signatureElement == null) {
+                if (signatureRequired) {
+                    log.debug("DOM Element was not signed and signature is required");
+                    item.getItemMetadata().put(
+                            new ErrorStatus(getId(), "DOM Element was not signed but signatures are required"));
+                } else {
+                    log.debug("DOM Element is not signed, no verification performed");
+                }
+                return true;
             }
-
+        } catch (ValidationException e) {
+            // pass on an error from signature location (e.g., multiple signatures)
+            log.debug("setting status: ", e.getMessage());
+            item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
             return true;
         }
 
@@ -182,80 +192,26 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
             log.debug("DOM Element contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
         }
 
-        if (!signatureVerified(signatureElement)) {
+        try {
+            validator.verifySignature(docElement, signatureElement);
+        } catch (ValidationException e) {
+            final String message = "element signature is invalid: " + e.getMessage();
+            log.debug("setting status: ", message);
             if (validSignatureRequired) {
-                item.getItemMetadata().put(new ErrorStatus(getId(), "element signature is invalid"));
+                item.getItemMetadata().put(new ErrorStatus(getId(), message));
             } else {
-                item.getItemMetadata().put(new WarningStatus(getId(), "element signature is invalid"));
-            }
+                item.getItemMetadata().put(new WarningStatus(getId(), message));
+            }            
         }
 
         return true;
-    }
-
-    /**
-     * Verifies the enclosed signature on the root of the Element.
-     * 
-     * @param signatureElement the Signature element
-     * 
-     * @return true if the signature is verified successfully, false otherwise
-     * 
-     * @throws StageProcessingException thrown if the given root element contains more than one signature
-     */
-    protected boolean signatureVerified(@Nonnull final Element signatureElement) throws StageProcessingException {
-        log.trace("Creating XML security library XMLSignature object");
-        final XMLSignature signature;
-        try {
-            signature = new XMLSignature(signatureElement, "");
-        } catch (XMLSecurityException e) {
-            log.debug("Unable to read XML signature", e);
-            return false;
-        }
-
-        try {
-            if (signature.checkSignatureValue(verificationKey)) {
-                log.debug("DOM Element signature verified.");
-                return true;
-            } else {
-                log.debug("DOM Element signature did not verify.");
-                return false;
-            }
-        } catch (XMLSignatureException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Unable to validate signature", e);
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Gets the signature element from the document. The signature must be a child of the document root.
-     * 
-     * @param root root from which to start searching for the signature
-     * 
-     * @return the signature element, or null
-     * 
-     * @throws StageProcessingException thrown if there is more than one signature present
-     */
-    protected Element getSignatureElement(@Nonnull final Element root) throws StageProcessingException {
-        final List<Element> sigElements =
-                ElementSupport.getChildElementsByTagNameNS(root, XMLSignatureSigningStage.XML_SIG_NS_URI, "Signature");
-
-        if (sigElements.isEmpty()) {
-            return null;
-        }
-
-        if (sigElements.size() > 1) {
-            throw new StageProcessingException("DOM Element contained more than one signature");
-        }
-
-        return sigElements.get(0);
     }
 
     /** {@inheritDoc} */
     protected void doDestroy() {
         verificationCertificate = null;
         verificationKey = null;
+        validator = null;
 
         super.doDestroy();
     }
@@ -268,6 +224,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", no verification key was specified");
         }
+
+        validator = new XMLSignatureValidator(verificationKey, null, null);
 
         if (!Init.isInitialized()) {
             Init.init();
