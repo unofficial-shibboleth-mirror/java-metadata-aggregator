@@ -73,15 +73,20 @@ final class XMLSignatureValidator {
     /** Set of blacklisted signature methods. */
     private final Set<String> blacklistedSignatureMethods;
     
+    /** Whether an empty reference is permitted. */
+    private final boolean emptyReferencePermitted;
+    
     /**
      *  Constructor.
      *  
      *  @param key public key with which to verify signatures
      *  @param blacklistDigests set of blacklisted digest algorithm URIs, or <code>null</code>
      *  @param blacklistSignatureMethods set of blacklisted signature method URIs, or <code>null</code>
+     *  @param emptyRefPermitted true if empty references are permitted
      */
     XMLSignatureValidator(@Nonnull final PublicKey key, @Nullable final Set<String> blacklistDigests,
-            @Nullable final Set<String> blacklistSignatureMethods) {
+            @Nullable final Set<String> blacklistSignatureMethods,
+            final boolean emptyRefPermitted) {
         Constraint.isNotNull(key, "public key can not be null");
         verificationKey = key;
         
@@ -95,7 +100,9 @@ final class XMLSignatureValidator {
             blacklistedSignatureMethods = new HashSet<String>(blacklistSignatureMethods);
         } else {
             blacklistedSignatureMethods = Collections.emptySet();
-        }        
+        }
+        
+        emptyReferencePermitted = emptyRefPermitted;
     }
     
     /**
@@ -283,7 +290,7 @@ final class XMLSignatureValidator {
 
     /**
      * Extract the reference within the provided XML signature while ensuring that there
-     * is only one such reference.
+     * is only one such reference, and that (if appropriate) it is not empty.
      * 
      * @param signature signature to extract the reference from
      * @return the extracted reference
@@ -299,6 +306,11 @@ final class XMLSignatureValidator {
             final Reference ref = signature.getSignedInfo().item(0);
             if (ref == null) {
                 throw new ValidationException("Signature Reference was null");
+            }
+            if (!emptyReferencePermitted) {
+                if (Strings.isNullOrEmpty(ref.getURI())) {
+                    throw new ValidationException("empty references are not permitted");
+                }
             }
             return ref;
         } catch (XMLSecurityException e) {

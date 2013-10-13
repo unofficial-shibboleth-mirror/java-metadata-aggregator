@@ -85,6 +85,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
     /** Set of blacklisted signature method URIs. Default value: empty set. */
     @Nonnull private Set<String> blacklistedSignatureMethods = Collections.emptySet();
     
+    /** Option to determine whether empty references are to be permitted.  Default value: <code>true</code>. */
+    private boolean permittingEmptyReferences = true;
+    
     /** Validator used for all signatures validated by this stage instance. */
     private XMLSignatureValidator validator;
 
@@ -217,6 +220,27 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
         return Collections.unmodifiableSet(blacklistedSignatureMethods);
     }
 
+    /**
+     * Gets whether empty references are permitted.
+     * 
+     * @return whether empty references are permitted
+     */
+    public boolean isPermittingEmptyReferences() {
+        return permittingEmptyReferences;
+    }
+
+    /**
+     * Sets whether empty references are permitted.
+     * 
+     * @param permit whether empty references are permitted
+     */
+    public synchronized void setPermittingEmptyReferences(final boolean permit) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        permittingEmptyReferences = permit;
+    }
+    
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         
@@ -282,7 +306,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
                     + ", no verification key was specified");
         }
 
-        validator = new XMLSignatureValidator(verificationKey, blacklistedDigests, blacklistedSignatureMethods);
+        validator = new XMLSignatureValidator(verificationKey,
+                blacklistedDigests, blacklistedSignatureMethods, permittingEmptyReferences);
 
         if (!Init.isInitialized()) {
             Init.init();

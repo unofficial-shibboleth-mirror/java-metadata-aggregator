@@ -201,4 +201,62 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         final String message = errors.get(0).getStatusMessage();
         Assert.assertTrue(message.contains("blacklist"));
     }
+    
+    /**
+     * Test that a signature with an empty reference is permitted by default.
+     */
+    @Test
+    public void testEmptyRefPermitted() throws Exception {
+        final DOMElementItem item = makeItem("emptyref.xml");
+
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(item);
+
+        XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setVerificationCertificate(signingCert);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DOMElementItem result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
+        
+        // There should not have been any errors.
+        final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
+        Assert.assertEquals(errors.size(), 0);
+
+        // There should not have been any warnings either.
+        final List<WarningStatus> warnings = result.getItemMetadata().get(WarningStatus.class);
+        Assert.assertEquals(warnings.size(), 0);
+    }
+
+    /**
+     * Test that a signature with an empty reference is not permitted if disallowed.
+     */
+    @Test
+    public void testEmptyRefNotPermitted() throws Exception {
+        final DOMElementItem item = makeItem("emptyref.xml");
+
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(item);
+
+        final XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setVerificationCertificate(signingCert);
+        stage.setPermittingEmptyReferences(false);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        final DOMElementItem result = mdCol.iterator().next();
+        
+        // There should have been an error.
+        final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
+        Assert.assertEquals(errors.size(), 1);
+        final String message = errors.get(0).getStatusMessage();
+        Assert.assertTrue(message.contains("reference"));
+    }
 }
