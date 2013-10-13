@@ -30,10 +30,16 @@ import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class XSLValidationStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(XSLValidationStage.class);
+    }
 
     /**
      * Utility method to grab our standard input file and turn it into a {@link DOMElementItem}.
@@ -41,7 +47,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
      * @throws XMLParserException
      */
     private DOMElementItem makeInput() throws XMLParserException {
-        Element testInput = readXmlData("xsltStageInput.xml");
+        Element testInput = readXmlData("input.xml");
         DOMElementItem metadata = new DOMElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
         Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
@@ -58,9 +64,10 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
-        Resource transform = new ClasspathResource("data/xslValidator.xsl");
+        final Resource transform =
+                new ClasspathResource(classRelativeResource("validator.xsl").substring(1));
 
-        XSLValidationStage stage = new XSLValidationStage();
+        final XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
         stage.setXSLResource(transform);
         stage.initialize();
@@ -69,10 +76,10 @@ public class XSLValidationStageTest extends BaseDOMTest {
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
-        DOMElementItem result = mdCol.get(0);
+        final DOMElementItem result = mdCol.get(0);
 
         // The XML should be unchanged
-        Element expected = readXmlData("xsltStageInput.xml");
+        final Element expected = readXmlData("input.xml");
         assertXmlIdentical(expected, result.unwrap());
 
         // It should have been processed by the appropriate stage
@@ -106,9 +113,10 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
-        Resource transform = new ClasspathResource("data/mda45.xsl");
+        final Resource transform =
+                new ClasspathResource(classRelativeResource("mda45.xsl").substring(1));
 
-        XSLValidationStage stage = new XSLValidationStage();
+        final XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
         stage.setXSLResource(transform);
         stage.initialize();
@@ -117,7 +125,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
-        DOMElementItem result = mdCol.get(0);
+        final DOMElementItem result = mdCol.get(0);
 
         // verify the presence of the InfoStatus on the output
         List<InfoStatus> infos = result.getItemMetadata().get(InfoStatus.class);
