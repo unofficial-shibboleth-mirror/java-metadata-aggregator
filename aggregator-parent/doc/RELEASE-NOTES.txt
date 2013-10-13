@@ -1,0 +1,27 @@
+Release Notes - Metadata Aggregator - Version 0.8.0
+===================================================
+
+** Bug
+    * [MDA-44] - exceptions should be propagated up from subordinate pipelines
+    * [MDA-81] - address multiple failed tests
+    * [MDA-83] - PullUpCacheDurationStage ignores cacheDuration on EntityDescriptor elements
+    * [MDA-87] - EntitiesDescriptorAssemblerStage does not declare namespace prefix
+    * [MDA-90] - default identifier strategy used by GenerateIdStage sometimes generates bad IDs
+    * [MDA-98] - review use of debug vs. trace logging in aggregator stages
+    * [MDA-101] - XMLSignatureSigningStage does not work under Santuario 1.5.x
+    * [MDA-112] - signature validation stage should protect against wrapping attacks
+
+** Improvement
+    * [MDA-66] - should be possible to have CLI termination without a stack dump
+    * [MDA-85] - Guava Closeables.closeQuietly is deprecated
+    * [MDA-86] - tests shouldn't pull UK production metadata
+    * [MDA-89] - add license and release notes to aggregator-cli package
+    * [MDA-111] - bundle spring-extensions in MDA cli package
+
+** New Feature
+    * [MDA-88] - assist debugging of signature creation by making pre-digest data available
+
+** Task
+    * [MDA-68] - Convert command line interface to use JCommander
+    * [MDA-70] - Move ClassToInstanceMultiMap to java-support
+    * [MDA-80] - compile using, and require, Java 7

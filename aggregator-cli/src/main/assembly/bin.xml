@@ -49,5 +49,11 @@
                 <include>*.bat</include>
             </includes>
         </fileSet>
+        
+        <!-- Documentation pulled from parent project. -->
+        <fileSet>
+            <directory>${project.basedir}/../aggregator-parent/doc/</directory>
+            <outputDirectory>/doc</outputDirectory>
+        </fileSet>
     </fileSets>
 </assembly>
