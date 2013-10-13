@@ -113,17 +113,6 @@ public abstract class BaseDOMTest {
         return basePackagePath + which;
     }
     
-    /**
-     * Return a {@link ClasspathResource} named relative to the currently tested class.
-     * 
-     * @param relativeName local name of the resource
-     * @return resolved {@link ClasspathResource} with the given name
-     */
-    protected Resource classRelativeClasspathResource(final String relativeName) {
-        // ClasspathResource needs a path that does *not* start with a '/'
-        return new ClasspathResource(classRelativeResource(relativeName).substring(1));
-    }
-
     
     /**
      * Setup test class. Creates and initializes the parser pool. Set BouncyCastle as a JCE provider.
@@ -171,11 +160,17 @@ public abstract class BaseDOMTest {
     /**
      * Helper method to acquire a ClasspathResource based on the given resource path.
      * 
+     * Uses class-relative resource names if there is a known class under test.
+     * 
      * @param resourcePath classpath path to the resource
      * @return the data file as a resource
      */
     public Resource getClasspathResource(final String resourcePath) {
-        return new FixedClasspathResource(resourcePath);
+        if (testingClass != null) {
+            return new FixedClasspathResource(classRelativeResource(resourcePath).substring(1));
+        } else {
+            return new FixedClasspathResource(resourcePath);
+        }
     }
     
     /**

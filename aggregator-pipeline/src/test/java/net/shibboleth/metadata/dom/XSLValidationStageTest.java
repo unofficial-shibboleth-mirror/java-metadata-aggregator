@@ -63,7 +63,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
-        final Resource transform = classRelativeClasspathResource("validator.xsl");
+        final Resource transform = getClasspathResource("validator.xsl");
 
         final XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
@@ -111,7 +111,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
-        final Resource transform = classRelativeClasspathResource("mda45.xsl");
+        final Resource transform = getClasspathResource("mda45.xsl");
 
         final XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
