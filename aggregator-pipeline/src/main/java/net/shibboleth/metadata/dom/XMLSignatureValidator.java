@@ -295,16 +295,15 @@ final class XMLSignatureValidator {
             throw new ValidationException("Signature SignedInfo had invalid number of References: " + numReferences);
         }
 
-        Reference ref = null;
         try {
-            ref = signature.getSignedInfo().item(0);
+            final Reference ref = signature.getSignedInfo().item(0);
+            if (ref == null) {
+                throw new ValidationException("Signature Reference was null");
+            }
+            return ref;
         } catch (XMLSecurityException e) {
             throw new ValidationException("Apache XML Security exception obtaining Reference: " + e.getMessage());
         }
-        if (ref == null) {
-            throw new ValidationException("Signature Reference was null");
-        }
-        return ref;
     }
 
     /**
