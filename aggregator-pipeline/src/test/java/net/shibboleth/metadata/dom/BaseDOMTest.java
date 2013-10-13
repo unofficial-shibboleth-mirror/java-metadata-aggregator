@@ -114,6 +114,18 @@ public abstract class BaseDOMTest {
     }
     
     /**
+     * Return a {@link ClasspathResource} named relative to the currently tested class.
+     * 
+     * @param relativeName local name of the resource
+     * @return resolved {@link ClasspathResource} with the given name
+     */
+    protected Resource classRelativeClasspathResource(final String relativeName) {
+        // ClasspathResource needs a path that does *not* start with a '/'
+        return new ClasspathResource(classRelativeResource(relativeName).substring(1));
+    }
+
+    
+    /**
      * Setup test class. Creates and initializes the parser pool. Set BouncyCastle as a JCE provider.
      * 
      * @throws ComponentInitializationException thrown if there is a problem initializing the parser pool

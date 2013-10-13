@@ -25,7 +25,6 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
@@ -64,8 +63,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
-        final Resource transform =
-                new ClasspathResource(classRelativeResource("validator.xsl").substring(1));
+        final Resource transform = classRelativeClasspathResource("validator.xsl");
 
         final XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
@@ -113,8 +111,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
-        final Resource transform =
-                new ClasspathResource(classRelativeResource("mda45.xsl").substring(1));
+        final Resource transform = classRelativeClasspathResource("mda45.xsl");
 
         final XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
