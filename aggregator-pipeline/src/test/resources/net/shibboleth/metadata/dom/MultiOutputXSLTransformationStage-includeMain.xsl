@@ -8,7 +8,7 @@
         <firstValue><xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="$fruit"/></firstValue>
     </xsl:template>
     
-    <xsl:include href="xslIncluded.xsl"/>
+    <xsl:include href="MultiOutputXSLTransformationStage-included.xsl"/>
     
     <!--By default, copy text blocks and attributes unchanged.-->
     <xsl:template match="text()|@*">
