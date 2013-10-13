@@ -3,6 +3,10 @@ Release Notes - Metadata Aggregator - Version 0.8.0
 
 Highlights
    * API changes for new Shibboleth coding conventions
+   * Algorithm blacklisting during signature validation
+   * Moved to Java 7, Apache Santuario V1.5
+   * Improved CLI experience
+   * bug fixes
 
    
 API Changes
@@ -41,6 +45,7 @@ API Changes
 
 ** New Feature
     * [MDA-88] - assist debugging of signature creation by making pre-digest data available
+    * [MDA-120] - signature validation stage should allow algorithm blacklisting
 
 ** Task
     * [MDA-68] - Convert command line interface to use JCommander

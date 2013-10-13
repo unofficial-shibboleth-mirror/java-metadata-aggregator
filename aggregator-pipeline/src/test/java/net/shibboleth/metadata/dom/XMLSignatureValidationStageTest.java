@@ -20,11 +20,14 @@ package net.shibboleth.metadata.dom;
 import java.io.IOException;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -37,27 +40,29 @@ import edu.vt.middleware.crypt.util.CryptReader;
 /** Unit test for {@link XMLSchemaValidationStage}. */
 public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
-    @BeforeClass
-    private void init() {
-        setTestingClass(XMLSignatureValidationStage.class);
-    }
+    private Certificate signingCert;
     
-    private Certificate getSigningCertificate() throws CryptException, IOException {
-        return CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+    @BeforeClass
+    private void init() throws CryptException, IOException {
+        setTestingClass(XMLSignatureValidationStage.class);
+        signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
     }
-
+    
+    private DOMElementItem makeItem(final String name) throws XMLParserException {
+        final Element input = readXmlData(name);
+        return new DOMElementItem(input);
+    }
+    
     /**
      * Tests verifying a file with a valid signature.
      */
     @Test
     public void testValidSignature() throws Exception {
-        Element testInput = readXmlData("signed.xml");
+        final DOMElementItem item = makeItem("signed.xml");
 
         final List<DOMElementItem> mdCol = new ArrayList<>();
-        mdCol.add(new DOMElementItem(testInput));
-
-        Certificate signingCert = getSigningCertificate();
+        mdCol.add(item);
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
         stage.setId("test");
@@ -84,13 +89,9 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
      */
     @Test
     public void testInvalidSignature() throws Exception {
-        Element testInput = readXmlData("badSignature.xml");
-
-        DOMElementItem item = new DOMElementItem(testInput);
+        final DOMElementItem item = makeItem("badSignature.xml");
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(item);
-
-        Certificate signingCert = getSigningCertificate();
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
         stage.setId("test");
@@ -107,14 +108,10 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
      */
     @Test
     public void testRequiredSignature() throws Exception {
-        Element testInput = readXmlData("entities2.xml");
-
-        DOMElementItem item = new DOMElementItem(testInput);
+        final DOMElementItem item = makeItem("entities2.xml");
         
         final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(item);
-
-        Certificate signingCert = getSigningCertificate();
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
         stage.setId("test");
@@ -128,10 +125,10 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
-        item = new DOMElementItem(testInput);
+        final DOMElementItem item2 = makeItem("entities2.xml");
         
         mdCol.clear();
-        mdCol.add(item);
+        mdCol.add(item2);
         
         stage = new XMLSignatureValidationStage();
         stage.setId("test");
@@ -140,6 +137,68 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
         stage.execute(mdCol);
         
-        Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
+        Assert.assertTrue(item2.getItemMetadata().containsKey(ErrorStatus.class));
+    }
+    
+    /**
+     * Test digest algorithm blacklist.
+     */
+    @Test
+    public void testDigestBlacklist() throws Exception {
+        final DOMElementItem item = makeItem("signed.xml");
+
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(item);
+
+        final Set<String> blacklist = new HashSet<>();
+        blacklist.add("http://www.w3.org/2001/04/xmlenc#sha256");
+        
+        final XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setVerificationCertificate(signingCert);
+        stage.setBlacklistedDigests(blacklist);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DOMElementItem result = mdCol.iterator().next();
+        
+        // There should not have been one error, mentioning blacklisting.
+        final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
+        Assert.assertEquals(errors.size(), 1);
+        final String message = errors.get(0).getStatusMessage();
+        Assert.assertTrue(message.contains("blacklist"));
+    }
+
+    /**
+     * Test signature method blacklist.
+     */
+    @Test
+    public void testSignatureMethodBlacklist() throws Exception {
+        final DOMElementItem item = makeItem("signed.xml");
+
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(item);
+
+        final Set<String> blacklist = new HashSet<>();
+        blacklist.add("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
+        
+        final XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
+        stage.setId("test");
+        stage.setVerificationCertificate(signingCert);
+        stage.setBlacklistedSignatureMethods(blacklist);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        DOMElementItem result = mdCol.iterator().next();
+        
+        // There should not have been one error, mentioning blacklisting.
+        final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
+        Assert.assertEquals(errors.size(), 1);
+        final String message = errors.get(0).getStatusMessage();
+        Assert.assertTrue(message.contains("blacklist"));
     }
 }

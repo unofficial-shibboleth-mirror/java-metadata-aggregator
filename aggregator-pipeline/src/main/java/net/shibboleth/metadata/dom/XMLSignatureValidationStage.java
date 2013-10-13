@@ -19,6 +19,9 @@ package net.shibboleth.metadata.dom;
 
 import java.security.PublicKey;
 import java.security.cert.Certificate;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,6 +32,7 @@ import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.XMLSignatureValidator.ValidationException;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -38,6 +42,8 @@ import org.apache.xml.security.Init;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A pipeline stage which validates the XML digital signature found on DOM Elements.
@@ -72,6 +78,12 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
 
     /** Public key used to verify the Element signature. */
     private PublicKey verificationKey;
+    
+    /** Set of blacklisted digest URIs. Default value: empty set. */
+    @Nonnull private Set<String> blacklistedDigests = Collections.emptySet();
+    
+    /** Set of blacklisted signature method URIs. Default value: empty set. */
+    @Nonnull private Set<String> blacklistedSignatureMethods = Collections.emptySet();
     
     /** Validator used for all signatures validated by this stage instance. */
     private XMLSignatureValidator validator;
@@ -161,6 +173,49 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
         verificationCertificate = Constraint.isNotNull(certificate, "Certificate can not be null");
         verificationKey = verificationCertificate.getPublicKey();
     }
+    
+    /**
+     * Set the collection of identifiers to be blacklisted as digest algorithms.
+     * 
+     * @param identifiers collection of identifiers to be blacklisted
+     */
+    public void setBlacklistedDigests(@Nonnull @NonnullElements final Collection<String> identifiers) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
+        blacklistedDigests = ImmutableSet.copyOf(Constraint.isNotNull(identifiers,
+                "identifier collection may not be null"));
+    }
+    
+    /**
+     * Gets the set of blacklisted digest algorithm identifiers.
+     * 
+     * @return the set of blacklisted digest algorithm identifiers
+     */
+    @Nonnull @NonnullElements public Set<String> getBlacklistedDigests() {
+        return Collections.unmodifiableSet(blacklistedDigests);
+    }
+
+    /**
+     * Set the collection of identifiers to be blacklisted as signature methods.
+     * 
+     * @param identifiers collection of identifiers to be blacklisted
+     */
+    public void setBlacklistedSignatureMethods(@Nonnull @NonnullElements final Collection<String> identifiers) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        blacklistedSignatureMethods = ImmutableSet.copyOf(Constraint.isNotNull(identifiers,
+                "identifier collection may not be null"));
+    }
+    
+    /**
+     * Gets the set of blacklisted signature method identifiers.
+     * 
+     * @return the set of blacklisted signature method identifiers
+     */
+    @Nonnull @NonnullElements public Set<String> getBlacklistedSignatureMethods() {
+        return Collections.unmodifiableSet(blacklistedSignatureMethods);
+    }
 
     /** {@inheritDoc} */
     protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
@@ -212,6 +267,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
         verificationCertificate = null;
         verificationKey = null;
         validator = null;
+        blacklistedDigests = null;
+        blacklistedSignatureMethods = null;
 
         super.doDestroy();
     }
@@ -225,7 +282,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
                     + ", no verification key was specified");
         }
 
-        validator = new XMLSignatureValidator(verificationKey, null, null);
+        validator = new XMLSignatureValidator(verificationKey, blacklistedDigests, blacklistedSignatureMethods);
 
         if (!Init.isInitialized()) {
             Init.init();
