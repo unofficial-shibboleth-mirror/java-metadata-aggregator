@@ -23,13 +23,13 @@ import java.util.List;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-public class EmptyContainerStrippingStageTest extends BaseDomTest {
+public class EmptyContainerStrippingStageTest extends BaseDOMTest {
 
     @Test
     public void doExecute() throws Exception {
         final Element doc = readXmlData("emptyExtensionsIn.xml");
-        final DomElementItem item = new DomElementItem(doc);
-        final List<DomElementItem> items = new ArrayList<>();
+        final DOMElementItem item = new DOMElementItem(doc);
+        final List<DOMElementItem> items = new ArrayList<>();
         items.add(item);
         
         final NamespaceStrippingStage removeMdui = new NamespaceStrippingStage();

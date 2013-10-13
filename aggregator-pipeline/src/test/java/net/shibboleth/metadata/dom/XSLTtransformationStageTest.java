@@ -39,18 +39,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /** {@link XSLTransformationStage} unit test. */
-public class XSLTtransformationStageTest extends BaseDomTest {
+public class XSLTtransformationStageTest extends BaseDOMTest {
 
     /**
-     * Utility method to grab our standard input file and turn it into a {@link DomElementItem}.
+     * Utility method to grab our standard input file and turn it into a {@link DOMElementItem}.
      * 
-     * @return the standard input file imported into a {@link DomElementItem}.
+     * @return the standard input file imported into a {@link DOMElementItem}.
      * 
      * @throws XMLParserException if there is a problem reading the input file
      */
-    private DomElementItem makeInput() throws XMLParserException {
+    private DOMElementItem makeInput() throws XMLParserException {
         Element testInput = readXmlData("xsltStageInput.xml");
-        DomElementItem metadata = new DomElementItem(testInput);
+        DOMElementItem metadata = new DOMElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
         Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
         metadata.getItemMetadata().put(new TestInfo());
@@ -65,20 +65,20 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testTransform1() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
 
         XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -93,7 +93,7 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testTransformParam() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
@@ -103,14 +103,14 @@ public class XSLTtransformationStageTest extends BaseDomTest {
 
         XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.setTransformParameters(params);
         stage.initialize();
 
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -125,21 +125,21 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testTransformListener() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransformListener1.xsl");
 
         XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
         final Set<String> names = new HashSet<>();
-        for (DomElementItem result : mdCol) {
+        for (DOMElementItem result : mdCol) {
             AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
 
             // each output item should have preserved the TestInfo that was on the input
@@ -176,20 +176,20 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testInclude() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = getClasspathResource("data/xslIncludeMain.xsl");
 
         XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -204,20 +204,20 @@ public class XSLTtransformationStageTest extends BaseDomTest {
      */
     @Test public void testOutsideDocumentElement() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xsltStageTransform1.xsl");
 
         XSLTransformationStage stage = new XSLTransformationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 

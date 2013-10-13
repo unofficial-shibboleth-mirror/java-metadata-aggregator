@@ -37,7 +37,7 @@ public class XMLSchemaValidationStageTest {
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
 
-        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageValidInput.xml");
+        Collection<DOMElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageValidInput.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
     }
@@ -45,7 +45,7 @@ public class XMLSchemaValidationStageTest {
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        Collection<DomElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageInvalidInput.xml");
+        Collection<DOMElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageInvalidInput.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertTrue(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
@@ -66,13 +66,13 @@ public class XMLSchemaValidationStageTest {
         return stage;
     }
 
-    protected Collection<DomElementItem> buildMetdataCollection(String xmlPath) throws Exception {
+    protected Collection<DOMElementItem> buildMetdataCollection(String xmlPath) throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
         Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
-        mdCol.add(new DomElementItem(doc.getDocumentElement()));
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(new DOMElementItem(doc.getDocumentElement()));
 
         return mdCol;
     }

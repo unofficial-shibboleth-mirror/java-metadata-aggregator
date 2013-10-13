@@ -38,7 +38,7 @@ import com.google.common.base.Predicate;
  * Item selection strategy which selects items on the basis of a boolean XPath expression.
  */
 @ThreadSafe
-public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
+public class XPathItemSelectionStrategy implements Predicate<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathItemSelectionStrategy.class);
@@ -78,7 +78,7 @@ public class XPathItemSelectionStrategy implements Predicate<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    public synchronized boolean apply(@Nonnull DomElementItem item) {
+    public synchronized boolean apply(@Nonnull DOMElementItem item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {

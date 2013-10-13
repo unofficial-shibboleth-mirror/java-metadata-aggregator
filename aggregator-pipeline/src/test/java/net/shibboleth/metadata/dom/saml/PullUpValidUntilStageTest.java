@@ -20,8 +20,8 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -31,13 +31,13 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link PullUpValidUntilStage}. */
-public class PullUpValidUntilStageTest extends BaseDomTest {
+public class PullUpValidUntilStageTest extends BaseDOMTest {
 
     /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
@@ -47,27 +47,27 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
         Assert.assertEquals(validUntil, 2429913600000L);
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+                SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         Assert.assertEquals(entityDescriptors.size(), 3);
 
         for (Element entityDescriptor : entityDescriptors) {
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
-                    SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+                    SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
         }
     }
 
     /** Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration + now. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long hundredYears = 1000L * 60 * 60 * 24 * 365 * 100;
         
@@ -80,7 +80,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -90,8 +90,8 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
     /** Test that the maximum validUntil is used when the nearest validUntil is later than max duration + now. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long twoYears = 1000L * 60 * 60 * 24 * 365 * 2;
         long twoYearsFromNow = twoYears + System.currentTimeMillis();
@@ -105,7 +105,7 @@ public class PullUpValidUntilStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);

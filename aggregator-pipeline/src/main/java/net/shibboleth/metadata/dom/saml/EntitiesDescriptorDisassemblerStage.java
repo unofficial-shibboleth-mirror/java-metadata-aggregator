@@ -24,7 +24,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -39,24 +39,24 @@ import org.w3c.dom.Element;
  * elements contained therein.
  */
 @ThreadSafe
-public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementItem> {
+public class EntitiesDescriptorDisassemblerStage extends BaseStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
-        final ArrayList<DomElementItem> items = new ArrayList<>(itemCollection);
+        final ArrayList<DOMElementItem> items = new ArrayList<>(itemCollection);
         itemCollection.clear();
 
         Element element;
-        for (DomElementItem item : items) {
+        for (DOMElementItem item : items) {
             element = item.unwrap();
-            if (SamlMetadataSupport.isEntitiesDescriptor(element)) {
+            if (SAMLMetadataSupport.isEntitiesDescriptor(element)) {
                 processEntitiesDescriptor(itemCollection, element);
-            } else if (SamlMetadataSupport.isEntityDescriptor(element)) {
+            } else if (SAMLMetadataSupport.isEntityDescriptor(element)) {
                 processEntityDescriptor(itemCollection, element);
             } else {
                 log.debug("{} pipeline stage: DOM Element {} not supported, ignoring it", getId(),
@@ -72,30 +72,30 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DomElementIte
      * @param itemCollection collection to which EntityDescriptor metadata elements are added
      * @param entitiesDescriptor the EntitiesDescriptor to break down
      */
-    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection,
+    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection,
             @Nonnull final Element entitiesDescriptor) {
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
-            if (SamlMetadataSupport.isEntitiesDescriptor(child)) {
+            if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(itemCollection, child);
             }
-            if (SamlMetadataSupport.isEntityDescriptor(child)) {
+            if (SAMLMetadataSupport.isEntityDescriptor(child)) {
                 processEntityDescriptor(itemCollection, child);
             }
         }
     }
 
     /**
-     * Processes an EntityDescriptor element. Creates a {@link DomElementItem} element and adds it to the item
+     * Processes an EntityDescriptor element. Creates a {@link DOMElementItem} element and adds it to the item
      * collections.
      * 
      * @param itemCollection collection to which metadata is added
      * @param entityDescriptor entity descriptor to add to the item collection
      */
-    protected void processEntityDescriptor(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection,
+    protected void processEntityDescriptor(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection,
             @Nonnull final Element entityDescriptor) {
-        final DomElementItem item = new DomElementItem(entityDescriptor);
+        final DOMElementItem item = new DOMElementItem(entityDescriptor);
         itemCollection.add(item);
     }
 }

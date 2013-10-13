@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
 import org.testng.Assert;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */
-public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
+public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
     
     @BeforeClass
     private void init() {
@@ -46,7 +46,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
      */
     @Test
     public void testAssemblingWithoutName() throws Exception {
-        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.initialize();
@@ -64,7 +64,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
      */
     @Test
     public void testAssemblingWithName() throws Exception {
-        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.setDescriptorName("nameValue");
@@ -88,15 +88,15 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         class ReverseOrder implements ItemOrderingStrategy {
 
             /** {@inheritDoc} */
-            public List<DomElementItem> order(Collection<DomElementItem> items) {
-                final List<DomElementItem> result = new ArrayList<>(items);
+            public List<DOMElementItem> order(Collection<DOMElementItem> items) {
+                final List<DOMElementItem> result = new ArrayList<>(items);
                 Collections.reverse(result);
                 return result;
             }
             
         }
         
-        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.setItemOrderingStrategy(new ReverseOrder());
@@ -116,7 +116,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
      */
     @Test
     public void testMda87() throws Exception {
-        Collection<DomElementItem> metadataCollection = buildMetadataCollection();
+        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.initialize();
@@ -132,17 +132,17 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDomTest {
         Assert.assertEquals("urn:oasis:names:tc:SAML:2.0:metadata", nsattr);
     }
 
-    protected Collection<DomElementItem> buildMetadataCollection() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+    protected Collection<DOMElementItem> buildMetadataCollection() throws Exception {
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
 
         Element descriptor = readXmlData("entity1.xml");
-        metadataCollection.add(new DomElementItem(descriptor));
+        metadataCollection.add(new DOMElementItem(descriptor));
 
         descriptor = readXmlData("entity2.xml");
-        metadataCollection.add(new DomElementItem(descriptor));
+        metadataCollection.add(new DOMElementItem(descriptor));
 
         Element fooElement = getParserPool().newDocument().createElement("foo");
-        metadataCollection.add(new DomElementItem(fooElement));
+        metadataCollection.add(new DOMElementItem(fooElement));
 
         return metadataCollection;
     }

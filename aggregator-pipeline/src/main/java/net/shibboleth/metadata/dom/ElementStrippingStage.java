@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
  * A stage which removes all instances of the specified element from DOM metadata.
  */
 @ThreadSafe
-public class ElementStrippingStage extends BaseStage<DomElementItem> {
+public class ElementStrippingStage extends BaseStage<DOMElementItem> {
 
     /** Namespace of the element to strip. */
     private String elementNamespace;
@@ -94,9 +94,9 @@ public class ElementStrippingStage extends BaseStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> items)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> items)
             throws StageProcessingException {
-        for (DomElementItem item : items) {
+        for (DOMElementItem item : items) {
             final Element docElement = item.unwrap();
 
             // List all the matching descendant elements in this document in document order

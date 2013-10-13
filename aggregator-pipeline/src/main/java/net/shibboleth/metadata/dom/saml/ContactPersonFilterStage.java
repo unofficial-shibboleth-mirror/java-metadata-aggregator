@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -60,7 +60,7 @@ import com.google.common.collect.ImmutableSet;
  * </p>
  */
 @ThreadSafe
-public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem> {
+public class ContactPersonFilterStage extends BaseIteratingStage<DOMElementItem> {
 
     /** 'technical' person type constant. */
     public static final String TECHNICAL = "technical";
@@ -154,11 +154,11 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
-        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
+        if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
-        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
             processEntityDescriptor(descriptor);
         }
         return true;
@@ -173,9 +173,9 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
     protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
-            if (SamlMetadataSupport.isEntitiesDescriptor(child)) {
+            if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
-            } else if (SamlMetadataSupport.isEntityDescriptor(child)) {
+            } else if (SAMLMetadataSupport.isEntityDescriptor(child)) {
                 processEntityDescriptor(child);
             }
         }
@@ -191,7 +191,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DomElementItem>
 
         final List<Element> contactPersons =
                 ElementSupport
-                        .getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS, "ContactPerson");
+                        .getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS, "ContactPerson");
         if (!contactPersons.isEmpty()) {
             log.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
             for (Element contactPerson : contactPersons) {

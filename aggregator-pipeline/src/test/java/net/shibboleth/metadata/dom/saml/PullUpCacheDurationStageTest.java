@@ -20,8 +20,8 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -31,13 +31,13 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link PullUpCacheDurationStage}. */
-public class PullUpCacheDurationStageTest extends BaseDomTest {
+public class PullUpCacheDurationStageTest extends BaseDOMTest {
 
     /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
@@ -47,27 +47,27 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
         long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
         Assert.assertEquals(duration, 1000 * 60 * 60);
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
-                SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+                SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         Assert.assertEquals(entityDescriptors.size(), 3);
 
         for (Element entityDescriptor : entityDescriptors) {
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
-                    SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME));
+                    SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME));
         }
     }
 
     /** Test that the minimum cache duration is used when the shortest duration is less than it. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
@@ -78,7 +78,7 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
         long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
@@ -88,8 +88,8 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
     /** Test that the maximum cache duration is used when the shortest duration is greater than it. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
@@ -100,7 +100,7 @@ public class PullUpCacheDurationStageTest extends BaseDomTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
         long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);

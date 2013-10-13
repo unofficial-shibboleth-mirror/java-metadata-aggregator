@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 import com.google.common.collect.Lists;
 
 /** {@link ElementFormattingStage} unit test. */
-public class ElementFormattingStageTest extends BaseDomTest {
+public class ElementFormattingStageTest extends BaseDOMTest {
 
     @BeforeClass
     private void init() {
@@ -190,11 +190,11 @@ public class ElementFormattingStageTest extends BaseDomTest {
         stage.setLineSeparator(null);
         stage.initialize();
 
-        ArrayList<DomElementItem> itemCollection = Lists.newArrayList(new DomElementItem(unformattedElement));
+        ArrayList<DOMElementItem> itemCollection = Lists.newArrayList(new DOMElementItem(unformattedElement));
         stage.execute(itemCollection);
         Assert.assertEquals(itemCollection.size(), 1);
 
-        DomElementItem result = itemCollection.get(0);
+        DOMElementItem result = itemCollection.get(0);
         assertXmlIdentical(singleLineElement, result.unwrap());
 
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));
@@ -208,11 +208,11 @@ public class ElementFormattingStageTest extends BaseDomTest {
         stage.setIndentSize(4);
         stage.initialize();
 
-        ArrayList<DomElementItem> itemCollection = Lists.newArrayList(new DomElementItem(unformattedElement));
+        ArrayList<DOMElementItem> itemCollection = Lists.newArrayList(new DOMElementItem(unformattedElement));
         stage.execute(itemCollection);
         Assert.assertEquals(itemCollection.size(), 1);
 
-        DomElementItem result = itemCollection.get(0);
+        DOMElementItem result = itemCollection.get(0);
         assertXmlIdentical(prettyPrintElement, result.unwrap());
 
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));

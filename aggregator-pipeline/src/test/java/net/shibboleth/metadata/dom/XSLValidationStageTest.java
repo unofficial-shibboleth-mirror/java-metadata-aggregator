@@ -33,16 +33,16 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-public class XSLValidationStageTest extends BaseDomTest {
+public class XSLValidationStageTest extends BaseDOMTest {
 
     /**
-     * Utility method to grab our standard input file and turn it into a {@link DomElementItem}.
+     * Utility method to grab our standard input file and turn it into a {@link DOMElementItem}.
      * 
      * @throws XMLParserException
      */
-    private DomElementItem makeInput() throws XMLParserException {
+    private DOMElementItem makeInput() throws XMLParserException {
         Element testInput = readXmlData("xsltStageInput.xml");
-        DomElementItem metadata = new DomElementItem(testInput);
+        DOMElementItem metadata = new DOMElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
         Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
         metadata.getItemMetadata().put(new TestInfo());
@@ -55,21 +55,21 @@ public class XSLValidationStageTest extends BaseDomTest {
      */
     @Test public void testValidation() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/xslValidator.xsl");
 
         XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
-        DomElementItem result = mdCol.get(0);
+        DOMElementItem result = mdCol.get(0);
 
         // The XML should be unchanged
         Element expected = readXmlData("xsltStageInput.xml");
@@ -103,21 +103,21 @@ public class XSLValidationStageTest extends BaseDomTest {
      */
     @Test public void testMDA45() throws Exception {
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = new ClasspathResource("data/mda45.xsl");
 
         XSLValidationStage stage = new XSLValidationStage();
         stage.setId("test");
-        stage.setXslResource(transform);
+        stage.setXSLResource(transform);
         stage.initialize();
 
         stage.execute(mdCol);
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
-        DomElementItem result = mdCol.get(0);
+        DOMElementItem result = mdCol.get(0);
 
         // verify the presence of the InfoStatus on the output
         List<InfoStatus> infos = result.getItemMetadata().get(InfoStatus.class);

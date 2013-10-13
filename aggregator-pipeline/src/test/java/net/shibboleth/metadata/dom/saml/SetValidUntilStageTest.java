@@ -19,7 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
@@ -45,12 +45,12 @@ public class SetValidUntilStageTest {
         parserPool.initialize();
         Element entitiesDescriptor = parserPool.parse(
                 SetValidUntilStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
-        entitiesDescriptor.removeAttributeNS(null, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
+        entitiesDescriptor.removeAttributeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
 
-        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME) == null);
+        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME) == null);
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(entitiesDescriptor));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
         long now = System.currentTimeMillis();
@@ -61,7 +61,7 @@ public class SetValidUntilStageTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -81,10 +81,10 @@ public class SetValidUntilStageTest {
         Element entitiesDescriptor = parserPool.parse(
                 SetValidUntilStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
 
-        Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+        Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(entitiesDescriptor));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
         long now = System.currentTimeMillis();
@@ -95,7 +95,7 @@ public class SetValidUntilStageTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -117,8 +117,8 @@ public class SetValidUntilStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(root));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(root));
 
         long duration = 123456;
         SetValidUntilStage stage = new SetValidUntilStage();
@@ -128,7 +128,7 @@ public class SetValidUntilStageTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(root, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(root, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         Assert.assertNull(validUntilAttr);
     }
 

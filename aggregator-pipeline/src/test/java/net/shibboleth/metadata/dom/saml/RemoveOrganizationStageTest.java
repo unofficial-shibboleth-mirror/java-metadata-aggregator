@@ -20,8 +20,8 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
@@ -29,20 +29,20 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link RemoveOrganizationStage}. */
-public class RemoveOrganizationStageTest extends BaseDomTest {
+public class RemoveOrganizationStageTest extends BaseDOMTest {
 
     /** Test the organization elements are removed from top level metadata elements. */
     @Test
     public void testRemoveOrganization() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
         List<Element> descriptors = ElementSupport
                 .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
-            metadataCollection.add(new DomElementItem(descriptor));
+            metadataCollection.add(new DOMElementItem(descriptor));
         }
 
-        for (DomElementItem metadata : metadataCollection) {
-            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SamlMetadataSupport.MD_NS,
+        for (DOMElementItem metadata : metadataCollection) {
+            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
 
@@ -54,8 +54,8 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
 
         Assert.assertEquals(metadataCollection.size(), 3);
 
-        for (DomElementItem metadata : metadataCollection) {
-            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SamlMetadataSupport.MD_NS,
+        for (DOMElementItem metadata : metadataCollection) {
+            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
     }
@@ -63,13 +63,13 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
     /** Test that contact person elements are removed from children of top level metadata elements. */
     @Test
     public void testRemoveOrganizationFromNestedElements() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element entityDescriptor : entityDescriptors) {
-            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS,
+            Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
 
@@ -82,7 +82,7 @@ public class RemoveOrganizationStageTest extends BaseDomTest {
         Assert.assertEquals(metadataCollection.size(), 1);
 
         for (Element entityDescriptor : entityDescriptors) {
-            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS,
+            Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
     }

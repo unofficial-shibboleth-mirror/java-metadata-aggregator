@@ -37,8 +37,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * A pipeline stage which transforms each item in the {@link DomElementItem} collection via an XSL transform. Each item
- * is replaced by an item constructed from the result of the transform. The result {@link DomElementItem} receives
+ * A pipeline stage which transforms each item in the {@link DOMElementItem} collection via an XSL transform. Each item
+ * is replaced by an item constructed from the result of the transform. The result {@link DOMElementItem} receives
  * {@link net.shibboleth.metadata.InfoStatus}, {@link net.shibboleth.metadata.WarningStatus}, and
  * {@link net.shibboleth.metadata.ErrorStatus} metadata via the
  * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
@@ -48,12 +48,12 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
     protected void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 
         try {
-            final ArrayList<DomElementItem> newItems = new ArrayList<>();
-            for (DomElementItem domItem : itemCollection) {
+            final ArrayList<DOMElementItem> newItems = new ArrayList<>();
+            for (DOMElementItem domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 final Element element = domItem.unwrap();
 
@@ -65,7 +65,7 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
                 transformer.transform(new DOMSource(element.getOwnerDocument()), new DOMResult(newDocument));
 
                 // Create the result Item and copy across the input's ItemMetadata objects.
-                final DomElementItem newItem = new DomElementItem(newDocument);
+                final DOMElementItem newItem = new DOMElementItem(newDocument);
                 ItemMetadataSupport.addAll(newItem, domItem.getItemMetadata().values());
                 newItems.add(newItem);
             }

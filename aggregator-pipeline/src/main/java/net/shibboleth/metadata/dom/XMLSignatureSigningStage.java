@@ -76,7 +76,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
 
 /**
- * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DomElementItem}
+ * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DOMElementItem}
  * collection.
  * 
  * <p>
@@ -86,7 +86,7 @@ import com.google.common.io.CharStreams;
  * </ul>
  */
 @ThreadSafe
-public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem> {
+public class XMLSignatureSigningStage extends BaseIteratingStage<DOMElementItem> {
 
     /** The variant of SHA to use in the various signature algorithms. */
     public static enum ShaVariant {
@@ -667,7 +667,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DomElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         Element element = item.unwrap();
         XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {

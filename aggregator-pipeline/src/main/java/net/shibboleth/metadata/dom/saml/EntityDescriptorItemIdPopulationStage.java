@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -33,13 +33,13 @@ import org.w3c.dom.Element;
  * the metadata item.
  */
 @ThreadSafe
-public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<DomElementItem> {
+public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<DOMElementItem> {
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         Element metadataElement = item.unwrap();
 
-        if (SamlMetadataSupport.isEntityDescriptor(metadataElement)) {
+        if (SAMLMetadataSupport.isEntityDescriptor(metadataElement)) {
             String entityId = AttributeSupport.getAttributeValue(metadataElement, null, "entityID");
             item.getItemMetadata().put(new ItemId(entityId));
         }

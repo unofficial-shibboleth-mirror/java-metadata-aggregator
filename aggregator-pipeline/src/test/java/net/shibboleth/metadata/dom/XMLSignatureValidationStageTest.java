@@ -35,7 +35,7 @@ import edu.vt.middleware.crypt.CryptException;
 import edu.vt.middleware.crypt.util.CryptReader;
 
 /** Unit test for {@link XMLSchemaValidationStage}. */
-public class XMLSignatureValidationStageTest extends BaseDomTest {
+public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
     @BeforeClass
     private void init() {
@@ -54,8 +54,8 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testValidSignature() throws Exception {
         Element testInput = readXmlData("signed.xml");
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
-        mdCol.add(new DomElementItem(testInput));
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(new DOMElementItem(testInput));
 
         Certificate signingCert = getSigningCertificate();
 
@@ -67,7 +67,7 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
         
         // There should not have been any errors.
@@ -86,8 +86,8 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testInvalidSignature() throws Exception {
         Element testInput = readXmlData("badSignature.xml");
 
-        DomElementItem item = new DomElementItem(testInput);
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        DOMElementItem item = new DOMElementItem(testInput);
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         Certificate signingCert = getSigningCertificate();
@@ -109,9 +109,9 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
     public void testRequiredSignature() throws Exception {
         Element testInput = readXmlData("entities2.xml");
 
-        DomElementItem item = new DomElementItem(testInput);
+        DOMElementItem item = new DOMElementItem(testInput);
         
-        final List<DomElementItem> mdCol = new ArrayList<>();
+        final List<DOMElementItem> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         Certificate signingCert = getSigningCertificate();
@@ -125,10 +125,10 @@ public class XMLSignatureValidationStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
-        item = new DomElementItem(testInput);
+        item = new DOMElementItem(testInput);
         
         mdCol.clear();
         mdCol.add(item);

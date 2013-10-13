@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * to a single EntitiesDescriptor element.
  */
 @ThreadSafe
-public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> {
+public class EntitiesDescriptorAssemblerStage extends BaseStage<DOMElementItem> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
     public static final QName NAME_ATTRIB_NAME = new QName("Name");
@@ -135,7 +135,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection)
             throws StageProcessingException {
         if (itemCollection.isEmpty()) {
             if (noChildrenAProcessingError) {
@@ -152,7 +152,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
 
         final Element entitiesDescriptor =
                 ElementSupport.constructElement(entitiesDescriptorDocument,
-                        SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+                        SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         NamespaceSupport.appendNamespaceDeclaration(entitiesDescriptor,
                 entitiesDescriptor.getNamespaceURI(), entitiesDescriptor.getPrefix());
         entitiesDescriptorDocument.appendChild(entitiesDescriptor);
@@ -161,11 +161,11 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
         // Put a newline between the start and end tags
         ElementSupport.appendTextContent(entitiesDescriptor, "\n");
 
-        List<DomElementItem> orderedItems = orderingStrategy.order(itemCollection);
+        List<DOMElementItem> orderedItems = orderingStrategy.order(itemCollection);
         Element descriptor;
-        for (DomElementItem item : orderedItems) {
+        for (DOMElementItem item : orderedItems) {
             descriptor = item.unwrap();
-            if (SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
+            if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);
                 entitiesDescriptor.appendChild(descriptor);
 
@@ -174,7 +174,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
             }
         }
 
-        final DomElementItem item = new DomElementItem(entitiesDescriptorDocument);
+        final DOMElementItem item = new DOMElementItem(entitiesDescriptorDocument);
         itemCollection.clear();
         itemCollection.add(item);
     }
@@ -218,14 +218,14 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DomElementItem> 
          * 
          * @return sorted collection of Item, never null
          */
-        public List<DomElementItem> order(@Nonnull @NonnullElements final Collection<DomElementItem> items);
+        public List<DOMElementItem> order(@Nonnull @NonnullElements final Collection<DOMElementItem> items);
     }
 
     /** An ordering strategy that simply returns the collection in whatever order it was already in. */
     private class NoOpItemOrderingStrategy implements ItemOrderingStrategy {
 
         /** {@inheritDoc} */
-        public List<DomElementItem> order(@Nonnull @NonnullElements final Collection<DomElementItem> items) {
+        public List<DOMElementItem> order(@Nonnull @NonnullElements final Collection<DOMElementItem> items) {
             return new ArrayList<>(items);
         }
     }

@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
  * A stage which removes all empty instances of the named container element from DOM metadata.
  */
 @ThreadSafe
-public class EmptyContainerStrippingStage extends BaseStage<DomElementItem> {
+public class EmptyContainerStrippingStage extends BaseStage<DOMElementItem> {
 
     /** Namespace of the element to strip. */
     private String elementNamespace;
@@ -105,9 +105,9 @@ public class EmptyContainerStrippingStage extends BaseStage<DomElementItem> {
     }
     
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> items)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> items)
             throws StageProcessingException {
-        for (DomElementItem item : items) {
+        for (DOMElementItem item : items) {
             final Element element = item.unwrap();
             
             // List all the relevant elements in this document in document order

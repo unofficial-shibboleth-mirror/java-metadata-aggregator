@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -46,7 +46,7 @@ import com.google.common.collect.Iterables;
 
 /** A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority. */
 @ThreadSafe
-public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<DomElementItem> {
+public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRegistrationAuthorityFilterStage.class);
@@ -161,14 +161,14 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) {
         Element descriptor;
         descriptor = item.unwrap();
-        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
+        if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;
             }
-        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
             return !filterOutDescriptor(descriptor);
         }
 
@@ -193,7 +193,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
         }
 
         final List<Element> childEntitiesDescriptors =
-                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+                ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -204,7 +204,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
         }
 
         final List<Element> childEntityDescriptors =
-                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+                ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -235,7 +235,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
      */
     protected boolean filterOutDescriptor(@Nonnull final Element descriptor) {
         Element registrationInfoElement =
-                SamlMetadataSupport.getDescriptorExtensions(descriptor, new QName(SamlMetadataSupport.RPI_NS,
+                SAMLMetadataSupport.getDescriptorExtensions(descriptor, new QName(SAMLMetadataSupport.RPI_NS,
                         "RegistrationInfo"));
         if (registrationInfoElement == null) {
             if (requiringRegistrationInformation) {

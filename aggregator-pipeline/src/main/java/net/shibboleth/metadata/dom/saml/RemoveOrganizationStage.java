@@ -22,7 +22,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -33,17 +33,17 @@ import org.w3c.dom.Element;
 
 /** Filtering stage that removes Organization elements from EntityDescriptors. */
 @ThreadSafe
-public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> {
+public class RemoveOrganizationStage extends BaseIteratingStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
-        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
+        if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
-        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
             processEntityDescriptor(descriptor);
         }
         return true;
@@ -58,9 +58,9 @@ public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> 
     protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element child : children) {
-            if (SamlMetadataSupport.isEntitiesDescriptor(child)) {
+            if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
-            } else if (SamlMetadataSupport.isEntityDescriptor(child)) {
+            } else if (SAMLMetadataSupport.isEntityDescriptor(child)) {
                 processEntityDescriptor(child);
             }
         }
@@ -75,7 +75,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<DomElementItem> 
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
         final List<Element> organizations =
-                ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SamlMetadataSupport.MD_NS, "Organization");
+                ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS, "Organization");
         if (!organizations.isEmpty()) {
             log.debug("{} pipeline stage filtering Organization from EntityDescriptor {}", getId(), entityId);
             for (Element organization : organizations) {

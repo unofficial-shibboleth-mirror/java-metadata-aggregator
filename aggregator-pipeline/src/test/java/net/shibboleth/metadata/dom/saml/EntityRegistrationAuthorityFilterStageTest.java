@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 import com.google.common.collect.Lists;
 
 /** Unit test for {@link EntityRegistrationAuthorityFilterStage}. */
-public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
+public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
 
     /** Tests filtering out Items based on an authority whitelist. */
     @Test public void testAuthorityWhitelist() throws Exception {
@@ -43,7 +43,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
         stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority2"));
         stage.initialize();
 
-        Collection<DomElementItem> mdCollection = buildMetadataCollection();
+        Collection<DOMElementItem> mdCollection = buildMetadataCollection();
         Assert.assertEquals(mdCollection.size(), 3);
 
         stage.execute(mdCollection);
@@ -59,7 +59,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
         stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority2"));
         stage.initialize();
 
-        Collection<DomElementItem> mdCollection = buildMetadataCollection();
+        Collection<DOMElementItem> mdCollection = buildMetadataCollection();
         Assert.assertEquals(mdCollection.size(), 3);
 
         stage.execute(mdCollection);
@@ -76,8 +76,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
                 "urn:example.org:authority2"));
         stage.initialize();
 
-        final ArrayList<DomElementItem> mdCollection = new ArrayList<>();
-        mdCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> mdCollection = new ArrayList<>();
+        mdCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
@@ -95,8 +95,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
                 "urn:example.org:authority2"));
         stage.initialize();
 
-        final ArrayList<DomElementItem> mdCollection = new ArrayList<>();
-        mdCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> mdCollection = new ArrayList<>();
+        mdCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
@@ -114,8 +114,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
                 "urn:example.org:authority2"));
         stage.initialize();
 
-        final ArrayList<DomElementItem> mdCollection = new ArrayList<>();
-        mdCollection.add(new DomElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        final ArrayList<DOMElementItem> mdCollection = new ArrayList<>();
+        mdCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
@@ -124,13 +124,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDomTest {
     }
 
     /** Build up a metadata collection containing 3 EntityDescriptors. */
-    private Collection<DomElementItem> buildMetadataCollection() throws Exception {
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+    private Collection<DOMElementItem> buildMetadataCollection() throws Exception {
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
                 ElementSupport.getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
-            metadataCollection.add(new DomElementItem(descriptor));
+            metadataCollection.add(new DOMElementItem(descriptor));
         }
 
         return metadataCollection;

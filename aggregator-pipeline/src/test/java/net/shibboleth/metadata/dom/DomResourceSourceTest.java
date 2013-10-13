@@ -39,13 +39,13 @@ public class DomResourceSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomResourceSourceStage source = new DomResourceSourceStage();
+        DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
-        source.setDomResource(mdResource);
+        source.setDOMResource(mdResource);
         source.setParserPool(parserPool);
         source.initialize();
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -57,14 +57,14 @@ public class DomResourceSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomResourceSourceStage source = new DomResourceSourceStage();
+        DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
-        source.setDomResource(mdResource);
+        source.setDOMResource(mdResource);
         source.setParserPool(parserPool);
         source.initialize();
 
         try {
-            final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+            final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
             source.execute(metadataCollection);
             throw new ConstraintViolationException("Invalid URL marked as parsed");
         } catch (StageProcessingException e) {
@@ -78,9 +78,9 @@ public class DomResourceSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomResourceSourceStage source = new DomResourceSourceStage();
+        DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
-        source.setDomResource(mdResource);
+        source.setDOMResource(mdResource);
         source.setParserPool(parserPool);
 
         try {

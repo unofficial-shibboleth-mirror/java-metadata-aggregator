@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 import edu.vt.middleware.crypt.util.CryptReader;
 
 /** {@link XMLSignatureSigningStage} unit test. */
-public class XMLSignatureSigningStageTest extends BaseDomTest {
+public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
     @BeforeClass
     private void init() {
@@ -44,8 +44,8 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
     public void testSigning() throws Exception {
         Element testInput = readXmlData("input.xml");
 
-        final List<DomElementItem> mdCol = new ArrayList<>();
-        mdCol.add(new DomElementItem(testInput));
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(new DOMElementItem(testInput));
 
         PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
@@ -65,7 +65,7 @@ public class XMLSignatureSigningStageTest extends BaseDomTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DomElementItem result = mdCol.iterator().next();
+        DOMElementItem result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
         Element expected = readXmlData("output.xml");

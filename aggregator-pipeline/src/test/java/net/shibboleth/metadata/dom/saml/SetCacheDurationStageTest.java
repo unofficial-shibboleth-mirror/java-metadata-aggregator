@@ -19,7 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
@@ -46,10 +46,10 @@ public class SetCacheDurationStageTest {
         Element entitiesDescriptor = parserPool.parse(
                 SetCacheDurationStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
 
-        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
+        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(entitiesDescriptor));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -60,7 +60,7 @@ public class SetCacheDurationStageTest {
         stage.execute(metadataCollection);
 
         Attr cacheDurationAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(),
-                SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+                SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(cacheDurationAttr);
         Assert.assertEquals(cacheDurationAttr.getValue(), "PT2M3.456S");
     }
@@ -76,12 +76,12 @@ public class SetCacheDurationStageTest {
         parserPool.initialize();
         Element entitiesDescriptor = parserPool.parse(
                 SetCacheDurationStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
-        AttributeSupport.appendDurationAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME, 987654);
+        AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME, 987654);
 
-        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME) != null);
+        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) != null);
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(entitiesDescriptor));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -92,7 +92,7 @@ public class SetCacheDurationStageTest {
         stage.execute(metadataCollection);
 
         Attr cacheDurationAttr = AttributeSupport.getAttribute(entitiesDescriptor,
-                SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+                SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(cacheDurationAttr);
         Assert.assertEquals(cacheDurationAttr.getValue(), "PT16M27.654S");
     }
@@ -111,8 +111,8 @@ public class SetCacheDurationStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(root));
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(root));
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -122,7 +122,7 @@ public class SetCacheDurationStageTest {
 
         stage.execute(metadataCollection);
 
-        Attr cacheDurationAttr = AttributeSupport.getAttribute(root, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+        Attr cacheDurationAttr = AttributeSupport.getAttribute(root, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNull(cacheDurationAttr);
     }
 

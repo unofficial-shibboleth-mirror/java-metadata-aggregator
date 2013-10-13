@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptor and remove the cache duration from all descendants.
  */
 @ThreadSafe
-public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem> {
+public class PullUpCacheDurationStage extends BaseIteratingStage<DOMElementItem> {
 
     /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
     private long minCacheDuration;
@@ -96,7 +96,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);
@@ -113,13 +113,13 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
      */
     protected Long getShortestCacheDuration(@Nonnull final Element descriptor) {
         Long shortestCacheDuration = null;
-        if (!SamlMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
+        if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return shortestCacheDuration;
         }
 
         Long cacheDuration = null;
         List<Element> entitiesDescriptors =
-                ElementSupport.getChildElements(descriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+                ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (Element entitiesDescriptor : entitiesDescriptors) {
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -128,7 +128,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
         }
 
         List<Element> entityDescriptors =
-                ElementSupport.getChildElements(descriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+                ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (Element entityDescriptor : entityDescriptors) {
             cacheDuration = getShortestCacheDuration(entityDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -137,7 +137,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
         }
 
         Attr cacheDurationAttr =
-                AttributeSupport.getAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+                AttributeSupport.getAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         if (cacheDurationAttr != null) {
             cacheDuration = AttributeSupport.getDurationAttributeValueAsLong(cacheDurationAttr);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
@@ -165,13 +165,13 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DomElementItem>
         }
 
         if (cacheDuration < minCacheDuration) {
-            AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
+            AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     minCacheDuration);
         } else if (cacheDuration > maxCacheDuration) {
-            AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
+            AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     maxCacheDuration);
         } else {
-            AttributeSupport.appendDurationAttribute(descriptor, SamlMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
+            AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     cacheDuration);
         }
     }

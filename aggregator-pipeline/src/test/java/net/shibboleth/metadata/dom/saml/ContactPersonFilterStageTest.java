@@ -23,8 +23,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 import com.google.common.collect.Sets;
 
 /** Unit test for {@link ContactPersonFilterStage}. */
-public class ContactPersonFilterStageTest extends BaseDomTest {
+public class ContactPersonFilterStageTest extends BaseDOMTest {
 
     @BeforeClass
     private void init() {
@@ -133,8 +133,8 @@ public class ContactPersonFilterStageTest extends BaseDomTest {
         stage.setId("foo");
         stage.initialize();
 
-        final ArrayList<DomElementItem> itemCollection = new ArrayList<>();
-        itemCollection.add(new DomElementItem(entitiesDescriptor));
+        final ArrayList<DOMElementItem> itemCollection = new ArrayList<>();
+        itemCollection.add(new DOMElementItem(entitiesDescriptor));
 
         stage.execute(itemCollection);
 
@@ -161,8 +161,8 @@ public class ContactPersonFilterStageTest extends BaseDomTest {
         stage.setWhitelistingTypes(false);
         stage.initialize();
 
-        final ArrayList<DomElementItem> itemCollection = new ArrayList<>();
-        itemCollection.add(new DomElementItem(entitiesDescriptor));
+        final ArrayList<DOMElementItem> itemCollection = new ArrayList<>();
+        itemCollection.add(new DOMElementItem(entitiesDescriptor));
 
         stage.execute(itemCollection);
 

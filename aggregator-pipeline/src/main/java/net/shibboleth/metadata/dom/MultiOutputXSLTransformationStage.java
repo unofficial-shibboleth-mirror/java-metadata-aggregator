@@ -37,9 +37,9 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import org.w3c.dom.Element;
 
 /**
- * A pipeline stage which transforms each item in the {@link DomElementItem} collection via an XSL transform. Each of
- * the input items may result in zero, one or more XML elements, each of which results in a {@link DomElementItem} in
- * the resulting collection. The resulting {@link DomElementItem}s receive {@link net.shibboleth.metadata.InfoStatus},
+ * A pipeline stage which transforms each item in the {@link DOMElementItem} collection via an XSL transform. Each of
+ * the input items may result in zero, one or more XML elements, each of which results in a {@link DOMElementItem} in
+ * the resulting collection. The resulting {@link DOMElementItem}s receive {@link net.shibboleth.metadata.InfoStatus},
  * {@link net.shibboleth.metadata.WarningStatus}, and {@link net.shibboleth.metadata.ErrorStatus} metadata via the
  * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
  */
@@ -48,7 +48,7 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
 
     /** {@inheritDoc} */
     protected void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 
         try {
@@ -56,8 +56,8 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
             DOMResult result;
             List<Element> transformedElements;
 
-            final ArrayList<DomElementItem> newItems = new ArrayList<>();
-            for (DomElementItem domItem : itemCollection) {
+            final ArrayList<DOMElementItem> newItems = new ArrayList<>();
+            for (DOMElementItem domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 element = domItem.unwrap();
 
@@ -70,7 +70,7 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
                 // ItemMetadata objects as the input.
                 transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
-                    DomElementItem newItem = new DomElementItem(transformedElement);
+                    DOMElementItem newItem = new DOMElementItem(transformedElement);
                     ItemMetadataSupport.addAll(newItem, domItem.getItemMetadata().values());
                     newItems.add(newItem);
                 }

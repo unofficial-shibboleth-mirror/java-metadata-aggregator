@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -32,7 +32,7 @@ import net.shibboleth.utilities.java.support.security.Type4UuidIdentifierGenerat
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 /** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
-public class GenerateIdStage extends BaseIteratingStage<DomElementItem> {
+public class GenerateIdStage extends BaseIteratingStage<DOMElementItem> {
 
     /** QName of the ID attribute added to the descriptor. */
     public static final QName ID_ATTRIB = new QName("ID");
@@ -55,9 +55,9 @@ public class GenerateIdStage extends BaseIteratingStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         Element element = item.unwrap();
-        if (!SamlMetadataSupport.isEntityOrEntitiesDescriptor(element)) {
+        if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(element)) {
             return true;
         }
 

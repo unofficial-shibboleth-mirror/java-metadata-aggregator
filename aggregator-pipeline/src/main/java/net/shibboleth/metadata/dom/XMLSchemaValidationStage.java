@@ -50,7 +50,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 /**
- * A pipeline stage that XML schema validates the elements within the {@link DomElementItem} collection.
+ * A pipeline stage that XML schema validates the elements within the {@link DOMElementItem} collection.
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
@@ -63,7 +63,7 @@ import com.google.common.collect.Iterables;
  * an Element is found to be invalid than an {@link WarningStatus} is set on the Element.
  */
 @ThreadSafe
-public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem> {
+public class XMLSchemaValidationStage extends BaseIteratingStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
@@ -120,7 +120,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DomElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
         final Validator validator = validationSchema.newValidator();

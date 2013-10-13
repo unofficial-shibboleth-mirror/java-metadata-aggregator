@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression. Each
- * {@link DomElementItem} is removed if the XPath expression evaluates as {@code true}.
+ * {@link DOMElementItem} is removed if the XPath expression evaluates as {@code true}.
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
@@ -54,32 +54,32 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 @ThreadSafe
-public class XPathFilteringStage extends BaseStage<DomElementItem> {
+public class XPathFilteringStage extends BaseStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);
 
-    /** The XPath expression to execute on each {@link DomElementItem}. */
+    /** The XPath expression to execute on each {@link DOMElementItem}. */
     private String xpathExpression;
 
     /** The {@link NamespaceContext} to use in interpreting the XPath expression. */
     private NamespaceContext namespaceContext = new SimpleNamespaceContext();
 
     /**
-     * Gets the XPath expression to execute on each {@link DomElementItem}.
+     * Gets the XPath expression to execute on each {@link DOMElementItem}.
      * 
-     * @return XPath expression to execute on each {@link DomElementItem}
+     * @return XPath expression to execute on each {@link DOMElementItem}
      */
-    @Nullable public String getXpathExpression() {
+    @Nullable public String getXPathExpression() {
         return xpathExpression;
     }
 
     /**
-     * Sets the XPath expression to execute on each {@link DomElementItem}.
+     * Sets the XPath expression to execute on each {@link DOMElementItem}.
      * 
-     * @param expression XPath expression to execute on each {@link DomElementItem}
+     * @param expression XPath expression to execute on each {@link DOMElementItem}
      */
-    public synchronized void setXpathExpression(@Nonnull @NotEmpty final String expression) {
+    public synchronized void setXPathExpression(@Nonnull @NotEmpty final String expression) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -113,7 +113,7 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    public void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> metadataCollection) {
+    public void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> metadataCollection) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         if (namespaceContext != null) {
@@ -128,9 +128,9 @@ public class XPathFilteringStage extends BaseStage<DomElementItem> {
             return;
         }
 
-        Iterator<DomElementItem> iterator = metadataCollection.iterator();
+        Iterator<DOMElementItem> iterator = metadataCollection.iterator();
         while (iterator.hasNext()) {
-            DomElementItem item = iterator.next();
+            DOMElementItem item = iterator.next();
             try {
                 Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
                 if (filterThis) {

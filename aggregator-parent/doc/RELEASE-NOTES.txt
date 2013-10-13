@@ -1,6 +1,26 @@
 Release Notes - Metadata Aggregator - Version 0.8.0
 ===================================================
 
+Highlights
+   * API changes for new Shibboleth coding conventions
+
+   
+API Changes
+   * DomElementItem becomes DOMElementItem
+   * DomElementSerializer becomes DOMElementSerializer
+   * DomFilesystemSourceStage becomes DOMFilesystemSourceStage
+   * DomResourceSourceStage becomes DOMResourceSourceStage
+   * domResource bean properties become DOMResource
+      * getDomResource becomes getDOMResource
+      * setDomResource becomes setDOMResource
+   * xpathExpression bean properties become XPathResource
+      * getXpathExpression becomes getXPathExpression
+      * setXpathExpression becomes setXPathExpression
+   * xslResource bean properties become XSLResource
+      * getXslResource becomes getXSLResource
+      * setXslResource becomes setXSLResource
+   * BaseDomTest test class becomes BaseDOMTest
+
 ** Bug
     * [MDA-44] - exceptions should be propagated up from subordinate pipelines
     * [MDA-81] - address multiple failed tests
@@ -16,6 +36,7 @@ Release Notes - Metadata Aggregator - Version 0.8.0
     * [MDA-85] - Guava Closeables.closeQuietly is deprecated
     * [MDA-86] - tests shouldn't pull UK production metadata
     * [MDA-89] - add license and release notes to aggregator-cli package
+    * [MDA-95] - API changes for new Shibboleth coding conventions
     * [MDA-111] - bundle spring-extensions in MDA cli package
 
 ** New Feature

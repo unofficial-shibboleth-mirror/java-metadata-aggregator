@@ -23,13 +23,13 @@ import java.util.List;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-public class ElementStrippingStageTest extends BaseDomTest {
+public class ElementStrippingStageTest extends BaseDOMTest {
 
     @Test
     public void doExecute() throws Exception {
         final Element doc = readXmlData("elementStripIn.xml");
-        final DomElementItem item = new DomElementItem(doc);
-        final List<DomElementItem> items = new ArrayList<>();
+        final DOMElementItem item = new DOMElementItem(doc);
+        final List<DOMElementItem> items = new ArrayList<>();
         items.add(item);
         
         final ElementStrippingStage stage = new ElementStrippingStage();

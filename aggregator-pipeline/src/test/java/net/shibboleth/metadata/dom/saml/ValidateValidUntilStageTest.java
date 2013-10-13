@@ -18,8 +18,8 @@
 package net.shibboleth.metadata.dom.saml;
 
 import net.shibboleth.metadata.ErrorStatus;
-import net.shibboleth.metadata.dom.BaseDomTest;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.testng.Assert;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link ValidateValidUntilStage}. */
-public class ValidateValidUntilStageTest extends BaseDomTest {
+public class ValidateValidUntilStageTest extends BaseDOMTest {
 
     /** Tests that optional check flag on the stage operates properly. */
     @Test
@@ -37,7 +37,7 @@ public class ValidateValidUntilStageTest extends BaseDomTest {
         stage.setRequireValidUntil(false);
         stage.initialize();
 
-        DomElementItem item = buildDomElementItem(0);
+        DOMElementItem item = buildDomElementItem(0);
         stage.doExecute(item);
         Assert.assertFalse(item.getItemMetadata().containsKey(ErrorStatus.class));
 
@@ -59,7 +59,7 @@ public class ValidateValidUntilStageTest extends BaseDomTest {
         stage.setRequireValidUntil(false);
         stage.initialize();
 
-        DomElementItem item = buildDomElementItem(10000);
+        DOMElementItem item = buildDomElementItem(10000);
         stage.doExecute(item);
         Assert.assertFalse(item.getItemMetadata().containsKey(ErrorStatus.class));
 
@@ -73,21 +73,21 @@ public class ValidateValidUntilStageTest extends BaseDomTest {
     }
 
     /**
-     * Creates a {@link DomElementItem} that contains a validUntil attribute whose value is now plus a given interval.
+     * Creates a {@link DOMElementItem} that contains a validUntil attribute whose value is now plus a given interval.
      * 
      * @param validUntilInterval interval for the valid until, interval of 0 indicates not to include the validUntil
      *            attribute
      * 
      * @return the created Item
      */
-    private DomElementItem buildDomElementItem(long validUntilInterval) throws Exception {
+    private DOMElementItem buildDomElementItem(long validUntilInterval) throws Exception {
         Element descriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
         if (validUntilInterval != 0) {
-            AttributeSupport.appendDateTimeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME,
+            AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME,
                     System.currentTimeMillis() + validUntilInterval);
         }else{
-            AttributeSupport.removeAttribute(descriptor, SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+            AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
         }
-        return new DomElementItem(descriptor.getOwnerDocument());
+        return new DOMElementItem(descriptor.getOwnerDocument());
     }
 }

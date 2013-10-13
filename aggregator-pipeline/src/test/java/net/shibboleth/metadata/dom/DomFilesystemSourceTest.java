@@ -30,7 +30,7 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/** Unit test for {@link DomFilesystemSourceStage}. */
+/** Unit test for {@link DOMFilesystemSourceStage}. */
 public class DomFilesystemSourceTest {
 
     @Test public void testSuccessfulFileFetchAndParse() throws Exception {
@@ -40,13 +40,13 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
+        DOMFilesystemSourceStage source = new DOMFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
         source.initialize();
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -59,13 +59,13 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
+        DOMFilesystemSourceStage source = new DOMFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
         source.initialize();
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 6);
@@ -78,7 +78,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
+        DOMFilesystemSourceStage source = new DOMFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
@@ -91,7 +91,7 @@ public class DomFilesystemSourceTest {
         });
         source.initialize();
 
-        final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 7);
@@ -104,14 +104,14 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
+        DOMFilesystemSourceStage source = new DOMFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);
         source.initialize();
 
         try {
-            final ArrayList<DomElementItem> metadataCollection = new ArrayList<>();
+            final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
             source.execute(metadataCollection);
             throw new ConstraintViolationException("Source did not fail when given a non-XML file");
         } catch (StageProcessingException e) {
@@ -125,7 +125,7 @@ public class DomFilesystemSourceTest {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
 
-        DomFilesystemSourceStage source = new DomFilesystemSourceStage();
+        DOMFilesystemSourceStage source = new DOMFilesystemSourceStage();
         source.setId("test");
         source.setParserPool(parserPool);
         source.setSource(sourceFile);

@@ -31,7 +31,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
- * A pipeline which "validates" each element in the {@link DomElementItem} collection via an XSL stylesheet. The results
+ * A pipeline which "validates" each element in the {@link DOMElementItem} collection via an XSL stylesheet. The results
  * of the transform are discarded but the source element receives {@link net.shibboleth.metadata.InfoStatus},
  * {@link net.shibboleth.metadata.WarningStatus}, and {@link net.shibboleth.metadata.ErrorStatus} metadata via the
  * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
@@ -41,11 +41,11 @@ public class XSLValidationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
     protected void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<DomElementItem> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 
         try {
-            for (DomElementItem domItem : itemCollection) {
+            for (DOMElementItem domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 transformer.transform(new DOMSource(domItem.unwrap().getOwnerDocument()), new DOMResult());
             }

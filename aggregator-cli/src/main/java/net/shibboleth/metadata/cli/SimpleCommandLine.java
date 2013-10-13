@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.TerminationException;
 
@@ -92,7 +92,7 @@ public final class SimpleCommandLine {
             System.exit(RC_INIT);
         }
 
-        log.debug("Retreiving pipeline from Spring context");
+        log.debug("Retrieving pipeline from Spring context");
         String pipelineName = cli.getPipelineName();
         Pipeline pipeline = appCtx.getBean(pipelineName, Pipeline.class);
         if (pipeline == null) {
@@ -109,7 +109,7 @@ public final class SimpleCommandLine {
                 log.debug("Retrieved pipeline has already been initialized");
             }
 
-            ArrayList<DomElementItem> item = new ArrayList<DomElementItem>();
+            ArrayList<DOMElementItem> item = new ArrayList<>();
             Date startTime = new Date();
             log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
             pipeline.execute(item);

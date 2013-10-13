@@ -50,7 +50,7 @@ import org.w3c.dom.NodeList;
  * A stage which removes all evidence of a given XML namespace from each metadata item.
  */
 @ThreadSafe
-public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
+public class NamespaceStrippingStage extends BaseStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(NamespaceStrippingStage.class);
@@ -83,11 +83,11 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
     }
 
     /**
-     * Processes the given {@link DomElementItem}.
+     * Processes the given {@link DOMElementItem}.
      * 
-     * @param item {@link DomElementItem} to process.
+     * @param item {@link DOMElementItem} to process.
      */
-    private void processItem(@Nonnull final DomElementItem item) {
+    private void processItem(@Nonnull final DOMElementItem item) {
         final Element element = Constraint.isNotNull(item, "Item can not be null").unwrap();
 
         /*
@@ -190,9 +190,9 @@ public class NamespaceStrippingStage extends BaseStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DomElementItem> items)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> items)
             throws StageProcessingException {
-        for (DomElementItem item : items) {
+        for (DOMElementItem item : items) {
             processItem(item);
         }
     }

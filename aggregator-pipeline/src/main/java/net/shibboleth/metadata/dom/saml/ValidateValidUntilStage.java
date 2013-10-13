@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ErrorStatus;
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * range. Items which are not a SAML EntitiesDescriptor or EntityDescriptor are ignored.
  */
 @ThreadSafe
-public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> {
+public class ValidateValidUntilStage extends BaseIteratingStage<DOMElementItem> {
 
     /** Whether the item is required to have a validUntil attribute. Default value: <code>true</code> */
     private boolean requireValidUntil = true;
@@ -91,16 +91,16 @@ public class ValidateValidUntilStage extends BaseIteratingStage<DomElementItem> 
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         final Element element = item.unwrap();
 
-        if (!SamlMetadataSupport.isEntitiesDescriptor(element)) {
+        if (!SAMLMetadataSupport.isEntitiesDescriptor(element)) {
             return true;
         }
 
         final Long validUntil =
                 AttributeSupport.getDateTimeAttributeAsLong(AttributeSupport.getAttribute(element,
-                        SamlMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+                        SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
         if (validUntil == null) {
             if (requireValidUntil) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));

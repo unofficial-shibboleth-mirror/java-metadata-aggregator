@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  * valid and an Element signature is found to be invalid than an {@link WarningStatus} is set on the Element.
  */
 @ThreadSafe
-public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementItem> {
+public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementItem> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureValidationStage.class);
@@ -163,7 +163,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DomElementIt
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
         
         final Element docElement = item.unwrap();
         

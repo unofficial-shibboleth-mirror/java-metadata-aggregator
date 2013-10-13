@@ -59,7 +59,7 @@ import com.google.common.collect.Lists;
  * to be the system default {@link TransformerFactory} implementation.
  * </p>
  */
-public class ElementFormattingStage extends BaseStage<DomElementItem> {
+public class ElementFormattingStage extends BaseStage<DOMElementItem> {
 
     /** Line separator character to use. Default value: \n */
     private String lineSeparator = "\n";
@@ -175,19 +175,19 @@ public class ElementFormattingStage extends BaseStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DomElementItem> itemCollection) throws StageProcessingException {
-        ArrayList<DomElementItem> transformedItems = Lists.newArrayListWithExpectedSize(itemCollection.size());
+    protected void doExecute(Collection<DOMElementItem> itemCollection) throws StageProcessingException {
+        ArrayList<DOMElementItem> transformedItems = Lists.newArrayListWithExpectedSize(itemCollection.size());
 
         DOMSource source;
         DOMResult result;
-        DomElementItem transformedItem;
-        for (DomElementItem item : itemCollection) {
+        DOMElementItem transformedItem;
+        for (DOMElementItem item : itemCollection) {
             source = new DOMSource(item.unwrap());
             result = new DOMResult();
 
             try {
                 getTransformer().transform(source, result);
-                transformedItem = new DomElementItem(((Document) result.getNode()).getDocumentElement());
+                transformedItem = new DOMElementItem(((Document) result.getNode()).getDocumentElement());
                 ItemMetadataSupport.addAll(transformedItem, item.getItemMetadata().values());
                 transformedItems.add(transformedItem);
             } catch (TransformerException e) {

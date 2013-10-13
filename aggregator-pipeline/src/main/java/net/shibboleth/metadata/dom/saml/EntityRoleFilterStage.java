@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.dom.DomElementItem;
+import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -51,31 +51,31 @@ import com.google.common.collect.Iterables;
 /**
  * A pipeline stage that will filter SAML role descriptors from EntityDescriptors.
  * 
- * This filter will work on {@link DomElementItem} elements that are entity or entities descriptors. In the case of
+ * This filter will work on {@link DOMElementItem} elements that are entity or entities descriptors. In the case of
  * EntitiesDescriptors the role filter will effect all descendant EntityDescriptors.
  */
 @ThreadSafe
-public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
+public class EntityRoleFilterStage extends BaseIteratingStage<DOMElementItem> {
 
     /** QName of the RoleDescriptor element. */
-    public static final QName ROLE_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "RoleDescriptor");
+    public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "RoleDescriptor");
 
     /** QName of the IDPSSODescriptor element. */
-    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "IDPSSODescriptor");
+    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "IDPSSODescriptor");
 
     /** QName of the SPSSODescriptor element. */
-    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "SPSSODescriptor");
+    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "SPSSODescriptor");
 
     /** QName of the AuthnAuthorityDescriptor element. */
-    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS,
+    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS,
             "AuthnAuthorityDescriptor");
 
     /** QName of the AttributeAuthorityDescriptor element. */
-    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS,
+    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS,
             "AttributeAuthorityDescriptor");
 
     /** QName of the PDPDescriptor element. */
-    public static final QName PDP_DESCRIPTOR_NAME = new QName(SamlMetadataSupport.MD_NS, "PDPDescriptor");
+    public static final QName PDP_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "PDPDescriptor");
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStage.class);
@@ -199,13 +199,13 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DomElementItem item) {
+    protected boolean doExecute(@Nonnull final DOMElementItem item) {
         Element descriptor = item.unwrap();
-        if (SamlMetadataSupport.isEntitiesDescriptor(descriptor)) {
+        if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;
             }
-        } else if (SamlMetadataSupport.isEntityDescriptor(descriptor)) {
+        } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
             if (processEntityDescriptor(descriptor)) {
                 return false;
             }
@@ -229,7 +229,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
         Element descriptor;
 
         final List<Element> childEntitiesDescriptors =
-                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
+                ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();
@@ -240,7 +240,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DomElementItem> {
         }
 
         final List<Element> childEntityDescriptors =
-                ElementSupport.getChildElements(entitiesDescriptor, SamlMetadataSupport.ENTITY_DESCRIPTOR_NAME);
+                ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
             descriptor = descriptorItr.next();

@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link XPathFilteringStage} unit test. */
-public class XPathFilteringStageTest extends BaseDomTest {
+public class XPathFilteringStageTest extends BaseDOMTest {
 
     /**
      * Test XPathFilteringStage using an example from the UK federation build process.
@@ -44,14 +44,14 @@ public class XPathFilteringStageTest extends BaseDomTest {
 
         // Construct the strategy object
         XPathFilteringStage strategy = new XPathFilteringStage();
-        strategy.setXpathExpression("//ukfedlabel:DeletedEntity");
+        strategy.setXPathExpression("//ukfedlabel:DeletedEntity");
         strategy.setNamespaceContext(new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
-        final List<DomElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DomElementItem(readXmlData("xpathInput1.xml")));
-        metadataCollection.add(new DomElementItem(readXmlData("xpathInput2.xml")));
-        metadataCollection.add(new DomElementItem(readXmlData("xpathInput3.xml")));
+        final List<DOMElementItem> metadataCollection = new ArrayList<>();
+        metadataCollection.add(new DOMElementItem(readXmlData("xpathInput1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("xpathInput2.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("xpathInput3.xml")));
         Assert.assertEquals(metadataCollection.size(), 3);
 
         // Filter the metadata collection
