@@ -42,6 +42,7 @@ API Changes
     * [MDA-89] - add license and release notes to aggregator-cli package
     * [MDA-95] - API changes for new Shibboleth coding conventions
     * [MDA-111] - bundle spring-extensions in MDA cli package
+    * [MDA-118] - correct double initialisation of ID attribute list in signing stage
 
 ** New Feature
     * [MDA-88] - assist debugging of signature creation by making pre-digest data available

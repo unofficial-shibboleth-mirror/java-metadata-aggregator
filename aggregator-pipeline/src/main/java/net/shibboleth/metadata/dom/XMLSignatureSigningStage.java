@@ -452,9 +452,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DOMElementItem>
      * 
      * @param names names of the attributes treated as reference IDs
      */
-    public synchronized void setIdAttributeNames(@Nullable @NullableElements final List<QName> names) {
+    public synchronized void setIdAttributeNames(@Nonnull @NullableElements final List<QName> names) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        Constraint.isNotNull(names, "names property may not be null");
 
         idAttributeNames = ImmutableList.copyOf(Iterables.filter(names, Predicates.notNull()));
     }
@@ -1012,12 +1013,5 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DOMElementItem>
             }
         }
 
-        if (idAttributeNames == null) {
-            idAttributeNames = new ArrayList<>();
-            idAttributeNames.add(new QName("id"));
-            idAttributeNames.add(new QName("Id"));
-            idAttributeNames.add(new QName("ID"));
-            idAttributeNames.add(XmlConstants.XML_ID_ATTRIB_NAME);
-        }
     }
 }

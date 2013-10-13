@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.AssertSupport;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -54,7 +55,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         final List<X509Certificate> certs = new ArrayList<>();
         certs.add(signingCert);
 
-        XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
+        final XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
         stage.setId("test");
         stage.setIncludeKeyValue(false);
         stage.setIncludeX509IssuerSerial(true);
@@ -71,4 +72,17 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         Element expected = readXmlData("output.xml");
         assertXmlIdentical(expected, result.unwrap());
     }
+    
+    @Test
+    public void testSetIdAttributeNamesNull() throws Exception {
+        final XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
+        stage.setId("test");
+        try {
+            stage.setIdAttributeNames(null);
+            Assert.fail("expected a constraint exception");
+        } catch (ConstraintViolationException e) {
+            // expected
+        }
+    }
+    
 }
