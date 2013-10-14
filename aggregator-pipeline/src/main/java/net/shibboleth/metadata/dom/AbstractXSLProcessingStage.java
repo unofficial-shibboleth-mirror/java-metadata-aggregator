@@ -32,6 +32,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -86,6 +87,9 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementIte
      * If not set, an empty collection.
      */
     private Map<String, Object> transformParameters = Collections.emptyMap();
+    
+    /** {@link URIResolver} to use in the transformer. Default value: <code>null</code>. */
+    @Nullable private URIResolver uriResolver;
 
     /**
      * Gets the resource that provides the XSL document.
@@ -205,6 +209,28 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementIte
         transformParameters = Collections.unmodifiableMap(newParams);
     }
 
+    /**
+     * Gets the {@link URIResolver} set for this transform, if any.
+     * 
+     * @return the {@link URIResolver}, or <code>null</code>
+     */
+    @Nullable public URIResolver getURIResolver() {
+        return uriResolver;
+    }
+
+    /**
+     * Set the {@link URIResolver} for this transform, or <code>null</code> to
+     * specify none.
+     * 
+     * @param resolver the {@link URIResolver} to use, or <code>null</code>
+     */
+    public synchronized void setURIResolver(@Nullable final URIResolver resolver) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        uriResolver = resolver;
+    }
+
     /** {@inheritDoc} */
     protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection)
             throws StageProcessingException {
@@ -241,6 +267,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementIte
         transformAttributes = null;
         transformFeatures = null;
         transformParameters = null;
+        uriResolver = null;
 
         super.doDestroy();
     }
@@ -272,6 +299,10 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementIte
 
             for (Entry<String, Boolean> features : transformFeatures.entrySet()) {
                 tfactory.setFeature(features.getKey(), features.getValue());
+            }
+            
+            if (uriResolver != null) {
+                tfactory.setURIResolver(uriResolver);
             }
 
             log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);

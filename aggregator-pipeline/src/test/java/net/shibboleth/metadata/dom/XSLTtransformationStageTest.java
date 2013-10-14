@@ -24,12 +24,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.stream.StreamSource;
+
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.resource.ResourceException;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.testng.Assert;
@@ -240,5 +247,57 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
 
         /** Serial version UIDs. */
         private static final long serialVersionUID = -4133926323393787487L;
+    }
+
+    @Test
+    public void testURIResolver() throws Exception {
+        
+        // Local URIResolver
+        class MyResolver implements URIResolver {
+
+            public Source resolve(final String href, final String base) throws TransformerException {
+                //System.out.println("href=" + href + ", base=" + base);
+                
+                // resolve just this one value of href, to cause a different file to be included
+                // and the resulting output document to be changed
+                if (href.equals("XSLTransformationStage-included.xsl")) {
+                    final Resource resource = getClasspathResource("included2.xsl");
+                    try {
+                        resource.initialize();
+                        return new StreamSource(resource.getInputStream());
+                    } catch (ResourceException e) {
+                        throw new TransformerException("couldn't fetch second included file", e);
+                    } catch (ComponentInitializationException e) {
+                        throw new TransformerException("problem initializing stream resource", e);
+                    }
+                }
+                
+                // all other values of href cause the default processing to occur,
+                // which will mean the original file will be included
+                return null;
+            }
+            
+        }
+
+        final List<DOMElementItem> mdCol = new ArrayList<>();
+        mdCol.add(makeInput());
+
+        final Resource transform = getClasspathResource("includeMain.xsl");
+
+        final XSLTransformationStage stage = new XSLTransformationStage();
+        stage.setId("test");
+        stage.setXSLResource(transform);
+        stage.setURIResolver(new MyResolver());
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        final DOMElementItem result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
+        Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
+
+        final Element expected = readXmlData("output2.xml");
+        assertXmlIdentical(expected, result.unwrap());
     }
 }

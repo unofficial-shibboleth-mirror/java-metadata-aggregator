@@ -48,6 +48,7 @@ API Changes
 ** New Feature
     * [MDA-88] - assist debugging of signature creation by making pre-digest data available
     * [MDA-91] - allow checking that SAML metadata is signed using ID, not empty reference
+    * [MDA-102] - allow configuration of URI resolver for XSLT stages
     * [MDA-120] - signature validation stage should allow algorithm blacklisting
 
 ** Task
