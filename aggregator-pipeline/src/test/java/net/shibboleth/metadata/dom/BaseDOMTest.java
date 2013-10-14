@@ -117,9 +117,10 @@ public abstract class BaseDOMTest {
     /**
      * Setup test class. Creates and initializes the parser pool. Set BouncyCastle as a JCE provider.
      * 
-     * @throws ComponentInitializationException thrown if there is a problem initializing the parser pool
+     * @throws ComponentInitializationException if there is a problem initializing the parser pool
      */
-    @BeforeClass public void setUp() throws ComponentInitializationException {
+    @BeforeClass
+    public void setUp() throws ComponentInitializationException {
         XMLUnit.setIgnoreWhitespace(true);
 
         parserPool = new BasicParserPool();
@@ -183,7 +184,7 @@ public abstract class BaseDOMTest {
      * 
      * @throws XMLParserException thrown if the file does not exists or there is a problem parsing it
      */
-    public Element readXmlData(String path) throws XMLParserException {
+    public Element readXmlData(final String path) throws XMLParserException {
         String trimmedPath = StringSupport.trimOrNull(path);
         Constraint.isNotNull(trimmedPath, "Path may not be null or empty");
 
@@ -195,7 +196,7 @@ public abstract class BaseDOMTest {
             }
         }
 
-        InputStream input = BaseDOMTest.class.getResourceAsStream(trimmedPath);
+        final InputStream input = BaseDOMTest.class.getResourceAsStream(trimmedPath);
         if (input == null) {
             throw new XMLParserException(trimmedPath + " does not exist or is not readable");
         }
@@ -218,4 +219,5 @@ public abstract class BaseDOMTest {
             org.testng.Assert.fail(diff.toString());
         }
     }
+    
 }
