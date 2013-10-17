@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -91,7 +90,7 @@ public class DomResourceSourceTest {
         }
     }
 
-    protected HttpResource buildHttpResource(String url) throws IOException {
+    protected HttpResource buildHttpResource(String url) throws Exception {
         HttpClientBuilder builder = new HttpClientBuilder();
         builder.setConnectionDisregardSslCertificate(true);
         builder.setConnectionStalecheck(false);
