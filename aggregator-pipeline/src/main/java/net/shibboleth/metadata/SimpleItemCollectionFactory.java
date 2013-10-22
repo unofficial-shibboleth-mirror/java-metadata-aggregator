@@ -27,12 +27,12 @@ import com.google.common.base.Supplier;
 /**
  * Implementation {@link Supplier} that produces {@link ArrayList} instances.
  * 
- * @param <ItemType> the type of items the produced collection will contain
+ * @param <T> the type of items the produced collection will contain
  */
-public class SimpleItemCollectionFactory<ItemType extends Item<?>> implements Supplier<Collection<ItemType>> {
+public class SimpleItemCollectionFactory<T> implements Supplier<Collection<Item<T>>> {
 
     /** {@inheritDoc} */
-    @Nonnull public Collection<ItemType> get() {
+    @Nonnull public Collection<Item<T>> get() {
         return new ArrayList<>();
     }
 }

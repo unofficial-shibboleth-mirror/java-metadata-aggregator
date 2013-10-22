@@ -26,6 +26,7 @@ import java.util.Set;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
@@ -61,7 +62,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     public void testValidSignature() throws Exception {
         final DOMElementItem item = makeItem("signed.xml");
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -72,7 +73,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
         
         // There should not have been any errors.
@@ -90,7 +91,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     @Test
     public void testInvalidSignature() throws Exception {
         final DOMElementItem item = makeItem("badSignature.xml");
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -110,7 +111,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     public void testRequiredSignature() throws Exception {
         final DOMElementItem item = makeItem("entities2.xml");
         
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -122,7 +123,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
         final DOMElementItem item2 = makeItem("entities2.xml");
@@ -147,7 +148,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     public void testDigestBlacklist() throws Exception {
         final DOMElementItem item = makeItem("signed.xml");
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         final Set<String> blacklist = new HashSet<>();
@@ -162,7 +163,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         
         // There should not have been one error, mentioning blacklisting.
         final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
@@ -178,7 +179,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     public void testSignatureMethodBlacklist() throws Exception {
         final DOMElementItem item = makeItem("signed.xml");
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         final Set<String> blacklist = new HashSet<>();
@@ -193,7 +194,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         
         // There should not have been one error, mentioning blacklisting.
         final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
@@ -209,7 +210,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     public void testEmptyRefPermitted() throws Exception {
         final DOMElementItem item = makeItem("emptyref.xml");
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -220,7 +221,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
         
         // There should not have been any errors.
@@ -239,7 +240,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     public void testEmptyRefNotPermitted() throws Exception {
         final DOMElementItem item = makeItem("emptyref.xml");
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(item);
 
         final XMLSignatureValidationStage stage = new XMLSignatureValidationStage();
@@ -251,7 +252,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        final DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         
         // There should have been an error.
         final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);

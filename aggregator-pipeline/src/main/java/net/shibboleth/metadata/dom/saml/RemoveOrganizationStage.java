@@ -22,7 +22,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -33,13 +33,13 @@ import org.w3c.dom.Element;
 
 /** Filtering stage that removes Organization elements from EntityDescriptors. */
 @ThreadSafe
-public class RemoveOrganizationStage extends BaseIteratingStage<DOMElementItem> {
+public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);

@@ -24,6 +24,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -39,20 +40,20 @@ import org.w3c.dom.Element;
  * elements contained therein.
  */
 @ThreadSafe
-public class EntitiesDescriptorDisassemblerStage extends BaseStage<DOMElementItem> {
+public class EntitiesDescriptorDisassemblerStage extends BaseStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) {
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
-        final ArrayList<DOMElementItem> items = new ArrayList<>(itemCollection);
+        final ArrayList<Item<Element>> items = new ArrayList<>(itemCollection);
         itemCollection.clear();
 
         Element element;
-        for (DOMElementItem item : items) {
+        for (Item<Element> item : items) {
             element = item.unwrap();
             if (SAMLMetadataSupport.isEntitiesDescriptor(element)) {
                 processEntitiesDescriptor(itemCollection, element);
@@ -72,7 +73,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DOMElementIte
      * @param itemCollection collection to which EntityDescriptor metadata elements are added
      * @param entitiesDescriptor the EntitiesDescriptor to break down
      */
-    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection,
+    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
             @Nonnull final Element entitiesDescriptor) {
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
@@ -93,7 +94,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<DOMElementIte
      * @param itemCollection collection to which metadata is added
      * @param entityDescriptor entity descriptor to add to the item collection
      */
-    protected void processEntityDescriptor(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection,
+    protected void processEntityDescriptor(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
             @Nonnull final Element entityDescriptor) {
         final DOMElementItem item = new DOMElementItem(entityDescriptor);
         itemCollection.add(item);

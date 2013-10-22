@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -41,7 +42,7 @@ import org.w3c.dom.NodeList;
  * A stage which removes all instances of the specified element from DOM metadata.
  */
 @ThreadSafe
-public class ElementStrippingStage extends BaseStage<DOMElementItem> {
+public class ElementStrippingStage extends BaseStage<Element> {
 
     /** Namespace of the element to strip. */
     private String elementNamespace;
@@ -94,9 +95,9 @@ public class ElementStrippingStage extends BaseStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> items)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
-        for (DOMElementItem item : items) {
+        for (Item<Element> item : items) {
             final Element docElement = item.unwrap();
 
             // List all the matching descendant elements in this document in document order

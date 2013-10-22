@@ -33,12 +33,12 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 /**
  * A wrapper around a delegate collection that allows the collection to carry item metadata.
  * 
- * @param <ItemType> type of items stored in this collection
+ * @param <T> type of items stored in this collection
  */
-public class ItemCollectionWithMetadata<ItemType extends Item<?>> implements Collection<ItemType> {
+public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
 
     /** The delegate collection. */
-    private final Collection<ItemType> delegate;
+    private final Collection<Item<T>> delegate;
 
     /** Additional processing information associated with this collection of Items. */
     private final ClassToInstanceMultiMap<ItemMetadata> metadata;
@@ -54,7 +54,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item<?>> implements Col
      * 
      * @param wrappedCollection the underlying collection that holds the items
      */
-    public ItemCollectionWithMetadata(@Nonnull @NonnullElements final Collection<ItemType> wrappedCollection) {
+    public ItemCollectionWithMetadata(@Nonnull @NonnullElements final Collection<Item<T>> wrappedCollection) {
         delegate = Constraint.isNotNull(wrappedCollection, "Wrapped collection can not be null");
         delegate.clear();
 
@@ -86,7 +86,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item<?>> implements Col
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements public Iterator<ItemType> iterator() {
+    @Nonnull @NonnullElements public Iterator<Item<T>> iterator() {
         return delegate.iterator();
     }
 
@@ -96,13 +96,13 @@ public class ItemCollectionWithMetadata<ItemType extends Item<?>> implements Col
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements public <T> T[] toArray(@Nonnull final T[] a) {
+    @Nonnull @NonnullElements public <TT> TT[] toArray(@Nonnull final TT[] a) {
         Constraint.isNotNull(a, "Target array can not be null");
         return delegate.toArray(a);
     }
 
     /** {@inheritDoc} */
-    public boolean add(@Nullable final ItemType e) {
+    public boolean add(@Nullable final Item<T> e) {
         if (e == null) {
             return false;
         }
@@ -127,7 +127,7 @@ public class ItemCollectionWithMetadata<ItemType extends Item<?>> implements Col
     }
 
     /** {@inheritDoc} */
-    public boolean addAll(@Nullable final Collection<? extends ItemType> c) {
+    public boolean addAll(@Nullable final Collection<? extends Item<T>> c) {
         if (c == null) {
             return false;
         }

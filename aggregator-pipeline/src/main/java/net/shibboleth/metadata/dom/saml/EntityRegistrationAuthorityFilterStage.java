@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -46,7 +46,7 @@ import com.google.common.collect.Iterables;
 
 /** A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority. */
 @ThreadSafe
-public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<DOMElementItem> {
+public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRegistrationAuthorityFilterStage.class);
@@ -161,7 +161,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<D
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) {
+    protected boolean doExecute(@Nonnull final Item<Element> item) {
         Element descriptor;
         descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -42,7 +43,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(true);
         stage.initialize();
 
-        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
+        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -56,7 +57,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(false);
         stage.initialize();
 
-        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
+        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 2);
@@ -64,7 +65,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
     /** Test that filtering logic descends in to EntitiesDescriptors. */
     @Test public void testEntitiesDescriptorFiltering() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
@@ -82,7 +83,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are themselves removed.
      */
     @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
@@ -101,7 +102,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      * when {@link EntityFilterStage#isRemovingEntitylessEntitiesDescriptor()} is false.
      */
     @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
@@ -117,8 +118,8 @@ public class EntityFilterStageTest extends BaseDOMTest {
     }
 
     /** Build up a metadata collection containing 3 EntityDescriptors. */
-    private Collection<DOMElementItem> buildMetadataCollection() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+    private Collection<Item<Element>> buildMetadataCollection() throws Exception {
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
                 ElementSupport.getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));

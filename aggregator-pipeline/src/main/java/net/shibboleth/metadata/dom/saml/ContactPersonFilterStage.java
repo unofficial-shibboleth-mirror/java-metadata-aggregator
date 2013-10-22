@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -60,7 +60,7 @@ import com.google.common.collect.ImmutableSet;
  * </p>
  */
 @ThreadSafe
-public class ContactPersonFilterStage extends BaseIteratingStage<DOMElementItem> {
+public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
 
     /** 'technical' person type constant. */
     public static final String TECHNICAL = "technical";
@@ -154,8 +154,8 @@ public class ContactPersonFilterStage extends BaseIteratingStage<DOMElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
-        Element descriptor = item.unwrap();
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+        final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
         } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {

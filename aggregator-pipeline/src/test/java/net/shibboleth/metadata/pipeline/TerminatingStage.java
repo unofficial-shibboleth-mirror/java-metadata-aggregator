@@ -5,7 +5,7 @@ import java.util.Collection;
 import net.shibboleth.metadata.Item;
 
 /** Stage that throws a TerminationException when it is called. */
-class TerminatingStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+class TerminatingStage<T> extends BaseStage<T> {
 
     /** Constructor. */
     public TerminatingStage() {
@@ -13,7 +13,7 @@ class TerminatingStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<ItemType> itemCollection) throws StageProcessingException {
+    protected void doExecute(Collection<Item<T>> itemCollection) throws StageProcessingException {
         throw new TerminationException("from TerminatingStage");
     }
 }

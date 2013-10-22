@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -36,7 +37,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
@@ -66,7 +67,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     /** Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration + now. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long hundredYears = 1000L * 60 * 60 * 24 * 365 * 100;
@@ -90,7 +91,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     /** Test that the maximum validUntil is used when the nearest validUntil is later than max duration + now. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         long twoYears = 1000L * 60 * 60 * 24 * 365 * 2;

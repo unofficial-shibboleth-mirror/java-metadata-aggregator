@@ -27,6 +27,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Element;
+
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
@@ -41,11 +44,11 @@ public class XSLValidationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
     protected void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 
         try {
-            for (DOMElementItem domItem : itemCollection) {
+            for (Item<Element> domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 transformer.transform(new DOMSource(domItem.unwrap().getOwnerDocument()), new DOMResult());
             }

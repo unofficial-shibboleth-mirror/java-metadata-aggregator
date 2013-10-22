@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.AssertSupport;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
@@ -45,7 +46,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     public void testSigning() throws Exception {
         Element testInput = readXmlData("input.xml");
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(testInput));
 
         PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
@@ -66,7 +67,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
         Element expected = readXmlData("output.xml");

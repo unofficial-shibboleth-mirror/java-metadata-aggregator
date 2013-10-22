@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -133,7 +134,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage.setId("foo");
         stage.initialize();
 
-        final ArrayList<DOMElementItem> itemCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> itemCollection = new ArrayList<>();
         itemCollection.add(new DOMElementItem(entitiesDescriptor));
 
         stage.execute(itemCollection);
@@ -161,7 +162,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingTypes(false);
         stage.initialize();
 
-        final ArrayList<DOMElementItem> itemCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> itemCollection = new ArrayList<>();
         itemCollection.add(new DOMElementItem(entitiesDescriptor));
 
         stage.execute(itemCollection);

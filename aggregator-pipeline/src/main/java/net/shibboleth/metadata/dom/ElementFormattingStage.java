@@ -32,6 +32,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
@@ -46,6 +47,7 @@ import net.shibboleth.utilities.java.support.logic.TrimOrNullStringFunction;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -59,7 +61,7 @@ import com.google.common.collect.Lists;
  * to be the system default {@link TransformerFactory} implementation.
  * </p>
  */
-public class ElementFormattingStage extends BaseStage<DOMElementItem> {
+public class ElementFormattingStage extends BaseStage<Element> {
 
     /** Line separator character to use. Default value: \n */
     private String lineSeparator = "\n";
@@ -175,19 +177,17 @@ public class ElementFormattingStage extends BaseStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<DOMElementItem> itemCollection) throws StageProcessingException {
-        ArrayList<DOMElementItem> transformedItems = Lists.newArrayListWithExpectedSize(itemCollection.size());
+    protected void doExecute(final Collection<Item<Element>> itemCollection) throws StageProcessingException {
+        final ArrayList<Item<Element>> transformedItems = Lists.newArrayListWithExpectedSize(itemCollection.size());
 
-        DOMSource source;
-        DOMResult result;
-        DOMElementItem transformedItem;
-        for (DOMElementItem item : itemCollection) {
-            source = new DOMSource(item.unwrap());
-            result = new DOMResult();
+        for (Item<Element> item : itemCollection) {
+            final DOMSource source = new DOMSource(item.unwrap());
+            final DOMResult result = new DOMResult();
 
             try {
                 getTransformer().transform(source, result);
-                transformedItem = new DOMElementItem(((Document) result.getNode()).getDocumentElement());
+                final Item<Element> transformedItem =
+                        new DOMElementItem(((Document) result.getNode()).getDocumentElement());
                 ItemMetadataSupport.addAll(transformedItem, item.getItemMetadata().values());
                 transformedItems.add(transformedItem);
             } catch (TransformerException e) {

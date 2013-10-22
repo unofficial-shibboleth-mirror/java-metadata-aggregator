@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -48,7 +49,7 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -80,7 +81,7 @@ public class SetCacheDurationStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) != null);
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -111,7 +112,7 @@ public class SetCacheDurationStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(root));
 
         long duration = 123456;

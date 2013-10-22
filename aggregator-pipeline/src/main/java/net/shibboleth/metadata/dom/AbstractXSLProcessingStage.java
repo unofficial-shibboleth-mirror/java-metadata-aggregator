@@ -53,6 +53,7 @@ import net.shibboleth.utilities.java.support.resource.ResourceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 /**
  * A pipeline stage which applies and XSLT to each element in the {@link DOMElementItem} collection.
@@ -64,7 +65,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 @ThreadSafe
-public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementItem> {
+public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(AbstractXSLProcessingStage.class);
@@ -232,7 +233,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementIte
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         try {
             final Transformer transformer = xslTemplate.newTransformer();
@@ -256,7 +257,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<DOMElementIte
      * @throws TransformerConfigurationException thrown if there is a problem with the Transform itself
      */
     protected abstract void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException;
 
     /** {@inheritDoc} */

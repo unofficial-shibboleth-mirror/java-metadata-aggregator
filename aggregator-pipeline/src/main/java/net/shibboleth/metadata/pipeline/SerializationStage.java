@@ -46,10 +46,10 @@ import org.slf4j.LoggerFactory;
  * <li><code>serializer</code></li>
  * </ul>
  * 
- * @param <ItemType> type of items upon which this stage operates
+ * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class SerializationStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+public class SerializationStage<T> extends BaseStage<T> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SerializationStage.class);
@@ -61,7 +61,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
     private boolean overwritingExistingOutputFile = true;
 
     /** Serializer used to write the item to the output stream. */
-    private ItemSerializer<ItemType> serializer;
+    private ItemSerializer<T> serializer;
 
     /**
      * Gets the file to which the item will be written.
@@ -110,7 +110,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @return serializer used to write item to the output file
      */
-    @Nullable public ItemSerializer<ItemType> getSerializer() {
+    @Nullable public ItemSerializer<T> getSerializer() {
         return serializer;
     }
 
@@ -119,7 +119,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @param itemSerializer serializer used to write item to the output file
      */
-    public synchronized void setSerializer(@Nonnull final ItemSerializer<ItemType> itemSerializer) {
+    public synchronized void setSerializer(@Nonnull final ItemSerializer<T> itemSerializer) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -127,7 +127,7 @@ public class SerializationStage<ItemType extends Item<?>> extends BaseStage<Item
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements Collection<ItemType> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         try {
             serializer.serialize(itemCollection, new FileOutputStream(outputFile));

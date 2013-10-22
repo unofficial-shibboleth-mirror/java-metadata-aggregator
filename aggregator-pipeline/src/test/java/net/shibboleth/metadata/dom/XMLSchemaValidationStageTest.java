@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.resource.FilesystemResource;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
@@ -30,6 +31,7 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class XMLSchemaValidationStageTest {
 
@@ -37,7 +39,7 @@ public class XMLSchemaValidationStageTest {
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
 
-        Collection<DOMElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageValidInput.xml");
+        Collection<Item<Element>> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageValidInput.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
     }
@@ -45,7 +47,7 @@ public class XMLSchemaValidationStageTest {
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        Collection<DOMElementItem> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageInvalidInput.xml");
+        Collection<Item<Element>> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageInvalidInput.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertTrue(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
@@ -66,12 +68,12 @@ public class XMLSchemaValidationStageTest {
         return stage;
     }
 
-    protected Collection<DOMElementItem> buildMetdataCollection(String xmlPath) throws Exception {
+    protected Collection<Item<Element>> buildMetdataCollection(String xmlPath) throws Exception {
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
         Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(doc.getDocumentElement()));
 
         return mdCol;

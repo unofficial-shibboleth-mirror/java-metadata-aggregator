@@ -116,10 +116,10 @@ public class PipelineDemultiplexerStageTest {
     }
     
     @Test public void testThrow() throws Exception {
-        SimplePipeline<MockItem> pipeline = new SimplePipeline<>();
+        final SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("selectedPipeline");
-        final TerminatingStage<MockItem> terminatingStage = new TerminatingStage<>();
-        pipeline.setStages(Collections.singletonList(terminatingStage));
+        final TerminatingStage<String> terminatingStage = new TerminatingStage<>();
+        pipeline.setStages(Collections.<Stage<String>>singletonList(terminatingStage));
 
         final List<MockItem> items = new ArrayList<>();
         items.add(new MockItem("one"));

@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.io.File;
 import java.util.ArrayList;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
@@ -29,6 +30,7 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.w3c.dom.Element;
 
 public class DomResourceSourceTest {
 
@@ -44,7 +46,7 @@ public class DomResourceSourceTest {
         source.setParserPool(parserPool);
         source.initialize();
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -63,7 +65,7 @@ public class DomResourceSourceTest {
         source.initialize();
 
         try {
-            final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+            final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
             source.execute(metadataCollection);
             throw new ConstraintViolationException("Invalid URL marked as parsed");
         } catch (StageProcessingException e) {

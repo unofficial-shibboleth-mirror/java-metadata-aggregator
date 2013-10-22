@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptor and remove the valid until dates from all descendants.
  */
 @ThreadSafe
-public class PullUpValidUntilStage extends BaseIteratingStage<DOMElementItem> {
+public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
 
     /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: 0 */
     private long minValidityDuration;
@@ -99,7 +99,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);

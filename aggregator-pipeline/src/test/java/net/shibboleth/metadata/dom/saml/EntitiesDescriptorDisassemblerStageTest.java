@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 
@@ -33,7 +34,7 @@ public class EntitiesDescriptorDisassemblerStageTest extends BaseDOMTest {
     public void test() throws Exception {
         Element entitiesDescriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         EntitiesDescriptorDisassemblerStage stage = new EntitiesDescriptorDisassemblerStage();

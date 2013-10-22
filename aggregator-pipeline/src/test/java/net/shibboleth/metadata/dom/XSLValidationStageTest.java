@@ -23,6 +23,7 @@ import java.util.List;
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.utilities.java.support.resource.Resource;
@@ -60,7 +61,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
      */
     @Test public void testValidation() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("validator.xsl");
@@ -74,7 +75,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
-        final DOMElementItem result = mdCol.get(0);
+        final Item<Element> result = mdCol.get(0);
 
         // The XML should be unchanged
         final Element expected = readXmlData("input.xml");
@@ -108,7 +109,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
      */
     @Test public void testMDA45() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("mda45.xsl");
@@ -122,7 +123,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
-        final DOMElementItem result = mdCol.get(0);
+        final Item<Element> result = mdCol.get(0);
 
         // verify the presence of the InfoStatus on the output
         List<InfoStatus> infos = result.getItemMetadata().get(InfoStatus.class);

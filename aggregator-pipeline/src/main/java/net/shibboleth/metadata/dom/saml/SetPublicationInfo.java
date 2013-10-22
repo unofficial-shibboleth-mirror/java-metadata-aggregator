@@ -22,10 +22,12 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
+import org.w3c.dom.Element;
 
 /**
  * This stage is not yet implemented.
@@ -35,10 +37,10 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * path.
  */
 @ThreadSafe
-public class SetPublicationInfo extends BaseStage<DOMElementItem> {
+public class SetPublicationInfo extends BaseStage<Element> {
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> metadataCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection)
             throws StageProcessingException {
         // TODO Auto-generated method stub
 

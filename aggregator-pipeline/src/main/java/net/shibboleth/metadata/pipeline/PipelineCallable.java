@@ -32,18 +32,18 @@ import org.slf4j.LoggerFactory;
 /**
  * A {@link Callable} that executes a {@link Pipeline} and returns the given item collection.
  * 
- * @param <ItemType> type of the items processed by the pipeline
+ * @param <T> type of the items processed by the pipeline
  */
-public class PipelineCallable<ItemType extends Item<?>> implements Callable<Collection<ItemType>> {
+public class PipelineCallable<T> implements Callable<Collection<Item<T>>> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(PipelineCallable.class);
 
     /** The pipeline to be executed, never null. */
-    private Pipeline<ItemType> pipeline;
+    private Pipeline<T> pipeline;
 
     /** The collection of items upon which the pipeline will operate. */
-    private Collection<ItemType> itemCollection;
+    private Collection<Item<T>> itemCollection;
 
     /**
      * Constructor.
@@ -51,8 +51,8 @@ public class PipelineCallable<ItemType extends Item<?>> implements Callable<Coll
      * @param invokedPipeline the pipeline that will be invoked; must be initialized; can not be null
      * @param items the collection of items upon which the pipeline will operate, can not be null
      */
-    public PipelineCallable(@Nonnull final Pipeline<ItemType> invokedPipeline,
-            @Nonnull @NonnullElements final Collection<ItemType> items) {
+    public PipelineCallable(@Nonnull final Pipeline<T> invokedPipeline,
+            @Nonnull @NonnullElements final Collection<Item<T>> items) {
         pipeline = Constraint.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
         Constraint.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
 
@@ -64,7 +64,7 @@ public class PipelineCallable<ItemType extends Item<?>> implements Callable<Coll
      * 
      * @throws PipelineProcessingException
      */
-    @Nonnull @NonnullElements public Collection<ItemType> call() throws PipelineProcessingException {
+    @Nonnull @NonnullElements public Collection<Item<T>> call() throws PipelineProcessingException {
         log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
                 itemCollection.size());
         pipeline.execute(itemCollection);

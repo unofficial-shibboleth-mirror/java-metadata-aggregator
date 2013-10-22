@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
@@ -46,7 +47,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
      */
     @Test
     public void testAssemblingWithoutName() throws Exception {
-        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
+        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.initialize();
@@ -64,7 +65,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
      */
     @Test
     public void testAssemblingWithName() throws Exception {
-        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
+        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.setDescriptorName("nameValue");
@@ -88,15 +89,15 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         class ReverseOrder implements ItemOrderingStrategy {
 
             /** {@inheritDoc} */
-            public List<DOMElementItem> order(Collection<DOMElementItem> items) {
-                final List<DOMElementItem> result = new ArrayList<>(items);
+            public List<Item<Element>> order(Collection<Item<Element>> items) {
+                final List<Item<Element>> result = new ArrayList<>(items);
                 Collections.reverse(result);
                 return result;
             }
             
         }
         
-        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
+        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.setItemOrderingStrategy(new ReverseOrder());
@@ -116,7 +117,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
      */
     @Test
     public void testMda87() throws Exception {
-        Collection<DOMElementItem> metadataCollection = buildMetadataCollection();
+        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
         EntitiesDescriptorAssemblerStage stage = new EntitiesDescriptorAssemblerStage();
         stage.setId("foo");
         stage.initialize();
@@ -132,8 +133,8 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         Assert.assertEquals("urn:oasis:names:tc:SAML:2.0:metadata", nsattr);
     }
 
-    protected Collection<DOMElementItem> buildMetadataCollection() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+    protected Collection<Item<Element>> buildMetadataCollection() throws Exception {
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         Element descriptor = readXmlData("entity1.xml");
         metadataCollection.add(new DOMElementItem(descriptor));

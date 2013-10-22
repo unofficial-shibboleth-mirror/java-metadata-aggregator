@@ -37,14 +37,14 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * A stage that is composed of other stages. This allows a collection of stages to be grouped together and for that
  * composition to the be referenced and reused.
  * 
- * @param <ItemType> type of Items this stage, and its composed stages, operate upon
+ * @param <T> type of metadata this stage, and its composed stages, operate upon
  */
 @ThreadSafe
-public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent
-        implements Stage<ItemType> {
+public class CompositeStage<T> extends AbstractDestructableIdentifiableInitializableComponent
+        implements Stage<T> {
 
     /** Stages which compose this stage. */
-    private List<Stage<ItemType>> composedStages = Collections.emptyList();
+    private List<Stage<T>> composedStages = Collections.emptyList();
 
     /** {@inheritDoc} */
     public synchronized void setId(String componentId) {
@@ -56,7 +56,7 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
      * 
      * @return list the stages that compose this stage, never null nor containing null elements
      */
-    @Nonnull @NonnullElements public List<Stage<ItemType>> getComposedStages() {
+    @Nonnull @NonnullElements public List<Stage<T>> getComposedStages() {
         return composedStages;
     }
 
@@ -65,13 +65,13 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
      * 
      * @param stages list the stages that compose this stage, may be null or contain null elements
      */
-    public synchronized void setComposedStages(@Nullable @NullableElements final List<Stage<ItemType>> stages) {
+    public synchronized void setComposedStages(@Nullable @NullableElements final List<Stage<T>> stages) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        ArrayList<Stage<ItemType>> newStages = new ArrayList<>();
+        ArrayList<Stage<T>> newStages = new ArrayList<>();
         if (stages != null) {
-            for (Stage<ItemType> stage : stages) {
+            for (Stage<T> stage : stages) {
                 if (stage != null) {
                     newStages.add(stage);
                 }
@@ -82,9 +82,9 @@ public class CompositeStage<ItemType extends Item<?>> extends AbstractDestructab
     }
 
     /** {@inheritDoc} */
-    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        for (Stage<ItemType> stage : composedStages) {
+        for (Stage<T> stage : composedStages) {
             stage.execute(itemCollection);
         }
     }

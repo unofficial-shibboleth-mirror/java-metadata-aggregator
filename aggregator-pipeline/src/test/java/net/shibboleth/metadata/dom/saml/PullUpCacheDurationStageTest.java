@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -36,7 +37,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
     /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
@@ -66,7 +67,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
     /** Test that the minimum cache duration is used when the shortest duration is less than it. */
     @Test
     public void testMinCacheDuration() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
@@ -88,7 +89,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
     /** Test that the maximum cache duration is used when the shortest duration is greater than it. */
     @Test
     public void testMaxCacheDuration() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();

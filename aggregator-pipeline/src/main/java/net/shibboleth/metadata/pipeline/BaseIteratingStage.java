@@ -29,10 +29,10 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 /**
  * Base class for {@link Stage} implementations that iterate over each {@link Item} in a collection and do something.
  * 
- * @param <ItemType> type of Items this stage operates upon
+ * @param <T> type of metadata this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+public abstract class BaseIteratingStage<T> extends BaseStage<T> {
 
     /**
      * Iterates over each element of the Item collection and delegates the processing of that element to
@@ -40,11 +40,11 @@ public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseS
      * 
      * {@inheritDoc}
      */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        Iterator<ItemType> itemIterator = itemCollection.iterator();
+        Iterator<Item<T>> itemIterator = itemCollection.iterator();
 
-        ItemType item;
+        Item<T> item;
         while (itemIterator.hasNext()) {
             item = itemIterator.next();
             if (!doExecute(item)) {
@@ -62,5 +62,5 @@ public abstract class BaseIteratingStage<ItemType extends Item<?>> extends BaseS
      * 
      * @throws StageProcessingException thrown if there is a problem with the stage processing
      */
-    protected abstract boolean doExecute(@Nonnull final ItemType item) throws StageProcessingException;
+    protected abstract boolean doExecute(@Nonnull final Item<T> item) throws StageProcessingException;
 }

@@ -46,16 +46,16 @@ public final class FutureSupport {
     /**
      * Resolves the future value of a {@link Future} collection value.
      * @param future {@link Future} value to be resolved
-     * @param <ItemType> type of the items in the collection
+     * @param <T> type of the items in the collection
      * @return resolved value of the {@link Future}
      * 
      * @throws StageProcessingException unless resolution is successful
      */
-    @Nonnull public static <ItemType extends Item<?>> Collection<ItemType> futureItems(
-            @Nonnull Future<Collection<ItemType>> future) throws StageProcessingException {
+    @Nonnull public static <T> Collection<Item<T>> futureItems(
+            @Nonnull Future<Collection<Item<T>>> future) throws StageProcessingException {
         assert future != null;
         try {
-            final Collection<ItemType> value = future.get();
+            final Collection<Item<T>> value = future.get();
             if (value == null) {
                 throw new StageProcessingException("null returned from future value");
             }

@@ -59,10 +59,10 @@ import com.google.common.collect.ImmutableList.Builder;
  * 
  * If no {@link #collectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
  * 
- * @param <ItemType> type of items upon which this stage operates
+ * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -71,10 +71,10 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     private boolean waitingForPipelines;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private Supplier<Collection<ItemType>> collectionFactory = new SimpleItemCollectionFactory<ItemType>();
+    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<T>();
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
-    private List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> pipelineAndStrategies = Collections.emptyList();
+    private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = Collections.emptyList();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -123,7 +123,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    @Nonnull public Supplier<Collection<ItemType>> getCollectionFactory() {
+    @Nonnull public Supplier<Collection<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -132,7 +132,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<ItemType>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -144,7 +144,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * 
      * @return pipeline and item selection strategies used to demultiplex item collections within this stage
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<Pair<Pipeline<ItemType>, Predicate<ItemType>>>
+    @Nonnull @NonnullElements @Unmodifiable public List<Pair<Pipeline<T>, Predicate<Item<T>>>>
             getPipelineAndSelectionStrategies() {
         return pipelineAndStrategies;
     }
@@ -155,7 +155,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
      * @param passes pipeline and item selection strategies used to demultiplex item collections within this stage
      */
     public synchronized void setPipelineAndSelectionStrategies(
-            @Nonnull @NonnullElements final List<Pair<Pipeline<ItemType>, Predicate<ItemType>>> passes) {
+            @Nonnull @NonnullElements final List<Pair<Pipeline<T>, Predicate<Item<T>>>> passes) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -164,41 +164,42 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
             return;
         }
 
-        final Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>> checkedPasses =
-                new Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>>();
-        for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pass : passes) {
+        final Builder<Pair<Pipeline<T>, Predicate<Item<T>>>> checkedPasses =
+                new Builder<Pair<Pipeline<T>, Predicate<Item<T>>>>();
+        for (Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
             Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
             Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
 
-            checkedPasses.add(new Pair<Pipeline<ItemType>, Predicate<ItemType>>(pass));
+            checkedPasses.add(new Pair<Pipeline<T>, Predicate<Item<T>>>(pass));
         }
 
         pipelineAndStrategies = checkedPasses.build();
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        Collection<ItemType> selectedItems;
-        final ArrayList<Future<Collection<ItemType>>> pipelineFutures = new ArrayList<>();
+        Collection<Item<T>> selectedItems;
+        final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
 
-        for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
-            final Pipeline<ItemType> pipeline = pipelineAndStrategy.getFirst();
-            final Predicate<ItemType> selectionStrategy = pipelineAndStrategy.getSecond();
+        for (Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
+            final Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
+            final Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
             selectedItems = collectionFactory.get();
 
-            for (ItemType item : itemCollection) {
+            for (Item<T> item : itemCollection) {
                 if (selectionStrategy.apply(item)) {
-                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
-                    selectedItems.add(copied);
+//                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
+//                    selectedItems.add(copied);
+                    selectedItems.add(item.copy());
                 }
             }
 
-            pipelineFutures.add(executorService.submit(new PipelineCallable<ItemType>(pipeline, selectedItems)));
+            pipelineFutures.add(executorService.submit(new PipelineCallable<T>(pipeline, selectedItems)));
         }
 
         if (isWaitingForPipelines()) {
-            for (Future<Collection<ItemType>> pipelineFuture : pipelineFutures) {
+            for (Future<Collection<Item<T>>> pipelineFuture : pipelineFutures) {
                 FutureSupport.futureItems(pipelineFuture);
             }
         }
@@ -222,8 +223,8 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
                     "Pipeline and selection strategy collection can not be null or empty");
         }
 
-        Pipeline<ItemType> pipeline;
-        for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
+        Pipeline<T> pipeline;
+        for (Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();

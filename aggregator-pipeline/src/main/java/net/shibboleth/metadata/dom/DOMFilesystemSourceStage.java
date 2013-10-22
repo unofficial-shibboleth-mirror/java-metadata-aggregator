@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
@@ -41,6 +42,7 @@ import net.shibboleth.utilities.java.support.xml.ParserPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * A stage which reads XML information from the filesystem and places it in the given {@link DOMElementItem} collection.
@@ -52,7 +54,7 @@ import org.w3c.dom.Document;
  * </ul>
  */
 @ThreadSafe
-public class DOMFilesystemSourceStage extends BaseStage<DOMElementItem> {
+public class DOMFilesystemSourceStage extends BaseStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMFilesystemSourceStage.class);
@@ -211,7 +213,7 @@ public class DOMFilesystemSourceStage extends BaseStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<>();
         if (sourceFile.isFile()) {

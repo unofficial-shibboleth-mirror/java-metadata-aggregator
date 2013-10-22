@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -41,6 +42,7 @@ import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 /**
  * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression. Each
@@ -54,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 @ThreadSafe
-public class XPathFilteringStage extends BaseStage<DOMElementItem> {
+public class XPathFilteringStage extends BaseStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);
@@ -113,7 +115,7 @@ public class XPathFilteringStage extends BaseStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    public void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> metadataCollection) {
+    public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         if (namespaceContext != null) {
@@ -128,9 +130,9 @@ public class XPathFilteringStage extends BaseStage<DOMElementItem> {
             return;
         }
 
-        Iterator<DOMElementItem> iterator = metadataCollection.iterator();
+        final Iterator<Item<Element>> iterator = metadataCollection.iterator();
         while (iterator.hasNext()) {
-            DOMElementItem item = iterator.next();
+            final Item<Element> item = iterator.next();
             try {
                 Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
                 if (filterThis) {

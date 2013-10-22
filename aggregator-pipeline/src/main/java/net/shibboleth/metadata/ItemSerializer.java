@@ -27,9 +27,9 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 /**
  * Serializers convert a collection of {@link Item} in to an octet stream.
  * 
- * @param <ItemType> type of Item that can be serialized to an {@link OutputStream}
+ * @param <T> type of data contained in the items
  */
-public interface ItemSerializer<ItemType extends Item<?>> {
+public interface ItemSerializer<T> {
 
     /**
      * Serializes the Item to the given output stream.
@@ -37,6 +37,6 @@ public interface ItemSerializer<ItemType extends Item<?>> {
      * @param itemCollection collection of Items
      * @param output output stream to which the Item will be written
      */
-    public void serialize(@Nonnull @NonnullElements final Collection<ItemType> itemCollection,
+    public void serialize(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
             @Nonnull final OutputStream output);
 }

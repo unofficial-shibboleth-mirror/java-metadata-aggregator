@@ -33,11 +33,11 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 /**
  * A base class for {@link Stage} implementations.
  * 
- * @param <ItemType> type of Item this stage operates upon
+ * @param <T> type of item this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseStage<ItemType extends Item<?>> extends
-        AbstractDestructableIdentifiableInitializableComponent implements Stage<ItemType> {
+public abstract class BaseStage<T> extends
+        AbstractDestructableIdentifiableInitializableComponent implements Stage<T> {
 
     /** {@inheritDoc} */
     public synchronized void setId(@Nonnull @NotEmpty final String componentId) {
@@ -50,7 +50,7 @@ public abstract class BaseStage<ItemType extends Item<?>> extends
      * 
      * {@inheritDoc}
      */
-    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
@@ -74,6 +74,6 @@ public abstract class BaseStage<ItemType extends Item<?>> extends
      * 
      * @throws StageProcessingException thrown if there is an unrecoverable problem when processing the stage
      */
-    protected abstract void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    protected abstract void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException;
 }

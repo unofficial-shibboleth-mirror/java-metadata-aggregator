@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -48,27 +49,23 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
 
     /** {@inheritDoc} */
     protected void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 
         try {
-            Element element;
-            DOMResult result;
-            List<Element> transformedElements;
-
-            final ArrayList<DOMElementItem> newItems = new ArrayList<>();
-            for (DOMElementItem domItem : itemCollection) {
+            final ArrayList<Item<Element>> newItems = new ArrayList<>();
+            for (Item<Element> domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
-                element = domItem.unwrap();
+                final Element element = domItem.unwrap();
 
                 // Collect the potentially multiple results from the transform in a document fragment.
-                result = new DOMResult(element.getOwnerDocument().createDocumentFragment());
+                final DOMResult result = new DOMResult(element.getOwnerDocument().createDocumentFragment());
                 transformer.transform(new DOMSource(element.getOwnerDocument()), result);
 
                 // The document fragment contains a number of Elements, each of which
                 // becomes a new DomElementItem in the output collection carrying the same
                 // ItemMetadata objects as the input.
-                transformedElements = ElementSupport.getChildElements(result.getNode());
+                final List<Element> transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (Element transformedElement : transformedElements) {
                     DOMElementItem newItem = new DOMElementItem(transformedElement);
                     ItemMetadataSupport.addAll(newItem, domItem.getItemMetadata().values());

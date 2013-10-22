@@ -35,23 +35,23 @@ import com.google.common.collect.Lists;
 public class PipelineMergeStageTest {
 
     @Test public void test() throws Exception {
-        MockItem md1 = new MockItem("one");
-        StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
+        Item<String> md1 = new MockItem("one");
+        StaticItemSourceStage<String> source1 = new StaticItemSourceStage<>();
         source1.setId("src1");
         source1.setSourceItems(Lists.newArrayList(md1));
-        SimplePipeline<MockItem> pipeline1 = new SimplePipeline<MockItem>();
+        SimplePipeline<String> pipeline1 = new SimplePipeline<String>();
         pipeline1.setId("p1");
-        pipeline1.setStages(Lists.newArrayList((Stage<MockItem>) source1));
+        pipeline1.setStages(Lists.newArrayList((Stage<String>) source1));
 
-        MockItem md2 = new MockItem("two");
-        StaticItemSourceStage<MockItem> source2 = new StaticItemSourceStage<MockItem>();
+        Item<String> md2 = new MockItem("two");
+        StaticItemSourceStage<String> source2 = new StaticItemSourceStage<>();
         source2.setId("src2");
         source2.setSourceItems(Lists.newArrayList(md2));
-        SimplePipeline<MockItem> pipeline2 = new SimplePipeline<MockItem>();
+        SimplePipeline<String> pipeline2 = new SimplePipeline<>();
         pipeline2.setId("p2");
-        pipeline2.setStages(Lists.newArrayList((Stage<MockItem>) source2));
+        pipeline2.setStages(Lists.newArrayList((Stage<String>) source2));
 
-        final Collection<Pipeline<MockItem>> joinedPipelines = new ArrayList<>();
+        final Collection<Pipeline<String>> joinedPipelines = new ArrayList<>();
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
 
@@ -93,7 +93,7 @@ public class PipelineMergeStageTest {
     @Test public void testDediplicatingItemIdMergeStrategySingleSource() {
         DeduplicatingItemIdMergeStrategy strategy = new DeduplicatingItemIdMergeStrategy();
 
-        final List<MockItem> target = new ArrayList<>();
+        final List<Item<String>> target = new ArrayList<>();
         MockItem item1 = new MockItem("item1");
         target.add(item1);
         MockItem item2 = new MockItem("item2");
@@ -104,7 +104,7 @@ public class PipelineMergeStageTest {
         item3.getItemMetadata().put(new ItemId("itemC"));
         target.add(item3);
 
-        final List<MockItem> source1 = new ArrayList<>();
+        final List<Item<String>> source1 = new ArrayList<>();
         MockItem item4 = new MockItem("item4");
         item4.getItemMetadata().put(new ItemId("itemD"));
         source1.add(item4);
@@ -114,7 +114,7 @@ public class PipelineMergeStageTest {
         MockItem item6 = new MockItem("item6");
         source1.add(item6);
 
-        final List<Collection<MockItem>> sources = new ArrayList<>();
+        final List<Collection<Item<String>>> sources = new ArrayList<>();
         sources.add(source1);
         
         strategy.mergeCollection(target, sources);
@@ -130,7 +130,7 @@ public class PipelineMergeStageTest {
     @Test public void testDediplicatingItemIdMergeStrategyMultipleSource() {
         DeduplicatingItemIdMergeStrategy strategy = new DeduplicatingItemIdMergeStrategy();
 
-        final List<MockItem> target = new ArrayList<>();
+        final List<Item<String>> target = new ArrayList<>();
         MockItem item1 = new MockItem("item1");
         target.add(item1);
         MockItem item2 = new MockItem("item2");
@@ -141,7 +141,7 @@ public class PipelineMergeStageTest {
         item3.getItemMetadata().put(new ItemId("itemC"));
         target.add(item3);
 
-        final List<MockItem> source1 = new ArrayList<>();
+        final List<Item<String>> source1 = new ArrayList<>();
         MockItem item4 = new MockItem("item4");
         item4.getItemMetadata().put(new ItemId("itemD"));
         source1.add(item4);
@@ -151,7 +151,7 @@ public class PipelineMergeStageTest {
         MockItem item6 = new MockItem("item6");
         source1.add(item6);
 
-        final List<MockItem> source2 = new ArrayList<>();
+        final List<Item<String>> source2 = new ArrayList<>();
         MockItem item7 = new MockItem("item7");
         item7.getItemMetadata().put(new ItemId("itemD"));
         source2.add(item7);
@@ -161,7 +161,7 @@ public class PipelineMergeStageTest {
         item9.getItemMetadata().put(new ItemId("itemA"));
         source2.add(item9);
 
-        final List<Collection<MockItem>> sources = new ArrayList<>();
+        final List<Collection<Item<String>>> sources = new ArrayList<>();
         sources.add(source1);
         sources.add(source2);
         
@@ -180,27 +180,27 @@ public class PipelineMergeStageTest {
     
     /** Tests the case where one of the pipelines throws an exception. */
     @Test public void testThrow() throws Exception {
-        MockItem md1 = new MockItem("one");
-        StaticItemSourceStage<MockItem> source1 = new StaticItemSourceStage<MockItem>();
+        Item<String> md1 = new MockItem("one");
+        StaticItemSourceStage<String> source1 = new StaticItemSourceStage<>();
         source1.setId("src1");
         source1.setSourceItems(Lists.newArrayList(md1));
-        SimplePipeline<MockItem> pipeline1 = new SimplePipeline<MockItem>();
+        SimplePipeline<String> pipeline1 = new SimplePipeline<>();
         pipeline1.setId("p1");
-        pipeline1.setStages(Lists.newArrayList((Stage<MockItem>) source1));
+        pipeline1.setStages(Lists.newArrayList((Stage<String>) source1));
 
-        MockItem md2 = new MockItem("two");
-        StaticItemSourceStage<MockItem> source2 = new StaticItemSourceStage<MockItem>();
+        final Item<String> md2 = new MockItem("two");
+        final StaticItemSourceStage<String> source2 = new StaticItemSourceStage<>();
         source2.setId("src2");
         source2.setSourceItems(Lists.newArrayList(md2));
         final TerminatingStage term = new TerminatingStage();
-        SimplePipeline<MockItem> pipeline2 = new SimplePipeline<MockItem>();
+        SimplePipeline<String> pipeline2 = new SimplePipeline<>();
         pipeline2.setId("p2");
-        final List<Stage<MockItem>> stages = new ArrayList<>();
+        final List<Stage<String>> stages = new ArrayList<>();
         stages.add(source2);
         stages.add(term);
         pipeline2.setStages(stages);
 
-        final Collection<Pipeline<MockItem>> joinedPipelines = new ArrayList<>();
+        final Collection<Pipeline<String>> joinedPipelines = new ArrayList<>();
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
 

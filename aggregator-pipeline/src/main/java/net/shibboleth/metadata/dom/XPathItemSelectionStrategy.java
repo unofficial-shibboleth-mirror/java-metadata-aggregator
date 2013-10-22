@@ -26,11 +26,13 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 import com.google.common.base.Predicate;
 
@@ -38,7 +40,7 @@ import com.google.common.base.Predicate;
  * Item selection strategy which selects items on the basis of a boolean XPath expression.
  */
 @ThreadSafe
-public class XPathItemSelectionStrategy implements Predicate<DOMElementItem> {
+public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathItemSelectionStrategy.class);
@@ -78,7 +80,7 @@ public class XPathItemSelectionStrategy implements Predicate<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    public synchronized boolean apply(@Nonnull DOMElementItem item) {
+    public synchronized boolean apply(@Nonnull Item<Element> item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {

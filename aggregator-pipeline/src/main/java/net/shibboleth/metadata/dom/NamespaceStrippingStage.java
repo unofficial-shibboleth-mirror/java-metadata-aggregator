@@ -27,6 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.XMLConstants;
 
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -50,7 +51,7 @@ import org.w3c.dom.NodeList;
  * A stage which removes all evidence of a given XML namespace from each metadata item.
  */
 @ThreadSafe
-public class NamespaceStrippingStage extends BaseStage<DOMElementItem> {
+public class NamespaceStrippingStage extends BaseStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(NamespaceStrippingStage.class);
@@ -87,7 +88,7 @@ public class NamespaceStrippingStage extends BaseStage<DOMElementItem> {
      * 
      * @param item {@link DOMElementItem} to process.
      */
-    private void processItem(@Nonnull final DOMElementItem item) {
+    private void processItem(@Nonnull final Item<Element> item) {
         final Element element = Constraint.isNotNull(item, "Item can not be null").unwrap();
 
         /*
@@ -190,9 +191,9 @@ public class NamespaceStrippingStage extends BaseStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> items)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
-        for (DOMElementItem item : items) {
+        for (Item<Element> item : items) {
             processItem(item);
         }
     }

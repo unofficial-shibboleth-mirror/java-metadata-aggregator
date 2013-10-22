@@ -37,17 +37,19 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A {@link Stage} that logs {@link StatusMetadata} associated with an {@link Item}.
+ * 
+ * @param <T> type of item which this stage processes
  */
 @ThreadSafe
-public class StatusMetadataLoggingStage extends AbstractItemMetadataSelectionStage {
+public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelectionStage<T> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(StatusMetadataLoggingStage.class);
 
     /** {@inheritDoc} */
     protected void doExecute(
-                    @Nonnull @NonnullElements final Collection<Item<?>> itemCollection,
-                    @Nonnull final Item<?> matchingItem,
+                    @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+                    @Nonnull final Item<T> matchingItem,
                     @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>,
                         List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException {

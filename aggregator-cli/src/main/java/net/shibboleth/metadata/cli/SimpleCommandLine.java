@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.TerminationException;
 
@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.w3c.dom.Element;
 
 /**
  * A simple driver for the metadata aggregator.
@@ -97,8 +98,8 @@ public final class SimpleCommandLine {
         
         // Warning suppressed: unavoidable, given type erasure
         @SuppressWarnings("unchecked")
-        final Pipeline<DOMElementItem> pipeline =
-            (Pipeline<DOMElementItem>) appCtx.getBean(pipelineName, Pipeline.class);
+        final Pipeline<Element> pipeline =
+            (Pipeline<Element>) appCtx.getBean(pipelineName, Pipeline.class);
 
         if (pipeline == null) {
             log.error("No net.shibboleth.metadata.pipeline.Pipeline, with ID {}, defined in Spring configuration",
@@ -114,7 +115,7 @@ public final class SimpleCommandLine {
                 log.debug("Retrieved pipeline has already been initialized");
             }
 
-            final ArrayList<DOMElementItem> itemCollection = new ArrayList<>();
+            final ArrayList<Item<Element>> itemCollection = new ArrayList<>();
             final Date startTime = new Date();
             log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
             pipeline.execute(itemCollection);

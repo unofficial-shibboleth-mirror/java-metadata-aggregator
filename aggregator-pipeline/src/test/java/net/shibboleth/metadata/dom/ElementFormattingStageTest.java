@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
@@ -190,11 +191,12 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         stage.setLineSeparator(null);
         stage.initialize();
 
-        ArrayList<DOMElementItem> itemCollection = Lists.newArrayList(new DOMElementItem(unformattedElement));
+        ArrayList<Item<Element>> itemCollection =
+                Lists.newArrayList((Item<Element>)new DOMElementItem(unformattedElement));
         stage.execute(itemCollection);
         Assert.assertEquals(itemCollection.size(), 1);
 
-        DOMElementItem result = itemCollection.get(0);
+        Item<Element> result = itemCollection.get(0);
         assertXmlIdentical(singleLineElement, result.unwrap());
 
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));
@@ -208,11 +210,12 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         stage.setIndentSize(4);
         stage.initialize();
 
-        ArrayList<DOMElementItem> itemCollection = Lists.newArrayList(new DOMElementItem(unformattedElement));
+        ArrayList<Item<Element>> itemCollection =
+                Lists.newArrayList((Item<Element>)new DOMElementItem(unformattedElement));
         stage.execute(itemCollection);
         Assert.assertEquals(itemCollection.size(), 1);
 
-        DOMElementItem result = itemCollection.get(0);
+        final Item<Element> result = itemCollection.get(0);
         assertXmlIdentical(prettyPrintElement, result.unwrap());
 
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));

@@ -20,6 +20,8 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
+
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -28,8 +30,8 @@ public class ElementStrippingStageTest extends BaseDOMTest {
     @Test
     public void doExecute() throws Exception {
         final Element doc = readXmlData("elementStripIn.xml");
-        final DOMElementItem item = new DOMElementItem(doc);
-        final List<DOMElementItem> items = new ArrayList<>();
+        final Item<Element> item = new DOMElementItem(doc);
+        final List<Item<Element>> items = new ArrayList<>();
         items.add(item);
         
         final ElementStrippingStage stage = new ElementStrippingStage();

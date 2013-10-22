@@ -48,9 +48,11 @@ import org.slf4j.LoggerFactory;
  * This classes uses the JSR-223 scripting interface. As such, in order to use a language other than ECMAscript (a.k.a.
  * javascript), you must ensure the scripting engine and any associated libraries necessary for its operation are on the
  * classpath.
+ * 
+ * @param <T> type of item the stage operates on
  */
 @ThreadSafe
-public class ScriptletStage extends BaseStage<Item<?>> {
+public class ScriptletStage<T> extends BaseStage<T> {
 
     /** Name of the scriptlet attribute, {@value} , containing the Item collection to be transformed. */
     public static final String ITEMS = "items";
@@ -83,7 +85,7 @@ public class ScriptletStage extends BaseStage<Item<?>> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         final SimpleScriptContext context = new SimpleScriptContext();
         context.setAttribute(ITEMS, itemCollection, SimpleScriptContext.ENGINE_SCOPE);

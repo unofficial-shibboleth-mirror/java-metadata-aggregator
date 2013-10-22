@@ -49,6 +49,7 @@ import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
@@ -85,7 +86,7 @@ import com.google.common.io.CharStreams;
  * </ul>
  */
 @ThreadSafe
-public class XMLSignatureSigningStage extends BaseIteratingStage<DOMElementItem> {
+public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
 
     /** The variant of SHA to use in the various signature algorithms. */
     public static enum ShaVariant {
@@ -667,7 +668,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<DOMElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element element = item.unwrap();
         XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {

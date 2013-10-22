@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -55,7 +55,7 @@ import com.google.common.collect.Iterables;
  * EntitiesDescriptors the role filter will effect all descendant EntityDescriptors.
  */
 @ThreadSafe
-public class EntityRoleFilterStage extends BaseIteratingStage<DOMElementItem> {
+public class EntityRoleFilterStage extends BaseIteratingStage<Element> {
 
     /** QName of the RoleDescriptor element. */
     public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "RoleDescriptor");
@@ -199,8 +199,8 @@ public class EntityRoleFilterStage extends BaseIteratingStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) {
-        Element descriptor = item.unwrap();
+    protected boolean doExecute(@Nonnull final Item<Element> item) {
+        final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
                 return false;

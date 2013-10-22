@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.XMLSignatureValidator.ValidationException;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
@@ -62,7 +63,7 @@ import com.google.common.collect.ImmutableSet;
  * valid and an Element signature is found to be invalid than an {@link WarningStatus} is set on the Element.
  */
 @ThreadSafe
-public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementItem> {
+public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureValidationStage.class);
@@ -242,7 +243,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<DOMElementIt
     }
     
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         
         final Element docElement = item.unwrap();
         

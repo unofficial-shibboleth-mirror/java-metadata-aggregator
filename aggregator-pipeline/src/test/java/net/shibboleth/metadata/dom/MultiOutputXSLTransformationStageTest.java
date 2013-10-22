@@ -27,6 +27,7 @@ import java.util.Set;
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.utilities.java.support.resource.Resource;
@@ -69,7 +70,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      */
     @Test public void testTransform1() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("transform1.xsl");
@@ -82,7 +83,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        final DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -97,7 +98,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      */
     @Test public void testTransform0() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("transform0.xsl");
@@ -119,7 +120,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      */
     @Test public void testTransform2() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("transform2.xsl");
@@ -133,7 +134,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 2);
 
         final Set<String> names = new HashSet<>();
-        for (DOMElementItem result : mdCol) {
+        for (Item<Element> result : mdCol) {
             AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
             Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
             names.add(result.unwrap().getNodeName());
@@ -150,7 +151,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      */
     @Test public void testTransformParam() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("transform1.xsl");
@@ -167,7 +168,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        final DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -182,7 +183,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      */
     @Test public void testTransformListener() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         final Resource transform = getClasspathResource("transformListener.xsl");
@@ -196,7 +197,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 2);
 
         final Set<String> names = new HashSet<>();
-        for (DOMElementItem result : mdCol) {
+        for (Item<Element> result : mdCol) {
             AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
 
             // each output item should have preserved the TestInfo that was on the input
@@ -233,7 +234,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      */
     @Test public void testInclude() throws Exception {
 
-        final List<DOMElementItem> mdCol = new ArrayList<>();
+        final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(makeInput());
 
         Resource transform = getClasspathResource("includeMain.xsl");
@@ -246,7 +247,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
 
-        DOMElementItem result = mdCol.iterator().next();
+        final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 

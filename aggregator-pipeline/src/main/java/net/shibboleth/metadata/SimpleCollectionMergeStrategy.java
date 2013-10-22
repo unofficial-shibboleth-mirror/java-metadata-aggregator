@@ -32,12 +32,12 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
 
     /** {@inheritDoc} */
-    public <ItemType extends Item<?>> void mergeCollection(@Nonnull @NonnullElements final Collection<ItemType> target,
-            @Nonnull @NonnullElements final List<Collection<ItemType>> sources) {
+    public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
+            @Nonnull @NonnullElements final List<Collection<Item<T>>> sources) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");
 
-        for (Collection<ItemType> source : sources) {
+        for (Collection<Item<T>> source : sources) {
             target.addAll(source);
         }
     }

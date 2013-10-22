@@ -45,9 +45,11 @@ import com.google.common.collect.Iterables;
 /**
  * A {@link Stage} that selects Items for further processing if they have a specific type of {@link ItemMetadata}
  * attached to them.
+ * 
+ * @param <T> the type of data included in the items being processed
  */
 @ThreadSafe
-public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<?>> {
+public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T> {
 
     /** {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be selected. */
     private Collection<Class<? extends ItemMetadata>> selectionRequirements = Collections.emptyList();
@@ -108,12 +110,12 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<Item<?>> itemCollection) throws StageProcessingException {
+    protected void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
         // to the itemCollection and thus would cause issues if we were iterating over it directly
-        final ArrayList<Item<?>> collectionCopy = new ArrayList<>(itemCollection);
+        final ArrayList<Item<T>> collectionCopy = new ArrayList<>(itemCollection);
 
-        for (Item<?> item : collectionCopy) {
+        for (Item<T> item : collectionCopy) {
             final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
                     new HashMap<>();
 
@@ -149,8 +151,8 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
     protected abstract
             void
             doExecute(
-                    @Nonnull @NonnullElements final Collection<Item<?>> itemCollection,
-                    @Nonnull final Item<?> matchingItem,
+                    @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+                    @Nonnull final Item<T> matchingItem,
                     @Nonnull @NonnullElements
                     final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException;

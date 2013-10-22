@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
@@ -34,7 +35,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     /** Tests running the stage on an empty collection. */
     @Test
     public void testEmptyCollection() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
@@ -61,7 +62,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     /** Tests running the stage on a collection that contains a single EntityDescriptor. */
     @Test
     public void testSingleRecord() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entityDescriptor1.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
@@ -71,7 +72,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
         stage.execute(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
 
-        DOMElementItem item = metadataCollection.get(0);
+        Item<Element> item = metadataCollection.get(0);
         Element entityDescriptor = item.unwrap();
 
         List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
@@ -84,7 +85,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     /** Tests running the stage on a collection that contains multiple EntityDescriptors. */
     @Test
     public void testMultipleRecords() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entityDescriptor1.xml")));
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entityDescriptor2.xml")));
 
@@ -98,7 +99,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
         Element entityDescriptor;
         List<ItemId> itemIds;
         ItemId itemId;
-        for (DOMElementItem item : metadataCollection) {
+        for (Item<Element> item : metadataCollection) {
             entityDescriptor = item.unwrap();
 
             itemIds = item.getItemMetadata().get(ItemId.class);

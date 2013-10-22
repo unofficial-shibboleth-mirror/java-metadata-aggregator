@@ -37,20 +37,20 @@ import com.google.common.collect.Iterables;
 /**
  * A stage which adds a static collection of Items to a {@link Item} collection.
  * 
- * @param <ItemType> the type of Item produced by this source
+ * @param <T> the type of item produced by this source
  */
 @ThreadSafe
-public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+public class StaticItemSourceStage<T> extends BaseStage<T> {
 
     /** Collection of static Items added to each Item collection by {@link #execute(Collection)}. */
-    private Collection<ItemType> source = Collections.emptyList();
+    private Collection<Item<T>> source = Collections.emptyList();
 
     /**
      * Gets the collection of static Items added to the Item collection by this stage.
      * 
      * @return collection of static Items added to the Item collection by this stage
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<ItemType> getSourceItems() {
+    @Nonnull @NonnullElements @Unmodifiable public Collection<Item<T>> getSourceItems() {
         return source;
     }
 
@@ -59,7 +59,7 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
      * 
      * @param items collection of Items added to the Item collection by this stage
      */
-    public synchronized void setSourceItems(@Nullable @NullableElements final Collection<ItemType> items) {
+    public synchronized void setSourceItems(@Nullable @NullableElements final Collection<Item<T>> items) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -71,12 +71,11 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        for (ItemType item : getSourceItems()) {
+        for (Item<T> item : getSourceItems()) {
             if (item != null) {
-                @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
-                itemCollection.add(copied);
+                itemCollection.add(item.copy());
             }
         }
     }

@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
@@ -41,14 +42,14 @@ import org.w3c.dom.Element;
  * collection. All other elements of the collection are ignored.
  */
 @ThreadSafe
-public class DOMElementSerializer implements ItemSerializer<DOMElementItem> {
+public class DOMElementSerializer implements ItemSerializer<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMElementSerializer.class);
 
     /** {@inheritDoc} */
     public void
-            serialize(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection, OutputStream output) {
+            serialize(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection, OutputStream output) {
         if (itemCollection == null || itemCollection.isEmpty()) {
             return;
         }
@@ -71,4 +72,5 @@ public class DOMElementSerializer implements ItemSerializer<DOMElementItem> {
             log.error("Unable to close output stream", e);
         }
     }
+
 }

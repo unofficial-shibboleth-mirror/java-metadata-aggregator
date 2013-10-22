@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -49,7 +50,7 @@ import org.w3c.dom.Element;
  * to a single EntitiesDescriptor element.
  */
 @ThreadSafe
-public class EntitiesDescriptorAssemblerStage extends BaseStage<DOMElementItem> {
+public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
     public static final QName NAME_ATTRIB_NAME = new QName("Name");
@@ -135,7 +136,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DOMElementItem> 
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         if (itemCollection.isEmpty()) {
             if (noChildrenAProcessingError) {
@@ -161,9 +162,9 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DOMElementItem> 
         // Put a newline between the start and end tags
         ElementSupport.appendTextContent(entitiesDescriptor, "\n");
 
-        List<DOMElementItem> orderedItems = orderingStrategy.order(itemCollection);
+        final List<Item<Element>> orderedItems = orderingStrategy.order(itemCollection);
         Element descriptor;
-        for (DOMElementItem item : orderedItems) {
+        for (Item<Element> item : orderedItems) {
             descriptor = item.unwrap();
             if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);
@@ -174,7 +175,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DOMElementItem> 
             }
         }
 
-        final DOMElementItem item = new DOMElementItem(entitiesDescriptorDocument);
+        final Item<Element> item = new DOMElementItem(entitiesDescriptorDocument);
         itemCollection.clear();
         itemCollection.add(item);
     }
@@ -218,14 +219,14 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<DOMElementItem> 
          * 
          * @return sorted collection of Item, never null
          */
-        public List<DOMElementItem> order(@Nonnull @NonnullElements final Collection<DOMElementItem> items);
+        public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items);
     }
 
     /** An ordering strategy that simply returns the collection in whatever order it was already in. */
     private class NoOpItemOrderingStrategy implements ItemOrderingStrategy {
 
         /** {@inheritDoc} */
-        public List<DOMElementItem> order(@Nonnull @NonnullElements final Collection<DOMElementItem> items) {
+        public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items) {
             return new ArrayList<>(items);
         }
     }

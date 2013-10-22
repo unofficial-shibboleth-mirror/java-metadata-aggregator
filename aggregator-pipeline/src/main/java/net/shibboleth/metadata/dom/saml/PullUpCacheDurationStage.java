@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * EntitiesDescriptor and remove the cache duration from all descendants.
  */
 @ThreadSafe
-public class PullUpCacheDurationStage extends BaseIteratingStage<DOMElementItem> {
+public class PullUpCacheDurationStage extends BaseIteratingStage<Element> {
 
     /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
     private long minCacheDuration;
@@ -96,7 +96,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<DOMElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);

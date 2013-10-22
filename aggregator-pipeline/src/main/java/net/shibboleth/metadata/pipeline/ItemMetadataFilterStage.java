@@ -36,15 +36,17 @@ import org.slf4j.LoggerFactory;
  * 
  * This is useful, for example, in removing all {@link Item} elements which have an associated
  * {@link net.shibboleth.metadata.ErrorStatus}.
+ * 
+ * @param <T> type of items the stage operates on
  */
 @ThreadSafe
-public class ItemMetadataFilterStage extends AbstractItemMetadataSelectionStage {
+public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionStage<T> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ItemMetadataFilterStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<?>> itemCollection, Item<?> matchingItem,
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection, Item<T> matchingItem,
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
 

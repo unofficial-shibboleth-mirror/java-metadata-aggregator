@@ -76,18 +76,18 @@ public final class ItemMetadataSupport {
      * 
      * @param itemCollection collection to which the metadata may be added
      * @param itemMetadatas the metadata which may be added to the collection
-     * @param <ItemType> type of item in the collections
+     * @param <T> type of item in the collections
      */
-    public static <ItemType extends Item<?>> void addToCollection(@Nullable final Collection<ItemType> itemCollection,
+    public static <T> void addToCollection(@Nullable final Collection<Item<T>> itemCollection,
             @Nullable @NullableElements final Iterable<? extends ItemMetadata> itemMetadatas) {
-        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata<?>)) {
+        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata)) {
             return;
         }
         if (itemMetadatas == null) {
             return;
         }
 
-        ItemCollectionWithMetadata<ItemType> collection = (ItemCollectionWithMetadata<ItemType>) itemCollection;
+        ItemCollectionWithMetadata<T> collection = (ItemCollectionWithMetadata<T>) itemCollection;
         for (ItemMetadata metadata : itemMetadatas) {
             if (metadata != null) {
                 collection.getCollectionMetadata().put(metadata);

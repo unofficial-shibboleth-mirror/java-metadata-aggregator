@@ -40,14 +40,14 @@ import com.google.common.collect.Iterables;
 /**
  * A very simple implementation of {@link Pipeline}.
  * 
- * @param <ItemType> the type of Item upon which this stage operates
+ * @param <T> the type of item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent
-        implements Pipeline<ItemType> {
+public class SimplePipeline<T> extends AbstractDestructableIdentifiableInitializableComponent
+        implements Pipeline<T> {
 
     /** Stages for this pipeline. */
-    private List<? extends Stage<ItemType>> pipelineStages = Collections.emptyList();
+    private List<Stage<T>> pipelineStages = Collections.emptyList();
 
     /** {@inheritDoc} */
     public synchronized void setId(@Nonnull @NotEmpty String componentId) {
@@ -55,7 +55,7 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements @Unmodifiable public List<? extends Stage<ItemType>> getStages() {
+    @Nonnull @NonnullElements @Unmodifiable public List<Stage<T>> getStages() {
         return pipelineStages;
     }
 
@@ -64,7 +64,7 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
      * 
      * @param stages stages that make up this pipeline
      */
-    public synchronized void setStages(final List<? extends Stage<ItemType>> stages) {
+    public synchronized void setStages(final List<Stage<T>> stages) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -76,11 +76,11 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
     }
 
     /** {@inheritDoc} */
-    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws PipelineProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        for (Stage<ItemType> stage : pipelineStages) {
+        for (Stage<T> stage : pipelineStages) {
             stage.execute(itemCollection);
         }
 
@@ -99,7 +99,7 @@ public class SimplePipeline<ItemType extends Item<?>> extends AbstractDestructab
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        for (Stage<ItemType> stage : pipelineStages) {
+        for (Stage<T> stage : pipelineStages) {
             if (!stage.isInitialized()) {
                 stage.initialize();
             }

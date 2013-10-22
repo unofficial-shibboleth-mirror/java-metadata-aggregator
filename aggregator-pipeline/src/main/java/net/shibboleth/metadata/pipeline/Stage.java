@@ -33,10 +33,10 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
  * 
  * Stages must be thread safe and reusable.
  * 
- * @param <ItemType> type of Item upon which the stage operates
+ * @param <T> type of metadata upon which the stage operates
  */
 @ThreadSafe
-public interface Stage<ItemType extends Item<?>> extends DestructableComponent, IdentifiableComponent,
+public interface Stage<T> extends DestructableComponent, IdentifiableComponent,
         InitializableComponent {
 
     /**
@@ -46,6 +46,6 @@ public interface Stage<ItemType extends Item<?>> extends DestructableComponent, 
      * 
      * @throws StageProcessingException thrown if there is a problem running this stage on the given input
      */
-    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException;
 }

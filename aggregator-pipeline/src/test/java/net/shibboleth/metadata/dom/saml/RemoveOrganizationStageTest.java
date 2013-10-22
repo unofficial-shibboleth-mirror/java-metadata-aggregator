@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -34,14 +35,14 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
     /** Test the organization elements are removed from top level metadata elements. */
     @Test
     public void testRemoveOrganization() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         List<Element> descriptors = ElementSupport
                 .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }
 
-        for (DOMElementItem metadata : metadataCollection) {
+        for (Item<Element> metadata : metadataCollection) {
             Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
@@ -54,7 +55,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
 
         Assert.assertEquals(metadataCollection.size(), 3);
 
-        for (DOMElementItem metadata : metadataCollection) {
+        for (Item<Element> metadata : metadataCollection) {
             Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(metadata.unwrap(), SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
@@ -63,7 +64,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
     /** Test that contact person elements are removed from children of top level metadata elements. */
     @Test
     public void testRemoveOrganizationFromNestedElements() throws Exception {
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();

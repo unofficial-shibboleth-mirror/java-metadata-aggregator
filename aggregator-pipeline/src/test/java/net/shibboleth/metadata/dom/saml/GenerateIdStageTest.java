@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -40,7 +41,7 @@ public class GenerateIdStageTest {
         doc.appendChild(element);
         
         final DOMElementItem item = new DOMElementItem(doc);
-        final List<DOMElementItem> metadataCollection = new ArrayList<>();
+        final List<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(item);
 
         final Pattern ncNamePattern = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_\\-\\.]+$");

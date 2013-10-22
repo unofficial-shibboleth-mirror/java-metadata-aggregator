@@ -22,8 +22,8 @@ import java.util.Collection;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
 
-/** Stages that counts the number of times it was invoked and the number of items it has observed. */
-public class CountingStage<ItemType extends Item<?>> extends AbstractDestructableIdentifiableInitializableComponent implements Stage<ItemType> {
+/** Stage that counts the number of times it was invoked and the number of items it has observed. */
+public class CountingStage<T> extends AbstractDestructableIdentifiableInitializableComponent implements Stage<T> {
 
     /** Number of times the stage was invoked. */
     private int invocationCount;
@@ -55,7 +55,7 @@ public class CountingStage<ItemType extends Item<?>> extends AbstractDestructabl
     }
 
     /** {@inheritDoc} */
-    public void execute(final Collection<ItemType> metadataCollection) throws StageProcessingException {
+    public void execute(final Collection<Item<T>> metadataCollection) throws StageProcessingException {
         invocationCount += 1;
         itemCount += metadataCollection.size();
     }

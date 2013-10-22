@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.testng.Assert;
@@ -48,7 +49,7 @@ public class XPathFilteringStageTest extends BaseDOMTest {
         strategy.setNamespaceContext(new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
-        final List<DOMElementItem> metadataCollection = new ArrayList<>();
+        final List<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXmlData("xpathInput1.xml")));
         metadataCollection.add(new DOMElementItem(readXmlData("xpathInput2.xml")));
         metadataCollection.add(new DOMElementItem(readXmlData("xpathInput3.xml")));

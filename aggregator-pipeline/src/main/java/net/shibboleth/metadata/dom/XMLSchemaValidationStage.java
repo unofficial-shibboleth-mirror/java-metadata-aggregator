@@ -28,6 +28,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -43,6 +44,7 @@ import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Predicates;
@@ -63,7 +65,7 @@ import com.google.common.collect.Iterables;
  * an Element is found to be invalid than an {@link WarningStatus} is set on the Element.
  */
 @ThreadSafe
-public class XMLSchemaValidationStage extends BaseIteratingStage<DOMElementItem> {
+public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
@@ -120,7 +122,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<DOMElementItem>
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
         final Validator validator = validationSchema.newValidator();

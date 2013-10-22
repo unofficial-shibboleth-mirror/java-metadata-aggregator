@@ -40,10 +40,10 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
  * 
  * Pipelines are reusable and threadsafe.
  * 
- * @param <ItemType> type of Item which is produced by this source
+ * @param <T> type of item which is processed by this pipeline
  */
 @ThreadSafe
-public interface Pipeline<ItemType extends Item<?>> extends DestructableComponent, IdentifiableComponent,
+public interface Pipeline<T> extends DestructableComponent, IdentifiableComponent,
         InitializableComponent {
 
     /**
@@ -51,7 +51,7 @@ public interface Pipeline<ItemType extends Item<?>> extends DestructableComponen
      * 
      * @return unmodifiable list of stages within the pipeline
      */
-    @Nonnull @NonnullElements public List<? extends Stage<ItemType>> getStages();
+    @Nonnull @NonnullElements public List<Stage<T>> getStages();
 
     /**
      * Executes each registered {@link Stage} in turn.
@@ -60,6 +60,6 @@ public interface Pipeline<ItemType extends Item<?>> extends DestructableComponen
      * 
      * @throws PipelineProcessingException thrown if there is a problem processing the pipeline
      */
-    public void execute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws PipelineProcessingException;
 }

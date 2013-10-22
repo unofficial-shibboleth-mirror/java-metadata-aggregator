@@ -54,10 +54,10 @@ import com.google.common.collect.Iterables;
  * After each pipeline has completed the results are merged in to the Item collection given to this stage by means of
  * the an {@link CollectionMergeStrategy}.
  * 
- * @param <ItemType> the type of items processed by the stage
+ * @param <T> the type of items processed by the stage
  */
 @ThreadSafe
-public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<ItemType> {
+public class PipelineMergeStage<T> extends BaseStage<T> {
 
     /** Service used to execute the pipelines whose results will be merged. */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -66,13 +66,13 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
      * The factory used to create the item returned by this source. Default implementation is
      * {@link SimpleItemCollectionFactory}.
      */
-    private Supplier<Collection<ItemType>> collectionFactory = new SimpleItemCollectionFactory<ItemType>();
+    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<T>();
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /** Pipelines whose results become the output of this source. */
-    private List<Pipeline<ItemType>> mergedPipelines = Collections.emptyList();
+    private List<Pipeline<T>> mergedPipelines = Collections.emptyList();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -100,7 +100,7 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @return unmodifiable set of pipelines used by this stage
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<Pipeline<ItemType>> getMergedPipelines() {
+    @Nonnull @NonnullElements @Unmodifiable public List<Pipeline<T>> getMergedPipelines() {
         return mergedPipelines;
     }
 
@@ -110,7 +110,7 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
      * @param pipelines pipelines joined by this stage
      */
     public synchronized void setMergedPipelines(
-            @Nullable @NullableElements final List<? extends Pipeline<ItemType>> pipelines) {
+            @Nullable @NullableElements final List<? extends Pipeline<T>> pipelines) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -127,7 +127,7 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @return factory used to create the {@link Item} collection produced by this source
      */
-    @Nonnull public Supplier<Collection<ItemType>> getCollectionFactory() {
+    @Nonnull public Supplier<Collection<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -136,7 +136,7 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
      * 
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
-    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<ItemType>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -166,17 +166,17 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        final ArrayList<Future<Collection<ItemType>>> pipelineResultFutures = new ArrayList<>();
+        final ArrayList<Future<Collection<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
-        for (Pipeline<ItemType> pipeline : mergedPipelines) {
+        for (Pipeline<T> pipeline : mergedPipelines) {
             pipelineResultFutures.add(executorService.submit(
-                    new PipelineCallable<ItemType>(pipeline, collectionFactory.get())));
+                    new PipelineCallable<T>(pipeline, collectionFactory.get())));
         }
 
-        final ArrayList<Collection<ItemType>> pipelineResults = new ArrayList<>();
-        for (Future<Collection<ItemType>> future : pipelineResultFutures) {
+        final ArrayList<Collection<Item<T>>> pipelineResults = new ArrayList<>();
+        for (Future<Collection<Item<T>>> future : pipelineResultFutures) {
             pipelineResults.add(FutureSupport.futureItems(future));
         }
 
@@ -197,7 +197,7 @@ public class PipelineMergeStage<ItemType extends Item<?>> extends BaseStage<Item
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        for (Pipeline<? extends Item<?>> pipeline : mergedPipelines) {
+        for (Pipeline<T> pipeline : mergedPipelines) {
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }

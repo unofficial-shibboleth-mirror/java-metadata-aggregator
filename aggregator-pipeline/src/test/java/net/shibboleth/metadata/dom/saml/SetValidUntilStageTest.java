@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -49,7 +50,7 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME) == null);
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -83,7 +84,7 @@ public class SetValidUntilStageTest {
 
         Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         long duration = 123456;
@@ -117,7 +118,7 @@ public class SetValidUntilStageTest {
         Element root = newDoc.createElementNS("http://example.org", "foo");
         ElementSupport.setDocumentElement(newDoc, root);
 
-        final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(root));
 
         long duration = 123456;

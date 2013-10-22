@@ -20,6 +20,7 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
@@ -32,9 +33,9 @@ import com.google.common.collect.Lists;
 public class SimplePipelineTest {
 
     @Test public void testInitialize() throws Exception {
-        List<? extends Stage<MockItem>> stages = buildStages();
+        final List<Stage<String>> stages = buildStages();
 
-        SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
+        SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId(" test ");
         pipeline.setStages(stages);
         Assert.assertEquals(pipeline.getId(), "test");
@@ -54,7 +55,7 @@ public class SimplePipelineTest {
         Assert.assertTrue(pipeline.getStages().get(2).isInitialized());
 
         try {
-            pipeline = new SimplePipeline<MockItem>();
+            pipeline = new SimplePipeline<>();
             pipeline.setStages(stages);
             pipeline.initialize();
             Assert.fail();
@@ -63,7 +64,7 @@ public class SimplePipelineTest {
         }
 
         try {
-            pipeline = new SimplePipeline<MockItem>();
+            pipeline = new SimplePipeline<>();
             pipeline.setId("");
             pipeline.setStages(stages);
             pipeline.initialize();
@@ -74,27 +75,27 @@ public class SimplePipelineTest {
     }
 
     @Test public void testExecution() throws Exception {
-        List<? extends Stage<MockItem>> stages = buildStages();
+        final List<Stage<String>> stages = buildStages();
 
-        SimplePipeline<MockItem> pipeline = new SimplePipeline<MockItem>();
+        SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("test");
         pipeline.setStages(stages);
         pipeline.initialize();
 
-        final List<MockItem> metadata = new ArrayList<>();
+        final List<Item<String>> metadata = new ArrayList<>();
         pipeline.execute(metadata);
         Assert.assertEquals(metadata.size(), 2);
 
         Assert.assertEquals(((CountingStage) stages.get(1)).getInvocationCount(), 1);
         Assert.assertEquals(((CountingStage) stages.get(2)).getInvocationCount(), 1);
 
-        MockItem md = metadata.iterator().next();
+        Item<String> md = metadata.iterator().next();
         Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
         Assert.assertEquals(md.getItemMetadata().values().size(), 2);
         Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
 
         try {
-            List<? extends Stage<MockItem>> pipelineStages = pipeline.getStages();
+            List<Stage<String>> pipelineStages = pipeline.getStages();
             pipelineStages.clear();
             Assert.fail();
         } catch (UnsupportedOperationException e) {
@@ -108,17 +109,21 @@ public class SimplePipelineTest {
         Assert.assertEquals(((CountingStage) stages.get(2)).getInvocationCount(), 2);
     }
 
-    protected List<? extends Stage<MockItem>> buildStages() {
-        MockItem md1 = new MockItem("one");
-        MockItem md2 = new MockItem("two");
+    protected List<Stage<String>> buildStages() {
+        final Item<String> md1 = new MockItem("one");
+        final Item<String> md2 = new MockItem("two");
 
-        StaticItemSourceStage<MockItem> source = new StaticItemSourceStage<MockItem>();
+        final StaticItemSourceStage<String> source = new StaticItemSourceStage<>();
         source.setId("src");
         source.setSourceItems(Lists.newArrayList(md1, md2));
 
-        CountingStage<MockItem> stage1 = new CountingStage<MockItem>();
-        CountingStage<MockItem> stage2 = new CountingStage<MockItem>();
+        final CountingStage<String> stage1 = new CountingStage<>();
+        final CountingStage<String> stage2 = new CountingStage<>();
 
-        return Lists.newArrayList(source, stage1, stage2);
+        final List<Stage<String>> list = new ArrayList<>();
+        list.add(source);
+        list.add(stage1);
+        list.add(stage2);
+        return list;
     }
 }

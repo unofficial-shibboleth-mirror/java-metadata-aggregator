@@ -20,7 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * </ul>
  */
 @ThreadSafe
-public class SetCacheDurationStage extends BaseIteratingStage<DOMElementItem> {
+public class SetCacheDurationStage extends BaseIteratingStage<Element> {
 
     /** Cache duration, in milliseconds, that will be set on each metadata element. */
     private long cacheDuration;
@@ -66,7 +66,7 @@ public class SetCacheDurationStage extends BaseIteratingStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final DOMElementItem item) throws StageProcessingException {
+    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);

@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -38,6 +39,7 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 /**
  * A pipeline stage which reads an XML document from an {@link Resource}, parses the document, and places the resultant
@@ -50,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 @ThreadSafe
-public class DOMResourceSourceStage extends BaseStage<DOMElementItem> {
+public class DOMResourceSourceStage extends BaseStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMResourceSourceStage.class);
@@ -131,7 +133,7 @@ public class DOMResourceSourceStage extends BaseStage<DOMElementItem> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<DOMElementItem> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         InputStream ins = null;
 
@@ -173,7 +175,7 @@ public class DOMResourceSourceStage extends BaseStage<DOMElementItem> {
      * 
      * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected void populateItemCollection(@Nonnull @NonnullElements Collection<DOMElementItem> itemCollection,
+    protected void populateItemCollection(@Nonnull @NonnullElements Collection<Item<Element>> itemCollection,
             final InputStream data) throws StageProcessingException {
         try {
             log.debug("Parsing XML document retrieved from '{}'", domResource.getLocation());
@@ -225,4 +227,5 @@ public class DOMResourceSourceStage extends BaseStage<DOMElementItem> {
                     + ", error reading DOM resource " + domResource.getLocation() + " information", e);
         }
     }
+
 }
