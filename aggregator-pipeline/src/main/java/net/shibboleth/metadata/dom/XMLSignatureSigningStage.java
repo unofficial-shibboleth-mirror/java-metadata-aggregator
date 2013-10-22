@@ -60,7 +60,6 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
-import net.shibboleth.utilities.java.support.xml.XmlConstants;
 
 import org.apache.xml.security.Init;
 import org.slf4j.Logger;
