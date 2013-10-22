@@ -191,8 +191,8 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         stage.setLineSeparator(null);
         stage.initialize();
 
-        ArrayList<Item<Element>> itemCollection =
-                Lists.newArrayList((Item<Element>)new DOMElementItem(unformattedElement));
+        ArrayList<Item<Element>> itemCollection = new ArrayList<>();
+        itemCollection.add(new DOMElementItem(unformattedElement));
         stage.execute(itemCollection);
         Assert.assertEquals(itemCollection.size(), 1);
 
@@ -210,8 +210,8 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         stage.setIndentSize(4);
         stage.initialize();
 
-        ArrayList<Item<Element>> itemCollection =
-                Lists.newArrayList((Item<Element>)new DOMElementItem(unformattedElement));
+        ArrayList<Item<Element>> itemCollection = new ArrayList<>();
+        itemCollection.add(new DOMElementItem(unformattedElement));
         stage.execute(itemCollection);
         Assert.assertEquals(itemCollection.size(), 1);
 

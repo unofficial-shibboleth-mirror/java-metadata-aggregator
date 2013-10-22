@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -36,15 +37,15 @@ import com.google.common.base.Predicates;
 public class SplitMergeStageTest {
 
     @Test public void testCollectionFactory() {
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
-        SimpleItemCollectionFactory factory = new SimpleItemCollectionFactory();
+        SimpleItemCollectionFactory<Object> factory = new SimpleItemCollectionFactory<>();
         stage.setCollectionFactory(factory);
         Assert.assertEquals(stage.getCollectionFactory(), factory);
     }
 
     @Test public void testExecutorService() {
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         stage.setExecutorService(executor);
@@ -52,59 +53,59 @@ public class SplitMergeStageTest {
     }
 
     @Test public void testNonselectedItemPipeline() {
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
-        SimplePipeline pipeline = new SimplePipeline();
+        SimplePipeline<Object> pipeline = new SimplePipeline<>();
         stage.setNonselectedItemPipeline(pipeline);
         Assert.assertSame(stage.getNonselectedItemPipeline(), pipeline);
     }
 
     @Test public void testSelectedItemPipeline() {
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
-        SimplePipeline pipeline = new SimplePipeline();
+        SimplePipeline<Object> pipeline = new SimplePipeline<>();
         stage.setSelectedItemPipeline(pipeline);
         Assert.assertSame(stage.getSelectedItemPipeline(), pipeline);
     }
 
     @Test public void testSelectionStrategy() {
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
         Assert.assertEquals(stage.getSelectionStrategy(), Predicates.alwaysTrue());
     }
 
     @Test public void testInitialization() throws Exception {
-        SimplePipeline pipeline = new SimplePipeline();
+        SimplePipeline<Object> pipeline = new SimplePipeline<>();
         pipeline.setId("pipeline");
 
-        SplitMergeStage stage;
+        SplitMergeStage<Object> stage;
 
-        stage = new SplitMergeStage();
+        stage = new SplitMergeStage<>();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
 
-        stage = new SplitMergeStage();
+        stage = new SplitMergeStage<>();
         stage.setId("test");
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
         stage.initialize();
 
-        stage = new SplitMergeStage();
+        stage = new SplitMergeStage<>();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
         stage.initialize();
 
         try {
-            stage = new SplitMergeStage();
+            stage = new SplitMergeStage<>();
             stage.setId("test");
-            stage.setSelectionStrategy(Predicates.alwaysTrue());
+            stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
             stage.initialize();
             Assert.fail();
         } catch (ComponentInitializationException e) {
@@ -113,27 +114,27 @@ public class SplitMergeStageTest {
     }
 
     @Test public void testExecute() throws Exception {
-        SimplePipeline selectedPipeline = new SimplePipeline();
+        SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
-        CountingStage selectedCount = new CountingStage();
-        selectedPipeline.setStages(Collections.singletonList(selectedCount));
+        CountingStage<String> selectedCount = new CountingStage<>();
+        selectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedCount));
 
-        SimplePipeline nonselectedPipeline = new SimplePipeline();
+        SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
         nonselectedPipeline.setId("nonselectedPipeline");
-        CountingStage nonselectedCount = new CountingStage();
-        nonselectedPipeline.setStages(Collections.singletonList(nonselectedCount));
+        CountingStage<String> nonselectedCount = new CountingStage<>();
+        nonselectedPipeline.setStages(Collections.<Stage<String>>singletonList(nonselectedCount));
 
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");
         MockItem item3 = new MockItem("three");
-        final List<MockItem> items = new ArrayList<>();
+        final List<Item<String>> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);
         items.add(item3);
 
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();
@@ -152,27 +153,27 @@ public class SplitMergeStageTest {
     
     /** Tests case where the selected items pipeline throws a {@link TerminationException}. */
     @Test public void testThrowSelected() throws Exception {
-        final SimplePipeline selectedPipeline = new SimplePipeline();
+        final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
-        final TerminatingStage selectedTerm = new TerminatingStage();
-        selectedPipeline.setStages(Collections.singletonList(selectedTerm));
+        final TerminatingStage<String> selectedTerm = new TerminatingStage<>();
+        selectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedTerm));
 
-        SimplePipeline nonselectedPipeline = new SimplePipeline();
+        SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
         nonselectedPipeline.setId("nonselectedPipeline");
-        CountingStage nonselectedCount = new CountingStage();
-        nonselectedPipeline.setStages(Collections.singletonList(nonselectedCount));
+        CountingStage<String> nonselectedCount = new CountingStage<>();
+        nonselectedPipeline.setStages(Collections.<Stage<String>>singletonList(nonselectedCount));
 
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");
         MockItem item3 = new MockItem("three");
-        final List<MockItem> items = new ArrayList<>();
+        final List<Item<String>> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);
         items.add(item3);
 
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();
@@ -187,27 +188,27 @@ public class SplitMergeStageTest {
     
     /** Tests case where the nonselected items pipeline throws a {@link TerminationException}. */
     @Test public void testThrowNonselected() throws Exception {
-        final SimplePipeline selectedPipeline = new SimplePipeline();
+        final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
-        CountingStage selectedCount = new CountingStage();
-        selectedPipeline.setStages(Collections.singletonList(selectedCount));
+        CountingStage<String> selectedCount = new CountingStage<>();
+        selectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedCount));
 
-        SimplePipeline nonselectedPipeline = new SimplePipeline();
+        SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
         nonselectedPipeline.setId("nonselectedPipeline");
-        final TerminatingStage selectedTerm = new TerminatingStage();
-        nonselectedPipeline.setStages(Collections.singletonList(selectedTerm));
+        final TerminatingStage<String> selectedTerm = new TerminatingStage<>();
+        nonselectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedTerm));
 
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");
         MockItem item3 = new MockItem("three");
-        final List<MockItem> items = new ArrayList<>();
+        final List<Item<String>> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);
         items.add(item3);
 
-        SplitMergeStage stage = new SplitMergeStage();
+        SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
-        stage.setSelectionStrategy(Predicates.alwaysTrue());
+        stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();

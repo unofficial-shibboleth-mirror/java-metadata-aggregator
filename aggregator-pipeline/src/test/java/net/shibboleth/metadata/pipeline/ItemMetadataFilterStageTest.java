@@ -35,19 +35,19 @@ import org.testng.annotations.Test;
 public class ItemMetadataFilterStageTest {
 
     /** Unmodifiable, prototype, collection of metadata elements. */
-    private Collection<Item<?>> metadataCollectionPrototype;
+    private Collection<Item<String>> metadataCollectionPrototype;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
-    private Item<?> md1;
+    private Item<String> md1;
 
     /** Metadata element which contains a {@link WarningStatus} item. */
-    private Item<?> md2;
+    private Item<String> md2;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
-    private Item<?> md3;
+    private Item<String> md3;
 
     /** Metadata element which contains a {@link WarningStatus} and {@link ErrorStatus} item. */
-    private Item<?> md4;
+    private Item<String> md4;
 
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest
@@ -73,9 +73,9 @@ public class ItemMetadataFilterStageTest {
     /** Tests a {@link ItemMetadataFilterStage} without any filter requirements. */
     @Test
     public void testNoFilterRequirements() throws Exception {
-        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
-        ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        ItemMetadataFilterStage<String> stage = new ItemMetadataFilterStage<>();
         stage.setId("test");
         stage.initialize();
         stage.execute(metadataCollection);
@@ -90,12 +90,12 @@ public class ItemMetadataFilterStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing one filter requirement. */
     @Test
     public void testSingleFilterRequirement() throws Exception {
-        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(ErrorStatus.class);
 
-        ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        ItemMetadataFilterStage<String> stage = new ItemMetadataFilterStage<>();
         stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
         stage.initialize();
@@ -111,14 +111,14 @@ public class ItemMetadataFilterStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing multiple filter requirements. */
     @Test
     public void testMultiFilterRequirement() throws Exception {
-        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
-        Collection filterRequirements = new ArrayList();
+        Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(InfoStatus.class);
         filterRequirements.add(WarningStatus.class);
         filterRequirements.add(ErrorStatus.class);
 
-        ItemMetadataFilterStage stage = new ItemMetadataFilterStage();
+        ItemMetadataFilterStage<String> stage = new ItemMetadataFilterStage<>();
         stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
         stage.initialize();

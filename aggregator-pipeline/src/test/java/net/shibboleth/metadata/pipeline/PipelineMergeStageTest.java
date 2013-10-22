@@ -29,35 +29,46 @@ import net.shibboleth.metadata.MockItem;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-
 /** {@link PipelineMergeStage} unit test. */
 public class PipelineMergeStageTest {
+
+    private <T> List<T> newSingletonList(T element) {
+        final List<T> list = new ArrayList<>();
+        list.add(element);
+        return list;
+    }
+    
+    private <T> List<T> newTwoElementList(T element1, T element2) {
+        final List<T> list = new ArrayList<>();
+        list.add(element1);
+        list.add(element2);
+        return list;
+    }
 
     @Test public void test() throws Exception {
         Item<String> md1 = new MockItem("one");
         StaticItemSourceStage<String> source1 = new StaticItemSourceStage<>();
         source1.setId("src1");
-        source1.setSourceItems(Lists.newArrayList(md1));
+        source1.setSourceItems(newSingletonList(md1));
         SimplePipeline<String> pipeline1 = new SimplePipeline<String>();
         pipeline1.setId("p1");
-        pipeline1.setStages(Lists.newArrayList((Stage<String>) source1));
+        pipeline1.setStages(newSingletonList((Stage<String>) source1));
 
         Item<String> md2 = new MockItem("two");
         StaticItemSourceStage<String> source2 = new StaticItemSourceStage<>();
         source2.setId("src2");
-        source2.setSourceItems(Lists.newArrayList(md2));
+        source2.setSourceItems(newSingletonList(md2));
         SimplePipeline<String> pipeline2 = new SimplePipeline<>();
         pipeline2.setId("p2");
-        pipeline2.setStages(Lists.newArrayList((Stage<String>) source2));
+        pipeline2.setStages(newSingletonList((Stage<String>) source2));
 
         final Collection<Pipeline<String>> joinedPipelines = new ArrayList<>();
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
 
-        PipelineMergeStage joinSource = new PipelineMergeStage();
+        PipelineMergeStage<String> joinSource = new PipelineMergeStage<>();
         joinSource.setId("joinSource");
-        joinSource.setMergedPipelines(Lists.newArrayList(pipeline1, pipeline2));
+        joinSource.setMergedPipelines(newTwoElementList(pipeline1, pipeline2));
 
         Assert.assertFalse(joinSource.isInitialized());
         Assert.assertFalse(pipeline1.isInitialized());
@@ -68,7 +79,7 @@ public class PipelineMergeStageTest {
         Assert.assertTrue(pipeline1.isInitialized());
         Assert.assertTrue(pipeline2.isInitialized());
 
-        final ArrayList<Item<?>> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<String>> metadataCollection = new ArrayList<>();
         joinSource.execute(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 2);
 
@@ -183,16 +194,16 @@ public class PipelineMergeStageTest {
         Item<String> md1 = new MockItem("one");
         StaticItemSourceStage<String> source1 = new StaticItemSourceStage<>();
         source1.setId("src1");
-        source1.setSourceItems(Lists.newArrayList(md1));
+        source1.setSourceItems(newSingletonList(md1));
         SimplePipeline<String> pipeline1 = new SimplePipeline<>();
         pipeline1.setId("p1");
-        pipeline1.setStages(Lists.newArrayList((Stage<String>) source1));
+        pipeline1.setStages(newSingletonList((Stage<String>) source1));
 
         final Item<String> md2 = new MockItem("two");
         final StaticItemSourceStage<String> source2 = new StaticItemSourceStage<>();
         source2.setId("src2");
-        source2.setSourceItems(Lists.newArrayList(md2));
-        final TerminatingStage term = new TerminatingStage();
+        source2.setSourceItems(newSingletonList(md2));
+        final TerminatingStage<String> term = new TerminatingStage<>();
         SimplePipeline<String> pipeline2 = new SimplePipeline<>();
         pipeline2.setId("p2");
         final List<Stage<String>> stages = new ArrayList<>();
@@ -204,9 +215,9 @@ public class PipelineMergeStageTest {
         joinedPipelines.add(pipeline1);
         joinedPipelines.add(pipeline2);
 
-        PipelineMergeStage joinSource = new PipelineMergeStage();
+        PipelineMergeStage<String> joinSource = new PipelineMergeStage<>();
         joinSource.setId("joinSource");
-        joinSource.setMergedPipelines(Lists.newArrayList(pipeline1, pipeline2));
+        joinSource.setMergedPipelines(newTwoElementList(pipeline1, pipeline2));
 
         Assert.assertFalse(joinSource.isInitialized());
         Assert.assertFalse(pipeline1.isInitialized());
@@ -217,7 +228,7 @@ public class PipelineMergeStageTest {
         Assert.assertTrue(pipeline1.isInitialized());
         Assert.assertTrue(pipeline2.isInitialized());
 
-        final ArrayList<Item<?>> metadataCollection = new ArrayList<>();
+        final ArrayList<Item<String>> metadataCollection = new ArrayList<>();
         try {
             joinSource.execute(metadataCollection);
             Assert.fail("expected exception not thrown");

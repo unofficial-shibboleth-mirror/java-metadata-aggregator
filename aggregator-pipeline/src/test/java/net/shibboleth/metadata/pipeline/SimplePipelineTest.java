@@ -28,8 +28,6 @@ import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-
 public class SimplePipelineTest {
 
     @Test public void testInitialize() throws Exception {
@@ -86,8 +84,8 @@ public class SimplePipelineTest {
         pipeline.execute(metadata);
         Assert.assertEquals(metadata.size(), 2);
 
-        Assert.assertEquals(((CountingStage) stages.get(1)).getInvocationCount(), 1);
-        Assert.assertEquals(((CountingStage) stages.get(2)).getInvocationCount(), 1);
+        Assert.assertEquals(((CountingStage<String>) stages.get(1)).getInvocationCount(), 1);
+        Assert.assertEquals(((CountingStage<String>) stages.get(2)).getInvocationCount(), 1);
 
         Item<String> md = metadata.iterator().next();
         Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
@@ -105,17 +103,20 @@ public class SimplePipelineTest {
         metadata.clear();
         pipeline.execute(metadata);
         Assert.assertEquals(metadata.size(), 2);
-        Assert.assertEquals(((CountingStage) stages.get(1)).getInvocationCount(), 2);
-        Assert.assertEquals(((CountingStage) stages.get(2)).getInvocationCount(), 2);
+        Assert.assertEquals(((CountingStage<String>) stages.get(1)).getInvocationCount(), 2);
+        Assert.assertEquals(((CountingStage<String>) stages.get(2)).getInvocationCount(), 2);
     }
 
     protected List<Stage<String>> buildStages() {
         final Item<String> md1 = new MockItem("one");
         final Item<String> md2 = new MockItem("two");
+        final List<Item<String>> items = new ArrayList<>();
+        items.add(md1);
+        items.add(md2);
 
         final StaticItemSourceStage<String> source = new StaticItemSourceStage<>();
         source.setId("src");
-        source.setSourceItems(Lists.newArrayList(md1, md2));
+        source.setSourceItems(items);
 
         final CountingStage<String> stage1 = new CountingStage<>();
         final CountingStage<String> stage2 = new CountingStage<>();

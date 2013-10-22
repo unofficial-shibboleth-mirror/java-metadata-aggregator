@@ -23,6 +23,7 @@ import java.util.Collection;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
 
@@ -34,19 +35,19 @@ import org.testng.annotations.Test;
 public class ItemMetadataTerminationStageTest {
 
     /** Unmodifiable, prototype, collection of metadata elements. */
-    private Collection<Item<?>> metadataCollectionPrototype;
+    private Collection<Item<String>> metadataCollectionPrototype;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
-    private Item md1;
+    private Item<String> md1;
 
     /** Metadata element which contains a {@link WarningStatus} item. */
-    private Item md2;
+    private Item<String> md2;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
-    private Item md3;
+    private Item<String> md3;
 
     /** Metadata element which contains a {@link WarningStatus} and {@link ErrorStatus} item. */
-    private Item md4;
+    private Item<String> md4;
 
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest
@@ -72,9 +73,9 @@ public class ItemMetadataTerminationStageTest {
     /** Tests a {@link ItemMetadataFilterStage} without any selection requirements. */
     @Test
     public void testNoSelectionRequirements() throws Exception {
-        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
-        ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
+        ItemMetadataTerminationStage<String> stage = new ItemMetadataTerminationStage<>();
         stage.setId("test");
         stage.initialize();
         try {
@@ -93,12 +94,12 @@ public class ItemMetadataTerminationStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing one selection requirement. */
     @Test
     public void testSingleSelectionRequirement() throws Exception {
-        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
-        Collection filterRequirements = new ArrayList();
+        Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(ErrorStatus.class);
 
-        ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
+        ItemMetadataTerminationStage<String> stage = new ItemMetadataTerminationStage<>();
         stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
         stage.initialize();
@@ -113,14 +114,14 @@ public class ItemMetadataTerminationStageTest {
     /** Tests a {@link ItemMetadataFilterStage} containing multiple selection requirements. */
     @Test
     public void testMultiSelectionRequirement() throws Exception {
-        final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
-        Collection filterRequirements = new ArrayList();
+        Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(InfoStatus.class);
         filterRequirements.add(WarningStatus.class);
         filterRequirements.add(ErrorStatus.class);
 
-        ItemMetadataTerminationStage stage = new ItemMetadataTerminationStage();
+        ItemMetadataTerminationStage<String> stage = new ItemMetadataTerminationStage<>();
         stage.setId("test");
         stage.setSelectionRequirements(filterRequirements);
         stage.initialize();
