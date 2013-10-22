@@ -73,9 +73,10 @@ public class StaticItemSourceStage<ItemType extends Item<?>> extends BaseStage<I
     /** {@inheritDoc} */
     protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
             throws StageProcessingException {
-        for (ItemType items : getSourceItems()) {
-            if (items != null) {
-                itemCollection.add((ItemType) items.copy());
+        for (ItemType item : getSourceItems()) {
+            if (item != null) {
+                @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
+                itemCollection.add(copied);
             }
         }
     }

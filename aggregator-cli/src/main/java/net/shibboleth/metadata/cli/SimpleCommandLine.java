@@ -72,7 +72,7 @@ public final class SimpleCommandLine {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        SimpleCommandLineArguments cli = new SimpleCommandLineArguments();
+        final SimpleCommandLineArguments cli = new SimpleCommandLineArguments();
         cli.parseCommandLineArguments(args);
 
         if (cli.doHelp()) {
@@ -93,8 +93,13 @@ public final class SimpleCommandLine {
         }
 
         log.debug("Retrieving pipeline from Spring context");
-        String pipelineName = cli.getPipelineName();
-        Pipeline pipeline = appCtx.getBean(pipelineName, Pipeline.class);
+        final String pipelineName = cli.getPipelineName();
+        
+        // Warning suppressed: unavoidable, given type erasure
+        @SuppressWarnings("unchecked")
+        final Pipeline<DOMElementItem> pipeline =
+            (Pipeline<DOMElementItem>) appCtx.getBean(pipelineName, Pipeline.class);
+
         if (pipeline == null) {
             log.error("No net.shibboleth.metadata.pipeline.Pipeline, with ID {}, defined in Spring configuration",
                     pipelineName);
@@ -109,11 +114,11 @@ public final class SimpleCommandLine {
                 log.debug("Retrieved pipeline has already been initialized");
             }
 
-            ArrayList<DOMElementItem> item = new ArrayList<>();
-            Date startTime = new Date();
+            final ArrayList<DOMElementItem> itemCollection = new ArrayList<>();
+            final Date startTime = new Date();
             log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
-            pipeline.execute(item);
-            Date endTime = new Date();
+            pipeline.execute(itemCollection);
+            final Date endTime = new Date();
             log.info("Pipeline '{}' execution completed at {}; run time {} seconds",
                     new Object[]{pipelineName, endTime, (endTime.getTime()-startTime.getTime())/1000f});
 

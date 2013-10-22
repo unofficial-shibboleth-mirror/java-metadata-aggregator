@@ -70,7 +70,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.OTHER));
         Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
-        stage.setDesignatedTypes(Collections.EMPTY_LIST);
+        stage.setDesignatedTypes(Collections.<String>emptyList());
         Assert.assertEquals(stage.getDesignateTypes().size(), 0);
 
         stage.setDesignatedTypes(null);

@@ -234,19 +234,18 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
             }
         }
 
-        Future<Collection<? extends Item>> selectedItemFuture = executePipeline(selectedItemPipeline, selectedItems);
-        Future<Collection<? extends Item>> nonselectedItemFuture =
+        final Future<Collection<ItemType>> selectedItemFuture = executePipeline(selectedItemPipeline, selectedItems);
+        final Future<Collection<ItemType>> nonselectedItemFuture =
                 executePipeline(nonselectedItemPipeline, nonselectedItems);
 
-        final ArrayList<Collection<? extends Item>> pipelineResults = new ArrayList<>();
+        final ArrayList<Collection<ItemType>> pipelineResults = new ArrayList<>();
         
         // resolve results from the pipelines
         pipelineResults.add(FutureSupport.futureItems(selectedItemFuture));
         pipelineResults.add(FutureSupport.futureItems(nonselectedItemFuture));
 
         itemCollection.clear();
-        mergeStrategy.mergeCollection((Collection<Item<?>>) itemCollection,
-                pipelineResults.toArray(new Collection[pipelineResults.size()]));
+        mergeStrategy.mergeCollection(itemCollection, pipelineResults);
     }
 
     /**
@@ -257,13 +256,13 @@ public class SplitMergeStage<ItemType extends Item<?>> extends BaseStage<ItemTyp
      * 
      * @return the token representing the background execution of the pipeline
      */
-    @Nonnull protected Future<Collection<? extends Item>> executePipeline(Pipeline<ItemType> pipeline,
+    @Nonnull protected Future<Collection<ItemType>> executePipeline(Pipeline<ItemType> pipeline,
             Collection<ItemType> items) {
         if (pipeline == null) {
             return null;
         }
 
-        PipelineCallable callable = new PipelineCallable(pipeline, items);
+        final PipelineCallable<ItemType> callable = new PipelineCallable<>(pipeline, items);
         return executorService.submit(callable);
     }
 

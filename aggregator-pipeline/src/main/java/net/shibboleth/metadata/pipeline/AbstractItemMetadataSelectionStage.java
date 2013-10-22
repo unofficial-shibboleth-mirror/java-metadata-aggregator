@@ -50,7 +50,7 @@ import com.google.common.collect.Iterables;
 public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<?>> {
 
     /** {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be selected. */
-    private Collection<Class<ItemMetadata>> selectionRequirements = Collections.emptyList();
+    private Collection<Class<? extends ItemMetadata>> selectionRequirements = Collections.emptyList();
 
     /** Strategy used to generate item identifiers for logging purposes. */
     private ItemIdentificationStrategy identifierStrategy = new FirstItemIdItemIdentificationStrategy();
@@ -62,7 +62,8 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      * @return {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
      *         selected, never null nor containing null elements
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<Class<ItemMetadata>> getSelectionRequirements() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<Class<? extends ItemMetadata>> getSelectionRequirements() {
         return selectionRequirements;
     }
 
@@ -74,7 +75,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
      *            {@link Item} to be selected, may be null or contain null elements
      */
     public synchronized void setSelectionRequirements(
-            @Nullable @NullableElements final Collection<Class<ItemMetadata>> requirements) {
+            @Nullable @NullableElements final Collection<Class<? extends ItemMetadata>> requirements) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -116,7 +117,7 @@ public abstract class AbstractItemMetadataSelectionStage extends BaseStage<Item<
             final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
                     new HashMap<>();
 
-            for (Class<ItemMetadata> infoClass : selectionRequirements) {
+            for (Class<? extends ItemMetadata> infoClass : selectionRequirements) {
                 if (item.getItemMetadata().containsKey(infoClass)) {
                     matchingMetadata.put(infoClass, item.getItemMetadata().get(infoClass));
                 }

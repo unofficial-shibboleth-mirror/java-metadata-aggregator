@@ -23,6 +23,7 @@ import java.util.Collection;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
 
@@ -37,16 +38,16 @@ public class ItemMetadataFilterStageTest {
     private Collection<Item<?>> metadataCollectionPrototype;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
-    private Item md1;
+    private Item<?> md1;
 
     /** Metadata element which contains a {@link WarningStatus} item. */
-    private Item md2;
+    private Item<?> md2;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
-    private Item md3;
+    private Item<?> md3;
 
     /** Metadata element which contains a {@link WarningStatus} and {@link ErrorStatus} item. */
-    private Item md4;
+    private Item<?> md4;
 
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
     @BeforeTest
@@ -91,7 +92,7 @@ public class ItemMetadataFilterStageTest {
     public void testSingleFilterRequirement() throws Exception {
         final Collection<Item<?>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
-        Collection filterRequirements = new ArrayList();
+        Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(ErrorStatus.class);
 
         ItemMetadataFilterStage stage = new ItemMetadataFilterStage();

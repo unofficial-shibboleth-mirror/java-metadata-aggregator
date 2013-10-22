@@ -18,6 +18,7 @@
 package net.shibboleth.metadata;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +32,8 @@ public interface CollectionMergeStrategy {
      * 
      * @param target collection in to which all the Items should be merged, never null
      * @param sources collections of Items to be merged in to the target, never null not containing any null elements
+     * @param <ItemType> the type of each of the collections being merged
      */
-    public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
-            @Nonnull @NonnullElements final Collection<Item<?>>... sources);
+    public <ItemType extends Item<?>> void mergeCollection(@Nonnull @NonnullElements final Collection<ItemType> target,
+            @Nonnull @NonnullElements final List<Collection<ItemType>> sources);
 }

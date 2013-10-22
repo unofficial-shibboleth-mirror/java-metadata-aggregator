@@ -155,7 +155,7 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         Assert.assertTrue(stage.getCdataSectionElements().contains("foo"));
         Assert.assertTrue(stage.getCdataSectionElements().contains("bar"));
 
-        stage.setCdataSectionElements(Collections.EMPTY_LIST);
+        stage.setCdataSectionElements(Collections.<String>emptyList());
         Assert.assertTrue(stage.getCdataSectionElements().isEmpty());
 
         try {

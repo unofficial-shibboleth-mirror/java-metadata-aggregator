@@ -34,22 +34,22 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy {
 
     /** {@inheritDoc} */
-    public void mergeCollection(@Nonnull @NonnullElements final Collection<Item<?>> target,
-            @Nonnull @NonnullElements final Collection<Item<?>>... sources) {
+    public <ItemType extends Item<?>> void mergeCollection(@Nonnull @NonnullElements final Collection<ItemType> target,
+            @Nonnull @NonnullElements final List<Collection<ItemType>> sources) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");
         
         List<ItemId> itemIds;
         final HashSet<ItemId> presentItemIds = new HashSet<>();
 
-        for (Item item : target) {
+        for (ItemType item : target) {
             itemIds = item.getItemMetadata().get(ItemId.class);
             if (itemIds != null) {
                 presentItemIds.addAll(itemIds);
             }
         }
 
-        for (Collection<Item<?>> source : sources) {
+        for (Collection<ItemType> source : sources) {
             merge(presentItemIds, target, source);
         }
     }
@@ -62,13 +62,14 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
      * @param presentItemIds IDs that are already present in the target collection
      * @param target the collection to which items will be merged in to
      * @param sourceItems the collection of items to be merged in to the target
+     * @param <ItemType> type of the items in the collections
      */
-    private void merge(@Nonnull @NonnullElements final HashSet<ItemId> presentItemIds,
-            @Nonnull @NonnullElements final Collection<Item<?>> target,
-            @Nonnull @NonnullElements final Collection<Item<?>> sourceItems) {
+    private <ItemType extends Item<?>> void merge(@Nonnull @NonnullElements final HashSet<ItemId> presentItemIds,
+            @Nonnull @NonnullElements final Collection<ItemType> target,
+            @Nonnull @NonnullElements final Collection<ItemType> sourceItems) {
         boolean itemAlreadyPresent;
         List<ItemId> itemIds;
-        for (Item sourceItem : sourceItems) {
+        for (ItemType sourceItem : sourceItems) {
             itemIds = sourceItem.getItemMetadata().get(ItemId.class);
             if (itemIds == null || itemIds.isEmpty()) {
                 target.add(sourceItem);

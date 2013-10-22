@@ -29,7 +29,7 @@ import com.google.common.base.Supplier;
  * 
  * @param <ItemType> the type of items the produced collection will contain
  */
-public class SimpleItemCollectionFactory<ItemType extends Item> implements Supplier<Collection<ItemType>> {
+public class SimpleItemCollectionFactory<ItemType extends Item<?>> implements Supplier<Collection<ItemType>> {
 
     /** {@inheritDoc} */
     @Nonnull public Collection<ItemType> get() {

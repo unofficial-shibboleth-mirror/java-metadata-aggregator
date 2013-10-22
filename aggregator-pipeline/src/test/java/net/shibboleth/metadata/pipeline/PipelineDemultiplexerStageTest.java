@@ -38,9 +38,9 @@ import com.google.common.base.Predicates;
 public class PipelineDemultiplexerStageTest {
 
     @Test public void testCollectionFactory() {
-        PipelineDemultiplexerStage stage = new PipelineDemultiplexerStage();
+        PipelineDemultiplexerStage<MockItem> stage = new PipelineDemultiplexerStage<>();
 
-        SimpleItemCollectionFactory factory = new SimpleItemCollectionFactory();
+        SimpleItemCollectionFactory<MockItem> factory = new SimpleItemCollectionFactory<>();
         stage.setCollectionFactory(factory);
         Assert.assertEquals(stage.getCollectionFactory(), factory);
     }
@@ -69,7 +69,7 @@ public class PipelineDemultiplexerStageTest {
     }
 
     @Test public void testInitialize() throws Exception {
-        SimplePipeline pipeline = new SimplePipeline();
+        SimplePipeline<MockItem> pipeline = new SimplePipeline<>();
         pipeline.setId("pipeline");
 
         PipelineDemultiplexerStage stage;
@@ -83,7 +83,7 @@ public class PipelineDemultiplexerStageTest {
         Assert.assertNotNull(stage.getExecutorService());
 
         try {
-            stage = new PipelineDemultiplexerStage();
+            stage = new PipelineDemultiplexerStage<MockItem>();
             stage.setId("test");
             stage.initialize();
             Assert.fail();
@@ -116,9 +116,9 @@ public class PipelineDemultiplexerStageTest {
     }
     
     @Test public void testThrow() throws Exception {
-        SimplePipeline pipeline = new SimplePipeline();
+        SimplePipeline<MockItem> pipeline = new SimplePipeline<>();
         pipeline.setId("selectedPipeline");
-        final TerminatingStage terminatingStage = new TerminatingStage();
+        final TerminatingStage<MockItem> terminatingStage = new TerminatingStage<>();
         pipeline.setStages(Collections.singletonList(terminatingStage));
 
         final List<MockItem> items = new ArrayList<>();

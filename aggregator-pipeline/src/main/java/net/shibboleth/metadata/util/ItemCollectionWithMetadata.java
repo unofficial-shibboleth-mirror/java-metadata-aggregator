@@ -35,7 +35,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * 
  * @param <ItemType> type of items stored in this collection
  */
-public class ItemCollectionWithMetadata<ItemType extends Item> implements Collection<ItemType> {
+public class ItemCollectionWithMetadata<ItemType extends Item<?>> implements Collection<ItemType> {
 
     /** The delegate collection. */
     private final Collection<ItemType> delegate;

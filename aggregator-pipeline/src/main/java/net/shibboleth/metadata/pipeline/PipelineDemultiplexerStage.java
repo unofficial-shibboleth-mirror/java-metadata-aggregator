@@ -164,7 +164,7 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
             return;
         }
 
-        Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>> checkedPasses =
+        final Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>> checkedPasses =
                 new Builder<Pair<Pipeline<ItemType>, Predicate<ItemType>>>();
         for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pass : passes) {
             Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
@@ -179,27 +179,26 @@ public class PipelineDemultiplexerStage<ItemType extends Item<?>> extends BaseSt
     /** {@inheritDoc} */
     protected void doExecute(@Nonnull @NonnullElements final Collection<ItemType> itemCollection)
             throws StageProcessingException {
-        Pipeline<ItemType> pipeline;
-        Predicate<ItemType> selectionStrategy;
         Collection<ItemType> selectedItems;
-        final ArrayList<Future> pipelineFutures = new ArrayList<>();
+        final ArrayList<Future<Collection<ItemType>>> pipelineFutures = new ArrayList<>();
 
         for (Pair<Pipeline<ItemType>, Predicate<ItemType>> pipelineAndStrategy : pipelineAndStrategies) {
-            pipeline = pipelineAndStrategy.getFirst();
-            selectionStrategy = pipelineAndStrategy.getSecond();
+            final Pipeline<ItemType> pipeline = pipelineAndStrategy.getFirst();
+            final Predicate<ItemType> selectionStrategy = pipelineAndStrategy.getSecond();
             selectedItems = collectionFactory.get();
 
             for (ItemType item : itemCollection) {
                 if (selectionStrategy.apply(item)) {
-                    selectedItems.add((ItemType) item.copy());
+                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
+                    selectedItems.add(copied);
                 }
             }
 
-            pipelineFutures.add(executorService.submit(new PipelineCallable(pipeline, selectedItems)));
+            pipelineFutures.add(executorService.submit(new PipelineCallable<ItemType>(pipeline, selectedItems)));
         }
 
         if (isWaitingForPipelines()) {
-            for (Future pipelineFuture : pipelineFutures) {
+            for (Future<Collection<ItemType>> pipelineFuture : pipelineFutures) {
                 FutureSupport.futureItems(pipelineFuture);
             }
         }

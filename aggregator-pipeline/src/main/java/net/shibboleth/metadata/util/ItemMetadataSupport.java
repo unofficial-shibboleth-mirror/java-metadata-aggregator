@@ -40,7 +40,7 @@ public final class ItemMetadataSupport {
      * @param metadatas collection of {@link ItemMetadata} items to be added to each {@link Item} element of the given
      *            collection
      */
-    public static void addToAll(@Nullable final Collection<? extends Item> itemCollection,
+    public static void addToAll(@Nullable final Collection<? extends Item<?>> itemCollection,
             @Nullable @NullableElements Iterable<? extends ItemMetadata> metadatas) {
         if (itemCollection == null || metadatas == null) {
             return;
@@ -76,17 +76,18 @@ public final class ItemMetadataSupport {
      * 
      * @param itemCollection collection to which the metadata may be added
      * @param itemMetadatas the metadata which may be added to the collection
+     * @param <ItemType> type of item in the collections
      */
-    public static void addToCollection(@Nullable final Collection<? extends Item> itemCollection,
+    public static <ItemType extends Item<?>> void addToCollection(@Nullable final Collection<ItemType> itemCollection,
             @Nullable @NullableElements final Iterable<? extends ItemMetadata> itemMetadatas) {
-        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata)) {
+        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata<?>)) {
             return;
         }
         if (itemMetadatas == null) {
             return;
         }
 
-        ItemCollectionWithMetadata collection = (ItemCollectionWithMetadata) itemCollection;
+        ItemCollectionWithMetadata<ItemType> collection = (ItemCollectionWithMetadata<ItemType>) itemCollection;
         for (ItemMetadata metadata : itemMetadatas) {
             if (metadata != null) {
                 collection.getCollectionMetadata().put(metadata);

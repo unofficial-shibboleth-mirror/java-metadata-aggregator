@@ -93,7 +93,7 @@ public class PipelineMergeStageTest {
     @Test public void testDediplicatingItemIdMergeStrategySingleSource() {
         DeduplicatingItemIdMergeStrategy strategy = new DeduplicatingItemIdMergeStrategy();
 
-        final List<Item<?>> target = new ArrayList<>();
+        final List<MockItem> target = new ArrayList<>();
         MockItem item1 = new MockItem("item1");
         target.add(item1);
         MockItem item2 = new MockItem("item2");
@@ -104,7 +104,7 @@ public class PipelineMergeStageTest {
         item3.getItemMetadata().put(new ItemId("itemC"));
         target.add(item3);
 
-        final List<Item<?>> source1 = new ArrayList<>();
+        final List<MockItem> source1 = new ArrayList<>();
         MockItem item4 = new MockItem("item4");
         item4.getItemMetadata().put(new ItemId("itemD"));
         source1.add(item4);
@@ -114,7 +114,10 @@ public class PipelineMergeStageTest {
         MockItem item6 = new MockItem("item6");
         source1.add(item6);
 
-        strategy.mergeCollection(target, source1);
+        final List<Collection<MockItem>> sources = new ArrayList<>();
+        sources.add(source1);
+        
+        strategy.mergeCollection(target, sources);
         Assert.assertTrue(target.contains(item1));
         Assert.assertTrue(target.contains(item2));
         Assert.assertTrue(target.contains(item3));
@@ -127,7 +130,7 @@ public class PipelineMergeStageTest {
     @Test public void testDediplicatingItemIdMergeStrategyMultipleSource() {
         DeduplicatingItemIdMergeStrategy strategy = new DeduplicatingItemIdMergeStrategy();
 
-        final List<Item<?>> target = new ArrayList<>();
+        final List<MockItem> target = new ArrayList<>();
         MockItem item1 = new MockItem("item1");
         target.add(item1);
         MockItem item2 = new MockItem("item2");
@@ -138,7 +141,7 @@ public class PipelineMergeStageTest {
         item3.getItemMetadata().put(new ItemId("itemC"));
         target.add(item3);
 
-        final List<Item<?>> source1 = new ArrayList<>();
+        final List<MockItem> source1 = new ArrayList<>();
         MockItem item4 = new MockItem("item4");
         item4.getItemMetadata().put(new ItemId("itemD"));
         source1.add(item4);
@@ -148,7 +151,7 @@ public class PipelineMergeStageTest {
         MockItem item6 = new MockItem("item6");
         source1.add(item6);
 
-        final List<Item<?>> source2 = new ArrayList<>();
+        final List<MockItem> source2 = new ArrayList<>();
         MockItem item7 = new MockItem("item7");
         item7.getItemMetadata().put(new ItemId("itemD"));
         source2.add(item7);
@@ -158,7 +161,11 @@ public class PipelineMergeStageTest {
         item9.getItemMetadata().put(new ItemId("itemA"));
         source2.add(item9);
 
-        strategy.mergeCollection(target, source1, source2);
+        final List<Collection<MockItem>> sources = new ArrayList<>();
+        sources.add(source1);
+        sources.add(source2);
+        
+        strategy.mergeCollection(target, sources);
         Assert.assertTrue(target.contains(item1));
         Assert.assertTrue(target.contains(item2));
         Assert.assertTrue(target.contains(item3));

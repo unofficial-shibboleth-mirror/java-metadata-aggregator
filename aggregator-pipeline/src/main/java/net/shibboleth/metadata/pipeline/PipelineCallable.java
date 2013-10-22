@@ -29,17 +29,21 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A {@link Callable} that executes a {@link Pipeline} and returns the given item collection. */
-public class PipelineCallable implements Callable<Collection<? extends Item>> {
+/**
+ * A {@link Callable} that executes a {@link Pipeline} and returns the given item collection.
+ * 
+ * @param <ItemType> type of the items processed by the pipeline
+ */
+public class PipelineCallable<ItemType extends Item<?>> implements Callable<Collection<ItemType>> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(PipelineCallable.class);
 
     /** The pipeline to be executed, never null. */
-    private Pipeline pipeline;
+    private Pipeline<ItemType> pipeline;
 
     /** The collection of items upon which the pipeline will operate. */
-    private Collection<? extends Item> itemCollection;
+    private Collection<ItemType> itemCollection;
 
     /**
      * Constructor.
@@ -47,8 +51,8 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
      * @param invokedPipeline the pipeline that will be invoked; must be initialized; can not be null
      * @param items the collection of items upon which the pipeline will operate, can not be null
      */
-    public PipelineCallable(@Nonnull final Pipeline invokedPipeline,
-            @Nonnull @NonnullElements final Collection<? extends Item> items) {
+    public PipelineCallable(@Nonnull final Pipeline<ItemType> invokedPipeline,
+            @Nonnull @NonnullElements final Collection<ItemType> items) {
         pipeline = Constraint.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
         Constraint.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
 
@@ -60,7 +64,7 @@ public class PipelineCallable implements Callable<Collection<? extends Item>> {
      * 
      * @throws PipelineProcessingException
      */
-    @Nonnull @NonnullElements public Collection<? extends Item> call() throws PipelineProcessingException {
+    @Nonnull @NonnullElements public Collection<ItemType> call() throws PipelineProcessingException {
         log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
                 itemCollection.size());
         pipeline.execute(itemCollection);
