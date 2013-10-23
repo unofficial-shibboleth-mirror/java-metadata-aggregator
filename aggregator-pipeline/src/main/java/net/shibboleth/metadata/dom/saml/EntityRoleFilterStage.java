@@ -51,7 +51,7 @@ import com.google.common.collect.Iterables;
 /**
  * A pipeline stage that will filter SAML role descriptors from EntityDescriptors.
  * 
- * This filter will work on {@link DOMElementItem} elements that are entity or entities descriptors. In the case of
+ * This filter will work on {@link Element} items that are entity or entities descriptors. In the case of
  * EntitiesDescriptors the role filter will effect all descendant EntityDescriptors.
  */
 @ThreadSafe
