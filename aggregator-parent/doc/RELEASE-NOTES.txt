@@ -2,7 +2,8 @@ Release Notes - Metadata Aggregator - Version 0.8.0
 ===================================================
 
 Highlights
-   * API changes for new Shibboleth coding conventions
+   * API changes for new Shibboleth coding conventions, and in the
+     use of generic types
    * Signature validation can reject empty references, blacklist
      algorithm URIs and protects against "wrapping" attacks.
    * Moved to Java 7, Apache Santuario V1.5
@@ -43,6 +44,7 @@ API Changes
     * [MDA-89] - add license and release notes to aggregator-cli package
     * [MDA-95] - API changes for new Shibboleth coding conventions
     * [MDA-111] - bundle spring-extensions in MDA cli package
+    * [MDA-113] - improve use of generic types internally and in API
     * [MDA-118] - correct double initialisation of ID attribute list in signing stage
 
 ** New Feature
