@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+    xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+    xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+    xmlns:ukfedlabel="http://ukfederation.org.uk/2006/11/label" xmlns:wayf="http://sdss.ac.uk/2006/06/WAYF"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    ID="uk002232" entityID="https://example.org/entity">
+    <SPSSODescriptor
+        protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol">
+        <Extensions>
+            <init:RequestInitiator Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init"
+                Location="https://example.org/sso/Shibboleth.sso/Login"/>
+            <idpdisc:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                Location="https://example.org/sso/Shibboleth.sso/Login" index="1"/>
+        </Extensions>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+            Location="https://example.org/sso/Shibboleth.sso/Artifact/SOAP" index="1"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="https://example.org/sso/Shibboleth.sso/SAML2/POST" index="1"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+            Location="https://example.org/sso/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+            Location="https://example.org/sso/Shibboleth.sso/SAML2/Artifact" index="3"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"
+            Location="https://example.org/sso/Shibboleth.sso/SAML2/ECP" index="4"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
+            Location="https://example.org/sso/Shibboleth.sso/SAML/POST" index="5"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
+            Location="https://example.org/sso/Shibboleth.sso/SAML/Artifact" index="6"/>
+    </SPSSODescriptor>
+</EntityDescriptor>

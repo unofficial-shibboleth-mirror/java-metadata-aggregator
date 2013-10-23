@@ -6,6 +6,7 @@ Highlights
      use of generic types
    * Signature validation can reject empty references, blacklist
      algorithm URIs and protects against "wrapping" attacks.
+   * New stage to extract MDRPI registrationInfo into item metadata.
    * Moved to Java 7, Apache Santuario V1.5
    * Improved CLI experience
    * bug fixes
@@ -26,6 +27,14 @@ API Changes
       * getXslResource becomes getXSLResource
       * setXslResource becomes setXSLResource
    * BaseDomTest test class becomes BaseDOMTest
+   * Stages and Pipelines with generic types are parameterised by the
+     type *wrapped* in the Item, not the implementation type.  For example,
+     you would now use a Stage<Element> rather than a Stage<DOMElementItem>
+   * Most internal Stage APIs have been changed in a similar way.  For example,
+     Collection<DOMElementItem> would become Collection<Item<Element>>.
+   * The generic type changes mean that the DOM-based stages can work over any
+     class implementing Item<Element>, not just the supplied DOMElementItem.
+
 
 ** Bug
     * [MDA-44] - exceptions should be propagated up from subordinate pipelines
@@ -52,6 +61,7 @@ API Changes
     * [MDA-91] - allow checking that SAML metadata is signed using ID, not empty reference
     * [MDA-102] - allow configuration of URI resolver for XSLT stages
     * [MDA-120] - signature validation stage should allow algorithm blacklisting
+    * [MDA-121] - add stage to extract mdrpi registrationAuthority value into item metadata
 
 ** Task
     * [MDA-68] - Convert command line interface to use JCommander
