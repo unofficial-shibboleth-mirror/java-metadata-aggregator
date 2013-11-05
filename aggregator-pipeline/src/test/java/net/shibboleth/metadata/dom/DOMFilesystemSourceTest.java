@@ -33,10 +33,10 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link DOMFilesystemSourceStage}. */
-public class DomFilesystemSourceTest {
+public class DOMFilesystemSourceTest {
 
     @Test public void testSuccessfulFileFetchAndParse() throws Exception {
-        URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
+        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -55,7 +55,7 @@ public class DomFilesystemSourceTest {
     }
 
     @Test public void testSuccessfulDirectoryFetchAndParse() throws Exception {
-        URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/samlMetadata");
+        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata");
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -74,7 +74,7 @@ public class DomFilesystemSourceTest {
     }
 
     public void testSuccessfulDirectoryFetchWithFilterAndParse() throws Exception {
-        URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
+        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -100,7 +100,7 @@ public class DomFilesystemSourceTest {
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
-        URL sourceUrl = DomFilesystemSourceTest.class.getResource("/data/loremIpsum.txt");
+        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/loremIpsum.txt");
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();

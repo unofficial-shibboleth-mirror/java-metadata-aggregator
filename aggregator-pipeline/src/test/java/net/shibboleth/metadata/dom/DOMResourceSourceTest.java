@@ -32,7 +32,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-public class DomResourceSourceTest {
+public class DOMResourceSourceTest {
 
     @Test public void testSuccessfulFetchAndParse() throws Exception {
         HttpResource mdResource = buildHttpResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
