@@ -22,7 +22,7 @@ import javax.xml.namespace.QName;
 
 /** Helper class for dealing with MDRPI metadata. */
 @ThreadSafe
-public final class MDRPISupport {
+public final class MDRPIMetadataSupport {
 
     /** MDRPI namespace. */
     public static final String MDRPI_NS = "urn:oasis:names:tc:SAML:metadata:rpi";
@@ -31,7 +31,7 @@ public final class MDRPISupport {
     public static final QName MDRPI_REGISTRATION_INFO = new QName(MDRPI_NS, "RegistrationInfo");
     
     /** Constructor. */
-    private MDRPISupport() {
+    private MDRPIMetadataSupport() {
     }
 
 }

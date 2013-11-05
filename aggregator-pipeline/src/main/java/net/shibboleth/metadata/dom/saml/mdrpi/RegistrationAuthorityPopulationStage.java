@@ -57,7 +57,7 @@ public class RegistrationAuthorityPopulationStage extends BaseStage<Element> {
            } else {
                // Extract mdrpi:RegistrationInfo if present.
                final Element regInfo = SAMLMetadataSupport.getDescriptorExtensions(entity,
-                       MDRPISupport.MDRPI_REGISTRATION_INFO);
+                       MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
                if (regInfo != null) {
                    // Extract registrationAuthority
                    final String attr = AttributeSupport.getAttributeValue(regInfo, null, "registrationAuthority");
