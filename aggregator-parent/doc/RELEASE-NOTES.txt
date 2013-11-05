@@ -67,3 +67,5 @@ API Changes
     * [MDA-68] - Convert command line interface to use JCommander
     * [MDA-70] - Move ClassToInstanceMultiMap to java-support
     * [MDA-80] - compile using, and require, Java 7
+    * [MDA-107] - release process for MDA 0.8.0
+    * [MDA-108] - make use of Java 7 type inference
