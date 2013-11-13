@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,11 +36,9 @@ import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -264,12 +263,9 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
                 if (href.equals("XSLTransformationStage-included.xsl")) {
                     final Resource resource = getClasspathResource("included2.xsl");
                     try {
-                        resource.initialize();
                         return new StreamSource(resource.getInputStream());
-                    } catch (ResourceException e) {
+                    } catch (IOException e) {
                         throw new TransformerException("couldn't fetch second included file", e);
-                    } catch (ComponentInitializationException e) {
-                        throw new TransformerException("problem initializing stream resource", e);
                     }
                 }
                 

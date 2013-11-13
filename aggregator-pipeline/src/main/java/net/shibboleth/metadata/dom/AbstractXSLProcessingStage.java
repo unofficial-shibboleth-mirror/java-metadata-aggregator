@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,11 +49,10 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 /**
@@ -88,7 +88,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
      * If not set, an empty collection.
      */
     private Map<String, Object> transformParameters = Collections.emptyMap();
-    
+
     /** {@link URIResolver} to use in the transformer. Default value: <code>null</code>. */
     @Nullable private URIResolver uriResolver;
 
@@ -220,8 +220,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
     }
 
     /**
-     * Set the {@link URIResolver} for this transform, or <code>null</code> to
-     * specify none.
+     * Set the {@link URIResolver} for this transform, or <code>null</code> to specify none.
      * 
      * @param resolver the {@link URIResolver} to use, or <code>null</code>
      */
@@ -262,7 +261,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
 
     /** {@inheritDoc} */
     protected void doDestroy() {
-        xslResource.destroy();
+
         xslResource = null;
         xslTemplate = null;
         transformAttributes = null;
@@ -282,14 +281,10 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
                     + ", XslResource must not be null");
         }
 
-        if (!xslResource.isInitialized()) {
-            xslResource.initialize();
-        }
-
         try {
             if (!xslResource.exists()) {
                 throw new ComponentInitializationException("Unable to initialize " + getId() + ", XslResource "
-                        + xslResource.getLocation() + " does not exist");
+                        + xslResource.getDescription() + " does not exist");
             }
 
             final TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -301,19 +296,19 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
             for (Entry<String, Boolean> features : transformFeatures.entrySet()) {
                 tfactory.setFeature(features.getKey(), features.getValue());
             }
-            
+
             if (uriResolver != null) {
                 tfactory.setURIResolver(uriResolver);
             }
 
             log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
-            xslTemplate =
-                    tfactory.newTemplates(new StreamSource(xslResource.getInputStream(), xslResource.getLocation()));
+            xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream(), 
+                                                xslResource.getURL().toExternalForm()));
         } catch (TransformerConfigurationException e) {
             throw new ComponentInitializationException("XSL transformation engine misconfigured", e);
-        } catch (ResourceException e) {
+        } catch (IOException e) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", error reading XslResource " + xslResource.getLocation() + " information", e);
+                    + ", error reading XslResource " + xslResource.getDescription() + " information", e);
         }
     }
 

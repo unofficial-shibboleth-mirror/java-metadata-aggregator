@@ -18,14 +18,11 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.security.Security;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
@@ -33,6 +30,8 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.annotations.BeforeClass;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -100,6 +99,10 @@ public abstract class BaseDOMTest {
         return baseClassPath + "-" + which;
     }
     
+    protected String simpleClassRelativeName(final String which) {
+        return testingClass.getSimpleName() + "-" + which;
+    }
+    
     /**
      * Makes a resource reference relative to the package of the class being tested.
      * 
@@ -139,26 +142,6 @@ public abstract class BaseDOMTest {
     }
 
     /**
-     * Variant of ClasspathResource that patches round the problem described
-     * in JSPT-21.
-     */
-    private class FixedClasspathResource extends ClasspathResource {
-    
-        /**
-         * Constructor.
-         *
-         * @param resourcePath classpath path to the resource
-         */
-        public FixedClasspathResource(final String resourcePath) {
-            super(resourcePath);
-            // Work around the fact that ClasspathResource doesn't handle location correctly
-            final URL resourceURL = this.getClass().getClassLoader().getResource(resourcePath);
-            setLocation(resourceURL.toExternalForm());
-        }
-        
-    }
-    
-    /**
      * Helper method to acquire a ClasspathResource based on the given resource path.
      * 
      * Uses class-relative resource names if there is a known class under test.
@@ -168,9 +151,9 @@ public abstract class BaseDOMTest {
      */
     public Resource getClasspathResource(final String resourcePath) {
         if (testingClass != null) {
-            return new FixedClasspathResource(classRelativeResource(resourcePath).substring(1));
+            return new ClassPathResource(simpleClassRelativeName(resourcePath), testingClass);
         } else {
-            return new FixedClasspathResource(resourcePath);
+            return new ClassPathResource(resourcePath);
         }
     }
     
