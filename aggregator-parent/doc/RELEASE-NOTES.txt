@@ -1,3 +1,14 @@
+Release Notes - Metadata Aggregator - Version 0.9.0
+===================================================
+
+Highlights
+    * Now using Spring resources instead of (now deprecated) Shibboleth
+      resources.
+
+** Task
+    * [MDA-124] - Move from using Shibboleth resources to using Spring ones
+
+
 Release Notes - Metadata Aggregator - Version 0.8.0
 ===================================================
 
