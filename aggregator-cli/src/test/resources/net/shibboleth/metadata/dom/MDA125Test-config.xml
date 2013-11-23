@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Common bean definitions.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    default-lazy-init="true"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean id="component_parent" abstract="true"/>
+
+    <bean id="stage_parent" abstract="true" parent="component_parent"/>
+    
+    <bean id="XMLSignatureValidationStage" abstract="true" parent="stage_parent"
+        class="net.shibboleth.metadata.dom.XMLSignatureValidationStage">
+        <property name="blacklistedDigests">
+            <list>
+                <value>http://www.w3.org/2001/04/xmldsig-more#md5</value>
+            </list>
+        </property>
+        <property name="blacklistedSignatureMethods">
+            <list>
+                <value>http://www.w3.org/2001/04/xmldsig-more#rsa-md5</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--
+        Do not initialize the bean, as not all required properties are being
+        supplied for this test.
+    -->
+    <bean id="us_incommon_checkSignature" parent="XMLSignatureValidationStage"
+        p:id="us_incommon_checkSignature">
+    </bean>
+    
+</beans>

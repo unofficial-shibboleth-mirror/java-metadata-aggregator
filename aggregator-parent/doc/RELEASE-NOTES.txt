@@ -7,6 +7,8 @@ Highlights
 
 ** Task
     * [MDA-124] - Move from using Shibboleth resources to using Spring ones
+    * [MDA-125] - can't set some properties on XMLSignatureValidationStage from
+                  Spring configurations
 
 
 Release Notes - Metadata Aggregator - Version 0.8.0
