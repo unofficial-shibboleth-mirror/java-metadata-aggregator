@@ -26,27 +26,27 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
- * Strategy that returns the first {@link ItemId} associated with an {@link Item} or, if not {@link ItemId} is
+ * Strategy that returns the first {@link ItemId} associated with an {@link Item} or, if no {@link ItemId} is
  * associated with the item, a generic identifier is returned.
  */
 public class FirstItemIdItemIdentificationStrategy implements ItemIdentificationStrategy {
 
-    /** Identifier to use if an {@link Item} does have an {@link ItemId}. Default value: unidentified */
+    /** Identifier to use if an {@link Item} does not have an {@link ItemId}. Default value: "unidentified" */
     private String noItemIdIdentifier = "unidentified";
 
     /**
-     * Gets the identifier to use if an {@link Item} does have an {@link ItemId}.
+     * Gets the identifier to use if an {@link Item} does not have an {@link ItemId}.
      * 
-     * @return identifier to use if an {@link Item} does have an {@link ItemId}
+     * @return identifier to use if an {@link Item} does not have an {@link ItemId}
      */
     public String getNoItemIdIdentifier() {
         return noItemIdIdentifier;
     }
 
     /**
-     * Sets the identifier to use if an {@link Item} does have an {@link ItemId}.
+     * Sets the identifier to use if an {@link Item} does not have an {@link ItemId}.
      * 
-     * @param identifier identifier to use if an {@link Item} does have an {@link ItemId}
+     * @param identifier identifier to use if an {@link Item} does not have an {@link ItemId}
      */
     public void setNoItemIdIdentifier(@Nonnull @NotEmpty final String identifier) {
         noItemIdIdentifier =
