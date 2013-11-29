@@ -54,7 +54,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
      * @throws XMLParserException if there is a problem reading the input file
      */
     private DOMElementItem makeInput() throws XMLParserException {
-        final Element testInput = readXmlData("input.xml");
+        final Element testInput = readXMLData("input.xml");
         final DOMElementItem metadata = new DOMElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
         Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
@@ -87,8 +87,8 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("output.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("output.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 
     /**
@@ -172,8 +172,8 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("paramOutput.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("paramOutput.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 
     /**
@@ -251,8 +251,8 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        Element expected = readXmlData("output.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        Element expected = readXMLData("output.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */

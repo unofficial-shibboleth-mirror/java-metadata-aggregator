@@ -49,9 +49,9 @@ public class XPathItemSelectionStrategyTest extends BaseDOMTest {
                 new XPathItemSelectionStrategy("//ukfedlabel:DeletedEntity", new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
-        DOMElementItem item1 = new DOMElementItem(readXmlData("1.xml"));
-        DOMElementItem item2 = new DOMElementItem(readXmlData("2.xml"));
-        DOMElementItem item3 = new DOMElementItem(readXmlData("3.xml"));
+        DOMElementItem item1 = new DOMElementItem(readXMLData("1.xml"));
+        DOMElementItem item2 = new DOMElementItem(readXMLData("2.xml"));
+        DOMElementItem item3 = new DOMElementItem(readXMLData("3.xml"));
 
         Assert.assertTrue(strategy.apply(item1));
         Assert.assertFalse(strategy.apply(item2));

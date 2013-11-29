@@ -72,7 +72,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
     /** Test that filtering logic descends in to EntitiesDescriptors. */
     @Test public void testEntitiesDescriptorFiltering() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -90,7 +90,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      */
     @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -109,7 +109,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      */
     @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -128,7 +128,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
-                ElementSupport.getChildElements(readXmlData("in.xml"));
+                ElementSupport.getChildElements(readXMLData("in.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }

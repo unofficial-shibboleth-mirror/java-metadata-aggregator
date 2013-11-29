@@ -55,7 +55,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
 
         Element result = metadataCollection.iterator().next().unwrap();
         
-        assertXmlIdentical(readXmlData("entities.xml"), result);
+        assertXMLIdentical(readXMLData("entities.xml"), result);
     }
 
     /**
@@ -74,7 +74,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
 
         Element result = metadataCollection.iterator().next().unwrap();
 
-        assertXmlIdentical(readXmlData("name.xml"), result);
+        assertXMLIdentical(readXMLData("name.xml"), result);
     }
     
     /**
@@ -106,7 +106,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
 
         Element result = metadataCollection.iterator().next().unwrap();
 
-        assertXmlIdentical(readXmlData("reversed.xml"), result);
+        assertXMLIdentical(readXMLData("reversed.xml"), result);
     }
     
     /**
@@ -136,10 +136,10 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
     protected Collection<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
-        Element descriptor = readXmlData("entity1.xml");
+        Element descriptor = readXMLData("entity1.xml");
         metadataCollection.add(new DOMElementItem(descriptor));
 
-        descriptor = readXmlData("entity2.xml");
+        descriptor = readXMLData("entity2.xml");
         metadataCollection.add(new DOMElementItem(descriptor));
 
         Element fooElement = getParserPool().newDocument().createElement("foo");

@@ -38,7 +38,7 @@ public class EntitiesDescriptorDisassemblerStageTest extends BaseDOMTest {
 
     @Test
     public void test() throws Exception {
-        Element entitiesDescriptor = readXmlData("in.xml");
+        Element entitiesDescriptor = readXMLData("in.xml");
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));

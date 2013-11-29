@@ -44,7 +44,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
     @Test
     public void testPullCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
@@ -74,7 +74,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
     @Test
     public void testMinCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
@@ -96,7 +96,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
     @Test
     public void testMaxCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");

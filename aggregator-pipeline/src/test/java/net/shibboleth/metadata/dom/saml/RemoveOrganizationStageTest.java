@@ -43,7 +43,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
     public void testRemoveOrganization() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         List<Element> descriptors = ElementSupport
-                .getChildElements(readXmlData("in.xml"));
+                .getChildElements(readXMLData("in.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }
@@ -71,7 +71,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
     @Test
     public void testRemoveOrganizationFromNestedElements() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor);

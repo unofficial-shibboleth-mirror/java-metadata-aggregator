@@ -55,7 +55,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     @Test
     public void testDifferentElement() throws Exception {
         final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("different.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("different.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
@@ -69,7 +69,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     @Test
     public void testSingleRecord() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("1.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("1.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
@@ -92,8 +92,8 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     @Test
     public void testMultipleRecords() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("1.xml")));
-        metadataCollection.add(new DOMElementItem(readXmlData("2.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("1.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("2.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");

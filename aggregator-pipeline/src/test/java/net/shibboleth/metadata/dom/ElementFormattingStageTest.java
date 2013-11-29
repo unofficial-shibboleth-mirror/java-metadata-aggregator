@@ -49,9 +49,9 @@ public class ElementFormattingStageTest extends BaseDOMTest {
     private Element prettyPrintElement;
 
     @BeforeClass public void setup() throws Exception {
-        unformattedElement = readXmlData("unformatted.xml");
-        singleLineElement = readXmlData("singleLine.xml");
-        prettyPrintElement = readXmlData("prettyPrint.xml");
+        unformattedElement = readXMLData("unformatted.xml");
+        singleLineElement = readXMLData("singleLine.xml");
+        prettyPrintElement = readXMLData("prettyPrint.xml");
     }
 
     @Test public void testLineSeperator() throws ComponentInitializationException {
@@ -197,7 +197,7 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         Assert.assertEquals(itemCollection.size(), 1);
 
         Item<Element> result = itemCollection.get(0);
-        assertXmlIdentical(singleLineElement, result.unwrap());
+        assertXMLIdentical(singleLineElement, result.unwrap());
 
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));
     }
@@ -216,7 +216,7 @@ public class ElementFormattingStageTest extends BaseDOMTest {
         Assert.assertEquals(itemCollection.size(), 1);
 
         final Item<Element> result = itemCollection.get(0);
-        assertXmlIdentical(prettyPrintElement, result.unwrap());
+        assertXMLIdentical(prettyPrintElement, result.unwrap());
 
         System.out.print(SerializeSupport.nodeToString(result.unwrap()));
     }

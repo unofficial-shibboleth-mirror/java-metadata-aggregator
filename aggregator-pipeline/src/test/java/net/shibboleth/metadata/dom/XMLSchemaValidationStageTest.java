@@ -74,7 +74,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
     }
 
     protected Collection<Item<Element>> buildMetdataCollection(String xmlPath) throws Exception {
-        final Element element = readXmlData(xmlPath);
+        final Element element = readXMLData(xmlPath);
         final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(element));
         return mdCol;

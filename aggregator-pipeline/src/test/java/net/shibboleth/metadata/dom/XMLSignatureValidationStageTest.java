@@ -51,7 +51,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     }
     
     private DOMElementItem makeItem(final String name) throws XMLParserException {
-        final Element input = readXmlData(name);
+        final Element input = readXMLData(name);
         return new DOMElementItem(input);
     }
     

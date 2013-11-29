@@ -18,7 +18,7 @@ public class NamespaceStrippingStageTest extends BaseDOMTest {
 
     @Test
     public void doExecute() throws Exception {
-        final Element doc = readXmlData("in.xml");
+        final Element doc = readXMLData("in.xml");
         final Item<Element> item = new DOMElementItem(doc);
         final List<Item<Element>> items = new ArrayList<>();
         items.add(item);
@@ -30,7 +30,7 @@ public class NamespaceStrippingStageTest extends BaseDOMTest {
         
         stage.execute(items);
         
-        final Element out = readXmlData("out.xml");
-        assertXmlIdentical(out, item.unwrap());
+        final Element out = readXMLData("out.xml");
+        assertXMLIdentical(out, item.unwrap());
     }
 }

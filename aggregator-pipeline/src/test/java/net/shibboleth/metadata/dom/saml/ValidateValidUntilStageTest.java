@@ -87,7 +87,7 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
      * @return the created Item
      */
     private DOMElementItem buildDomElementItem(long validUntilInterval) throws Exception {
-        Element descriptor = readXmlData("in.xml");
+        Element descriptor = readXMLData("in.xml");
         if (validUntilInterval != 0) {
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME,
                     System.currentTimeMillis() + validUntilInterval);

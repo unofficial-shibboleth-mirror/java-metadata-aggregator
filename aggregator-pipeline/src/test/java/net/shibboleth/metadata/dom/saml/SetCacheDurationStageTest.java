@@ -49,7 +49,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
      */
     @Test
     public void testWithoutExistingCacheDuration() throws Exception {
-        final Element entitiesDescriptor = readXmlData("in.xml");
+        final Element entitiesDescriptor = readXMLData("in.xml");
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
 
@@ -77,7 +77,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
      */
     @Test
     public void testWithExistingCacheDuration() throws Exception {
-        final Element entitiesDescriptor = readXmlData("in.xml");
+        final Element entitiesDescriptor = readXMLData("in.xml");
         
         AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME, 987654);
 

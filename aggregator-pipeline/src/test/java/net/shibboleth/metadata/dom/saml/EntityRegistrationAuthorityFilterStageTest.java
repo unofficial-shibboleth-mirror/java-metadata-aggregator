@@ -84,7 +84,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
-        mdCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        mdCollection.add(new DOMElementItem(readXMLData("in.xml")));
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
@@ -103,7 +103,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
-        mdCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        mdCollection.add(new DOMElementItem(readXMLData("in.xml")));
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
@@ -122,7 +122,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
-        mdCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        mdCollection.add(new DOMElementItem(readXMLData("in.xml")));
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
@@ -135,7 +135,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
-                ElementSupport.getChildElements(readXmlData("in.xml"));
+                ElementSupport.getChildElements(readXMLData("in.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }

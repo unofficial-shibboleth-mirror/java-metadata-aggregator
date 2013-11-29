@@ -47,7 +47,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
      * @throws XMLParserException
      */
     private DOMElementItem makeInput() throws XMLParserException {
-        Element testInput = readXmlData("input.xml");
+        Element testInput = readXMLData("input.xml");
         DOMElementItem metadata = new DOMElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
         Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
@@ -78,8 +78,8 @@ public class XSLValidationStageTest extends BaseDOMTest {
         final Item<Element> result = mdCol.get(0);
 
         // The XML should be unchanged
-        final Element expected = readXmlData("input.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("input.xml");
+        assertXMLIdentical(expected, result.unwrap());
 
         // It should have been processed by the appropriate stage
         AssertSupport.assertValidComponentInfo(result, 1, XSLValidationStage.class, "test");

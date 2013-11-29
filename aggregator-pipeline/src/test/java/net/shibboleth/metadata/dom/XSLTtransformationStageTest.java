@@ -61,7 +61,7 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
      * @throws XMLParserException if there is a problem reading the input file
      */
     private DOMElementItem makeInput() throws XMLParserException {
-        final Element testInput = readXmlData("input.xml");
+        final Element testInput = readXMLData("input.xml");
         final DOMElementItem metadata = new DOMElementItem(testInput);
         // add a TestInfo so that we can check it is preserved by the stage.
         Assert.assertEquals(metadata.getItemMetadata().get(TestInfo.class).size(), 0);
@@ -94,8 +94,8 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("output.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("output.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 
     /**
@@ -126,8 +126,8 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("paramOutput.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("paramOutput.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 
     /**
@@ -205,8 +205,8 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("output.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("output.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 
     /**
@@ -233,8 +233,8 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("output.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("output.xml");
+        assertXMLIdentical(expected, result.unwrap());
 
         // peek at the first node in the document; should be a comment
         final Node firstNode = result.unwrap().getOwnerDocument().getFirstChild();
@@ -294,7 +294,7 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXmlData("output2.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("output2.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
 }

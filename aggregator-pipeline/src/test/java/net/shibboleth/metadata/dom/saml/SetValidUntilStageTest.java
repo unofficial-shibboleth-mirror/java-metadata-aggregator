@@ -49,7 +49,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
      */
     @Test
     public void testWithoutExistingValidUntil() throws Exception {
-        final Element entitiesDescriptor = readXmlData("in.xml");
+        final Element entitiesDescriptor = readXMLData("in.xml");
 
         entitiesDescriptor.removeAttributeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
 
@@ -82,7 +82,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
      */
     @Test
     public void testWithExistingValidUntil() throws Exception {
-        final Element entitiesDescriptor = readXmlData("in.xml");
+        final Element entitiesDescriptor = readXMLData("in.xml");
 
         Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
 

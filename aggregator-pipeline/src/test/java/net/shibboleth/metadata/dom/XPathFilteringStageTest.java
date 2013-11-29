@@ -56,9 +56,9 @@ public class XPathFilteringStageTest extends BaseDOMTest {
 
         // Construct the input metadata
         final List<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("1.xml")));
-        metadataCollection.add(new DOMElementItem(readXmlData("2.xml")));
-        metadataCollection.add(new DOMElementItem(readXmlData("3.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("1.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("2.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("3.xml")));
         Assert.assertEquals(metadataCollection.size(), 3);
 
         // Filter the metadata collection

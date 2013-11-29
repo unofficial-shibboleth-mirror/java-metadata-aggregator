@@ -44,7 +44,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     @Test
     public void testPullCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
@@ -74,7 +74,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     @Test
     public void testMinCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         long hundredYears = 1000L * 60 * 60 * 24 * 365 * 100;
         
@@ -98,7 +98,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     @Test
     public void testMaxCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
+        metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         long twoYears = 1000L * 60 * 60 * 24 * 365 * 2;
         long twoYearsFromNow = twoYears + System.currentTimeMillis();

@@ -75,7 +75,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @throws XMLParserException thrown if the file does not exists or there is a problem parsing it
      */
-    public Element readXmlData(final String path) throws XMLParserException {
+    public Element readXMLData(final String path) throws XMLParserException {
         String trimmedPath = StringSupport.trimOrNull(path);
         Constraint.isNotNull(trimmedPath, "Path may not be null or empty");
 
@@ -101,7 +101,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * @param expected the expected node against which the actual node will be tested, never null
      * @param actual the actual node tested against the expected node, never null
      */
-    public void assertXmlIdentical(Node expected, Node actual) {
+    public void assertXMLIdentical(Node expected, Node actual) {
         Constraint.isNotNull(expected, "Expected Node may not be null");
         Constraint.isNotNull(actual, "Actual Node may not be null");
 

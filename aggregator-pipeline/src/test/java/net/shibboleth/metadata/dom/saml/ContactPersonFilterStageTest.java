@@ -51,7 +51,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
     private Element entitiesDescriptor;
 
     @BeforeClass public void setup() throws Exception {
-        entitiesDescriptor = readXmlData("entities.xml");
+        entitiesDescriptor = readXMLData("entities.xml");
     }
 
     @Test public void testDesignatedTypes() throws ComponentInitializationException {

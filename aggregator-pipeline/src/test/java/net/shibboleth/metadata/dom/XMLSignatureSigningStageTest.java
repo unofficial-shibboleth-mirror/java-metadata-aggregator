@@ -44,7 +44,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     /** Test signing with and verifying the result against a known good. */
     @Test
     public void testSigning() throws Exception {
-        Element testInput = readXmlData("input.xml");
+        Element testInput = readXMLData("input.xml");
 
         final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(testInput));
@@ -70,8 +70,8 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         final Item<Element> result = mdCol.iterator().next();
         AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
-        Element expected = readXmlData("output.xml");
-        assertXmlIdentical(expected, result.unwrap());
+        Element expected = readXMLData("output.xml");
+        assertXMLIdentical(expected, result.unwrap());
     }
     
     @Test
