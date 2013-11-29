@@ -26,28 +26,33 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.resource.FilesystemResource;
 import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class XMLSchemaValidationStageTest {
+public class XMLSchemaValidationStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(XMLSchemaValidationStage.class);
+    }
 
     @Test
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
 
-        Collection<Item<Element>> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageValidInput.xml");
+        Collection<Item<Element>> mdCol = buildMetdataCollection("valid.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
+        Assert.assertFalse(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
     }
 
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        Collection<Item<Element>> mdCol = buildMetdataCollection("/data/xmlSchemaValidationStageInvalidInput.xml");
+        Collection<Item<Element>> mdCol = buildMetdataCollection("invalid.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertTrue(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
@@ -55,7 +60,7 @@ public class XMLSchemaValidationStageTest {
 
     protected XMLSchemaValidationStage buildStage() throws Exception {
         String schemaFile =
-                new File(XMLSchemaValidationStageTest.class.getResource("/data/xmlSchemaValidationStage.xsd").toURI())
+                new File(getClasspathResource("schema.xsd").getURI())
                         .getAbsolutePath();
         final List<Resource> schemaResources = new ArrayList<>();
         schemaResources.add(new FilesystemResource(schemaFile));
@@ -69,13 +74,9 @@ public class XMLSchemaValidationStageTest {
     }
 
     protected Collection<Item<Element>> buildMetdataCollection(String xmlPath) throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Document doc = parserPool.parse(XMLSchemaValidationStageTest.class.getResourceAsStream(xmlPath));
-
+        final Element element = readXmlData(xmlPath);
         final List<Item<Element>> mdCol = new ArrayList<>();
-        mdCol.add(new DOMElementItem(doc.getDocumentElement()));
-
+        mdCol.add(new DOMElementItem(element));
         return mdCol;
     }
 }
