@@ -62,7 +62,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
     }
 
     @Test public void testSuccessfulDirectoryFetchAndParse() throws Exception {
-        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata");
+        final URL sourceUrl = getClasspathResource("dir").getURL();
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();
