@@ -30,16 +30,15 @@ import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link DOMFilesystemSourceStage}. */
 public class DOMFilesystemSourceTest extends BaseTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(DOMFilesystemSourceStage.class);
+    /** Constructor sets class under test. */
+    public DOMFilesystemSourceTest() {
+        super(DOMFilesystemSourceStage.class);
     }
 
     @Test public void testSuccessfulFileFetchAndParse() throws Exception {

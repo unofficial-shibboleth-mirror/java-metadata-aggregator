@@ -26,7 +26,6 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -35,9 +34,9 @@ import com.google.common.collect.Lists;
 /** Unit test for {@link EntityRoleFilterStage}. */
 public class EntityRoleFilterStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(EntityRoleFilterStage.class);
+    /** Constructor sets class under test. */
+    public EntityRoleFilterStageTest() {
+        super(EntityRoleFilterStage.class);
     }
 
     /**

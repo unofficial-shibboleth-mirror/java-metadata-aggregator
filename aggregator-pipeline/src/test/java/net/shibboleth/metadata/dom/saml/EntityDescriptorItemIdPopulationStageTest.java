@@ -26,16 +26,15 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link EntityDescriptorItemIdPopulationStage}. */
 public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(EntityDescriptorItemIdPopulationStage.class);
+    /** Constructor sets class under test. */
+    public EntityDescriptorItemIdPopulationStageTest() {
+        super(EntityDescriptorItemIdPopulationStage.class);
     }
 
     /** Tests running the stage on an empty collection. */

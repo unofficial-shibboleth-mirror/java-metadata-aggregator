@@ -41,9 +41,9 @@ import com.google.common.collect.Sets;
 /** Unit test for {@link ContactPersonFilterStage}. */
 public class ContactPersonFilterStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(ContactPersonFilterStage.class);
+    /** Constructor sets class under test. */
+    public ContactPersonFilterStageTest() {
+        super(ContactPersonFilterStage.class);
     }
 
     private final QName contactPersonQname = new QName("urn:oasis:names:tc:SAML:2.0:metadata", "ContactPerson");

@@ -27,7 +27,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -36,9 +35,9 @@ import edu.vt.middleware.crypt.util.CryptReader;
 /** {@link XMLSignatureSigningStage} unit test. */
 public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(XMLSignatureSigningStage.class);
+    /** Constructor sets class under test. */
+    public XMLSignatureSigningStageTest() {
+        super(XMLSignatureSigningStage.class);
     }
 
     /** Test signing with and verifying the result against a known good. */

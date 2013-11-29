@@ -37,9 +37,9 @@ import com.google.common.collect.Lists;
 /** {@link ElementFormattingStage} unit test. */
 public class ElementFormattingStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(ElementFormattingStage.class);
+    /** Constructor sets class under test. */
+    public ElementFormattingStageTest() {
+        super(ElementFormattingStage.class);
     }
 
     private Element unformattedElement;

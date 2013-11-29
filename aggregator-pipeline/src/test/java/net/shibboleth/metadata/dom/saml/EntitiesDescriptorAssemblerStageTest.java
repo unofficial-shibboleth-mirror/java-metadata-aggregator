@@ -28,16 +28,15 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */
 public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
     
-    @BeforeClass
-    private void init() {
-        setTestingClass(EntitiesDescriptorAssemblerStage.class);
+    /** Constructor sets class under test. */
+    public EntitiesDescriptorAssemblerStageTest() {
+        super(EntitiesDescriptorAssemblerStage.class);
     }
 
     /**

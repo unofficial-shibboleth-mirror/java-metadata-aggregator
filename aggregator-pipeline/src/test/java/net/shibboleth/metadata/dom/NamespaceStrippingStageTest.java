@@ -5,15 +5,14 @@ import java.util.List;
 
 import net.shibboleth.metadata.Item;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class NamespaceStrippingStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(NamespaceStrippingStage.class);
+    /** Constructor sets class under test. */
+    public NamespaceStrippingStageTest() {
+        super(NamespaceStrippingStage.class);
     }
 
     @Test

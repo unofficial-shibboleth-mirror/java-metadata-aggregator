@@ -22,15 +22,14 @@ import java.util.List;
 
 import net.shibboleth.metadata.Item;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class EmptyContainerStrippingStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(EmptyContainerStrippingStage.class);
+    /** Constructor sets class under test. */
+    public EmptyContainerStrippingStageTest() {
+        super(EmptyContainerStrippingStage.class);
     }
 
     @Test

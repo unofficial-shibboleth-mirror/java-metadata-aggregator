@@ -40,7 +40,6 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,9 +47,9 @@ import org.w3c.dom.Node;
 /** {@link XSLTransformationStage} unit test. */
 public class XSLTtransformationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(XSLTransformationStage.class);
+    /** Constructor sets class under test. */
+    public XSLTtransformationStageTest() {
+        super(XSLTransformationStage.class);
     }
 
     /**

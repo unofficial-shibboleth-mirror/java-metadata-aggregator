@@ -30,15 +30,14 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class XSLValidationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(XSLValidationStage.class);
+    /** Constructor sets class under test. */
+    public XSLValidationStageTest() {
+        super(XSLValidationStage.class);
     }
 
     /**

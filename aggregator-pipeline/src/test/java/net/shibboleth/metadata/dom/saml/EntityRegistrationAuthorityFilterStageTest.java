@@ -27,7 +27,6 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -36,9 +35,9 @@ import com.google.common.collect.Lists;
 /** Unit test for {@link EntityRegistrationAuthorityFilterStage}. */
 public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(EntityRegistrationAuthorityFilterStage.class);
+    /** Constructor sets class under test. */
+    public EntityRegistrationAuthorityFilterStageTest() {
+        super(EntityRegistrationAuthorityFilterStage.class);
     }
 
     /** Tests filtering out Items based on an authority whitelist. */

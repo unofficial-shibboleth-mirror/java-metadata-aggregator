@@ -41,6 +41,11 @@ public abstract class BaseDOMTest extends BaseTest {
     /** Initialized parser pool used to parser data. */
     private BasicParserPool parserPool;
 
+    /** Constructor */
+    protected BaseDOMTest(final Class<?> clazz) {
+        super(clazz);
+    }
+    
     /**
      * Setup test class. Creates and initializes the parser pool. Set BouncyCastle as a JCE provider.
      * 
@@ -80,11 +85,7 @@ public abstract class BaseDOMTest extends BaseTest {
         Constraint.isNotNull(trimmedPath, "Path may not be null or empty");
 
         if (!trimmedPath.startsWith("/")) {
-            if (testingClass != null) {
-                trimmedPath = classRelativeResource(trimmedPath);
-            } else {
-                trimmedPath = "/data/" + trimmedPath;
-            }
+            trimmedPath = classRelativeResource(trimmedPath);
         }
 
         final InputStream input = BaseDOMTest.class.getResourceAsStream(trimmedPath);

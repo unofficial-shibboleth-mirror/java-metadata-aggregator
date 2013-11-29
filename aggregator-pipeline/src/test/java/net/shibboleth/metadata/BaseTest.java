@@ -6,24 +6,32 @@ import org.springframework.core.io.Resource;
 public abstract class BaseTest {
 
     /** Class being tested. */
-    protected Class<?> testingClass;
+    protected final Class<?> testingClass;
     
     /**
      * Base path for class-relative test resource references.
      * 
      * Will <em>not<em> end in a '/'.
      */
-    private String baseClassPath;
+    private final String baseClassPath;
     
     /** Package for the class being tested. */
-    private Package testingPackage;
+    private final Package testingPackage;
     
     /**
      * Base path for package-relative test resource references.
      * 
      * Will always end in a '/'.
      */
-    private String basePackagePath;
+    private final String basePackagePath;
+    
+    /** Constructor */
+    protected BaseTest(final Class<?> clazz) {
+        testingClass = clazz;
+        baseClassPath = nameToPath(testingClass.getName());
+        testingPackage = testingClass.getPackage();
+        basePackagePath = nameToPath(testingPackage.getName()) + "/";
+    }
     
     /**
      * Converts the "."-separated name of a class or package into an
@@ -35,20 +43,7 @@ public abstract class BaseTest {
     private String nameToPath(final String name) {
         return "/" + name.replace('.', '/');
     }
-    
-    /**
-     * Sets the class being tested, so that references can be made to testing resources
-     * relative to it.
-     * 
-     * @param clazz class being tested
-     */
-    protected void setTestingClass(final Class<?> clazz) {
-        testingClass = clazz;
-        baseClassPath = nameToPath(testingClass.getName());
-        testingPackage = testingClass.getPackage();
-        basePackagePath = nameToPath(testingPackage.getName()) + "/";
-    }
-    
+        
     /**
      * Makes a resource reference relative to the class being tested.
      * 
@@ -88,11 +83,7 @@ public abstract class BaseTest {
      * @return the data file as a resource
      */
     public Resource getClasspathResource(final String resourcePath) {
-        if (testingClass != null) {
-            return new ClassPathResource(simpleClassRelativeName(resourcePath), testingClass);
-        } else {
-            return new ClassPathResource(resourcePath);
-        }
+        return new ClassPathResource(simpleClassRelativeName(resourcePath), testingClass);
     }
 
 }

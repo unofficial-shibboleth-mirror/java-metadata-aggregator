@@ -28,15 +28,14 @@ import net.shibboleth.utilities.java.support.resource.FilesystemResource;
 import net.shibboleth.utilities.java.support.resource.Resource;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class XMLSchemaValidationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(XMLSchemaValidationStage.class);
+    /** Constructor sets class under test. */
+    public XMLSchemaValidationStageTest() {
+        super(XMLSchemaValidationStage.class);
     }
 
     @Test

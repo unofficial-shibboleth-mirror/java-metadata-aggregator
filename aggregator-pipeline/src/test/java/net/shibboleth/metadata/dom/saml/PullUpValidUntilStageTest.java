@@ -27,7 +27,6 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -35,9 +34,9 @@ import org.w3c.dom.Element;
 /** Unit test for {@link PullUpValidUntilStage}. */
 public class PullUpValidUntilStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(PullUpValidUntilStage.class);
+    /** Constructor sets class under test. */
+    public PullUpValidUntilStageTest() {
+        super(PullUpValidUntilStage.class);
     }
 
     /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */

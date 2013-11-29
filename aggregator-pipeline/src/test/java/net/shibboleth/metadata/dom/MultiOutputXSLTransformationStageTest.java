@@ -34,16 +34,15 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link MultiOutputXSLTransformationStage} unit test. */
 public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(MultiOutputXSLTransformationStage.class);
+    /** Constructor sets class under test. */
+    public MultiOutputXSLTransformationStageTest() {
+        super(MultiOutputXSLTransformationStage.class);
     }
 
     /**

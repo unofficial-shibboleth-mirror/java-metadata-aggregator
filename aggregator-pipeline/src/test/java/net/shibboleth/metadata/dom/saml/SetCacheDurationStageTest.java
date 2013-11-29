@@ -28,7 +28,6 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -37,9 +36,9 @@ import org.w3c.dom.Element;
 /** Unit test for {@link SetCacheDurationStage}. */
 public class SetCacheDurationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(SetCacheDurationStage.class);
+    /** Constructor sets class under test. */
+    public SetCacheDurationStageTest() {
+        super(SetCacheDurationStage.class);
     }
 
     /**

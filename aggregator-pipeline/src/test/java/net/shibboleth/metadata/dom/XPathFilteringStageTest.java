@@ -26,16 +26,15 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link XPathFilteringStage} unit test. */
 public class XPathFilteringStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(XPathFilteringStage.class);
+    /** Constructor sets class under test. */
+    public XPathFilteringStageTest() {
+        super(XPathFilteringStage.class);
     }
 
     /**

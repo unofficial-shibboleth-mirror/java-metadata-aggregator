@@ -23,15 +23,14 @@ import java.util.Map;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /** {@link XPathItemSelectionStrategy} unit test. */
 public class XPathItemSelectionStrategyTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(XPathItemSelectionStrategy.class);
+    /** Constructor sets class under test. */
+    public XPathItemSelectionStrategyTest() {
+        super(XPathItemSelectionStrategy.class);
     }
 
     /**

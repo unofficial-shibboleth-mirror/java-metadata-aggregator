@@ -27,7 +27,6 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -35,9 +34,9 @@ import org.w3c.dom.Element;
 /** Unit test for {@link PullUpCacheDurationStage}. */
 public class PullUpCacheDurationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(PullUpCacheDurationStage.class);
+    /** Constructor sets class under test. */
+    public PullUpCacheDurationStageTest() {
+        super(PullUpCacheDurationStage.class);
     }
 
     /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */

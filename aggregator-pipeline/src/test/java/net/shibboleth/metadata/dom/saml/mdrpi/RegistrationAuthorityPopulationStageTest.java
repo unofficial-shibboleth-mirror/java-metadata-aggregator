@@ -9,22 +9,19 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
-import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthorityPopulationStage;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class RegistrationAuthorityPopulationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(RegistrationAuthorityPopulationStage.class);
+    /** Constructor sets class under test. */
+    public RegistrationAuthorityPopulationStageTest() {
+        super(RegistrationAuthorityPopulationStage.class);
     }
 
     private RegistrationAuthorityPopulationStage makeStage() throws ComponentInitializationException {

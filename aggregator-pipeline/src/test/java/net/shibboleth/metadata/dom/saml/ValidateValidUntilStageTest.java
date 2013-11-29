@@ -23,16 +23,15 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link ValidateValidUntilStage}. */
 public class ValidateValidUntilStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(ValidateValidUntilStage.class);
+    /** Constructor sets class under test. */
+    public ValidateValidUntilStageTest() {
+        super(ValidateValidUntilStage.class);
     }
 
     /** Tests that optional check flag on the stage operates properly. */

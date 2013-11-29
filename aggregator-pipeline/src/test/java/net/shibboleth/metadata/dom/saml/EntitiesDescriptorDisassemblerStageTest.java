@@ -24,16 +24,15 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link EntitiesDescriptorDisassemblerStage} unit test. */
 public class EntitiesDescriptorDisassemblerStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(EntitiesDescriptorDisassemblerStage.class);
+    /** Constructor sets class under test. */
+    public EntitiesDescriptorDisassemblerStageTest() {
+        super(EntitiesDescriptorDisassemblerStage.class);
     }
 
     @Test

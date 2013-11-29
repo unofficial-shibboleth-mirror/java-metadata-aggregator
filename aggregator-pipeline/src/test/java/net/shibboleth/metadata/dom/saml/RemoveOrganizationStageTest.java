@@ -26,16 +26,15 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link RemoveOrganizationStage}. */
 public class RemoveOrganizationStageTest extends BaseDOMTest {
 
-    @BeforeClass
-    private void init() {
-        setTestingClass(RemoveOrganizationStage.class);
+    /** Constructor sets class under test. */
+    public RemoveOrganizationStageTest() {
+        super(RemoveOrganizationStage.class);
     }
 
     /** Test the organization elements are removed from top level metadata elements. */
