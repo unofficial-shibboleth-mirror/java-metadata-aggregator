@@ -26,11 +26,17 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link EntityDescriptorItemIdPopulationStage}. */
 public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(EntityDescriptorItemIdPopulationStage.class);
+    }
 
     /** Tests running the stage on an empty collection. */
     @Test
@@ -49,7 +55,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     @Test
     public void testDifferentElement() throws Exception {
         final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("different.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
@@ -63,7 +69,7 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     @Test
     public void testSingleRecord() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entityDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("1.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");
@@ -86,8 +92,8 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
     @Test
     public void testMultipleRecords() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entityDescriptor1.xml")));
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entityDescriptor2.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("2.xml")));
 
         EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
         stage.setId("foo");

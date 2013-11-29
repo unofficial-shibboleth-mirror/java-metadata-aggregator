@@ -24,15 +24,21 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link EntitiesDescriptorDisassemblerStage} unit test. */
 public class EntitiesDescriptorDisassemblerStageTest extends BaseDOMTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(EntitiesDescriptorDisassemblerStage.class);
+    }
+
     @Test
     public void test() throws Exception {
-        Element entitiesDescriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
+        Element entitiesDescriptor = readXmlData("in.xml");
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));

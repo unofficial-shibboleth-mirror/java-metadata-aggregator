@@ -43,7 +43,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
     }
 
     @Test public void testSuccessfulFileFetchAndParse() throws Exception {
-        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
+        URL sourceUrl = getClasspathResource("in.xml").getURL();
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();

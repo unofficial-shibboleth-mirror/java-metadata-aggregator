@@ -27,6 +27,7 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -34,11 +35,16 @@ import org.w3c.dom.Element;
 /** Unit test for {@link PullUpValidUntilStage}. */
 public class PullUpValidUntilStageTest extends BaseDOMTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(PullUpValidUntilStage.class);
+    }
+
     /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */
     @Test
     public void testPullCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
@@ -68,7 +74,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     @Test
     public void testMinCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         long hundredYears = 1000L * 60 * 60 * 24 * 365 * 100;
         
@@ -92,7 +98,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
     @Test
     public void testMaxCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         long twoYears = 1000L * 60 * 60 * 24 * 365 * 2;
         long twoYearsFromNow = twoYears + System.currentTimeMillis();

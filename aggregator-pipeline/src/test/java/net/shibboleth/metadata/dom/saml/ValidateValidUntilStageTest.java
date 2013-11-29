@@ -23,11 +23,17 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link ValidateValidUntilStage}. */
 public class ValidateValidUntilStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(ValidateValidUntilStage.class);
+    }
 
     /** Tests that optional check flag on the stage operates properly. */
     @Test
@@ -81,7 +87,7 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
      * @return the created Item
      */
     private DOMElementItem buildDomElementItem(long validUntilInterval) throws Exception {
-        Element descriptor = readXmlData("samlMetadata/entitiesDescriptor1.xml");
+        Element descriptor = readXmlData("in.xml");
         if (validUntilInterval != 0) {
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME,
                     System.currentTimeMillis() + validUntilInterval);

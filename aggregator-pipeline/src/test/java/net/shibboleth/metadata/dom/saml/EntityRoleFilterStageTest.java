@@ -26,6 +26,7 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -33,6 +34,11 @@ import com.google.common.collect.Lists;
 
 /** Unit test for {@link EntityRoleFilterStage}. */
 public class EntityRoleFilterStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(EntityRoleFilterStage.class);
+    }
 
     /**
      * Test that whitelisted roles are retained and all other roles are removed. Also tests that roleless entities are
@@ -115,7 +121,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
      */
     @Test public void testEntitiesDescriptorFiltering() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
@@ -142,7 +148,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
      */
     @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
@@ -162,7 +168,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
      */
     @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
@@ -182,7 +188,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
-                ElementSupport.getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
+                ElementSupport.getChildElements(readXmlData("in.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }

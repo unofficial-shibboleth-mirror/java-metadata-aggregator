@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityID="https://hestia.switch.ch/shibboleth">
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
+        <KeyDescriptor>
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:KeyName>hestia.switch.ch</ds:KeyName>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIE6zCCA9OgAwIBAgICGYMwDQYJKoZIhvcNAQEFBQAwazELMAkGA1UEBhMCQk0x
+                        GTAXBgNVBAoTEFF1b1ZhZGlzIExpbWl0ZWQxHzAdBgNVBAsTFnd3dy5xdW92YWRp
+                        c2dsb2JhbC5jb20xIDAeBgNVBAMTF1F1b1ZhZGlzIEdsb2JhbCBTU0wgSUNBMB4X
+                        DTA5MTEwNjE1NDYxMloXDTExMTEwNjE1NDYxMlowbDELMAkGA1UEBhMCQ0gxEDAO
+                        BgNVBAgTB1p1ZXJpY2gxEDAOBgNVBAcTB1p1ZXJpY2gxDzANBgNVBAoTBlNXSVRD
+                        SDENMAsGA1UECxMER3JpZDEZMBcGA1UEAxMQaGVzdGlhLnN3aXRjaC5jaDCCASIw
+                        DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALTEbtUuBQsjbDJb9YUV2dHZUEjb
+                        nCkwYACmMvOkt16Q/oqpJwYqptIaICu7VC9bnKyLwrUzfujnwld1C7jzC78gpvDC
+                        TL+q2YzOzaRf+iXXFOpBenpKQNL2gexKOwCJVm3GYPfRCv14K6CZOztFiaB45rdp
+                        uz4mKONG2YBpIqlv+eqau+I0f4HG3jyLbIbJzUHYZqyyYKuLScQt5pfnOl7SgWtw
+                        BJhb9W00zLa7+lnwpwHORCAsKPDoZ8Yuz47sSasEkEI2/IF8zKVi5nvURcv5gYQE
+                        yu88oCwWGGlK0o9YkXzWCoAhqKKr+aq6SPXHbCSAUYE/csOojGYaDSABdqcCAwEA
+                        AaOCAZYwggGSMHQGCCsGAQUFBwEBBGgwZjAqBggrBgEFBQcwAYYeaHR0cDovL29j
+                        c3AucXVvdmFkaXNnbG9iYWwuY29tMDgGCCsGAQUFBzAChixodHRwOi8vdHJ1c3Qu
+                        cXVvdmFkaXNnbG9iYWwuY29tL3F2c3NsaWNhLmNydDAbBgNVHREEFDASghBoZXN0
+                        aWEuc3dpdGNoLmNoMFEGA1UdIARKMEgwRgYMKwYBBAG+WAACZAEBMDYwNAYIKwYB
+                        BQUHAgEWKGh0dHA6Ly93d3cucXVvdmFkaXNnbG9iYWwuY29tL3JlcG9zaXRvcnkw
+                        DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAf
+                        BgNVHSMEGDAWgBQyTaFP6vCumbbumwcshAgRUIvifjA7BgNVHR8ENDAyMDCgLqAs
+                        hipodHRwOi8vY3JsLnF1b3ZhZGlzZ2xvYmFsLmNvbS9xdnNzbGljYS5jcmwwHQYD
+                        VR0OBBYEFLdZ7uyB5hnQVdsFPUOSvVF23ntfMA0GCSqGSIb3DQEBBQUAA4IBAQBt
+                        p3f3dMlWqWX3+zaL21I1gRVkz4dMkLpPcTjiqTOYU7fcpYOH8LzB5Wqr3wGWmUGt
+                        lB7U9BwHkj7NFheNQEsfXu1m4m7Nw7aKxuspRtqY+0IB4QseJd+Ds/ZXJMVlwi+R
+                        IwJHFeX7m+Ypo3Y8HjT2ZjwmmX31ywyIQ33pMsBAX8DtbS1aAYlDs7s8x//X4gux
+                        p/8vUNkLdVhecIRbl0xX++mFKOyAOuEeoXQXZe48vBu6EIoYe2KpGqGuPu5now1F
+                        UhTH7MXDaBv7yUATibJJpTBaS0Gz3oUikjwWjSfsJIY1KF+vmZqtajlhKHNAAaQo
+                        /xGNZR7tBqnS8KjsJU9r
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/Redirect"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/POST"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/Artifact"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://hestia.switch.ch/Shibboleth.sso/SLO/SOAP"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/Redirect"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/POST"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/Artifact"/>
+        <ManageNameIDService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://hestia.switch.ch/Shibboleth.sso/NIM/SOAP"/>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/POST" index="1"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/Artifact" index="3"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://hestia.switch.ch/Shibboleth.sso/SAML2/ECP" index="4"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://hestia.switch.ch/Shibboleth.sso/SAML/POST" index="5"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://hestia.switch.ch/Shibboleth.sso/SAML/Artifact" index="6"/>
+    </SPSSODescriptor>
+    <Organization>
+        <OrganizationName xml:lang="en">switch.ch</OrganizationName>
+        <OrganizationDisplayName xml:lang="en">SWITCH</OrganizationDisplayName>
+        <OrganizationURL xml:lang="en">http://www.switch.ch/aai/help/</OrganizationURL>
+    </Organization>
+</EntityDescriptor>

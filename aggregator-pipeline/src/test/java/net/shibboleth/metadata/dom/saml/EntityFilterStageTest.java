@@ -27,6 +27,7 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -34,6 +35,11 @@ import com.google.common.collect.Lists;
 
 /** Unit test for {@link EntityFilterStage}. */
 public class EntityFilterStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(EntityFilterStage.class);
+    }
 
     /** Test whitelisted entity is retained and ensure everything else is removed. */
     @Test public void testEntityWhitelist() throws Exception {
@@ -66,7 +72,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
     /** Test that filtering logic descends in to EntitiesDescriptors. */
     @Test public void testEntitiesDescriptorFiltering() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -84,7 +90,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      */
     @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -103,7 +109,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      */
     @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -122,7 +128,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
-                ElementSupport.getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
+                ElementSupport.getChildElements(readXmlData("in.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }

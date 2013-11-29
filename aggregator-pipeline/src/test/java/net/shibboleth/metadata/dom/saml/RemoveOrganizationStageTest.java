@@ -26,18 +26,24 @@ import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link RemoveOrganizationStage}. */
 public class RemoveOrganizationStageTest extends BaseDOMTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(RemoveOrganizationStage.class);
+    }
+
     /** Test the organization elements are removed from top level metadata elements. */
     @Test
     public void testRemoveOrganization() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         List<Element> descriptors = ElementSupport
-                .getChildElements(readXmlData("samlMetadata/entitiesDescriptor1.xml"));
+                .getChildElements(readXmlData("in.xml"));
         for (Element descriptor : descriptors) {
             metadataCollection.add(new DOMElementItem(descriptor));
         }
@@ -65,7 +71,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
     @Test
     public void testRemoveOrganizationFromNestedElements() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("samlMetadata/entitiesDescriptor1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("in.xml")));
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor);
