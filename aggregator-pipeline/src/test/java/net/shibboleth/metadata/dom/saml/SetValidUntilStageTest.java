@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -27,13 +28,19 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /** {@link SetValidUntilStage} unit test. */
-public class SetValidUntilStageTest {
+public class SetValidUntilStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(SetValidUntilStage.class);
+    }
 
     /**
      * Tests that the validUntil attribute is properly set on an element when it doesn't already contain one.
@@ -42,10 +49,8 @@ public class SetValidUntilStageTest {
      */
     @Test
     public void testWithoutExistingValidUntil() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Element entitiesDescriptor = parserPool.parse(
-                SetValidUntilStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
+        final Element entitiesDescriptor = readXmlData("in.xml");
+
         entitiesDescriptor.removeAttributeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME) == null);
@@ -77,10 +82,7 @@ public class SetValidUntilStageTest {
      */
     @Test
     public void testWithExistingValidUntil() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Element entitiesDescriptor = parserPool.parse(
-                SetValidUntilStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
+        final Element entitiesDescriptor = readXmlData("in.xml");
 
         Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
 

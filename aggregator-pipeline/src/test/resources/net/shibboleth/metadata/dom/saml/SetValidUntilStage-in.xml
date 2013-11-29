@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="urn:mace:switch.ch:SWITCHaai" validUntil="2010-09-20T15:59:02Z">
+<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="1234" Name="urn:mace:switch.ch:SWITCHaai" validUntil="2010-09-20T15:59:02Z">
 
     <Extensions>
         <switchmd:PublishingInformation xmlns:switchmd="http://www.switch.ch/aai/metadata/extensions">
@@ -94,8 +94,6 @@
             <OrganizationURL xml:lang="fr">http://www.unifr.ch/aai</OrganizationURL>
         </Organization>
     </EntityDescriptor>
-    
-    <foo/>
 
     <EntityDescriptor entityID="https://hestia.switch.ch/shibboleth">
         <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">

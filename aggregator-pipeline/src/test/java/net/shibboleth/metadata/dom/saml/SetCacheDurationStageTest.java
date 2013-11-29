@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -27,13 +28,19 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link SetCacheDurationStage}. */
-public class SetCacheDurationStageTest {
+public class SetCacheDurationStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(SetCacheDurationStage.class);
+    }
 
     /**
      * Tests that the duration is properly set on an element when it doesn't already contain a duration.
@@ -42,10 +49,7 @@ public class SetCacheDurationStageTest {
      */
     @Test
     public void testWithoutExistingCacheDuration() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Element entitiesDescriptor = parserPool.parse(
-                SetCacheDurationStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
+        final Element entitiesDescriptor = readXmlData("in.xml");
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
 
@@ -73,10 +77,8 @@ public class SetCacheDurationStageTest {
      */
     @Test
     public void testWithExistingCacheDuration() throws Exception {
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
-        Element entitiesDescriptor = parserPool.parse(
-                SetCacheDurationStageTest.class.getResourceAsStream("/data/samlMetadata.xml")).getDocumentElement();
+        final Element entitiesDescriptor = readXmlData("in.xml");
+        
         AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME, 987654);
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) != null);
