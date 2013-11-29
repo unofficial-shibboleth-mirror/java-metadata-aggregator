@@ -22,14 +22,20 @@ import java.util.List;
 
 import net.shibboleth.metadata.Item;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class EmptyContainerStrippingStageTest extends BaseDOMTest {
 
+    @BeforeClass
+    private void init() {
+        setTestingClass(EmptyContainerStrippingStage.class);
+    }
+
     @Test
     public void doExecute() throws Exception {
-        final Element doc = readXmlData("emptyExtensionsIn.xml");
+        final Element doc = readXmlData("in.xml");
         final DOMElementItem item = new DOMElementItem(doc);
         final List<Item<Element>> items = new ArrayList<>();
         items.add(item);
@@ -53,7 +59,7 @@ public class EmptyContainerStrippingStageTest extends BaseDOMTest {
         stage.initialize();
         stage.execute(items);
         
-        final Element out = readXmlData("emptyExtensionsOut.xml");
+        final Element out = readXmlData("out.xml");
         assertXmlIdentical(out, item.unwrap());
     }
 }

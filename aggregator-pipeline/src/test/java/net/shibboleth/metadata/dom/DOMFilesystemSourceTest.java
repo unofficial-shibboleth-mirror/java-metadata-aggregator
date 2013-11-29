@@ -22,6 +22,7 @@ import java.io.FileFilter;
 import java.net.URL;
 import java.util.ArrayList;
 
+import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -29,11 +30,17 @@ import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link DOMFilesystemSourceStage}. */
-public class DOMFilesystemSourceTest {
+public class DOMFilesystemSourceTest extends BaseTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(DOMFilesystemSourceStage.class);
+    }
 
     @Test public void testSuccessfulFileFetchAndParse() throws Exception {
         URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
@@ -100,7 +107,7 @@ public class DOMFilesystemSourceTest {
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
-        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/loremIpsum.txt");
+        final URL sourceUrl = getClasspathResource("lorem.txt").getURL();
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();
