@@ -26,11 +26,17 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** {@link XPathFilteringStage} unit test. */
 public class XPathFilteringStageTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(XPathFilteringStage.class);
+    }
 
     /**
      * Test XPathFilteringStage using an example from the UK federation build process.
@@ -50,9 +56,9 @@ public class XPathFilteringStageTest extends BaseDOMTest {
 
         // Construct the input metadata
         final List<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(readXmlData("xpathInput1.xml")));
-        metadataCollection.add(new DOMElementItem(readXmlData("xpathInput2.xml")));
-        metadataCollection.add(new DOMElementItem(readXmlData("xpathInput3.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("1.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("2.xml")));
+        metadataCollection.add(new DOMElementItem(readXmlData("3.xml")));
         Assert.assertEquals(metadataCollection.size(), 3);
 
         // Filter the metadata collection

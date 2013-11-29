@@ -23,10 +23,16 @@ import java.util.Map;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /** {@link XPathItemSelectionStrategy} unit test. */
 public class XPathItemSelectionStrategyTest extends BaseDOMTest {
+
+    @BeforeClass
+    private void init() {
+        setTestingClass(XPathItemSelectionStrategy.class);
+    }
 
     /**
      * Test XPathItemSelectionStrategy using an example from the UK federation build process.
@@ -43,9 +49,9 @@ public class XPathItemSelectionStrategyTest extends BaseDOMTest {
                 new XPathItemSelectionStrategy("//ukfedlabel:DeletedEntity", new SimpleNamespaceContext(prefixMappings));
 
         // Construct the input metadata
-        DOMElementItem item1 = new DOMElementItem(readXmlData("xpathInput1.xml"));
-        DOMElementItem item2 = new DOMElementItem(readXmlData("xpathInput2.xml"));
-        DOMElementItem item3 = new DOMElementItem(readXmlData("xpathInput3.xml"));
+        DOMElementItem item1 = new DOMElementItem(readXmlData("1.xml"));
+        DOMElementItem item2 = new DOMElementItem(readXmlData("2.xml"));
+        DOMElementItem item3 = new DOMElementItem(readXmlData("3.xml"));
 
         Assert.assertTrue(strategy.apply(item1));
         Assert.assertFalse(strategy.apply(item2));
