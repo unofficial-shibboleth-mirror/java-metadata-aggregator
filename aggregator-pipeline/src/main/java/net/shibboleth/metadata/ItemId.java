@@ -26,7 +26,13 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import com.google.common.base.Objects;
 
-/** Carries a unique identifier for the data carried by an Item. */
+/**
+ * Carries a unique identifier for the data carried by an {@link net.shibboleth.metadata.Item}.
+ * 
+ * An {@link net.shibboleth.metadata.Item} may have more than one {@link ItemId}, but should not
+ * have the same {@link ItemId} as any other {@link net.shibboleth.metadata.Item} in a given
+ * context.
+ */
 @ThreadSafe
 public class ItemId implements ItemMetadata, Comparable<ItemId> {
 
