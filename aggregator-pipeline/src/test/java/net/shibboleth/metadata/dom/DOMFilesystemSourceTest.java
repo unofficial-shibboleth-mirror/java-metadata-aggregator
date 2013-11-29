@@ -79,8 +79,9 @@ public class DOMFilesystemSourceTest extends BaseTest {
         Assert.assertEquals(metadataCollection.size(), 6);
     }
 
+    @Test
     public void testSuccessfulDirectoryFetchWithFilterAndParse() throws Exception {
-        URL sourceUrl = DOMFilesystemSourceTest.class.getResource("/data/samlMetadata/entityDescriptor1.xml");
+        final URL sourceUrl = getClasspathResource("dir").getURL();
         File sourceFile = new File(sourceUrl.toURI());
 
         BasicParserPool parserPool = new BasicParserPool();
@@ -94,7 +95,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         source.setSourceFileFilter(new FileFilter() {
 
             public boolean accept(File pathname) {
-                return pathname.getName().endsWith("xml");
+                return pathname.getName().endsWith("2.xml");
             }
         });
         source.initialize();
@@ -102,7 +103,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
-        Assert.assertEquals(metadataCollection.size(), 7);
+        Assert.assertEquals(metadataCollection.size(), 2);
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
