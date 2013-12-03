@@ -17,16 +17,14 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.resource.FilesystemResource;
-import net.shibboleth.utilities.java.support.resource.Resource;
 
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -58,11 +56,8 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
     }
 
     protected XMLSchemaValidationStage buildStage() throws Exception {
-        String schemaFile =
-                new File(getClasspathResource("schema.xsd").getURI())
-                        .getAbsolutePath();
         final List<Resource> schemaResources = new ArrayList<>();
-        schemaResources.add(new FilesystemResource(schemaFile));
+        schemaResources.add(getClasspathResource("schema.xsd"));
 
         XMLSchemaValidationStage stage = new XMLSchemaValidationStage();
         stage.setId("test");

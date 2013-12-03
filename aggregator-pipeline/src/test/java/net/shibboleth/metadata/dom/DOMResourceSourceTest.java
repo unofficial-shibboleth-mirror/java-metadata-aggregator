@@ -17,17 +17,16 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
-import net.shibboleth.utilities.java.support.httpclient.HttpResource;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -35,7 +34,7 @@ import org.w3c.dom.Element;
 public class DOMResourceSourceTest {
 
     @Test public void testSuccessfulFetchAndParse() throws Exception {
-        HttpResource mdResource = buildHttpResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
+        Resource mdResource = buildHttpResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
 
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
@@ -53,7 +52,7 @@ public class DOMResourceSourceTest {
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
-        HttpResource mdResource = buildHttpResource("http://www.google.com/intl/en/images/about_logo.gif");
+        Resource mdResource = buildHttpResource("http://www.google.com/intl/en/images/about_logo.gif");
 
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
@@ -74,7 +73,7 @@ public class DOMResourceSourceTest {
     }
 
     @Test public void testFailedFetch() throws Exception {
-        HttpResource mdResource = buildHttpResource("http://kslkjf.com/lkjlk3.dlw");
+        Resource mdResource = buildHttpResource("http://kslkjf.com/lkjlk3.dlw");
 
         BasicParserPool parserPool = new BasicParserPool();
         parserPool.initialize();
@@ -92,14 +91,7 @@ public class DOMResourceSourceTest {
         }
     }
 
-    protected HttpResource buildHttpResource(String url) throws Exception {
-        HttpClientBuilder builder = new HttpClientBuilder();
-        builder.setConnectionDisregardSslCertificate(true);
-        builder.setConnectionStalecheck(false);
-
-        File tmp = File.createTempFile(Long.toString(System.currentTimeMillis()), null);
-        tmp.deleteOnExit();
-
-        return new HttpResource(builder.buildClient(), url);
+    protected Resource buildHttpResource(String url) throws Exception {
+        return new UrlResource(url);
     }
 }

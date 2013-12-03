@@ -17,14 +17,20 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -37,13 +43,12 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NullableEleme
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
-import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
+import net.shibboleth.utilities.java.support.xml.LoggingErrorHandler;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -144,9 +149,6 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
 
     /** {@inheritDoc} */
     protected void doDestroy() {
-        for(Resource schemaResource : schemaResources){
-            schemaResource.destroy();
-        }
         schemaResources = null;
         validationSchema = null;
         
@@ -162,17 +164,20 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
                     + ", SchemaResources may not be empty");
         }
         
-        for(Resource schemaResource : schemaResources){
-            if(!schemaResource.isInitialized()){
-                schemaResource.initialize();
-            }
-        }
-
         try {
             log.debug("{} pipeline stage building validation schema resources", getId());
-            validationSchema =
-                    SchemaBuilder.buildSchema(SchemaLanguage.XML,
-                            schemaResources.toArray(new Resource[schemaResources.size()]));
+            final ArrayList<Source> sources = new ArrayList<>();
+            for (Resource schemaResource : schemaResources) {
+                try {
+                    sources.add(new StreamSource(schemaResource.getInputStream(), schemaResource.getDescription()));
+                } catch (IOException e) {
+                    throw new ComponentInitializationException("Unable to read schema resource " +
+                            schemaResource.getDescription(), e);
+                }
+            }
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            schemaFactory.setErrorHandler(new LoggingErrorHandler(log));
+            validationSchema = schemaFactory.newSchema(sources.toArray(new Source[sources.size()]));
         } catch (SAXException e) {
             throw new ComponentInitializationException("Unable to generate schema", e);
         }

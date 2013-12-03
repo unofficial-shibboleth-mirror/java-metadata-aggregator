@@ -32,13 +32,12 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 /**
@@ -138,21 +137,21 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
         InputStream ins = null;
 
         try {
-            log.debug("Attempting to fetch XML document from '{}'", domResource.getLocation());
+            log.debug("Attempting to fetch XML document from '{}'", domResource.getDescription());
 
             ins = domResource.getInputStream();
             if (ins == null) {
                 log.debug("Resource at location '{}' did not produce any data to parse, nothing left to do",
-                        domResource.getLocation());
+                        domResource.getDescription());
             } else {
                 log.debug("DOM Element from '{}' unchanged since last request, using cached copy",
-                        domResource.getLocation());
+                        domResource.getDescription());
                 populateItemCollection(itemCollection, ins);
             }
-        } catch (ResourceException e) {
+        } catch (IOException e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException("Error retrieving XML document from " +
-                        domResource.getLocation(), e);
+                        domResource.getDescription(), e);
             } else {
                 log.warn("stage {}: unable to read in XML file");
                 log.debug("stage {}: HTTP resource exception", getId(), e);
@@ -178,7 +177,7 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
     protected void populateItemCollection(@Nonnull @NonnullElements Collection<Item<Element>> itemCollection,
             final InputStream data) throws StageProcessingException {
         try {
-            log.debug("Parsing XML document retrieved from '{}'", domResource.getLocation());
+            log.debug("Parsing XML document retrieved from '{}'", domResource.getDescription());
             itemCollection.add(new DOMElementItem(parserPool.parse(data)));
         } catch (XMLParserException e) {
             if (errorCausesSourceFailure) {
@@ -192,7 +191,6 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
 
     /** {@inheritDoc} */
     protected void doDestroy() {
-        domResource.destroy();
         domResource = null;
         parserPool = null;
 
@@ -213,18 +211,9 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
                     + ", either a DomResource must be specified");
         }
 
-        if (!domResource.isInitialized()) {
-            domResource.initialize();
-        }
-
-        try {
-            if (!domResource.exists()) {
-                throw new ComponentInitializationException("Unable to initialize " + getId() + ", DOM resource "
-                        + domResource.getLocation() + " does not exist");
-            }
-        } catch (ResourceException e) {
-            throw new ComponentInitializationException("Unable to initialize " + getId()
-                    + ", error reading DOM resource " + domResource.getLocation() + " information", e);
+        if (!domResource.exists()) {
+            throw new ComponentInitializationException("Unable to initialize " + getId() + ", DOM resource "
+                    + domResource.getDescription() + " does not exist");
         }
     }
 
