@@ -58,7 +58,7 @@
         <dependency>
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
-            <version>${shibboleth.java-support.version}</version>
+            <version>2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
-            <version>${shibboleth.java-support.version}</version>
+            <version>2.1-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -125,7 +125,7 @@
             <dependency>
                 <groupId>net.shibboleth.ext</groupId>
                 <artifactId>spring-extensions</artifactId>
-                <version>${shibboleth.spring-extensions.version}</version>
+                <version>1.2-SNAPSHOT</version>
             </dependency>
 
             <!-- Provided Dependencies -->
@@ -136,7 +136,7 @@
             <dependency>
                 <groupId>net.shibboleth.ext</groupId>
                 <artifactId>spring-extensions</artifactId>
-                <version>${shibboleth.spring-extensions.version}</version>
+                <version>1.2-SNAPSHOT</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
