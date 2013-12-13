@@ -33,6 +33,7 @@ public class MDA125Test {
     private void test125() throws Exception {
         final GenericXmlApplicationContext appCtx = new GenericXmlApplicationContext();
         appCtx.load(MDA125Test.class, "MDA125Test-config.xml");
+        appCtx.refresh();
         final XMLSignatureValidationStage stage =
                 (XMLSignatureValidationStage)appCtx.getBean("us_incommon_checkSignature");
         // do NOT initialise the bean, not all required properties have been supplied for the test
