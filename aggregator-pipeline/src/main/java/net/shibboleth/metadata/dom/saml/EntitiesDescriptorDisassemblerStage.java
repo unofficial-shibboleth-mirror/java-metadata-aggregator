@@ -46,7 +46,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<Element> {
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
         final ArrayList<Item<Element>> items = new ArrayList<>(itemCollection);

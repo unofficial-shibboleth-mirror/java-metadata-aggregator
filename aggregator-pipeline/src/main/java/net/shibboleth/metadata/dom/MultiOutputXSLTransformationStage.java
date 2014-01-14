@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStage {
 
     /** {@inheritDoc} */
-    protected void executeTransformer(@Nonnull final Transformer transformer,
+    @Override protected void executeTransformer(@Nonnull final Transformer transformer,
             @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 

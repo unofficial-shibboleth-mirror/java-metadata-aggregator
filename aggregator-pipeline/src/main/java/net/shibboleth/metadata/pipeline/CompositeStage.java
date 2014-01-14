@@ -47,7 +47,7 @@ public class CompositeStage<T> extends AbstractDestructableIdentifiableInitializ
     private List<Stage<T>> composedStages = Collections.emptyList();
 
     /** {@inheritDoc} */
-    public synchronized void setId(String componentId) {
+    @Override public synchronized void setId(String componentId) {
         super.setId(componentId);
     }
     
@@ -82,7 +82,7 @@ public class CompositeStage<T> extends AbstractDestructableIdentifiableInitializ
     }
 
     /** {@inheritDoc} */
-    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         for (Stage<T> stage : composedStages) {
             stage.execute(itemCollection);
@@ -90,14 +90,14 @@ public class CompositeStage<T> extends AbstractDestructableIdentifiableInitializ
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         composedStages = null;
 
         super.doDestroy();
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (composedStages == null || composedStages.isEmpty()) {

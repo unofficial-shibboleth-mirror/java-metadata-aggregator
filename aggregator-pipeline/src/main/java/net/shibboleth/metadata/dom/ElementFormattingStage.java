@@ -177,7 +177,7 @@ public class ElementFormattingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<Item<Element>> itemCollection) throws StageProcessingException {
+    @Override protected void doExecute(final Collection<Item<Element>> itemCollection) throws StageProcessingException {
         final ArrayList<Item<Element>> transformedItems = Lists.newArrayListWithExpectedSize(itemCollection.size());
 
         for (Item<Element> item : itemCollection) {
@@ -235,7 +235,7 @@ public class ElementFormattingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         transformerFactory =

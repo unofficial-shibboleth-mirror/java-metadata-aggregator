@@ -88,7 +88,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         class ReverseOrder implements ItemOrderingStrategy {
 
             /** {@inheritDoc} */
-            public List<Item<Element>> order(Collection<Item<Element>> items) {
+        	@Override public List<Item<Element>> order(Collection<Item<Element>> items) {
                 final List<Item<Element>> result = new ArrayList<>(items);
                 Collections.reverse(result);
                 return result;

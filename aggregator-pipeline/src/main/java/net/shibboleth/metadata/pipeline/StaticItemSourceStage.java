@@ -71,7 +71,7 @@ public class StaticItemSourceStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         for (Item<T> item : getSourceItems()) {
             if (item != null) {
@@ -81,7 +81,7 @@ public class StaticItemSourceStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         source = null;
 
         super.doDestroy();

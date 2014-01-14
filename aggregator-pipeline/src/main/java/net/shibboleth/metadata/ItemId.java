@@ -61,12 +61,12 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
     }
 
     /** {@inheritDoc} */
-    public int hashCode() {
+    @Override public int hashCode() {
         return id.hashCode();
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    @Override public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -82,7 +82,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
     }
 
     /** {@inheritDoc} */
-    public int compareTo(ItemId o) {
+    @Override public int compareTo(ItemId o) {
         return id.compareTo(o.id);
     }
 }

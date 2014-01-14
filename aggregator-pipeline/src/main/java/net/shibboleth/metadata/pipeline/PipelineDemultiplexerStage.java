@@ -177,7 +177,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         Collection<Item<T>> selectedItems;
         final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
@@ -206,7 +206,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         executorService = null;
         collectionFactory = null;
         pipelineAndStrategies = null;
@@ -215,7 +215,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (pipelineAndStrategies.isEmpty()) {

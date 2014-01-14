@@ -243,7 +243,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
     }
     
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         
         final Element docElement = item.unwrap();
         
@@ -288,7 +288,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         verificationCertificate = null;
         verificationKey = null;
         validator = null;
@@ -299,7 +299,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (verificationKey == null) {

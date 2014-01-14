@@ -44,7 +44,8 @@ public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelecti
     private final Logger log = LoggerFactory.getLogger(ItemMetadataTerminationStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection, Item<T> matchingItem,
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+            Item<T> matchingItem,
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws TerminationException {
 

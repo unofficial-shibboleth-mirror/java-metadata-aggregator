@@ -213,7 +213,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<>();
         if (sourceFile.isFile()) {
@@ -306,7 +306,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         parserPool = null;
         sourceFile = null;
         sourceFileFilter = null;
@@ -315,7 +315,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (parserPool == null) {

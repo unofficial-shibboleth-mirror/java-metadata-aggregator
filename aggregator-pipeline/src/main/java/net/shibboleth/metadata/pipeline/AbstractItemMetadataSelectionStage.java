@@ -110,7 +110,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
+    @Override protected void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
         // to the itemCollection and thus would cause issues if we were iterating over it directly
         final ArrayList<Item<T>> collectionCopy = new ArrayList<>(itemCollection);
@@ -132,7 +132,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         selectionRequirements = null;
         identifierStrategy = null;
 

@@ -127,7 +127,7 @@ public class SerializationStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         try {
             serializer.serialize(itemCollection, new FileOutputStream(outputFile));
@@ -137,7 +137,7 @@ public class SerializationStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         outputFile = null;
         serializer = null;
 
@@ -145,7 +145,7 @@ public class SerializationStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (outputFile == null) {

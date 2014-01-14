@@ -94,7 +94,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         source.setRecurseDirectories(true);
         source.setSourceFileFilter(new FileFilter() {
 
-            public boolean accept(File pathname) {
+            @Override public boolean accept(File pathname) {
                 return pathname.getName().endsWith("2.xml");
             }
         });

@@ -85,7 +85,7 @@ public class ScriptletStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         final SimpleScriptContext context = new SimpleScriptContext();
         context.setAttribute(ITEMS, itemCollection, SimpleScriptContext.ENGINE_SCOPE);
@@ -100,7 +100,7 @@ public class ScriptletStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (script == null) {

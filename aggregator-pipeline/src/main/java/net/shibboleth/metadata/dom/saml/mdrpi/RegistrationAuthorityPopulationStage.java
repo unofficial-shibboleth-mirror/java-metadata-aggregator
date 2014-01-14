@@ -44,7 +44,7 @@ import com.google.common.base.Strings;
 public class RegistrationAuthorityPopulationStage extends BaseStage<Element> {
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
 
         for (Item<Element> item : items) {

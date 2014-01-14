@@ -47,7 +47,7 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
     private final Logger log = LoggerFactory.getLogger(StatusMetadataLoggingStage.class);
 
     /** {@inheritDoc} */
-    protected void doExecute(
+    @Override protected void doExecute(
                     @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
                     @Nonnull final Item<T> matchingItem,
                     @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>,

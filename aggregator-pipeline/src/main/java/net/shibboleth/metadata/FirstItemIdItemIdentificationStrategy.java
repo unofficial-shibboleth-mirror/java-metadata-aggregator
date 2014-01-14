@@ -54,7 +54,7 @@ public class FirstItemIdItemIdentificationStrategy implements ItemIdentification
     }
 
     /** {@inheritDoc} */
-    @Nonnull public String getItemIdentifier(@Nonnull final Item<?> item) {
+    @Override @Nonnull public String getItemIdentifier(@Nonnull final Item<?> item) {
         Constraint.isNotNull(item, "Item can not equal null");
         
         List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);

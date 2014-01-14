@@ -115,7 +115,7 @@ public class XPathFilteringStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection) {
+    @Override public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         if (namespaceContext != null) {
@@ -147,7 +147,7 @@ public class XPathFilteringStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         xpathExpression = null;
         namespaceContext = null;
 
@@ -155,7 +155,7 @@ public class XPathFilteringStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (xpathExpression == null) {

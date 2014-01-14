@@ -166,7 +166,7 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         final ArrayList<Future<Collection<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
@@ -184,7 +184,7 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         executorService = null;
         collectionFactory = null;
         mergeStrategy = null;
@@ -194,7 +194,7 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         for (Pipeline<T> pipeline : mergedPipelines) {

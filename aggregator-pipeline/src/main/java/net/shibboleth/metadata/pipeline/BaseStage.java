@@ -40,7 +40,7 @@ public abstract class BaseStage<T> extends
         AbstractDestructableIdentifiableInitializableComponent implements Stage<T> {
 
     /** {@inheritDoc} */
-    public synchronized void setId(@Nonnull @NotEmpty final String componentId) {
+    @Override public synchronized void setId(@Nonnull @NotEmpty final String componentId) {
         super.setId(componentId);
     }
 
@@ -50,7 +50,7 @@ public abstract class BaseStage<T> extends
      * 
      * {@inheritDoc}
      */
-    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);

@@ -55,7 +55,7 @@ public class GenerateIdStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element element = item.unwrap();
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(element)) {
             return true;

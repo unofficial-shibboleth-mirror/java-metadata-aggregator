@@ -39,7 +39,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);

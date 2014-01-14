@@ -46,7 +46,7 @@ public abstract class AbstractItem<T> implements Item<T> {
     }
 
     /** {@inheritDoc} */
-    @Nullable public T unwrap() {
+    @Override @Nullable public T unwrap() {
         return data;
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractItem<T> implements Item<T> {
     }
 
     /** {@inheritDoc} */
-    @Nonnull public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
+    @Override @Nonnull public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
         return metadata;
     }
 }

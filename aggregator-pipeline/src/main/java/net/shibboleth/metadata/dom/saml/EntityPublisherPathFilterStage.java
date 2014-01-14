@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 public class EntityPublisherPathFilterStage extends BaseStage<Element> {
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection)
             throws StageProcessingException {
         // TODO Auto-generated method stub
 

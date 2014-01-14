@@ -127,7 +127,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
         final Validator validator = validationSchema.newValidator();
@@ -148,7 +148,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         schemaResources = null;
         validationSchema = null;
         
@@ -156,7 +156,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
     }
     
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (schemaResources == null || schemaResources.isEmpty()) {

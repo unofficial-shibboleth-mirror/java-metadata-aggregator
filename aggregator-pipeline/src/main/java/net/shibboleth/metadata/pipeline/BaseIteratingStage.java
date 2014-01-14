@@ -40,7 +40,7 @@ public abstract class BaseIteratingStage<T> extends BaseStage<T> {
      * 
      * {@inheritDoc}
      */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         Iterator<Item<T>> itemIterator = itemCollection.iterator();
 

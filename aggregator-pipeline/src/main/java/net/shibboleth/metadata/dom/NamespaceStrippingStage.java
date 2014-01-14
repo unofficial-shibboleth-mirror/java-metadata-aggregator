@@ -191,7 +191,7 @@ public class NamespaceStrippingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
         for (Item<Element> item : items) {
             processItem(item);
@@ -199,14 +199,14 @@ public class NamespaceStrippingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         namespace = null;
 
         super.doDestroy();
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (namespace == null) {
             throw new ComponentInitializationException("target namespace can not be null or empty");

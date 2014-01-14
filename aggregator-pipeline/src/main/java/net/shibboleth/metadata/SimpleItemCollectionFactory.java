@@ -32,7 +32,7 @@ import com.google.common.base.Supplier;
 public class SimpleItemCollectionFactory<T> implements Supplier<Collection<Item<T>>> {
 
     /** {@inheritDoc} */
-    @Nonnull public Collection<Item<T>> get() {
+    @Override @Nonnull public Collection<Item<T>> get() {
         return new ArrayList<>();
     }
 }

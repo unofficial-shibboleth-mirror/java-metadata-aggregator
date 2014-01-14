@@ -80,7 +80,7 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
     }
 
     /** {@inheritDoc} */
-    public synchronized boolean apply(@Nonnull Item<Element> item) {
+    @Override public synchronized boolean apply(@Nonnull Item<Element> item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {

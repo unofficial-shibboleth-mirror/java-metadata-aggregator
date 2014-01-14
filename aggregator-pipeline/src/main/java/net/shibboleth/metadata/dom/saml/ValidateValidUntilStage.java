@@ -91,7 +91,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element element = item.unwrap();
 
         if (!SAMLMetadataSupport.isEntitiesDescriptor(element)) {
@@ -124,7 +124,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (maxValidityInterval < 0) {

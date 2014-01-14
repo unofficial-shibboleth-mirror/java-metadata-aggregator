@@ -154,14 +154,14 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         designatedAuthorities = null;
 
         super.doDestroy();
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) {
         Element descriptor;
         descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {

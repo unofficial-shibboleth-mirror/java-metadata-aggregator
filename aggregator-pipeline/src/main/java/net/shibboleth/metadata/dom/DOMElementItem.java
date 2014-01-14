@@ -80,7 +80,7 @@ public class DOMElementItem extends AbstractItem<Element> {
     }
 
     /** {@inheritDoc} */
-    public Item<Element> copy() {
+    @Override public Item<Element> copy() {
         final DOMElementItem clone = new DOMElementItem(unwrap());
         ItemMetadataSupport.addAll(clone, getItemMetadata().values());
         return clone;

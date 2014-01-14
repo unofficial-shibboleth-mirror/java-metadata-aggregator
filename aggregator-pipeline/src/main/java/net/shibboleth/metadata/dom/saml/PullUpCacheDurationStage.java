@@ -96,7 +96,7 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);

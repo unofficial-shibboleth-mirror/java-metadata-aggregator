@@ -48,7 +48,7 @@ public class DOMElementSerializer implements ItemSerializer<Element> {
     private final Logger log = LoggerFactory.getLogger(DOMElementSerializer.class);
 
     /** {@inheritDoc} */
-    public void
+    @Override public void
             serialize(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection, OutputStream output) {
         if (itemCollection == null || itemCollection.isEmpty()) {
             return;

@@ -132,7 +132,7 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         InputStream ins = null;
 
@@ -190,7 +190,7 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         domResource = null;
         parserPool = null;
 
@@ -198,7 +198,7 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (parserPool == null) {

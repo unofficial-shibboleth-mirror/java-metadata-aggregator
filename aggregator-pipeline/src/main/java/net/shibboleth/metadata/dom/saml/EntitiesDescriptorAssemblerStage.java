@@ -136,7 +136,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         if (itemCollection.isEmpty()) {
             if (noChildrenAProcessingError) {
@@ -193,7 +193,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         orderingStrategy = null;
         descriptorName = null;
 
@@ -201,7 +201,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (orderingStrategy == null) {
@@ -226,7 +226,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
     private class NoOpItemOrderingStrategy implements ItemOrderingStrategy {
 
         /** {@inheritDoc} */
-        public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items) {
+        @Override public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items) {
             return new ArrayList<>(items);
         }
     }

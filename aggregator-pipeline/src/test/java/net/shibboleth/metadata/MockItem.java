@@ -38,7 +38,7 @@ public class MockItem extends AbstractItem<String> {
     }
 
     /** {@inheritDoc} */
-    public void setData(String data) {
+    @Override public void setData(String data) {
         super.setData(data);
     }
 
@@ -53,19 +53,19 @@ public class MockItem extends AbstractItem<String> {
     }
 
     /** {@inheritDoc} */
-    public Item<String> copy() {
+    @Override public Item<String> copy() {
         MockItem clone = new MockItem(new String(unwrap()));
         ItemMetadataSupport.addAll(clone, getItemMetadata().values());
         return clone;
     }
 
     /** {@inheritDoc} */
-    public int hashCode() {
+    @Override public int hashCode() {
         return unwrap().hashCode();
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    @Override public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }

@@ -34,7 +34,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy {
 
     /** {@inheritDoc} */
-    public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
+    @Override public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
             @Nonnull @NonnullElements final List<Collection<Item<T>>> sources) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");

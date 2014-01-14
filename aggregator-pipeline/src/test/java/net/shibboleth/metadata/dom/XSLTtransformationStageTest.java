@@ -254,7 +254,7 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         // Local URIResolver
         class MyResolver implements URIResolver {
 
-            public Source resolve(final String href, final String base) throws TransformerException {
+        	@Override public Source resolve(final String href, final String base) throws TransformerException {
                 //System.out.println("href=" + href + ", base=" + base);
                 
                 // resolve just this one value of href, to cause a different file to be included

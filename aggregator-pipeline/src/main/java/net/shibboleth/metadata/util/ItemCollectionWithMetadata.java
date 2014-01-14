@@ -71,38 +71,38 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    public int size() {
+    @Override public int size() {
         return delegate.size();
     }
 
     /** {@inheritDoc} */
-    public boolean isEmpty() {
+    @Override public boolean isEmpty() {
         return delegate.isEmpty();
     }
 
     /** {@inheritDoc} */
-    public boolean contains(Object o) {
+    @Override public boolean contains(Object o) {
         return delegate.contains(o);
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements public Iterator<Item<T>> iterator() {
+    @Override @Nonnull @NonnullElements public Iterator<Item<T>> iterator() {
         return delegate.iterator();
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements public Object[] toArray() {
+    @Override @Nonnull @NonnullElements public Object[] toArray() {
         return delegate.toArray();
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements public <TT> TT[] toArray(@Nonnull final TT[] a) {
+    @Override @Nonnull @NonnullElements public <TT> TT[] toArray(@Nonnull final TT[] a) {
         Constraint.isNotNull(a, "Target array can not be null");
         return delegate.toArray(a);
     }
 
     /** {@inheritDoc} */
-    public boolean add(@Nullable final Item<T> e) {
+    @Override public boolean add(@Nullable final Item<T> e) {
         if (e == null) {
             return false;
         }
@@ -111,7 +111,7 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    public boolean remove(@Nullable final Object o) {
+    @Override public boolean remove(@Nullable final Object o) {
         if (o == null) {
             return false;
         }
@@ -120,14 +120,14 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    public boolean containsAll(@Nonnull final Collection<?> c) {
+    @Override public boolean containsAll(@Nonnull final Collection<?> c) {
         Constraint.isNotNull(c, "Collection can not be null");
 
         return delegate.containsAll(c);
     }
 
     /** {@inheritDoc} */
-    public boolean addAll(@Nullable final Collection<? extends Item<T>> c) {
+    @Override public boolean addAll(@Nullable final Collection<? extends Item<T>> c) {
         if (c == null) {
             return false;
         }
@@ -136,7 +136,7 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    public boolean removeAll(@Nullable final Collection<?> c) {
+    @Override public boolean removeAll(@Nullable final Collection<?> c) {
         if (c == null) {
             return false;
         }
@@ -145,14 +145,14 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    public boolean retainAll(@Nonnull Collection<?> c) {
+    @Override public boolean retainAll(@Nonnull Collection<?> c) {
         Constraint.isNotNull(c, "Collection can not be null");
 
         return delegate.retainAll(c);
     }
 
     /** {@inheritDoc} */
-    public void clear() {
+    @Override public void clear() {
         delegate.clear();
     }
 }

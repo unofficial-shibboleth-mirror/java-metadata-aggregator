@@ -217,7 +217,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         final Collection<Item<T>> selectedItems = collectionFactory.get();
         final Collection<Item<T>> nonselectedItems = collectionFactory.get();
@@ -267,7 +267,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         executorService = null;
         collectionFactory = null;
         selectionStrategy = null;
@@ -279,7 +279,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (selectedItemPipeline == null && nonselectedItemPipeline == null) {

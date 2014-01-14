@@ -154,7 +154,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
@@ -243,7 +243,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         designatedTypes = null;
         super.doDestroy();
     }

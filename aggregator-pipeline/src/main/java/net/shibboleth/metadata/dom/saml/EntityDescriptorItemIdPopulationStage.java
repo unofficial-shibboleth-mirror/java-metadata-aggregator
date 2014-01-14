@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<Element> {
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element metadataElement = item.unwrap();
 
         if (SAMLMetadataSupport.isEntityDescriptor(metadataElement)) {

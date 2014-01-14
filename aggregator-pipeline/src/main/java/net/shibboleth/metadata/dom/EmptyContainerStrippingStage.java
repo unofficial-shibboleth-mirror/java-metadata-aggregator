@@ -106,7 +106,7 @@ public class EmptyContainerStrippingStage extends BaseStage<Element> {
     }
     
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
         for (Item<Element> item : items) {
             final Element element = item.unwrap();
@@ -126,7 +126,7 @@ public class EmptyContainerStrippingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         elementNamespace = null;
         elementName = null;
 
@@ -134,7 +134,7 @@ public class EmptyContainerStrippingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (elementNamespace == null) {
             throw new ComponentInitializationException("target namespace can not be null or empty");

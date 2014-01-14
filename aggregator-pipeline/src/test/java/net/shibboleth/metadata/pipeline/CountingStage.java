@@ -55,7 +55,7 @@ public class CountingStage<T> extends AbstractDestructableIdentifiableInitializa
     }
 
     /** {@inheritDoc} */
-    public void execute(final Collection<Item<T>> metadataCollection) throws StageProcessingException {
+    @Override public void execute(final Collection<Item<T>> metadataCollection) throws StageProcessingException {
         invocationCount += 1;
         itemCount += metadataCollection.size();
     }

@@ -64,7 +64,7 @@ public class PipelineCallable<T> implements Callable<Collection<Item<T>>> {
      * 
      * @throws PipelineProcessingException
      */
-    @Nonnull @NonnullElements public Collection<Item<T>> call() throws PipelineProcessingException {
+    @Override @Nonnull @NonnullElements public Collection<Item<T>> call() throws PipelineProcessingException {
         log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
                 itemCollection.size());
         pipeline.execute(itemCollection);

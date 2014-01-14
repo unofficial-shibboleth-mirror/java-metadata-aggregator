@@ -668,7 +668,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element element = item.unwrap();
         XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {
@@ -949,7 +949,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         xmlSigFactory = null;
         keyInfoFactory = null;
         privKey = null;
@@ -967,7 +967,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (!Init.isInitialized()) {

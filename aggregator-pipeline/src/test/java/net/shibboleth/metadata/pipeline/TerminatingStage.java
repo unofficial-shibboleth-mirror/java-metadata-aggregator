@@ -13,7 +13,7 @@ class TerminatingStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(Collection<Item<T>> itemCollection) throws StageProcessingException {
+    @Override protected void doExecute(Collection<Item<T>> itemCollection) throws StageProcessingException {
         throw new TerminationException("from TerminatingStage");
     }
 }

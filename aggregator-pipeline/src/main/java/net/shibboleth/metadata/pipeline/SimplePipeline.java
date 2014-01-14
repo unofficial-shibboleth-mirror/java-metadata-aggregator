@@ -50,12 +50,12 @@ public class SimplePipeline<T> extends AbstractDestructableIdentifiableInitializ
     private List<Stage<T>> pipelineStages = Collections.emptyList();
 
     /** {@inheritDoc} */
-    public synchronized void setId(@Nonnull @NotEmpty String componentId) {
+    @Override public synchronized void setId(@Nonnull @NotEmpty String componentId) {
         super.setId(componentId);
     }
 
     /** {@inheritDoc} */
-    @Nonnull @NonnullElements @Unmodifiable public List<Stage<T>> getStages() {
+    @Override @Nonnull @NonnullElements @Unmodifiable public List<Stage<T>> getStages() {
         return pipelineStages;
     }
 
@@ -76,7 +76,7 @@ public class SimplePipeline<T> extends AbstractDestructableIdentifiableInitializ
     }
 
     /** {@inheritDoc} */
-    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws PipelineProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
@@ -89,14 +89,14 @@ public class SimplePipeline<T> extends AbstractDestructableIdentifiableInitializ
     }
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         pipelineStages = null;
 
         super.doDestroy();
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         for (Stage<T> stage : pipelineStages) {

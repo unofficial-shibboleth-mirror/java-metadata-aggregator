@@ -232,7 +232,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         try {
             final Transformer transformer = xslTemplate.newTransformer();
@@ -260,7 +260,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
             TransformerConfigurationException;
 
     /** {@inheritDoc} */
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
 
         xslResource = null;
         xslTemplate = null;
@@ -273,7 +273,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (xslResource == null) {
@@ -347,17 +347,17 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
         }
 
         /** {@inheritDoc} */
-        public void error(@Nonnull final TransformerException e) throws TransformerException {
+        @Override public void error(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
         /** {@inheritDoc} */
-        public void fatalError(@Nonnull final TransformerException e) throws TransformerException {
+        @Override public void fatalError(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
         /** {@inheritDoc} */
-        public void warning(@Nonnull final TransformerException e) throws TransformerException {
+        @Override public void warning(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 

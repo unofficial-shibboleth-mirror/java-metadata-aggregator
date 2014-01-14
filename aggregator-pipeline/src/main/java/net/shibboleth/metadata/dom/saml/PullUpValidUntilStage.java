@@ -99,7 +99,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         Long nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);
