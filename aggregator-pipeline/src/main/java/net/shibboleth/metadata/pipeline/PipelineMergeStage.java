@@ -66,7 +66,7 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
      * The factory used to create the item returned by this source. Default implementation is
      * {@link SimpleItemCollectionFactory}.
      */
-    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<T>();
+    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
@@ -172,7 +172,7 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
 
         for (Pipeline<T> pipeline : mergedPipelines) {
             pipelineResultFutures.add(executorService.submit(
-                    new PipelineCallable<T>(pipeline, collectionFactory.get())));
+                    new PipelineCallable<>(pipeline, collectionFactory.get())));
         }
 
         final ArrayList<Collection<Item<T>>> pipelineResults = new ArrayList<>();

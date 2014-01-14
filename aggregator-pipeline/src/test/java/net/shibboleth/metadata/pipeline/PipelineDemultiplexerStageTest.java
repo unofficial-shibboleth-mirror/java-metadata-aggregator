@@ -84,7 +84,7 @@ public class PipelineDemultiplexerStageTest {
         Assert.assertNotNull(stage.getExecutorService());
 
         try {
-            stage = new PipelineDemultiplexerStage<String>();
+            stage = new PipelineDemultiplexerStage<>();
             stage.setId("test");
             stage.initialize();
             Assert.fail();
@@ -96,7 +96,7 @@ public class PipelineDemultiplexerStageTest {
     @Test public void testExecute() throws Exception {
         SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("selectedPipeline");
-        CountingStage<String> countStage = new CountingStage<String>();
+        CountingStage<String> countStage = new CountingStage<>();
         pipeline.setStages(Collections.<Stage<String>>singletonList(countStage));
 
         final List<Item<String>> items = new ArrayList<>();

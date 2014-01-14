@@ -71,7 +71,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
     private boolean waitingForPipelines;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<T>();
+    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
     private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = Collections.emptyList();
@@ -164,13 +164,12 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
             return;
         }
 
-        final Builder<Pair<Pipeline<T>, Predicate<Item<T>>>> checkedPasses =
-                new Builder<Pair<Pipeline<T>, Predicate<Item<T>>>>();
+        final Builder<Pair<Pipeline<T>, Predicate<Item<T>>>> checkedPasses = new Builder<>();
         for (Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
             Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
             Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
 
-            checkedPasses.add(new Pair<Pipeline<T>, Predicate<Item<T>>>(pass));
+            checkedPasses.add(new Pair<>(pass));
         }
 
         pipelineAndStrategies = checkedPasses.build();
@@ -195,7 +194,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
                 }
             }
 
-            pipelineFutures.add(executorService.submit(new PipelineCallable<T>(pipeline, selectedItems)));
+            pipelineFutures.add(executorService.submit(new PipelineCallable<>(pipeline, selectedItems)));
         }
 
         if (isWaitingForPipelines()) {

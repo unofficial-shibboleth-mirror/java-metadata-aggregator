@@ -91,13 +91,13 @@ final class XMLSignatureValidator {
         verificationKey = key;
         
         if (blacklistDigests != null) {
-            blacklistedDigests = new HashSet<String>(blacklistDigests);
+            blacklistedDigests = new HashSet<>(blacklistDigests);
         } else {
             blacklistedDigests = Collections.emptySet();
         }
         
         if (blacklistSignatureMethods != null) {
-            blacklistedSignatureMethods = new HashSet<String>(blacklistSignatureMethods);
+            blacklistedSignatureMethods = new HashSet<>(blacklistSignatureMethods);
         } else {
             blacklistedSignatureMethods = Collections.emptySet();
         }

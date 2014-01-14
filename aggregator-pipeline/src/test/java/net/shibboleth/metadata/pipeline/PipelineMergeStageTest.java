@@ -50,7 +50,7 @@ public class PipelineMergeStageTest {
         StaticItemSourceStage<String> source1 = new StaticItemSourceStage<>();
         source1.setId("src1");
         source1.setSourceItems(newSingletonList(md1));
-        SimplePipeline<String> pipeline1 = new SimplePipeline<String>();
+        SimplePipeline<String> pipeline1 = new SimplePipeline<>();
         pipeline1.setId("p1");
         pipeline1.setStages(newSingletonList((Stage<String>) source1));
 

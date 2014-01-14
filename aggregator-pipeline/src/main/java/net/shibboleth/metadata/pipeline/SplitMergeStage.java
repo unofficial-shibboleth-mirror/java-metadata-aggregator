@@ -75,7 +75,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
-    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<T>();
+    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** Strategy used to split the given item collection. */
     private Predicate<Item<T>> selectionStrategy = Predicates.alwaysFalse();
