@@ -96,8 +96,6 @@ public final class SimpleCommandLine {
         log.debug("Retrieving pipeline from Spring context");
         final String pipelineName = cli.getPipelineName();
         
-        // Warning suppressed: unavoidable, given type erasure
-        @SuppressWarnings("unchecked")
         final Pipeline<Element> pipeline =
             (Pipeline<Element>) appCtx.getBean(pipelineName, Pipeline.class);
 
