@@ -10,6 +10,7 @@ Highlights
     * [MDA-125] - can't set some properties on XMLSignatureValidationStage from
                   Spring configurations
     * [MDA-128] - use @Override annotation in MDA sources
+    * [MDA-129] - remove semi-functional ElementFormattingStage
 
 
 Release Notes - Metadata Aggregator - Version 0.8.0
