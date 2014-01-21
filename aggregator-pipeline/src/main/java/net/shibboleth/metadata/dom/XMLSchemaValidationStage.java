@@ -18,19 +18,15 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -43,7 +39,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NullableEleme
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.xml.LoggingErrorHandler;
+import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
 import org.slf4j.Logger;
@@ -166,18 +162,17 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
         
         try {
             log.debug("{} pipeline stage building validation schema resources", getId());
-            final ArrayList<Source> sources = new ArrayList<>();
+            final SchemaBuilder builder = new SchemaBuilder();
             for (Resource schemaResource : schemaResources) {
                 try {
-                    sources.add(new StreamSource(schemaResource.getInputStream(), schemaResource.getDescription()));
+                    builder.addSchema(new StreamSource(schemaResource.getInputStream(),
+                            schemaResource.getDescription()));
                 } catch (IOException e) {
                     throw new ComponentInitializationException("Unable to read schema resource " +
                             schemaResource.getDescription(), e);
                 }
             }
-            final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            schemaFactory.setErrorHandler(new LoggingErrorHandler(log));
-            validationSchema = schemaFactory.newSchema(sources.toArray(new Source[sources.size()]));
+            validationSchema = builder.buildSchema();
         } catch (SAXException e) {
             throw new ComponentInitializationException("Unable to generate schema", e);
         }
