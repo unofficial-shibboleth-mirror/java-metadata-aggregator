@@ -56,28 +56,11 @@
     <dependencies>
         <!-- Compile Dependencies -->
         <dependency>
-            <groupId>net.shibboleth.utilities</groupId>
-            <artifactId>java-support</artifactId>
-            <version>3.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>edu.vt.middleware</groupId>
-            <artifactId>vt-crypt</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
 
         <!-- Provided Dependencies -->
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -106,13 +89,6 @@
         </dependency>
 
         <!-- Test Dependencies -->
-        <dependency>
-            <groupId>net.shibboleth.utilities</groupId>
-            <artifactId>java-support</artifactId>
-            <version>2.1-SNAPSHOT</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
 
@@ -126,6 +102,11 @@
                 <groupId>net.shibboleth.ext</groupId>
                 <artifactId>spring-extensions</artifactId>
                 <version>1.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>net.shibboleth.utilities</groupId>
+                <artifactId>java-support</artifactId>
+                <version>3.0-SNAPSHOT</version>
             </dependency>
 
             <!-- Provided Dependencies -->

@@ -18,12 +18,24 @@
     <dependencies>
         <!-- Compile Dependencies -->
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>            
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.vt.middleware</groupId>
+            <artifactId>vt-crypt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.shibboleth.utilities</groupId>
+            <artifactId>java-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
         </dependency>
     	<dependency>
 	       <groupId>org.springframework</groupId>
