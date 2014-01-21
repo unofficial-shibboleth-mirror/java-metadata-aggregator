@@ -9,6 +9,7 @@ Highlights
     * [MDA-124] - Move from using Shibboleth resources to using Spring ones
     * [MDA-125] - can't set some properties on XMLSignatureValidationStage from
                   Spring configurations
+    * [MDA-127] - simplify output from StatusMetadataLoggingStage
     * [MDA-128] - use @Override annotation in MDA sources
     * [MDA-129] - remove semi-functional ElementFormattingStage
 

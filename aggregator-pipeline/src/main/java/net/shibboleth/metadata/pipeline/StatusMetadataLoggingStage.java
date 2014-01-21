@@ -73,7 +73,7 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
             log.info("Item {} was marked with the following Info status messages", itemId);
             for (ItemMetadata info : statuses) {
                 final StatusMetadata status = (StatusMetadata) info;
-                log.info("    {} reported: {}", status.getComponentId(), status.getStatusMessage());
+                log.info("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }
@@ -90,7 +90,7 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
             log.warn("Item {} was marked with the following Warning status messages", itemId);
             for (ItemMetadata info : statuses) {
                 final StatusMetadata status = (StatusMetadata) info;
-                log.warn("    {} reported: {}", status.getComponentId(), status.getStatusMessage());
+                log.warn("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }
@@ -107,7 +107,7 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
             log.error("Item {} was marked with the following Error status messages", itemId);
             for (ItemMetadata info : statuses) {
                 final StatusMetadata status = (StatusMetadata) info;
-                log.error("    {} reported: {}", status.getComponentId(), status.getStatusMessage());
+                log.error("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }
