@@ -19,8 +19,8 @@ package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
 
-import org.junit.Assert;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -38,10 +38,10 @@ public class MDA125Test {
                 (XMLSignatureValidationStage)appCtx.getBean("us_incommon_checkSignature");
         // do NOT initialise the bean, not all required properties have been supplied for the test
         final Collection<String> digests = stage.getBlacklistedDigests();
-        Assert.assertEquals(1, digests.size());
+        Assert.assertEquals(digests.size(), 1);
         Assert.assertTrue(digests.contains("http://www.w3.org/2001/04/xmldsig-more#md5"));
         final Collection<String> methods = stage.getBlacklistedSignatureMethods();
-        Assert.assertEquals(1, methods.size());
+        Assert.assertEquals(methods.size(), 1);
         Assert.assertTrue(methods.contains("http://www.w3.org/2001/04/xmldsig-more#rsa-md5"));
         appCtx.close();
     }
