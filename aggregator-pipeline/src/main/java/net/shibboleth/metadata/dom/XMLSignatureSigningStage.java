@@ -205,12 +205,6 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
     /** Explicit names to associate with the given signing key. Default value: empty list */
     private List<String> keyNames;
 
-    /**
-     * Whether additional key names should be derived from the end-entity certificate, if present. Default value:
-     * <code>true</code>
-     */
-    private boolean deriveKeyNames;
-
     /** Whether key names should be included in the signature's KeyInfo. Default value: <code>true</code> */
     private boolean includeKeyNames;
 
@@ -251,7 +245,6 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         inclusivePrefixList = Collections.emptyList();
         idAttributeNames = Lists.newArrayList(new QName("ID"), new QName("id"), new QName("Id"));
         keyNames = Collections.emptyList();
-        deriveKeyNames = true;
         includeKeyNames = true;
         includeX509Certificates = true;
     }
@@ -479,27 +472,6 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         keyNames = ImmutableList.copyOf(Iterables.filter(names, Predicates.notNull()));
-    }
-
-    /**
-     * Gets whether key names are derived from the end-entity certificate, if present. TODO describe was is derived
-     * 
-     * @return whether key names are derived from the end-entity certificate
-     */
-    public boolean isDeriveKeyNames() {
-        return deriveKeyNames;
-    }
-
-    /**
-     * Sets whether key names are derived from the end-entity certificate.
-     * 
-     * @param deriveNames whether key names are derived from the end-entity certificate
-     */
-    public synchronized void setDeriveKeyNames(final boolean deriveNames) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
-        deriveKeyNames = deriveNames;
     }
 
     /**
@@ -872,10 +844,6 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
             for (String name : keyNames) {
                 keyInfoItems.add(keyInfoFactory.newKeyName(name));
             }
-        }
-
-        if (deriveKeyNames) {
-            // TODO derived key names
         }
     }
 

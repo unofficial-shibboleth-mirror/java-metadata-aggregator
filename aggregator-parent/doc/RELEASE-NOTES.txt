@@ -5,7 +5,16 @@ Highlights
     * Now using Spring resources instead of (now deprecated) Shibboleth
       resources.
 
+API Changes
+    * ElementFormattingStage removed
+    * EntityPublisherPathFilterStage removed
+    * PushDownCacheDurationStage removed
+    * PushDownValidUntilStage removed
+    * SetPublicationInfo removed
+    * XMLSignatureSigningStage's deriveKeyNames property
+
 ** Task
+    * [MDA-122] - remove unimplemented stages and properties
     * [MDA-124] - Move from using Shibboleth resources to using Spring ones
     * [MDA-125] - can't set some properties on XMLSignatureValidationStage from
                   Spring configurations
