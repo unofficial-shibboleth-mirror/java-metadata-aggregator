@@ -18,6 +18,10 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
@@ -42,6 +46,21 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
     }
 
     /**
+     * Helper method to extract the value of a descriptor's XML duration attribute in milliseconds.
+     * 
+     * @param descriptor EntitiesDescriptor or EntityDescriptor to pull the attribute from
+     * @return the cache duration attribute value converted to milliseconds
+     * @throws DatatypeConfigurationException if a {@link DatatypeFactory} can't be constructed
+     */
+    private long fetchDuration(Element descriptor) throws DatatypeConfigurationException {
+        final DatatypeFactory dtf = DatatypeFactory.newInstance();
+        final Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor,
+                SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
+        Assert.assertNotNull(cacheDurationAttr);
+        return dtf.newDuration(cacheDurationAttr.getValue()).getTimeInMillis(new Date());
+    }
+    
+    /**
      * Tests that the duration is properly set on an element when it doesn't already contain a duration.
      * 
      * @throws Exception thrown if there is an error
@@ -49,11 +68,12 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
     @Test
     public void testWithoutExistingCacheDuration() throws Exception {
         final Element entitiesDescriptor = readXMLData("in.xml");
+        final Item<Element> item = new DOMElementItem(entitiesDescriptor);
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) == null);
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(entitiesDescriptor));
+        metadataCollection.add(item);
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -63,10 +83,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
 
         stage.execute(metadataCollection);
 
-        Attr cacheDurationAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(),
-                SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
-        Assert.assertNotNull(cacheDurationAttr);
-        Assert.assertEquals(cacheDurationAttr.getValue(), "PT2M3.456S");
+        Assert.assertEquals(fetchDuration(item.unwrap()), duration);
     }
 
     /**
@@ -77,13 +94,17 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
     @Test
     public void testWithExistingCacheDuration() throws Exception {
         final Element entitiesDescriptor = readXMLData("in.xml");
+        final Item<Element> item = new DOMElementItem(entitiesDescriptor);
         
-        AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME, 987654);
+        final long originalDuration = 987654;
+        AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
+                originalDuration);
 
         Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME) != null);
+        Assert.assertEquals(fetchDuration(entitiesDescriptor), originalDuration);
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
-        metadataCollection.add(new DOMElementItem(entitiesDescriptor));
+        metadataCollection.add(item);
 
         long duration = 123456;
         SetCacheDurationStage stage = new SetCacheDurationStage();
@@ -93,10 +114,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
 
         stage.execute(metadataCollection);
 
-        Attr cacheDurationAttr = AttributeSupport.getAttribute(entitiesDescriptor,
-                SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
-        Assert.assertNotNull(cacheDurationAttr);
-        Assert.assertEquals(cacheDurationAttr.getValue(), "PT16M27.654S");
+        Assert.assertEquals(fetchDuration(item.unwrap()), duration);
     }
 
     /**
