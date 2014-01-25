@@ -53,11 +53,12 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
      * @throws DatatypeConfigurationException if a {@link DatatypeFactory} can't be constructed
      */
     private long fetchDuration(Element descriptor) throws DatatypeConfigurationException {
+        final Date baseDate = new Date(0);
         final DatatypeFactory dtf = DatatypeFactory.newInstance();
         final Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor,
                 SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(cacheDurationAttr);
-        return dtf.newDuration(cacheDurationAttr.getValue()).getTimeInMillis(new Date());
+        return dtf.newDuration(cacheDurationAttr.getValue()).getTimeInMillis(baseDate);
     }
     
     /**
