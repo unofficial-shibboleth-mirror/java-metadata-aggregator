@@ -59,7 +59,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class QueryController {
 
     /** Name of model attribute to which metadata from the query is bound. */
-    public final static String METADATA_MODEL_ATTRIB = "metadata";
+    public static final String METADATA_MODEL_ATTRIB = "metadata";
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(QueryController.class);
@@ -90,7 +90,8 @@ public class QueryController {
      * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
      *            requester
      */
-    public QueryController(final Pipeline<?> pipeline, final int updateInterval, final List<Stage<?>> postProcessStages) {
+    public QueryController(final Pipeline<?> pipeline, final int updateInterval,
+            final List<Stage<?>> postProcessStages) {
         this(pipeline, updateInterval, new Timer(true), postProcessStages);
     }
 
@@ -115,7 +116,7 @@ public class QueryController {
         backgroundTaskTimer.schedule(refreshTask, 0, mdUpdatePeriod);
 
         Assert.isNotNull(postProcessStages, "Result post-processing stages may not be null");
-        resultPostProcessStages = new ArrayList<Stage<?>>(postProcessStages);
+        resultPostProcessStages = new ArrayList<>(postProcessStages);
 
         termIndex = new HashMap<String, List<Metadata<?>>>();
     }
@@ -161,7 +162,7 @@ public class QueryController {
     /**
      * Handles the exception that occurs when the post processing pipeline is working on a query result set.
      * 
-     * @param e the thrown exception
+     * @param pe the thrown exception
      * @param request current HTTP request
      * @param response current HTTP response
      */
@@ -193,7 +194,7 @@ public class QueryController {
         final String[] terms = concatSearchTerms.split("\\+");
 
         String trimmedTerm;
-        final ArrayList<String> searchTerms = new ArrayList<String>();
+        final ArrayList<String> searchTerms = new ArrayList<>();
         for (String term : terms) {
             trimmedTerm = StringSupport.trimOrNull(term);
             if (trimmedTerm != null) {
@@ -276,7 +277,7 @@ public class QueryController {
      */
     protected void indexMetadata(final MetadataCollection<?> collection) {
         log.debug("Indexing metadata collection containing {} elements", collection.size());
-        final HashMap<String, List<Metadata<?>>> newIndex = new HashMap<String, List<Metadata<?>>>();
+        final HashMap<String, List<Metadata<?>>> newIndex = new HashMap<>();
 
         if (collection != null) {
             for (Metadata<?> metadata : collection) {
@@ -345,6 +346,7 @@ public class QueryController {
     private final class MetadataRefreshTask extends TimerTask {
 
         /** {@inheritDoc} */
+        @Override
         public void run() {
             try {
                 log.debug("Metadata refresh starting");

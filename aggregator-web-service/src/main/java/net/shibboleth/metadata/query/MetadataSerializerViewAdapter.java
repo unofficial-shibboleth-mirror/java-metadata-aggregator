@@ -63,12 +63,14 @@ public class MetadataSerializerViewAdapter implements View {
     }
 
     /** {@inheritDoc} */
+    @Override
     public String getContentType() {
         return mediaType.toString();
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
+    @Override
     public void render(final Map<String, ?> model, final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) throws Exception {
         final Collection<Metadata<?>> metadataCollection = (Collection<Metadata<?>>) model
