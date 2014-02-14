@@ -21,16 +21,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.jcip.annotations.ThreadSafe;
-import net.shibboleth.metadata.EntityIdInfo;
-import net.shibboleth.metadata.Metadata;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.MetadataInfoHelper;
+import net.shibboleth.utilities.java.support.collection.CollectionSupport;
+import net.shibboleth.utilities.java.support.collection.LazyList;
 
-import org.opensaml.util.collections.CollectionSupport;
-import org.opensaml.util.collections.LazyList;
 import org.springframework.core.convert.converter.Converter;
+
+import com.google.common.base.Predicates;
 
 import edu.vt.middleware.crypt.digest.MD5;
 import edu.vt.middleware.crypt.digest.SHA1;
@@ -40,12 +43,14 @@ import edu.vt.middleware.crypt.util.HexConverter;
  * A pipeline stage that, if present, takes each {@link EntityIdInfo} associated with a metadata element, transforms it
  * value using a set of registered transformers, and associates an additional {@link EntityIdInfo} (whose value is the
  * result of the transform) with the element.
+ * 
+ * @param <T> type of metadata this stage operates upon
  */
 @ThreadSafe
-public class EntityIdTransformStage extends BaseIteratingStage<Metadata<?>> {
+public class EntityIdTransformStage<T> extends BaseIteratingStage<T> {
 
     /** Transformers used on IDs. */
-    private Collection<Converter<String, String>> idTransformers = new LazyList<Converter<String, String>>();
+    private Collection<Converter<String, String>> idTransformers = new LazyList<>();
 
     /**
      * Gets the transforms used to produce the transformed entity IDs.
@@ -65,22 +70,22 @@ public class EntityIdTransformStage extends BaseIteratingStage<Metadata<?>> {
         if (isInitialized()) {
             return;
         }
-        idTransformers = CollectionSupport.addNonNull(transformers, new LazyList<Converter<String, String>>());
+        CollectionSupport.addIf(idTransformers, transformers, Predicates.notNull());
     }
 
     /** {@inheritDoc} */
-    protected boolean doExecute(final Metadata<?> metadata) throws StageProcessingException {
-        List<EntityIdInfo> ids = metadata.getMetadataInfo().get(EntityIdInfo.class);
+    @Override
+    protected boolean doExecute(@Nonnull final Item<T> item) throws StageProcessingException {
+        final List<ItemId> ids = item.getItemMetadata().get(ItemId.class);
 
-        final List<EntityIdInfo> transformedIds = new ArrayList<EntityIdInfo>();
-        String transformedId;
-        for (EntityIdInfo id : ids) {
+        final List<ItemId> transformedIds = new ArrayList<>();
+        for (ItemId id : ids) {
             for (Converter<String, String> idTransform : idTransformers) {
-                transformedId = idTransform.convert(id.getEntityId());
-                transformedIds.add(new EntityIdInfo(transformedId));
+                final String transformedId = idTransform.convert(id.getId());
+                transformedIds.add(new ItemId(transformedId));
             }
         }
-        MetadataInfoHelper.addToAll(metadata, transformedIds.toArray(new EntityIdInfo[] {}));
+        item.getItemMetadata().putAll(transformedIds);
         
         return true;
     }
@@ -89,6 +94,7 @@ public class EntityIdTransformStage extends BaseIteratingStage<Metadata<?>> {
     public static class Sha1Converter implements Converter<String, String> {
 
         /** {@inheritDoc} */
+        @Override
         public String convert(final String source) {
             SHA1 sha1 = new SHA1();
             return "{sha1}" + sha1.digest(source.getBytes(), new HexConverter());
@@ -99,6 +105,7 @@ public class EntityIdTransformStage extends BaseIteratingStage<Metadata<?>> {
     public static class Md5Converter implements Converter<String, String> {
 
         /** {@inheritDoc} */
+        @Override
         public String convert(final String source) {
             MD5 md5 = new MD5();
             return "{md5}" + md5.digest(source.getBytes(), new HexConverter());

@@ -18,17 +18,17 @@
 package net.shibboleth.metadata.query;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import net.shibboleth.metadata.EntityIdInfo;
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.TagInfo;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemId;
+import net.shibboleth.metadata.ItemTag;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.SimplePipeline;
 import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.pipeline.StaticMetadataInjectionStage;
+import net.shibboleth.metadata.pipeline.StaticItemSourceStage;
 
-import org.opensaml.util.collections.CollectionSupport;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.testng.annotations.Test;
 
@@ -37,18 +37,18 @@ public class QueryControllerTest {
 
     @Test
     public void testQueryController() throws Exception {
-        CountingStage<Metadata<?>> countingStage = new CountingStage<Metadata<?>>();
-        ArrayList<Stage<?>> postProcessStages = new ArrayList<Stage<?>>();
+        CountingStage<String> countingStage = new CountingStage<>();
+        ArrayList<Stage<String>> postProcessStages = new ArrayList<>();
         postProcessStages.add(countingStage);
 
-        QueryController controller = new QueryController(buildPipeline(), 1, postProcessStages);
+        QueryController<String> controller = new QueryController<>(buildPipeline(), 1, postProcessStages);
 
         // since the controller loads its metadata in a background thread we wait a second to let it do its thing
         Thread.sleep(1000);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setPathInfo("/entities/one");
-        MetadataCollection<?> result = controller.queryMetadata(request);
+        Collection<Item<String>> result = controller.queryMetadata(request);
         assert result.size() == 1;
         assert countingStage.getCount() == 1;
 
@@ -83,26 +83,35 @@ public class QueryControllerTest {
         assert countingStage.getCount() == 3;
     }
 
-    private Pipeline<?> buildPipeline() {
-        MockMetadata mdElem1 = new MockMetadata("one");
-        mdElem1.getMetadataInfo().put(new EntityIdInfo("one"));
+    private Pipeline<String> buildPipeline() throws Exception {
+        MockItem mdElem1 = new MockItem("one");
+        mdElem1.getItemMetadata().put(new ItemId("one"));
 
-        MockMetadata mdElem2 = new MockMetadata("two");
-        mdElem2.getMetadataInfo().put(new EntityIdInfo("two"));
-        mdElem2.getMetadataInfo().put(new TagInfo("test"));
+        MockItem mdElem2 = new MockItem("two");
+        mdElem2.getItemMetadata().put(new ItemId("two"));
+        mdElem2.getItemMetadata().put(new ItemTag("test"));
 
-        MockMetadata mdElem3 = new MockMetadata("three");
-        mdElem3.getMetadataInfo().put(new EntityIdInfo("three"));
-        mdElem3.getMetadataInfo().put(new TagInfo("test"));
+        MockItem mdElem3 = new MockItem("three");
+        mdElem3.getItemMetadata().put(new ItemId("three"));
+        mdElem3.getItemMetadata().put(new ItemTag("test"));
+        
+        final Collection<Item<String>> items = new ArrayList<>();
+        items.add(mdElem1);
+        items.add(mdElem2);
+        items.add(mdElem3);
 
-        StaticMetadataInjectionStage<MockMetadata> mdSource = new StaticMetadataInjectionStage<MockMetadata>();
+        final StaticItemSourceStage<String> mdSource = new StaticItemSourceStage<>();
         mdSource.setId("source");
-        mdSource.setSourceMetadata(CollectionSupport.toList(mdElem1, mdElem2, mdElem3));
+        mdSource.setSourceItems(items);
+        mdSource.initialize();
+        
+        final List<Stage<String>> stages = new ArrayList<>();
+        stages.add(mdSource);
 
-        SimplePipeline<MockMetadata> pipeline = new SimplePipeline<MockMetadata>();
+        SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("pipeline");
-        pipeline.setSource(mdSource);
-
+        pipeline.setStages(stages);
+        
         return pipeline;
     }
 }

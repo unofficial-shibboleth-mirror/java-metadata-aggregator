@@ -19,12 +19,11 @@ package net.shibboleth.metadata.query;
 
 import java.util.Collection;
 
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.pipeline.AbstractComponent;
-import net.shibboleth.metadata.pipeline.Stage;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.BaseStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-public class CountingStage<MetadataType extends Metadata<?>> extends AbstractComponent implements Stage<MetadataType> {
+public class CountingStage<T> extends BaseStage<T> {
 
     private int counter = 0;
 
@@ -36,7 +35,8 @@ public class CountingStage<MetadataType extends Metadata<?>> extends AbstractCom
         return counter;
     }
 
-    public void execute(final Collection<MetadataType> metadataCollection) throws StageProcessingException {
+    @Override
+    public void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
         counter += 1;
     }
 }

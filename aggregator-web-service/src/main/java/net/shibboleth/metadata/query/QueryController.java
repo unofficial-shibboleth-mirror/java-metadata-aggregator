@@ -19,6 +19,7 @@ package net.shibboleth.metadata.query;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,22 +29,19 @@ import java.util.TimerTask;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.shibboleth.metadata.EntityIdInfo;
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataCollection;
-import net.shibboleth.metadata.SimpleMetadataCollection;
-import net.shibboleth.metadata.TagInfo;
-import net.shibboleth.metadata.pipeline.ComponentInitializationException;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemId;
+import net.shibboleth.metadata.ItemTag;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.PipelineProcessingException;
 import net.shibboleth.metadata.pipeline.SimplePipeline;
 import net.shibboleth.metadata.pipeline.Stage;
-import net.shibboleth.metadata.pipeline.StaticMetadataInjectionStage;
+import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.joda.time.DateTime;
-import org.opensaml.util.Assert;
-import org.opensaml.util.StringSupport;
-import org.opensaml.util.collections.LazyList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -54,9 +52,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-/** Controller that responds to Metadata Query requests. */
+/**
+ * Controller that responds to Metadata Query requests.
+ * 
+ * @param <T> type of metadata this stage operates upon
+ */
 @Controller
-public class QueryController {
+public class QueryController<T> {
 
     /** Name of model attribute to which metadata from the query is bound. */
     public static final String METADATA_MODEL_ATTRIB = "metadata";
@@ -71,16 +73,16 @@ public class QueryController {
     private final MetadataRefreshTask refreshTask;
 
     /** Pipeline that produces metadata searched by this controller. */
-    private final Pipeline<?> mdPipeline;
+    private final Pipeline<T> mdPipeline;
 
     /**
      * Cache of search terms to associated metadata element. Value may be null indicating the search term does match any
      * metadata element.
      */
-    private HashMap<String, List<Metadata<?>>> termIndex;
+    private HashMap<String, List<Item<T>>> termIndex;
 
     /** The pipeline stages through which query results are sent prior to being serialized and returned. */
-    private final List<Stage<?>> resultPostProcessStages;
+    private final List<Stage<T>> resultPostProcessStages;
 
     /**
      * Constructor.
@@ -90,8 +92,8 @@ public class QueryController {
      * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
      *            requester
      */
-    public QueryController(final Pipeline<?> pipeline, final int updateInterval,
-            final List<Stage<?>> postProcessStages) {
+    public QueryController(final Pipeline<T> pipeline, final int updateInterval,
+            final List<Stage<T>> postProcessStages) {
         this(pipeline, updateInterval, new Timer(true), postProcessStages);
     }
 
@@ -104,21 +106,21 @@ public class QueryController {
      * @param postProcessStages set of stages used to process a query result to prepare it for being returned to the
      *            requester
      */
-    public QueryController(final Pipeline<?> pipeline, final int updateInterval, final Timer backgroundTaskTimer,
-            final List<Stage<?>> postProcessStages) {
-        Assert.isNotNull(pipeline, "Metadata pipeline may not be null");
+    public QueryController(final Pipeline<T> pipeline, final int updateInterval, final Timer backgroundTaskTimer,
+            final List<Stage<T>> postProcessStages) {
+        Constraint.isNotNull(pipeline, "Metadata pipeline may not be null");
         mdPipeline = pipeline;
 
-        Assert.isGreaterThan(0, updateInterval, "Update interval must be a positive number");
-        Assert.isNotNull(backgroundTaskTimer, "Metadata refresh timer may not be null");
+        Constraint.isGreaterThan(0, updateInterval, "Update interval must be a positive number");
+        Constraint.isNotNull(backgroundTaskTimer, "Metadata refresh timer may not be null");
         mdUpdatePeriod = updateInterval * 60 * 1000;
         refreshTask = new MetadataRefreshTask();
         backgroundTaskTimer.schedule(refreshTask, 0, mdUpdatePeriod);
 
-        Assert.isNotNull(postProcessStages, "Result post-processing stages may not be null");
+        Constraint.isNotNull(postProcessStages, "Result post-processing stages may not be null");
         resultPostProcessStages = new ArrayList<>(postProcessStages);
 
-        termIndex = new HashMap<String, List<Metadata<?>>>();
+        termIndex = new HashMap<>();
     }
 
     /**
@@ -134,18 +136,13 @@ public class QueryController {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping(value = "/entities", method = RequestMethod.GET)
     @ModelAttribute(METADATA_MODEL_ATTRIB)
-    public MetadataCollection queryMetadata(final HttpServletRequest request) throws PipelineProcessingException {
+    public Collection<Item<T>> queryMetadata(final HttpServletRequest request) throws PipelineProcessingException {
         final List<String> searchTerms = getSearchTerms(request);
-        MetadataCollection results = getMetadataElements(searchTerms);
+        final Collection<Item<T>> results = getMetadataElements(searchTerms);
 
         if (results != null && !results.isEmpty()) {
-            final StaticMetadataInjectionStage<?> resultSource = new StaticMetadataInjectionStage();
-            resultSource.setId("postProcessSource");
-            resultSource.setSourceMetadata(results);
-
-            final SimplePipeline resultPostProcess = new SimplePipeline();
+            final SimplePipeline<T> resultPostProcess = new SimplePipeline<>();
             resultPostProcess.setId("postProcess");
-            resultPostProcess.setSource(resultSource);
             resultPostProcess.setStages(resultPostProcessStages);
             try {
                 resultPostProcess.initialize();
@@ -153,7 +150,7 @@ public class QueryController {
                 throw new PipelineProcessingException("Unable to initialize post-processing pipeline", e);
             }
 
-            results = resultPostProcess.execute();
+            resultPostProcess.execute(results);
         }
 
         return results;
@@ -170,7 +167,7 @@ public class QueryController {
     public void handlePipelineProcessingException(final PipelineProcessingException pe,
             final HttpServletRequest request, final HttpServletResponse response) {
         try {
-            log.debug("Error post-prcossing result set", pe);
+            log.debug("Error post-processing result set", pe);
             response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error post-processing query results");
         } catch (IOException e) {
             log.error("Unble to handle post-processing exception", e);
@@ -211,19 +208,19 @@ public class QueryController {
      * 
      * @return metadata elements labeled with all the given search terms
      */
-    protected MetadataCollection<Metadata<?>> getMetadataElements(final List<String> searchTerms) {
+    protected Collection<Item<T>> getMetadataElements(final List<String> searchTerms) {
         log.debug("Searching for metaata elements matching the search terms: {}", searchTerms);
 
-        final HashMap<String, List<Metadata<?>>> index = termIndex;
+        final HashMap<String, List<Item<T>>> index = termIndex;
 
-        final SimpleMetadataCollection<Metadata<?>> mdc = new SimpleMetadataCollection<Metadata<?>>();
+        final Collection<Item<T>> mdc = new ArrayList<>();
 
         final String firstTerm = searchTerms.get(0);
         if (!index.containsKey(firstTerm)) {
             return mdc;
         }
 
-        final List<Metadata<?>> searchResults = new ArrayList<Metadata<?>>(index.get(firstTerm));
+        final List<Item<T>> searchResults = new ArrayList<>(index.get(firstTerm));
         searchTerms.remove(firstTerm);
         log.debug("Starting with result list for search term '{}' containing {} elements", firstTerm,
                 searchResults.size());
@@ -255,14 +252,14 @@ public class QueryController {
      * 
      * @return true if the search term matched any {@link EntityIdInfo} for the given element, false otherwise
      */
-    protected boolean isEntityId(final String searchTerm, final Metadata<?> element) {
-        final List<EntityIdInfo> idInfos = element.getMetadataInfo().get(EntityIdInfo.class);
+    protected boolean isEntityId(final String searchTerm, final Item<T> element) {
+        final List<ItemId> idInfos = element.getItemMetadata().get(ItemId.class);
         if (idInfos == null || idInfos.isEmpty()) {
             return false;
         }
 
-        for (EntityIdInfo idInfo : idInfos) {
-            if (idInfo.getEntityId().equals(searchTerm)) {
+        for (ItemId idInfo : idInfos) {
+            if (idInfo.getId().equals(searchTerm)) {
                 return true;
             }
         }
@@ -275,12 +272,12 @@ public class QueryController {
      * 
      * @param collection collection of metadata to be indexed
      */
-    protected void indexMetadata(final MetadataCollection<?> collection) {
+    protected void indexMetadata(final Collection<Item<T>> collection) {
         log.debug("Indexing metadata collection containing {} elements", collection.size());
-        final HashMap<String, List<Metadata<?>>> newIndex = new HashMap<>();
+        final HashMap<String, List<Item<T>>> newIndex = new HashMap<>();
 
         if (collection != null) {
-            for (Metadata<?> metadata : collection) {
+            for (Item<T> metadata : collection) {
                 indexByEntityIds(newIndex, metadata);
                 indexByTag(newIndex, metadata);
             }
@@ -296,23 +293,22 @@ public class QueryController {
      * @param index index to be populated
      * @param metadata metadata to be added to the index
      */
-    protected void indexByEntityIds(final HashMap<String, List<Metadata<?>>> index, final Metadata<?> metadata) {
-        List<Metadata<?>> metadatasForTerm;
+    protected void indexByEntityIds(final HashMap<String, List<Item<T>>> index, final Item<T> metadata) {
+        List<Item<T>> itemsForTerm;
 
-        final List<EntityIdInfo> idInfos = metadata.getMetadataInfo().get(EntityIdInfo.class);
+        final List<ItemId> idInfos = metadata.getItemMetadata().get(ItemId.class);
         if (idInfos == null || idInfos.isEmpty()) {
             return;
         }
 
-        String entityId;
-        for (EntityIdInfo idInfo : idInfos) {
-            entityId = idInfo.getEntityId();
-            metadatasForTerm = index.get(entityId);
-            if (metadatasForTerm == null) {
-                metadatasForTerm = new LazyList<Metadata<?>>();
-                index.put(entityId, metadatasForTerm);
+        for (ItemId idInfo : idInfos) {
+            final String entityId = idInfo.getId();
+            itemsForTerm = index.get(entityId);
+            if (itemsForTerm == null) {
+                itemsForTerm = new LazyList<>();
+                index.put(entityId, itemsForTerm);
             }
-            metadatasForTerm.add(metadata);
+            itemsForTerm.add(metadata);
         }
     }
 
@@ -322,20 +318,19 @@ public class QueryController {
      * @param index index to be populated
      * @param metadata metadata to be added to the index
      */
-    protected void indexByTag(final HashMap<String, List<Metadata<?>>> index, final Metadata<?> metadata) {
-        List<Metadata<?>> metadatasForTerm;
+    protected void indexByTag(final HashMap<String, List<Item<T>>> index, final Item<T> metadata) {
+        List<Item<T>> metadatasForTerm;
 
-        final List<TagInfo> tagInfos = metadata.getMetadataInfo().get(TagInfo.class);
+        final List<ItemTag> tagInfos = metadata.getItemMetadata().get(ItemTag.class);
         if (tagInfos == null || tagInfos.isEmpty()) {
             return;
         }
 
-        String tag;
-        for (TagInfo tagInfo : tagInfos) {
-            tag = tagInfo.getTag();
+        for (ItemTag tagInfo : tagInfos) {
+            final String tag = tagInfo.getTag();
             metadatasForTerm = index.get(tag);
             if (metadatasForTerm == null) {
-                metadatasForTerm = new LazyList<Metadata<?>>();
+                metadatasForTerm = new LazyList<>();
                 index.put(tag, metadatasForTerm);
             }
             metadatasForTerm.add(metadata);
@@ -350,7 +345,9 @@ public class QueryController {
         public void run() {
             try {
                 log.debug("Metadata refresh starting");
-                indexMetadata(mdPipeline.execute());
+                final Collection<Item<T>> items = new ArrayList<>();
+                mdPipeline.execute(items);
+                indexMetadata(items);
                 log.debug("Metadata refressh completed, next refresh will occur at approximately {}",
                         new DateTime().plus(mdUpdatePeriod));
             } catch (PipelineProcessingException e) {

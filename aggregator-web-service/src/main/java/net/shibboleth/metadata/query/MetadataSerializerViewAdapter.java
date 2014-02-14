@@ -26,17 +26,19 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.shibboleth.metadata.Metadata;
-import net.shibboleth.metadata.MetadataSerializer;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
-import org.opensaml.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.View;
 
-/** Adapts a {@link MetadataSerializer} to a Spring {@link View}. */
-public class MetadataSerializerViewAdapter implements View {
+/**
+ * Adapts an {@link ItemSerializer} to a Spring {@link View}.
+ */
+public class MetadataSerializerViewAdapter<T> implements View {
 
     /** Class logger. */
     private Logger log = LoggerFactory.getLogger(MetadataSerializerViewAdapter.class);
@@ -45,7 +47,7 @@ public class MetadataSerializerViewAdapter implements View {
     private MediaType mediaType;
 
     /** Serializer used to serialize a {@link MetadataCollection} to an {@link OutputStream}. */
-    private MetadataSerializer<Metadata<?>> serializer;
+    private ItemSerializer<T> serializer;
 
     /**
      * Constructor.
@@ -54,11 +56,11 @@ public class MetadataSerializerViewAdapter implements View {
      * @param metadataSerializer serializer for resultant metadata collections
      */
     public MetadataSerializerViewAdapter(final MediaType viewType,
-            final MetadataSerializer<Metadata<?>> metadataSerializer) {
-        Assert.isNotNull(viewType, "View media type may not be null");
+            final ItemSerializer<T> metadataSerializer) {
+        Constraint.isNotNull(viewType, "View media type may not be null");
         mediaType = viewType;
 
-        Assert.isNotNull(metadataSerializer, "Metadata serializer may not be null");
+        Constraint.isNotNull(metadataSerializer, "Metadata serializer may not be null");
         serializer = metadataSerializer;
     }
 
@@ -73,7 +75,7 @@ public class MetadataSerializerViewAdapter implements View {
     @Override
     public void render(final Map<String, ?> model, final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) throws Exception {
-        final Collection<Metadata<?>> metadataCollection = (Collection<Metadata<?>>) model
+        final Collection<Item<T>> metadataCollection = (Collection<Item<T>>) model
                 .get(QueryController.METADATA_MODEL_ATTRIB);
 
         if (metadataCollection == null || metadataCollection.isEmpty()) {
@@ -83,7 +85,7 @@ public class MetadataSerializerViewAdapter implements View {
 
         OutputStream out = httpResponse.getOutputStream();
 
-        String acceptEncoding = httpRequest.getHeader("Accept-Encoding");
+        final String acceptEncoding = httpRequest.getHeader("Accept-Encoding");
         if (acceptEncoding != null) {
             if (acceptEncoding.contains("gzip")) {
                 httpResponse.setHeader("Content-Encoding", "gzip");
