@@ -26,9 +26,8 @@
     <modules>
         <module>../aggregator-pipeline</module>
         <module>../aggregator-cli</module>
-        <!-- Comments out for now until we're ready to work on this -->
-        <!-- <module>../aggregator-web-service</module> -->
-        <!-- <module>../aggregator-distribution</module> -->
+        <module>../aggregator-web-service</module>
+        <module>../aggregator-distribution</module>
     </modules>
 
     <properties>
