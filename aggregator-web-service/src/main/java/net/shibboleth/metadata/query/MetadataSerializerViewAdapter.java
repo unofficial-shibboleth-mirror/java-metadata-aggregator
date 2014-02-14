@@ -71,7 +71,6 @@ public class MetadataSerializerViewAdapter<T> implements View {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Override
     public void render(final Map<String, ?> model, final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) throws Exception {
