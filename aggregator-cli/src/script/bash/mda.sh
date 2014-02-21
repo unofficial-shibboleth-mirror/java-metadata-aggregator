@@ -41,4 +41,4 @@ do
     fi
 done
 
-"$JAVACMD" '-classpath' "$LOCALCLASSPATH" '-Djava.endorsed.dirs='"$LIBDIR/endorsed" $JVMOPTS 'net.shibboleth.metadata.cli.SimpleCommandLine' "$@"
+"$JAVACMD" '-classpath' "$LOCALCLASSPATH" $JVMOPTS 'net.shibboleth.metadata.cli.SimpleCommandLine' "$@"

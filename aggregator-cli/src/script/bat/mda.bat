@@ -46,4 +46,4 @@ if exist %JAVA_HOME%\lib\classes.zip (
 
 REM Go to it !
 
-%JAVACMD% -classpath "%LOCALCLASSPATH%" -Djava.endorsed.dirs="%MDA_HOME%/lib/endorsed" %JVMOPTS% net.shibboleth.metadata.cli.SimpleCommandLine %*
+%JAVACMD% -classpath "%LOCALCLASSPATH%" %JVMOPTS% net.shibboleth.metadata.cli.SimpleCommandLine %*
