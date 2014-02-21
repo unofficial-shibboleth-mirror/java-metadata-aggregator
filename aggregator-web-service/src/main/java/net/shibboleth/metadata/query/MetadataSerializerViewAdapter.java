@@ -37,6 +37,8 @@ import org.springframework.web.servlet.View;
 
 /**
  * Adapts an {@link ItemSerializer} to a Spring {@link View}.
+ * 
+ * @param <T> type of metadata this stage operates upon
  */
 public class MetadataSerializerViewAdapter<T> implements View {
 
@@ -46,7 +48,7 @@ public class MetadataSerializerViewAdapter<T> implements View {
     /** Media type handled by this view. */
     private MediaType mediaType;
 
-    /** Serializer used to serialize a {@link MetadataCollection} to an {@link OutputStream}. */
+    /** Serializer used to serialize a {@link Collection} of {@link Item}s to an {@link OutputStream}. */
     private ItemSerializer<T> serializer;
 
     /**

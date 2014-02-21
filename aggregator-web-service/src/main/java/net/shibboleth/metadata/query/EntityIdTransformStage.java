@@ -40,8 +40,8 @@ import edu.vt.middleware.crypt.digest.SHA1;
 import edu.vt.middleware.crypt.util.HexConverter;
 
 /**
- * A pipeline stage that, if present, takes each {@link EntityIdInfo} associated with a metadata element, transforms it
- * value using a set of registered transformers, and associates an additional {@link EntityIdInfo} (whose value is the
+ * A pipeline stage that, if present, takes each {@link ItemId} associated with a metadata element, transforms it
+ * value using a set of registered transformers, and associates an additional {@link ItemId} (whose value is the
  * result of the transform) with the element.
  * 
  * @param <T> type of metadata this stage operates upon

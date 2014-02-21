@@ -55,7 +55,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Controller that responds to Metadata Query requests.
  * 
- * @param <T> type of metadata this stage operates upon
+ * @param <T> type of metadata this controller operates upon
  */
 @Controller
 public class QueryController<T> {
@@ -133,7 +133,6 @@ public class QueryController<T> {
      * @throws PipelineProcessingException thrown if there is a problem running a query result set through a
      *             post-processing pipeline
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping(value = "/entities", method = RequestMethod.GET)
     @ModelAttribute(METADATA_MODEL_ATTRIB)
     public Collection<Item<T>> queryMetadata(final HttpServletRequest request) throws PipelineProcessingException {
@@ -245,12 +244,12 @@ public class QueryController<T> {
     }
 
     /**
-     * Checks if the given search term matches any {@link EntityIdInfo} for the given metadata element.
+     * Checks if the given search term matches any {@link ItemId} for the given metadata element.
      * 
      * @param searchTerm search term to check
-     * @param element element whose {@link EntityIdInfo} will be checked
+     * @param element element whose {@link ItemId} will be checked
      * 
-     * @return true if the search term matched any {@link EntityIdInfo} for the given element, false otherwise
+     * @return true if the search term matched any {@link ItemId} for the given element, false otherwise
      */
     protected boolean isEntityId(final String searchTerm, final Item<T> element) {
         final List<ItemId> idInfos = element.getItemMetadata().get(ItemId.class);
@@ -268,7 +267,7 @@ public class QueryController<T> {
     }
 
     /**
-     * Creates an index that indexes all {@link Metadata} by {@link EntityIdInfo}.
+     * Creates an index that indexes all {@link Item}s by {@link ItemId}.
      * 
      * @param collection collection of metadata to be indexed
      */
@@ -288,7 +287,7 @@ public class QueryController<T> {
     }
 
     /**
-     * Adds an entry to the given index for each of given metadata's {@link EntityIdInfo}.
+     * Adds an entry to the given index for each of given metadata's {@link ItemId}.
      * 
      * @param index index to be populated
      * @param metadata metadata to be added to the index
@@ -313,7 +312,7 @@ public class QueryController<T> {
     }
 
     /**
-     * Adds an entry to the given index for each of given metadata's {@link TagInfo}.
+     * Adds an entry to the given index for each of given metadata's {@link ItemTag}.
      * 
      * @param index index to be populated
      * @param metadata metadata to be added to the index
@@ -348,7 +347,7 @@ public class QueryController<T> {
                 final Collection<Item<T>> items = new ArrayList<>();
                 mdPipeline.execute(items);
                 indexMetadata(items);
-                log.debug("Metadata refressh completed, next refresh will occur at approximately {}",
+                log.debug("Metadata refresh completed, next refresh will occur at approximately {}",
                         new DateTime().plus(mdUpdatePeriod));
             } catch (PipelineProcessingException e) {
                 // TODO
