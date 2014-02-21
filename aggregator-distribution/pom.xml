@@ -15,7 +15,7 @@
     <artifactId>aggregator-standalone</artifactId>
 
     <properties>
-        <bundle-symbolic-name>${project.groupId}.${artifactId}</bundle-symbolic-name>
+        <bundle-symbolic-name>${project.groupId}.${project.artifactId}</bundle-symbolic-name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty.groupId>org.eclipse.jetty</jetty.groupId>
         <jetty.version>7.2.1.v20101111</jetty.version>
