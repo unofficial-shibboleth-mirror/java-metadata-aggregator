@@ -26,7 +26,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
-import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
+import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
 
 /**
@@ -43,7 +43,7 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
  * @param <T> type of item which is processed by this pipeline
  */
 @ThreadSafe
-public interface Pipeline<T> extends DestructableComponent, IdentifiableComponent,
+public interface Pipeline<T> extends DestructableComponent, IdentifiedComponent,
         InitializableComponent {
 
     /**

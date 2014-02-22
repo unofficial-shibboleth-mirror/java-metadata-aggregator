@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
+import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -56,7 +56,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param component component which this info describes
      */
-    public ComponentInfo(@Nonnull final IdentifiableComponent component) {
+    public ComponentInfo(@Nonnull final IdentifiedComponent component) {
         Constraint.isNotNull(component, "Component can not be null");
         componentId = component.getId();
         componentType = component.getClass();

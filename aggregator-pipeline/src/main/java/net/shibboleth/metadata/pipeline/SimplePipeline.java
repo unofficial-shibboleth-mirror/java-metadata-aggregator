@@ -29,7 +29,7 @@ import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -43,7 +43,7 @@ import com.google.common.collect.Iterables;
  * @param <T> the type of item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<T> extends AbstractDestructableIdentifiableInitializableComponent
+public class SimplePipeline<T> extends AbstractDestructableIdentifiedInitializableComponent
         implements Pipeline<T> {
 
     /** Stages for this pipeline. */
