@@ -26,8 +26,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializeableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
@@ -36,13 +35,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> type of item this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseStage<T> extends
-        AbstractIdentifiedInitializableComponent implements Stage<T> {
-
-    /** {@inheritDoc} */
-    @Override public synchronized void setId(@Nonnull @NotEmpty final String componentId) {
-        super.setId(componentId);
-    }
+public abstract class BaseStage<T> extends AbstractIdentifiableInitializeableComponent implements Stage<T> {
 
     /**
      * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
