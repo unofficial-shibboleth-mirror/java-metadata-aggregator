@@ -27,7 +27,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
@@ -37,7 +37,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  */
 @ThreadSafe
 public abstract class BaseStage<T> extends
-        AbstractDestructableIdentifiedInitializableComponent implements Stage<T> {
+        AbstractIdentifiedInitializableComponent implements Stage<T> {
 
     /** {@inheritDoc} */
     @Override public synchronized void setId(@Nonnull @NotEmpty final String componentId) {

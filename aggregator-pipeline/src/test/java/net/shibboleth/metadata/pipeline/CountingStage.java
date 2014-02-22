@@ -20,10 +20,10 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.component.AbstractDestructableIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 
 /** Stage that counts the number of times it was invoked and the number of items it has observed. */
-public class CountingStage<T> extends AbstractDestructableIdentifiedInitializableComponent implements Stage<T> {
+public class CountingStage<T> extends AbstractIdentifiedInitializableComponent implements Stage<T> {
 
     /** Number of times the stage was invoked. */
     private int invocationCount;
