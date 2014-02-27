@@ -29,7 +29,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializeableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -40,17 +40,13 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> type of metadata this stage, and its composed stages, operate upon
  */
 @ThreadSafe
-public class CompositeStage<T> extends AbstractIdentifiedInitializableComponent
+public class CompositeStage<T> extends AbstractIdentifiableInitializeableComponent
         implements Stage<T> {
 
     /** Stages which compose this stage. */
     private List<Stage<T>> composedStages = Collections.emptyList();
 
-    /** {@inheritDoc} */
-    @Override public synchronized void setId(String componentId) {
-        super.setId(componentId);
-    }
-    
+
     /**
      * Gets an unmodifiable list the stages that compose this stage.
      * 
