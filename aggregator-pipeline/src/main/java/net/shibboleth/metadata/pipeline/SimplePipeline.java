@@ -28,7 +28,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializeableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -42,7 +42,7 @@ import com.google.common.collect.Iterables;
  * @param <T> the type of item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<T> extends AbstractIdentifiableInitializeableComponent
+public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponent
         implements Pipeline<T> {
 
     /** Stages for this pipeline. */
