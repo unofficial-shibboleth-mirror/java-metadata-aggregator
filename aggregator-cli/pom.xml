@@ -41,6 +41,7 @@
         <dependency>
             <groupId>net.shibboleth.ext</groupId>
             <artifactId>spring-extensions</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Test Dependencies -->
