@@ -134,20 +134,11 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
-        InputStream ins = null;
 
-        try {
-            log.debug("Attempting to fetch XML document from '{}'", domResource.getDescription());
+        log.debug("Attempting to fetch XML document from '{}'", domResource.getDescription());
 
-            ins = domResource.getInputStream();
-            if (ins == null) {
-                log.debug("Resource at location '{}' did not produce any data to parse, nothing left to do",
-                        domResource.getDescription());
-            } else {
-                log.debug("DOM Element from '{}' unchanged since last request, using cached copy",
-                        domResource.getDescription());
-                populateItemCollection(itemCollection, ins);
-            }
+        try (InputStream ins = domResource.getInputStream()) {
+            populateItemCollection(itemCollection, ins);
         } catch (IOException e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException("Error retrieving XML document from " +
@@ -155,12 +146,6 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
             } else {
                 log.warn("stage {}: unable to read in XML file");
                 log.debug("stage {}: HTTP resource exception", getId(), e);
-            }
-        } finally {
-            try {
-                ins.close();
-            } catch (IOException e) {
-                throw new StageProcessingException("Error closing resource", e);
             }
         }
     }

@@ -17,6 +17,10 @@
 
 package net.shibboleth.metadata.dom;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.Item;
@@ -28,16 +32,21 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class DOMResourceSourceTest {
 
-    @Test public void testSuccessfulFetchAndParse() throws Exception {
-        Resource mdResource = buildHttpResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
-
-        BasicParserPool parserPool = new BasicParserPool();
+    BasicParserPool parserPool;
+    
+    @BeforeClass void initialize() throws Exception {
+        parserPool = new BasicParserPool();
         parserPool.initialize();
+    }
+    
+    @Test public void testSuccessfulFetchAndParse() throws Exception {
+        Resource mdResource = new UrlResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
@@ -52,10 +61,7 @@ public class DOMResourceSourceTest {
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
-        Resource mdResource = buildHttpResource("http://www.google.com/intl/en/images/about_logo.gif");
-
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
+        Resource mdResource = new UrlResource("http://www.google.com/intl/en/images/about_logo.gif");
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
@@ -73,10 +79,7 @@ public class DOMResourceSourceTest {
     }
 
     @Test public void testFailedFetch() throws Exception {
-        Resource mdResource = buildHttpResource("http://kslkjf.com/lkjlk3.dlw");
-
-        BasicParserPool parserPool = new BasicParserPool();
-        parserPool.initialize();
+        Resource mdResource = new UrlResource("http://kslkjf.com/lkjlk3.dlw");
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
@@ -90,8 +93,32 @@ public class DOMResourceSourceTest {
             // expected this
         }
     }
+    
+    @Test
+    public void testMDA130() throws Exception {
+        /*
+         * Mock up a resource which claims to exist, but then throws an
+         * exception on access. This kind of thing tends to happen with
+         * HTTP resources. MDA-130 reports that this causes an NPE.
+         */
+        final Resource mockResource = mock(Resource.class);
+        when(mockResource.exists()).thenReturn(true);
+        when(mockResource.getInputStream()).thenThrow(new IOException());
 
-    protected Resource buildHttpResource(String url) throws Exception {
-        return new UrlResource(url);
+        DOMResourceSourceStage source = new DOMResourceSourceStage();
+        source.setId("test");
+        source.setDOMResource(mockResource);
+        source.setParserPool(parserPool);
+        source.initialize();
+
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
+        try {
+            source.execute(metadataCollection);
+            Assert.fail(); // expected an exception to be thrown
+        } catch (StageProcessingException e) {
+            // this is the exception we expect
+        }
+        Assert.assertNotNull(metadataCollection);
+        Assert.assertEquals(metadataCollection.size(), 0);
     }
 }
