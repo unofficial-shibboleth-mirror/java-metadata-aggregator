@@ -17,6 +17,9 @@ API Changes
     * SetPublicationInfo removed
     * XMLSignatureSigningStage's deriveKeyNames property
 
+** Bug
+    * [MDA-130] - NPE in DOMResourceStage if resource reading fails
+
 ** Task
     * [MDA-122] - remove unimplemented stages and properties
     * [MDA-124] - Move from using Shibboleth resources to using Spring ones
