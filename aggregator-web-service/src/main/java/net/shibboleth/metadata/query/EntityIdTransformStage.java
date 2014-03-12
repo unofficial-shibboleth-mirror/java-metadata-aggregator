@@ -31,13 +31,12 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazyList;
 
+import org.bouncycastle.crypto.digests.MD5Digest;
+import org.cryptacular.util.CodecUtil;
+import org.cryptacular.util.HashUtil;
 import org.springframework.core.convert.converter.Converter;
 
 import com.google.common.base.Predicates;
-
-import edu.vt.middleware.crypt.digest.MD5;
-import edu.vt.middleware.crypt.digest.SHA1;
-import edu.vt.middleware.crypt.util.HexConverter;
 
 /**
  * A pipeline stage that, if present, takes each {@link ItemId} associated with a metadata element, transforms it
@@ -96,8 +95,7 @@ public class EntityIdTransformStage<T> extends BaseIteratingStage<T> {
         /** {@inheritDoc} */
         @Override
         public String convert(final String source) {
-            SHA1 sha1 = new SHA1();
-            return "{sha1}" + sha1.digest(source.getBytes(), new HexConverter());
+            return "{sha1}" + CodecUtil.hex(HashUtil.sha1(source.getBytes()));
         }
     }
 
@@ -107,8 +105,7 @@ public class EntityIdTransformStage<T> extends BaseIteratingStage<T> {
         /** {@inheritDoc} */
         @Override
         public String convert(final String source) {
-            MD5 md5 = new MD5();
-            return "{md5}" + md5.digest(source.getBytes(), new HexConverter());
+            return "{md5}" + CodecUtil.hex(HashUtil.hash(new MD5Digest(), source.getBytes()));
         }
     }
 }

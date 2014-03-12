@@ -22,8 +22,8 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>edu.vt.middleware</groupId>
-            <artifactId>vt-crypt</artifactId>
+            <groupId>org.cryptacular</groupId>
+            <artifactId>cryptacular</artifactId>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -49,7 +49,7 @@
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
+            <artifactId>bcprov-jdk15on</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

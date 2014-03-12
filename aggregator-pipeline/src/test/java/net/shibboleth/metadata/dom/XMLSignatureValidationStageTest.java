@@ -30,12 +30,10 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
+import org.cryptacular.util.CertUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
-
-import edu.vt.middleware.crypt.CryptException;
-import edu.vt.middleware.crypt.util.CryptReader;
 
 /** Unit test for {@link XMLSchemaValidationStage}. */
 public class XMLSignatureValidationStageTest extends BaseDOMTest {
@@ -43,9 +41,9 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     private final Certificate signingCert;
     
     /** Constructor sets class under test. */
-    public XMLSignatureValidationStageTest() throws CryptException, IOException {
+    public XMLSignatureValidationStageTest() throws IOException {
         super(XMLSignatureValidationStage.class);
-        signingCert = CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+        signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
     }
     

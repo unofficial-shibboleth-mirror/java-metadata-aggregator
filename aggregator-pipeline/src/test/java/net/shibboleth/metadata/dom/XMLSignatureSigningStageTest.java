@@ -26,11 +26,11 @@ import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
+import org.cryptacular.util.CertUtil;
+import org.cryptacular.util.KeyPairUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
-
-import edu.vt.middleware.crypt.util.CryptReader;
 
 /** {@link XMLSignatureSigningStage} unit test. */
 public class XMLSignatureSigningStageTest extends BaseDOMTest {
@@ -48,9 +48,9 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(testInput));
 
-        PrivateKey signingKey = CryptReader.readPrivateKey(XMLSignatureSigningStageTest.class
+        PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
-        X509Certificate signingCert = (X509Certificate) CryptReader.readCertificate(XMLSignatureSigningStageTest.class
+        X509Certificate signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
         certs.add(signingCert);
