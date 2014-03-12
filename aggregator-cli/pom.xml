@@ -43,6 +43,11 @@
             <artifactId>spring-extensions</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>${httpclient.groupId}</groupId>
+            <artifactId>httpclient</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Test Dependencies -->
         
