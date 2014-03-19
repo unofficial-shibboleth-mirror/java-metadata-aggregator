@@ -43,16 +43,20 @@
             <artifactId>java-support</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.springframework</groupId>
+           <groupId>${spring.groupId}</groupId>
            <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.springframework</groupId>
+           <groupId>${spring.groupId}</groupId>
            <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.springframework</groupId>
+           <groupId>${spring.groupId}</groupId>
            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
 
         <!-- Provided Dependencies -->
@@ -67,19 +71,7 @@
         <dependency>
             <groupId>${spring.groupId}</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
-        <!-- Managed Dependencies -->
-        <dependency>
-            <groupId>${spring.groupId}</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
     </dependencies>
 </project>
