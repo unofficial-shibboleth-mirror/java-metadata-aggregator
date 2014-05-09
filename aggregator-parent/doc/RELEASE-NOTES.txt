@@ -2,12 +2,37 @@ Release Notes - Metadata Aggregator - Version 0.9.0
 ===================================================
 
 Highlights
+
     * Now using Spring resources instead of (now deprecated) Shibboleth
       resources.
+
     * Now uses the JAXP implementation supplied by the JRE, rather than
       a much older "endorsed" version. This will affect any configurations
       which depended on Xerces or Xalan specific extensions; re-endorse
       the implementation of your choice if this is an issue. 
+
+    * This release bundles a new version of the Shibboleth spring-extensions
+      package, which provides a new IdentifiableBeanPostProcessor class.
+      If you include an instance of this class in your Spring configuration,
+      you can now default the "id" property on all Shibboleth components
+      from the bean's "id" attribute, simplifying your configuration by
+      removing the usual duplication between these values.
+      
+      Before:
+      
+      <bean class="..." id="theBean">
+         <property name="id" value="theBean"/>
+         ...
+      </bean>
+      
+      After:
+      
+      <bean class="net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessor"/>
+      
+      <bean class="..." id="theBean">
+         ...
+      </bean>
+      
 
 API Changes
     * ElementFormattingStage removed
