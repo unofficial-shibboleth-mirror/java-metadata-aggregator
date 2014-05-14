@@ -273,7 +273,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
      * 
      * @param source XML file to read in
      * 
-     * @return the resultant Element Itme, may be null if there was an error parsing the data and
+     * @return the resultant {@link DOMElementItem}, may be <code>null</code> if there was an error parsing the data and
      *         {@link #errorCausesSourceFailure} is false
      * 
      * @throws StageProcessingException thrown if there is a problem reading in the Element and
