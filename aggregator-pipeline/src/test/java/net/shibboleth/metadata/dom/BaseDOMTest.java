@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
-import java.security.Security;
 
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -28,7 +27,6 @@ import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.testng.annotations.BeforeClass;
@@ -57,8 +55,6 @@ public abstract class BaseDOMTest extends BaseTest {
 
         parserPool = new BasicParserPool();
         parserPool.initialize();
-
-        Security.addProvider(new BouncyCastleProvider());
     }
 
     /**
