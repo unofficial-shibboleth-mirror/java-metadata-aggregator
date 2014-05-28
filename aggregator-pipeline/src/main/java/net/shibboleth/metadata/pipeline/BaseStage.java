@@ -31,6 +31,7 @@ import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A base class for {@link Stage} implementations.
@@ -54,8 +55,11 @@ public abstract class BaseStage<T> extends AbstractIdentifiableInitializableComp
      * @param pred the {@link Predicate} applied to the supplied item collection to determine
      * whether the stage will be executed
      */
-    public void setCollectionPredicate(@Nonnull Predicate<Collection<Item<T>>> pred) {
-        collectionPredicate = pred;
+    public void setCollectionPredicate(@Nonnull final Predicate<Collection<Item<T>>> pred) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        collectionPredicate = Constraint.isNotNull(pred, "collectionPredicate may not be null");
     }
     
     /**
