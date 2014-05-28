@@ -89,8 +89,8 @@ public class SimplePipelineTest {
 
         Item<String> md = metadata.iterator().next();
         Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
-        Assert.assertEquals(md.getItemMetadata().values().size(), 2);
-        Assert.assertTrue(md.getItemMetadata().containsKey(ComponentInfo.class));
+        // components in processing chain: source, count1, count2, pipeline itself
+        Assert.assertEquals(md.getItemMetadata().get(ComponentInfo.class).size(), 4);
 
         try {
             List<Stage<String>> pipelineStages = pipeline.getStages();

@@ -11,6 +11,18 @@ Highlights
       which depended on Xerces or Xalan specific extensions; re-endorse
       the implementation of your choice if this is an issue. 
 
+    * All provided stages now implement a new collectionPredicate property.
+      This can be set to a Predicate<Collection<Item<T>>> which will be
+      applied to each collection passed to the stage. If the
+      collectionPredicate returns true, the stage is executed as normal; this
+      is the default. If the collectionPredicate returns false, the stage is
+      skipped. This can be used used to perform lightweight conditional
+      operations such as forming an EntitiesDescriptor from a collection only
+      if the collection contains at least two items. The
+      AtLeastCollectionPredicate class has been added to address this specific
+      use case. Conditional evaluation of a series of stages with the same
+      collectionPredicate can be simplified by use of a CompositeStage.
+
     * This release bundles a new version of the Shibboleth spring-extensions
       package, which provides a new IdentifiableBeanPostProcessor class.
       If you include an instance of this class in your Spring configuration,
@@ -40,10 +52,15 @@ API Changes
     * PushDownCacheDurationStage removed
     * PushDownValidUntilStage removed
     * SetPublicationInfo removed
-    * XMLSignatureSigningStage's deriveKeyNames property
+    * XMLSignatureSigningStage's deriveKeyNames property removed
+    * new property collectionPredicate added on all stages
+    * new AtLeastCollectionPredicate class added
 
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
+
+** New Feature
+    * [MDA-132] - generic conditional execution of stages
 
 ** Task
     * [MDA-122] - remove unimplemented stages and properties

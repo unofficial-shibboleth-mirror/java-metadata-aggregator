@@ -29,7 +29,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -40,8 +39,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> type of metadata this stage, and its composed stages, operate upon
  */
 @ThreadSafe
-public class CompositeStage<T> extends AbstractIdentifiableInitializableComponent
-        implements Stage<T> {
+public class CompositeStage<T> extends BaseStage<T> {
 
     /** Stages which compose this stage. */
     private List<Stage<T>> composedStages = Collections.emptyList();
@@ -78,7 +76,8 @@ public class CompositeStage<T> extends AbstractIdentifiableInitializableComponen
     }
 
     /** {@inheritDoc} */
-    @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         for (Stage<T> stage : composedStages) {
             stage.execute(itemCollection);

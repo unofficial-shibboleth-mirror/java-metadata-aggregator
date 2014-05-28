@@ -23,6 +23,9 @@ import java.util.Collections;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -38,6 +41,36 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 public abstract class BaseStage<T> extends AbstractIdentifiableInitializableComponent implements Stage<T> {
 
     /**
+     * The {@link Predicate} applied to the supplied item collection to determine whether the stage will be executed.
+     * Default value: always <code>true</code>.
+     */
+    @Nonnull
+    private Predicate<Collection<Item<T>>> collectionPredicate = Predicates.alwaysTrue();
+    
+    /**
+     * Sets the {@link Predicate} applied to the supplied item collection to determine whether
+     * the stage will be executed.
+     * 
+     * @param pred the {@link Predicate} applied to the supplied item collection to determine
+     * whether the stage will be executed
+     */
+    public void setCollectionPredicate(@Nonnull Predicate<Collection<Item<T>>> pred) {
+        collectionPredicate = pred;
+    }
+    
+    /**
+     * Gets the {@link Predicate} being applied to the supplied item collection to determine whether
+     * the stage will be executed.
+     * 
+     * @return the {@link Predicate} being applied to the supplied item collection to determine whether
+     * the stage will be executed.
+     */
+    @Nonnull
+    public Predicate<Collection<Item<T>>> getCollectionPredicate() {
+        return collectionPredicate;
+    }
+    
+    /**
      * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
      * the {@link ComponentInfo} to all the resultant Item elements and then sets its completion time.
      * 
@@ -50,7 +83,9 @@ public abstract class BaseStage<T> extends AbstractIdentifiableInitializableComp
 
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        doExecute(itemCollection);
+        if (collectionPredicate.apply(itemCollection)) {
+            doExecute(itemCollection);
+        }
 
         ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(compInfo));
         compInfo.setCompleteInstant();
