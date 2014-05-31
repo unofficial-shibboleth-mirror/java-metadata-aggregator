@@ -6,6 +6,42 @@ Highlights
     * Now using Spring resources instead of (now deprecated) Shibboleth
       resources.
 
+    * The factory bean classes PrivateKeyFactoryBean, PublicKeyFactoryBean,
+      X509CertificateFactoryBean and X509CertificateChainFactoryBean
+      bundled from the spring-extensions package have significant API
+      improvements. Each factory now takes a "resource" property which
+      is a Spring Resource rather than a Java File. This allows these
+      factories to be used with any kind of Spring resource, including
+      ClassPathResource. Existing configurations will need to change to
+      compensate for this.
+      
+      Before:
+      
+      <bean class="...X509CertificateFactoryBean">
+         <property name="certificateFile">
+            <bean class="java.io.File">
+               <constructor-arg value="..."/>
+            </bean>
+         </property>
+      </bean>
+      
+      After:
+      
+      <bean class="...X509CertificateFactoryBean">
+         <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+               <constructor-arg value="..."/>
+            </bean>
+         </property>
+      </bean>
+      
+      If you were previously setting the input property of one of these
+      factories to a string value representing the path, and relying on
+      the Spring resource loader to convert that into a File object, you
+      may need to change your configuration to explicitly create a
+      FileSystemResource if that is not the default used by the
+      Spring context type in use in your application.
+
     * Now uses the JAXP implementation supplied by the JRE, rather than
       a much older "endorsed" version. This will affect any configurations
       which depended on Xerces or Xalan specific extensions; re-endorse
@@ -55,11 +91,16 @@ API Changes
     * XMLSignatureSigningStage's deriveKeyNames property removed
     * new property collectionPredicate added on all stages
     * new AtLeastCollectionPredicate class added
+    * PrivateKeyFactoryBean, PublicKeyFactoryBean, X509CertificateFactoryBean
+      and X509CertificateChainFactoryBean input properties are all now
+      called "resource" and are all Spring Resource objects rather than
+      Java File objects.
 
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
 
 ** New Feature
+    * [JSE-1] - change factory beans to operate on resources, not files
     * [MDA-132] - generic conditional execution of stages
 
 ** Task
