@@ -81,6 +81,15 @@ Highlights
          ...
       </bean>
       
+	* The ItemSerializer interface is no longer defined over a collection of
+	  items, but now (less surprisingly) operate on a single item. In addition,
+	  ItemSerializer implementations are no longer responsible for closing the
+	  OutputStream they write the serialized form of their input to. These changes
+	  allow reuse of Serializer implementations in cases other than the current
+	  SerializationStage. The SerializationStage implementation has also
+	  been changed to iterate over all items in the collection instead of serializing
+	  just the first item into the output file. This will not affect configurations which
+	  only passed collections containing a single item to SerializationStage.
 
 API Changes
     * ElementFormattingStage removed
@@ -95,6 +104,7 @@ API Changes
       and X509CertificateChainFactoryBean input properties are all now
       called "resource" and are all Spring Resource objects rather than
       Java File objects.
+    * ItemSerializer#serialize now takes Item<T> instead of Collection<Item<T>>
 
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
@@ -112,6 +122,7 @@ API Changes
     * [MDA-128] - use @Override annotation in MDA sources
     * [MDA-129] - remove semi-functional ElementFormattingStage
     * [MDA-133] - unbundle "endorsed" libraries from distribution
+    * [MDA-134] - refactor approach to serialisation
 
 
 Release Notes - Metadata Aggregator - Version 0.8.0

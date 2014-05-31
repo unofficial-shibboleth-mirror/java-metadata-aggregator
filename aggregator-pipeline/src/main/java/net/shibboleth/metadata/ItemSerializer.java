@@ -18,25 +18,24 @@
 package net.shibboleth.metadata;
 
 import java.io.OutputStream;
-import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-
 /**
- * Serializers convert a collection of {@link Item} in to an octet stream.
+ * Item serializers convert an {@link Item} into an octet stream.
  * 
- * @param <T> type of data contained in the items
+ * The caller is responsible for managing (opening, closing, etc.) the output stream
+ * and orchestrating the serialization of collections of {@link Item}s.
+ * 
+ * @param <T> type of data contained in the item
  */
 public interface ItemSerializer<T> {
 
     /**
-     * Serializes the Item to the given output stream.
+     * Serializes the {@link Item} to the given output stream.
      * 
-     * @param itemCollection collection of Items
-     * @param output output stream to which the Item will be written
+     * @param item {@link Item} to be serialized
+     * @param output output stream to which the serialized {@link Item} will be written
      */
-    public void serialize(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
-            @Nonnull final OutputStream output);
+    public void serialize(@Nonnull Item<T> item, @Nonnull OutputStream output);
 }

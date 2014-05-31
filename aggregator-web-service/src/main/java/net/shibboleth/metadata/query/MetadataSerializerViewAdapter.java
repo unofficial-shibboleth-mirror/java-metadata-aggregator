@@ -76,10 +76,10 @@ public class MetadataSerializerViewAdapter<T> implements View {
     @Override
     public void render(final Map<String, ?> model, final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) throws Exception {
-        final Collection<Item<T>> metadataCollection = (Collection<Item<T>>) model
+        final Collection<Item<T>> itemCollection = (Collection<Item<T>>) model
                 .get(QueryController.METADATA_MODEL_ATTRIB);
 
-        if (metadataCollection == null || metadataCollection.isEmpty()) {
+        if (itemCollection == null || itemCollection.isEmpty()) {
             httpResponse.sendError(404);
             return;
         }
@@ -98,7 +98,9 @@ public class MetadataSerializerViewAdapter<T> implements View {
         }
 
         try {
-            serializer.serialize(metadataCollection, out);
+            for (Item<T> item : itemCollection) {
+                serializer.serialize(item, out);
+            }
             out.flush();
         } catch (Exception e) {
             log.warn("Unable to serialize metadata for request to " + httpRequest.getRequestURI(), e);

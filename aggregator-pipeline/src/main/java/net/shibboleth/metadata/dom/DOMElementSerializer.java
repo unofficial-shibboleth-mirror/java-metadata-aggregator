@@ -17,9 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -31,15 +29,13 @@ import javax.xml.transform.stream.StreamResult;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /**
- * Very simple serializer that serializes the owning document of the first element of the given {@link DOMElementItem}
- * collection. All other elements of the collection are ignored.
+ * Very simple serializer that serializes the document element of the given {@link Element}-based {@link Item}.
  */
 @ThreadSafe
 public class DOMElementSerializer implements ItemSerializer<Element> {
@@ -48,13 +44,13 @@ public class DOMElementSerializer implements ItemSerializer<Element> {
     private final Logger log = LoggerFactory.getLogger(DOMElementSerializer.class);
 
     /** {@inheritDoc} */
-    @Override public void
-            serialize(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection, OutputStream output) {
-        if (itemCollection == null || itemCollection.isEmpty()) {
+    @Override
+    public void serialize(@Nonnull final Item<Element> item, @Nonnull OutputStream output) {
+        if (item == null) {
             return;
         }
 
-        final Element documentRoot = itemCollection.iterator().next().unwrap();
+        final Element documentRoot = item.unwrap();
 
         try {
             TransformerFactory tfac = TransformerFactory.newInstance();
@@ -63,13 +59,6 @@ public class DOMElementSerializer implements ItemSerializer<Element> {
             serializer.transform(new DOMSource(documentRoot.getOwnerDocument()), new StreamResult(output));
         } catch (TransformerException e) {
             log.error("Unable to write out XML", e);
-        }
-
-        try {
-            output.flush();
-            output.close();
-        } catch (IOException e) {
-            log.error("Unable to close output stream", e);
         }
     }
 

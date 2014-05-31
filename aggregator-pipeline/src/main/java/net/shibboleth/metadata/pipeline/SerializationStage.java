@@ -20,6 +20,7 @@ package net.shibboleth.metadata.pipeline;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
@@ -37,7 +38,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A stage which writes the given item collection out to a file.
+ * A stage which writes the given item collection out to a file using a provided
+ * {@link ItemSerializer}.
+ * 
+ * The stage writes each item in the collection in turn to the file; this will not
+ * always result in appropriate file contents. For example, a collection of more than
+ * one item containing XML content will result in an output file which contains more
+ * than one top-level element, which is not well-formed XML.
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
@@ -129,8 +136,10 @@ public class SerializationStage<T> extends BaseStage<T> {
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        try {
-            serializer.serialize(itemCollection, new FileOutputStream(outputFile));
+        try (OutputStream stream = new FileOutputStream(outputFile)) {
+            for (Item<T> item : itemCollection) {
+                serializer.serialize(item, stream);
+            }
         } catch (IOException e) {
             throw new StageProcessingException("Error write to output file " + outputFile.getAbsolutePath(), e);
         }
@@ -158,7 +167,7 @@ public class SerializationStage<T> extends BaseStage<T> {
         if (outputFile.exists()) {
             if (!overwritingExistingOutputFile) {
                 throw new ComponentInitializationException("Output file '" + outputFile.getAbsolutePath()
-                        + "' exist and stage is configured not to overwrite the file");
+                        + "' exists and stage is configured not to overwrite the file");
             } else if (!outputFile.canWrite()) {
                 throw new ComponentInitializationException("Can not write to output file '"
                         + outputFile.getAbsolutePath() + "'");
