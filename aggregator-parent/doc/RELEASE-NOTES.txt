@@ -105,6 +105,8 @@ API Changes
       called "resource" and are all Spring Resource objects rather than
       Java File objects.
     * ItemSerializer#serialize now takes Item<T> instead of Collection<Item<T>>
+    * DomDocumentFactoryBean is now DOMDocumentFactoryBean
+    * DOMDocumentFactoryBean documentResource property is now resource
 
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
@@ -112,6 +114,9 @@ API Changes
 ** New Feature
     * [JSE-1] - change factory beans to operate on resources, not files
     * [MDA-132] - generic conditional execution of stages
+
+** Improvements
+    * [JSE-4] - DomDocumentFactoryBean should be renamed
 
 ** Task
     * [MDA-122] - remove unimplemented stages and properties
