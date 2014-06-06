@@ -34,7 +34,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
@@ -305,7 +305,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<Element> {
             roleIdentifier = null;
 
             if (Objects.equal(childQName, ROLE_DESCRIPTOR_NAME)) {
-                roleIdentifier = DomTypeSupport.getXSIType(child);
+                roleIdentifier = DOMTypeSupport.getXSIType(child);
             } else if (namedRoles.contains(childQName)) {
                 roleIdentifier = childQName;
             } else {
