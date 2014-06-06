@@ -25,7 +25,7 @@ import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
-import net.shibboleth.utilities.java.support.security.Type4UuidIdentifierGenerationStrategy;
+import net.shibboleth.utilities.java.support.security.Type4UUIDIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Attr;
@@ -40,9 +40,9 @@ public class GenerateIdStage extends BaseIteratingStage<Element> {
     /** Strategy used to generate identifiers. */
     private final IdentifierGenerationStrategy idGenerator;
 
-    /** Constructor. Initialized the {@link #idGenerator} to a {@link Type4UuidIdentifierGenerationStrategy}. */
+    /** Constructor. Initialized the {@link #idGenerator} to a {@link Type4UUIDIdentifierGenerationStrategy}. */
     public GenerateIdStage() {
-        idGenerator = new Type4UuidIdentifierGenerationStrategy();
+        idGenerator = new Type4UUIDIdentifierGenerationStrategy();
     }
 
     /**
