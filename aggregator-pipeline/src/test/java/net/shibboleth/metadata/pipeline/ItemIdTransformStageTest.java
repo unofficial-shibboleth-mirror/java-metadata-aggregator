@@ -15,68 +15,73 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.query;
+package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
+import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.pipeline.ComponentInfo;
+import net.shibboleth.metadata.pipeline.ItemIdTransformStage;
 
 import org.springframework.core.convert.converter.Converter;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class EntityIdTransformStageTest {
+public class ItemIdTransformStageTest {
 
     @Test
     public void test() throws Exception {
-        MockItem item = new MockItem("test");
+        final MockItem item = new MockItem("test");
         item.getItemMetadata().put(new ItemId("http://example.org"));
 
         final ArrayList<Item<String>> mdColl = new ArrayList<>();
         mdColl.add(item);
 
-        ArrayList<Converter<String, String>> transforms = new ArrayList<>();
-        transforms.add(new EntityIdTransformStage.Md5Converter());
-        transforms.add(new EntityIdTransformStage.Sha1Converter());
+        final ArrayList<Converter<String, String>> transforms = new ArrayList<>();
+        transforms.add(new MDQueryMD5ItemIdTransformer());
+        transforms.add(new MDQuerySHA1ItemIdTransformer());
 
-        final EntityIdTransformStage<String> stage = new EntityIdTransformStage<>();
+        final ItemIdTransformStage<String> stage = new ItemIdTransformStage<>();
         stage.setId("test");
         stage.setIdTransformers(transforms);
-        assert !stage.isInitialized();
+        Assert.assertFalse(stage.isInitialized());
 
         stage.initialize();
-        assert stage.isInitialized();
+        Assert.assertTrue(stage.isInitialized());
 
         stage.execute(mdColl);
-        assert mdColl.size() == 1;
-        assert item.getItemMetadata().values().size() == 4;
+        Assert.assertEquals(mdColl.size(), 1);
+        Assert.assertEquals(item.getItemMetadata().values().size(), 4);
 
-        ComponentInfo compInfo = item.getItemMetadata().get(ComponentInfo.class).get(0);
-        assert compInfo.getCompleteInstant() != null;
-        assert compInfo.getComponentId().equals("test");
-        assert compInfo.getComponentType().equals(EntityIdTransformStage.class);
-        assert compInfo.getStartInstant() != null;
+        final ComponentInfo compInfo = item.getItemMetadata().get(ComponentInfo.class).get(0);
+        Assert.assertNotNull(compInfo.getCompleteInstant());
+        Assert.assertEquals(compInfo.getComponentId(), "test");
+        Assert.assertEquals(compInfo.getComponentType(), ItemIdTransformStage.class);
+        Assert.assertNotNull(compInfo.getStartInstant());
 
         final List<ItemId> idInfos = item.getItemMetadata().get(ItemId.class);
-        assert idInfos.size() == 3;
+        Assert.assertEquals(idInfos.size(), 3);
 
         boolean idMatch = false, sha1Match = false, md5Match = false;
-        String id;
         for (ItemId info : idInfos) {
-            id = info.getId();
+            final String id = info.getId();
             if (id.startsWith("{sha1}")) {
+                Assert.assertFalse(sha1Match);
                 sha1Match = "{sha1}ff7c1f10ab54968058fdcfaadf1b2457cd5d1a3f".equals(id);
             } else if (id.startsWith("{md5}")) {
+                Assert.assertFalse(md5Match);
                 md5Match = "{md5}dab521de65f9250b4cca7383feef67dc".equals(id);
             } else {
+                Assert.assertFalse(idMatch);
                 idMatch = "http://example.org".equals(id);
             }
         }
 
-        assert idMatch;
-        assert sha1Match;
-        assert md5Match;
+        Assert.assertTrue(idMatch);
+        Assert.assertTrue(sha1Match);
+        Assert.assertTrue(md5Match);
     }
 }

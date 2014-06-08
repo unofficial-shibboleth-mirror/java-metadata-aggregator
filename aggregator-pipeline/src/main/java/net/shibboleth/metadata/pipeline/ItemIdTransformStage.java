@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.query;
+package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,27 +26,23 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
-import org.bouncycastle.crypto.digests.MD5Digest;
-import org.cryptacular.util.CodecUtil;
-import org.cryptacular.util.HashUtil;
 import org.springframework.core.convert.converter.Converter;
 
 import com.google.common.base.Predicates;
 
 /**
- * A pipeline stage that, if present, takes each {@link ItemId} associated with a metadata element, transforms it
+ * A pipeline stage that, takes each {@link ItemId} associated with an {@link Item}, transforms its
  * value using a set of registered transformers, and associates an additional {@link ItemId} (whose value is the
  * result of the transform) with the element.
  * 
- * @param <T> type of metadata this stage operates upon
+ * @param <T> type of {@link Item} this stage operates upon
  */
 @ThreadSafe
-public class EntityIdTransformStage<T> extends BaseIteratingStage<T> {
+public class ItemIdTransformStage<T> extends BaseIteratingStage<T> {
 
     /** Transformers used on IDs. */
     private Collection<Converter<String, String>> idTransformers = new LazyList<>();
@@ -66,9 +62,9 @@ public class EntityIdTransformStage<T> extends BaseIteratingStage<T> {
      * @param transformers transforms used to produce the transformed entity IDs
      */
     public synchronized void setIdTransformers(final Collection<Converter<String, String>> transformers) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
         CollectionSupport.addIf(idTransformers, transformers, Predicates.notNull());
     }
 
@@ -87,25 +83,5 @@ public class EntityIdTransformStage<T> extends BaseIteratingStage<T> {
         item.getItemMetadata().putAll(transformedIds);
         
         return true;
-    }
-
-    /** Converts a string in to another string that is the SHA1 hash of the original string prepended with "{sha1}". */
-    public static class Sha1Converter implements Converter<String, String> {
-
-        /** {@inheritDoc} */
-        @Override
-        public String convert(final String source) {
-            return "{sha1}" + CodecUtil.hex(HashUtil.sha1(source.getBytes()));
-        }
-    }
-
-    /** Converts a string in to another string that is the MD5 hash of the original string prepended with "{md5}". */
-    public static class Md5Converter implements Converter<String, String> {
-
-        /** {@inheritDoc} */
-        @Override
-        public String convert(final String source) {
-            return "{md5}" + CodecUtil.hex(HashUtil.hash(new MD5Digest(), source.getBytes()));
-        }
     }
 }

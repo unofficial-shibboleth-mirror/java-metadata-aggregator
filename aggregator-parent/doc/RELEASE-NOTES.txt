@@ -107,6 +107,10 @@ API Changes
     * ItemSerializer#serialize now takes Item<T> instead of Collection<Item<T>>
     * DomDocumentFactoryBean is now DOMDocumentFactoryBean
     * DOMDocumentFactoryBean documentResource property is now resource
+    * New classes supporting the Metadata Query Protocol:
+        * ItemIdTransformStage
+        * MDQueryMD5ItemIdTransformer
+        * MDQuerySAML1ItemIdTransformer
 
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
@@ -114,6 +118,7 @@ API Changes
 ** New Feature
     * [JSE-1] - change factory beans to operate on resources, not files
     * [MDA-132] - generic conditional execution of stages
+    * [MDA-139] - add stage implementing ItemId transformations for metadata query
 
 ** Improvements
     * [JSE-4] - DomDocumentFactoryBean should be renamed
