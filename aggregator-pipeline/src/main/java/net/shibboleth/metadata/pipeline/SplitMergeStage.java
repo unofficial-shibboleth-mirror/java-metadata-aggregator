@@ -264,7 +264,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
          * a {@link Future}.
          */
         if (pipeline == null) {
-            return new FutureSupport.FutureNow<>(items);
+            return FutureSupport.futureNow(items);
         }
 
         final PipelineCallable<T> callable = new PipelineCallable<>(pipeline, items);

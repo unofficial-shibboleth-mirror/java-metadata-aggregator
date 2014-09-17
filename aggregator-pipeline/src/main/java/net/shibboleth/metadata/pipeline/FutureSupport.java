@@ -43,7 +43,7 @@ public final class FutureSupport {
      *
      * @param <T> type of "future" object to return
      */
-    public static class FutureNow<T> implements Future<T> {
+    private static class FutureNow<T> implements Future<T> {
     
         /**
          * Value to be returned.
@@ -93,6 +93,19 @@ public final class FutureSupport {
     /** Constructor. */
     private FutureSupport() {
 
+    }
+
+    /**
+     * Returns a {@link Future} containing an already computed value.
+     * 
+     * @param t value to be returned
+     * @param <T> type of value to be returned
+     * 
+     * @return {@link Future} returning the passed value
+     */
+    @Nonnull
+    public static <T> Future<T> futureNow(final T t) {
+        return new FutureNow<>(t);
     }
 
     /**
