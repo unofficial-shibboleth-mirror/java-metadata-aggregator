@@ -144,7 +144,7 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
                 throw new StageProcessingException("Error retrieving XML document from " +
                         domResource.getDescription(), e);
             } else {
-                log.warn("stage {}: unable to read in XML file");
+                log.warn("stage {}: unable to read in XML file", getId());
                 log.debug("stage {}: HTTP resource exception", getId(), e);
             }
         }
