@@ -114,6 +114,7 @@ API Changes
 
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
+    * [MDA-140] - NPE from SplitMergeStage if a pipeline is not set
 
 ** New Feature
     * [JSE-1] - change factory beans to operate on resources, not files

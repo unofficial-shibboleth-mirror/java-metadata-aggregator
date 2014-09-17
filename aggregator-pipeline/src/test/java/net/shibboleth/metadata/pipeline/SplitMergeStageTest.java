@@ -31,6 +31,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /** Unit test of {@link SplitMergeStage}. */
@@ -206,7 +207,7 @@ public class SplitMergeStageTest {
         items.add(item2);
         items.add(item3);
 
-        SplitMergeStage<String> stage = new SplitMergeStage<>();
+        final SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
         stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
         stage.setNonselectedItemPipeline(nonselectedPipeline);
@@ -221,4 +222,65 @@ public class SplitMergeStageTest {
         }
     }
 
+    @Test
+    public void testMDA140selected() throws Exception {
+        // make some items. we will send "one" down the selected pipeline, the rest down the nonselected one
+        final MockItem item1 = new MockItem("one");
+        final MockItem item2 = new MockItem("two");
+        final MockItem item3 = new MockItem("three");
+        final List<Item<String>> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+        final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
+        selectedPipeline.setId("selected");
+        selectedPipeline.initialize();
+        
+        final SplitMergeStage<String> stage = new SplitMergeStage<>();
+        stage.setId("test");
+        stage.setSelectionStrategy(new Predicate<Item<String>>(){
+            @Override
+            public boolean apply(Item<String> input) {
+                return input.unwrap().equals("one");
+            }
+            
+        });
+        stage.setSelectedItemPipeline(selectedPipeline);
+        stage.initialize();
+        
+        stage.execute(items);
+        Assert.assertEquals(3, items.size());
+    }
+
+    @Test
+    public void testMDA140nonselected() throws Exception {
+        // make some items. we will send "one" down the selected pipeline, the rest down the nonselected one
+        final MockItem item1 = new MockItem("one");
+        final MockItem item2 = new MockItem("two");
+        final MockItem item3 = new MockItem("three");
+        final List<Item<String>> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+        final SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
+        nonselectedPipeline.setId("nonselected");
+        nonselectedPipeline.initialize();
+        
+        final SplitMergeStage<String> stage = new SplitMergeStage<>();
+        stage.setId("test");
+        stage.setSelectionStrategy(new Predicate<Item<String>>(){
+            @Override
+            public boolean apply(Item<String> input) {
+                return input.unwrap().equals("one");
+            }
+            
+        });
+        stage.setNonselectedItemPipeline(nonselectedPipeline);
+        stage.initialize();
+        
+        stage.execute(items);
+        Assert.assertEquals(3, items.size());
+    }
 }

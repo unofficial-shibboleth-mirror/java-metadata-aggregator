@@ -20,6 +20,8 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -34,6 +36,56 @@ import net.shibboleth.metadata.Item;
  */
 @ThreadSafe
 public final class FutureSupport {
+
+    /**
+     * An implementation of {@link Future} that returns a value that is
+     * already known.
+     *
+     * @param <T> type of "future" object to return
+     */
+    public static class FutureNow<T> implements Future<T> {
+    
+        /**
+         * Value to be returned.
+         */
+        private final T value;
+        
+        /**
+         * Constructor.
+         *
+         * @param t value to be returned
+         */
+        FutureNow(final T t) {
+            value = t;
+        }
+        
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            return false;
+        }
+    
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
+    
+        @Override
+        public boolean isDone() {
+            return true;
+        }
+    
+        @Override
+        public T get() throws InterruptedException, ExecutionException {
+            return value;
+        }
+    
+        @Override
+        public T get(long timeout, TimeUnit unit) throws InterruptedException,
+                ExecutionException, TimeoutException {
+            return value;
+        }
+        
+    }
 
     /** Class logger. */
     private static final Logger LOG = LoggerFactory.getLogger(FutureSupport.class);

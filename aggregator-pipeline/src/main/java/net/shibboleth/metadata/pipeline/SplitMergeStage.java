@@ -257,9 +257,14 @@ public class SplitMergeStage<T> extends BaseStage<T> {
      * @return the token representing the background execution of the pipeline
      */
     @Nonnull protected Future<Collection<Item<T>>> executePipeline(Pipeline<T> pipeline,
-            Collection<Item<T>> items) {
+            final Collection<Item<T>> items) {
+
+        /*
+         * If no pipeline has been specified, just return the collection unchanged via
+         * a {@link Future}.
+         */
         if (pipeline == null) {
-            return null;
+            return new FutureSupport.FutureNow<>(items);
         }
 
         final PipelineCallable<T> callable = new PipelineCallable<>(pipeline, items);
