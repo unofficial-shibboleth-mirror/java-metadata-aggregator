@@ -17,14 +17,14 @@
 
 package net.shibboleth.metadata;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
-import com.google.common.base.Objects;
 
 /**
  * Carries a unique identifier for the data carried by an {@link net.shibboleth.metadata.Item}.
@@ -78,7 +78,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
         }
 
         ItemId other = (ItemId) obj;
-        return Objects.equal(id, other.id);
+        return Objects.equals(id, other.id);
     }
 
     /** {@inheritDoc} */

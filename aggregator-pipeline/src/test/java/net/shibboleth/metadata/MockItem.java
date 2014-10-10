@@ -17,10 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import java.util.Objects;
+
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
-
-import com.google.common.base.Objects;
 
 /** A mock implementation of {@link Item}. */
 public class MockItem extends AbstractItem<String> {
@@ -75,8 +75,8 @@ public class MockItem extends AbstractItem<String> {
         }
 
         if (obj instanceof MockItem) {
-            MockItem other = (MockItem) obj;
-            return Objects.equal(unwrap(), other.unwrap());
+            final MockItem other = (MockItem) obj;
+            return Objects.equals(unwrap(), other.unwrap());
         }
         return false;
     }

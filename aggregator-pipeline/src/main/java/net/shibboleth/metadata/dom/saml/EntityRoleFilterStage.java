@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -42,7 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -304,7 +304,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<Element> {
             childQName = QNameSupport.getNodeQName(child);
             roleIdentifier = null;
 
-            if (Objects.equal(childQName, ROLE_DESCRIPTOR_NAME)) {
+            if (Objects.equals(childQName, ROLE_DESCRIPTOR_NAME)) {
                 roleIdentifier = DOMTypeSupport.getXSIType(child);
             } else if (namedRoles.contains(childQName)) {
                 roleIdentifier = childQName;
