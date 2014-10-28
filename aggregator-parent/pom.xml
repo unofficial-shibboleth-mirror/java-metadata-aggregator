@@ -32,7 +32,7 @@
 
     <properties>
         <java-support.version>6.0-SNAPSHOT</java-support.version>
-        <spring-extensions.version>3.0-SNAPSHOT</spring-extensions.version>
+        <spring-extensions.version>4.0-SNAPSHOT</spring-extensions.version>
         <svn.relative.location>java-metadata-aggregator</svn.relative.location>
     </properties>
 
