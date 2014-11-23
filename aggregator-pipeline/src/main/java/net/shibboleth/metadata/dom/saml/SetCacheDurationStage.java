@@ -24,7 +24,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.Duration;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonNegative;
+import net.shibboleth.utilities.java.support.annotation.constraint.Positive;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -62,7 +62,7 @@ public class SetCacheDurationStage extends BaseIteratingStage<Element> {
      * 
      * @param duration cache duration, in milliseconds
      */
-    public synchronized void setCacheDuration(@Duration @NonNegative final long duration) {
+    public synchronized void setCacheDuration(@Duration @Positive final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
