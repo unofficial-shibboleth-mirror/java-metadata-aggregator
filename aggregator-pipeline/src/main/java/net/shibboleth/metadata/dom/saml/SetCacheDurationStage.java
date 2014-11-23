@@ -23,8 +23,11 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.Duration;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonNegative;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Element;
@@ -42,6 +45,7 @@ import org.w3c.dom.Element;
 public class SetCacheDurationStage extends BaseIteratingStage<Element> {
 
     /** Cache duration, in milliseconds, that will be set on each metadata element. */
+    @Duration
     private long cacheDuration;
 
     /**
@@ -58,11 +62,11 @@ public class SetCacheDurationStage extends BaseIteratingStage<Element> {
      * 
      * @param duration cache duration, in milliseconds
      */
-    public synchronized void setCacheDuration(final long duration) {
+    public synchronized void setCacheDuration(@Duration @NonNegative final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        cacheDuration = duration;
+        cacheDuration = Constraint.isGreaterThan(0, duration, "cache duration must be greater than 0");
     }
 
     /** {@inheritDoc} */
@@ -82,7 +86,7 @@ public class SetCacheDurationStage extends BaseIteratingStage<Element> {
         super.doInitialize();
 
         if (cacheDuration <= 0) {
-            throw new ComponentInitializationException("Cache duration must be greater than 0");
+            throw new ComponentInitializationException("cache duration must be greater than 0");
         }
     }
 }

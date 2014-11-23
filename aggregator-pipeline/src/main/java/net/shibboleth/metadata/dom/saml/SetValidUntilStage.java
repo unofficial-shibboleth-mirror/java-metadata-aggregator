@@ -23,8 +23,11 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.Duration;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonNegative;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 import org.w3c.dom.Element;
@@ -42,6 +45,7 @@ import org.w3c.dom.Element;
 public class SetValidUntilStage extends BaseIteratingStage<Element> {
 
     /** Amount of time the descriptors will be valid, expressed in milliseconds. */
+    @Duration
     private long validityDuration;
 
     /**
@@ -58,11 +62,11 @@ public class SetValidUntilStage extends BaseIteratingStage<Element> {
      * 
      * @param duration amount of time the descriptors will be valid, expressed in milliseconds
      */
-    public synchronized void setValidityDuration(final long duration) {
+    public synchronized void setValidityDuration(@Duration @NonNegative final long duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        validityDuration = duration;
+        validityDuration = Constraint.isGreaterThan(0, duration, "validity duration must be greater than 0");
     }
 
     /** {@inheritDoc} */
@@ -82,7 +86,7 @@ public class SetValidUntilStage extends BaseIteratingStage<Element> {
         super.doInitialize();
 
         if (validityDuration <= 0) {
-            throw new ComponentInitializationException("Validity duration must be greater than 0");
+            throw new ComponentInitializationException("validity duration must be greater than 0");
         }
     }
 }

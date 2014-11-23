@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -144,9 +144,8 @@ public class SetValidUntilStageTest extends BaseDOMTest {
 
         try {
             stage.setValidityDuration(duration);
-            stage.initialize();
             Assert.fail();
-        } catch (ComponentInitializationException e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
     }

@@ -90,6 +90,32 @@ Highlights
 	  been changed to iterate over all items in the collection instead of serializing
 	  just the first item into the output file. This will not affect configurations which
 	  only passed collections containing a single item to SerializationStage.
+	  
+    * The SetValidUntilStage and SetCacheDurationStage duration setters are now marked
+      using an annotation to indicate that they take non-negative duration values.
+      If you provide an appropriate converter in your Spring configuration, this means
+      that configurations can now use ISO duration values (e.g., "PT6H") rather than
+      a literal number of milliseconds (e.g., "21600000"). For example:
+      
+        <!-- This bean MUST be called "conversionService" to work properly. -->
+        <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+            <property name="converters">
+                <set>
+                    <bean class="net.shibboleth.ext.spring.config.DurationToLongConverter" />
+                    <bean class="net.shibboleth.ext.spring.config.StringToIPRangeConverter" />
+                    <bean class="net.shibboleth.ext.spring.config.BooleanToPredicateConverter" />
+                    <bean class="net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter" />
+                    <bean class="net.shibboleth.ext.spring.config.StringToResourceConverter" />
+                </set>
+            </property>
+        </bean>
+    
+        <bean id="stage" class="net.shibboleth.metadata.dom.saml.SetValidUntilStage"
+            p:id="stage"
+            p:validityDuration="PT6H"
+            init-method="initialize"
+            destroy-method="destroy"/>
+      
 
 API Changes
     * ElementFormattingStage removed
@@ -113,7 +139,10 @@ API Changes
         * MDQuerySAML1ItemIdTransformer
     * New ItemMetadataAddingStage adds a collection of ItemMetadata objects to
       each Item's item metadata
-
+    * The SetValidUntilStage and SetCacheDurationStage duration setters now throw
+      ConstraintViolationException if a value less than or equal to zero is provided,
+      rather than leaving this to be detected at initialization time.
+      
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
     * [MDA-140] - NPE from SplitMergeStage if a pipeline is not set
@@ -123,6 +152,7 @@ API Changes
     * [MDA-132] - generic conditional execution of stages
     * [MDA-139] - add stage implementing ItemId transformations for metadata query
     * [MDA-141] - add stage to add to item metadata
+    * [MDA-142] - duration properties on stages should be annotated
 
 ** Improvements
     * [JSE-4] - DomDocumentFactoryBean should be renamed
