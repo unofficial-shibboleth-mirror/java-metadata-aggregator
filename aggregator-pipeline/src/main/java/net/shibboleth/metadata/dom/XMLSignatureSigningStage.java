@@ -72,7 +72,6 @@ import org.w3c.dom.NamedNodeMap;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
 
 /**
@@ -243,7 +242,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         crls = Collections.emptyList();
         c14nExclusive = true;
         inclusivePrefixList = Collections.emptyList();
-        idAttributeNames = Lists.newArrayList(new QName("ID"), new QName("id"), new QName("Id"));
+        idAttributeNames = new ArrayList<>();
+        idAttributeNames.add(new QName("ID"));
+        idAttributeNames.add(new QName("id"));
+        idAttributeNames.add(new QName("Id"));
         keyNames = Collections.emptyList();
         includeKeyNames = true;
         includeX509Certificates = true;
