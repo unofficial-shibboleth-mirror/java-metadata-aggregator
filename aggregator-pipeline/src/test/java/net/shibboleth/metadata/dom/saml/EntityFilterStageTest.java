@@ -18,7 +18,9 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
@@ -30,8 +32,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.Lists;
-
 /** Unit test for {@link EntityFilterStage}. */
 public class EntityFilterStageTest extends BaseDOMTest {
 
@@ -42,9 +42,9 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
     /** Test whitelisted entity is retained and ensure everything else is removed. */
     @Test public void testEntityWhitelist() throws Exception {
-        EntityFilterStage stage = new EntityFilterStage();
+        final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
+        stage.setDesignatedEntities(Collections.singletonList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(true);
         stage.initialize();
 
@@ -56,9 +56,9 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
     /** Test blacklisted entity is remove and ensure everything else is retained. */
     @Test public void testEntityBlacklist() throws Exception {
-        EntityFilterStage stage = new EntityFilterStage();
+        final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
+        stage.setDesignatedEntities(Collections.singletonList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
         stage.initialize();
 
@@ -73,9 +73,9 @@ public class EntityFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
-        EntityFilterStage stage = new EntityFilterStage();
+        final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth"));
+        stage.setDesignatedEntities(Collections.singletonList("https://idp.shibboleth.net/idp/shibboleth"));
         stage.setWhitelistingEntities(false);
         stage.initialize();
         stage.execute(metadataCollection);
@@ -91,10 +91,10 @@ public class EntityFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
-        EntityFilterStage stage = new EntityFilterStage();
+        final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
-        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth",
-                "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"));
+        stage.setDesignatedEntities(Arrays.asList(new String[]{"https://idp.shibboleth.net/idp/shibboleth",
+                "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"}));
         stage.setWhitelistingEntities(false);
         stage.initialize();
         stage.execute(metadataCollection);
@@ -110,11 +110,11 @@ public class EntityFilterStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
-        EntityFilterStage stage = new EntityFilterStage();
+        final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
         stage.setRemovingEntitylessEntitiesDescriptor(false);
-        stage.setDesignatedEntities(Lists.newArrayList("https://idp.shibboleth.net/idp/shibboleth",
-                "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"));
+        stage.setDesignatedEntities(Arrays.asList(new String[]{"https://idp.shibboleth.net/idp/shibboleth",
+                "https://issues.shibboleth.net/shibboleth", "https://wiki.shibboleth.net/shibboleth"}));
         stage.setWhitelistingEntities(false);
         stage.initialize();
         stage.execute(metadataCollection);

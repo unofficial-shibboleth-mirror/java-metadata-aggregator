@@ -18,7 +18,9 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
@@ -29,8 +31,6 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
-
-import com.google.common.collect.Lists;
 
 /** Unit test for {@link EntityRegistrationAuthorityFilterStage}. */
 public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
@@ -46,7 +46,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setId("test");
         stage.setRequiringRegistrationInformation(false);
         stage.setWhitelistingRegistrationAuthorities(true);
-        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Collections.singletonList("urn:example.org:authority2"));
         stage.initialize();
 
         Collection<Item<Element>> mdCollection = buildMetadataCollection();
@@ -62,7 +62,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setId("test");
         stage.setWhitelistingRegistrationAuthorities(false);
         stage.setRequiringRegistrationInformation(false);
-        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Collections.singletonList("urn:example.org:authority2"));
         stage.initialize();
 
         Collection<Item<Element>> mdCollection = buildMetadataCollection();
@@ -78,8 +78,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setId("test");
         stage.setRequiringRegistrationInformation(true);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority1",
-                "urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Arrays.asList(new String[]{"urn:example.org:authority1",
+                "urn:example.org:authority2"}));
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
@@ -97,8 +97,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setRequiringRegistrationInformation(true);
         stage.setRemovingEntitylessEntitiesDescriptor(true);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority1",
-                "urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Arrays.asList(new String[]{"urn:example.org:authority1",
+                "urn:example.org:authority2"}));
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
@@ -116,8 +116,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setRemovingEntitylessEntitiesDescriptor(false);
         stage.setRequiringRegistrationInformation(false);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(Lists.newArrayList("urn:example.org:authority1",
-                "urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(Arrays.asList(new String[]{"urn:example.org:authority1",
+                "urn:example.org:authority2"}));
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();

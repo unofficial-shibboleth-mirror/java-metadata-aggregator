@@ -24,6 +24,7 @@ import java.security.PublicKey;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -242,10 +243,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         crls = Collections.emptyList();
         c14nExclusive = true;
         inclusivePrefixList = Collections.emptyList();
-        idAttributeNames = new ArrayList<>();
-        idAttributeNames.add(new QName("ID"));
-        idAttributeNames.add(new QName("id"));
-        idAttributeNames.add(new QName("Id"));
+        idAttributeNames = Arrays.asList(new QName[]{new QName("ID"), new QName("id"), new QName("Id")});
         keyNames = Collections.emptyList();
         includeKeyNames = true;
         includeX509Certificates = true;
