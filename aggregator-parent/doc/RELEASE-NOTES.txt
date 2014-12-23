@@ -142,6 +142,9 @@ API Changes
     * The SetValidUntilStage and SetCacheDurationStage duration setters now throw
       ConstraintViolationException if a value less than or equal to zero is provided,
       rather than leaving this to be detected at initialization time.
+    * The connectionDisregardSslCertificate property of the
+      net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder has been
+      renamed to be connectionDisregardTLSCertificate.
       
 ** Bug
     * [MDA-130] - NPE in DOMResourceStage if resource reading fails
