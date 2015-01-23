@@ -100,7 +100,7 @@ public class ValidateValidUntilStage extends BaseIteratingStage<Element> {
 
         final Long validUntil =
                 AttributeSupport.getDateTimeAttributeAsLong(AttributeSupport.getAttribute(element,
-                        SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+                        SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
         if (validUntil == null) {
             if (requireValidUntil) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));

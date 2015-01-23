@@ -53,7 +53,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -65,7 +65,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
 
         for (Element entityDescriptor : entityDescriptors) {
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
-                    SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+                    SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
         }
     }
 
@@ -86,7 +86,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -111,7 +111,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
 
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
-                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+                .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);

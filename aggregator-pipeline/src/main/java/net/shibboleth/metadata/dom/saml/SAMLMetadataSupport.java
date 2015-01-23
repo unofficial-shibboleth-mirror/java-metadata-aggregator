@@ -52,7 +52,7 @@ public final class SAMLMetadataSupport {
     public static final QName EXTENSIONS_NAME = new QName(MD_NS, "Extensions", MD_PREFIX);
 
     /** validUntil attribute name. */
-    public static final QName VALID_UNTIL_ATTIB_NAME = new QName("validUntil");
+    public static final QName VALID_UNTIL_ATTRIB_NAME = new QName("validUntil");
 
     /** cacheDuration attribute name. */
     public static final QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");

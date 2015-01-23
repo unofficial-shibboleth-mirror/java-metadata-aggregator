@@ -140,7 +140,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
         }
 
         Attr validUntilAttr =
-                descriptor.getAttributeNodeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
+                descriptor.getAttributeNodeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME.getLocalPart());
         if (validUntilAttr != null) {
             validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
             if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
@@ -183,7 +183,7 @@ public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
             boundedValidUntil = validUntil;
         }
 
-        AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME,
+        AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
                 boundedValidUntil);
     }
 }

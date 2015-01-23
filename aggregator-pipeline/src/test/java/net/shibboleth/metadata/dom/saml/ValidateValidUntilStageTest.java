@@ -88,10 +88,10 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
     private DOMElementItem buildDomElementItem(long validUntilInterval) throws Exception {
         Element descriptor = readXMLData("in.xml");
         if (validUntilInterval != 0) {
-            AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME,
+            AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
                     System.currentTimeMillis() + validUntilInterval);
         }else{
-            AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+            AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         }
         return new DOMElementItem(descriptor.getOwnerDocument());
     }

@@ -73,8 +73,8 @@ public class SetValidUntilStage extends BaseIteratingStage<Element> {
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
-            AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
-            AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME,
+            AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
+            AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
                     System.currentTimeMillis() + validityDuration);
         }
 

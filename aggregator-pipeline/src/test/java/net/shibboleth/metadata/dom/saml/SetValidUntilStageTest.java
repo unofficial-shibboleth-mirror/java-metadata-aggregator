@@ -50,9 +50,9 @@ public class SetValidUntilStageTest extends BaseDOMTest {
     public void testWithoutExistingValidUntil() throws Exception {
         final Element entitiesDescriptor = readXMLData("in.xml");
 
-        entitiesDescriptor.removeAttributeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME.getLocalPart());
+        entitiesDescriptor.removeAttributeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME.getLocalPart());
 
-        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME) == null);
+        Assert.assertTrue(AttributeSupport.getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME) == null);
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
@@ -66,7 +66,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -83,7 +83,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
     public void testWithExistingValidUntil() throws Exception {
         final Element entitiesDescriptor = readXMLData("in.xml");
 
-        Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME));
+        Assert.assertTrue(AttributeSupport.hasAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
@@ -97,7 +97,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
         long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -130,7 +130,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
 
         stage.execute(metadataCollection);
 
-        Attr validUntilAttr = AttributeSupport.getAttribute(root, SAMLMetadataSupport.VALID_UNTIL_ATTIB_NAME);
+        Attr validUntilAttr = AttributeSupport.getAttribute(root, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNull(validUntilAttr);
     }
 
