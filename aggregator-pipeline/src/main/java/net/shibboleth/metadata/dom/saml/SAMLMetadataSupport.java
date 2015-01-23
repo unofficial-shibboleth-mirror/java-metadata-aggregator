@@ -49,7 +49,7 @@ public final class SAMLMetadataSupport {
     public static final QName ENTITY_DESCRIPTOR_NAME = new QName(MD_NS, "EntityDescriptor", MD_PREFIX);
 
     /** Extensions element name. */
-    public static final QName EXTENSIONS_NAME = new QName(MD_NS, "Extensions");
+    public static final QName EXTENSIONS_NAME = new QName(MD_NS, "Extensions", MD_PREFIX);
 
     /** validUntil attribute name. */
     public static final QName VALID_UNTIL_ATTIB_NAME = new QName("validUntil");
