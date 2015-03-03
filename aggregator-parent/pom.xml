@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.shibboleth</groupId>
         <artifactId>parent-v3</artifactId>
-        <version>7</version>
+        <version>TRUNK-SNAPSHOT</version>
     </parent>
 
     <name>Shibboleth Metadata Aggregator</name>
@@ -20,7 +20,7 @@
     
     <groupId>net.shibboleth.metadata</groupId>
     <artifactId>aggregator-parent</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -31,8 +31,8 @@
     </modules>
 
     <properties>
-        <java-support.version>7.0.0</java-support.version>
-        <spring-extensions.version>5.0.0</spring-extensions.version>
+        <java-support.version>7.1-SNAPSHOT</java-support.version>
+        <spring-extensions.version>5.1-SNAPSHOT</spring-extensions.version>
         <svn.relative.location>java-metadata-aggregator</svn.relative.location>
     </properties>
 
