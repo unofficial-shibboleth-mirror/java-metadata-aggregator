@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -39,12 +39,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A stage which writes the given item collection out to a file using a provided
- * {@link ItemSerializer}.
- * 
- * The stage writes each item in the collection in turn to the file; this will not
- * always result in appropriate file contents. For example, a collection of more than
- * one item containing XML content will result in an output file which contains more
- * than one top-level element, which is not well-formed XML.
+ * {@link ItemCollectionSerializer}.
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
@@ -67,8 +62,8 @@ public class SerializationStage<T> extends BaseStage<T> {
     /** Whether an existing output file should be overwritten. Default value: <code>true</code> */
     private boolean overwritingExistingOutputFile = true;
 
-    /** Serializer used to write the item to the output stream. */
-    private ItemSerializer<T> serializer;
+    /** Serializer used to write the collection to the output stream. */
+    private ItemCollectionSerializer<T> serializer;
 
     /**
      * Gets the file to which the item will be written.
@@ -117,7 +112,7 @@ public class SerializationStage<T> extends BaseStage<T> {
      * 
      * @return serializer used to write item to the output file
      */
-    @Nullable public ItemSerializer<T> getSerializer() {
+    @Nullable public ItemCollectionSerializer<T> getSerializer() {
         return serializer;
     }
 
@@ -126,20 +121,18 @@ public class SerializationStage<T> extends BaseStage<T> {
      * 
      * @param itemSerializer serializer used to write item to the output file
      */
-    public synchronized void setSerializer(@Nonnull final ItemSerializer<T> itemSerializer) {
+    public synchronized void setSerializer(@Nonnull final ItemCollectionSerializer<T> itemSerializer) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        serializer = Constraint.isNotNull(itemSerializer, "Item serializer can not be null");
+        serializer = Constraint.isNotNull(itemSerializer, "Item collection serializer can not be null");
     }
 
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         try (OutputStream stream = new FileOutputStream(outputFile)) {
-            for (Item<T> item : itemCollection) {
-                serializer.serialize(item, stream);
-            }
+            serializer.serializeCollection(itemCollection, stream);
         } catch (IOException e) {
             throw new StageProcessingException("Error write to output file " + outputFile.getAbsolutePath(), e);
         }
@@ -189,7 +182,7 @@ public class SerializationStage<T> extends BaseStage<T> {
         }
 
         if (serializer == null) {
-            throw new ComponentInitializationException("Item serializer can not be null");
+            throw new ComponentInitializationException("Item collection serializer can not be null");
         }
 
     }

@@ -18,6 +18,8 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -28,6 +30,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.ItemSerializer;
 
 import org.slf4j.Logger;
@@ -35,17 +38,21 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /**
- * Very simple serializer that serializes the document element of the given {@link Element}-based {@link Item}.
+ * Very simple {@link ItemSerializer} that serializes the document element of the given
+ * {@link Element}-based {@link Item}.
+ * 
+ * When used as an {@link ItemCollectionSerializer}, just serializes the first {@link Item} in the collection.
+ * This will result in well-formed XML, but other items in the collection will simply be ignored.
  */
 @ThreadSafe
-public class DOMElementSerializer implements ItemSerializer<Element> {
+public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollectionSerializer<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMElementSerializer.class);
 
     /** {@inheritDoc} */
     @Override
-    public void serialize(@Nonnull final Item<Element> item, @Nonnull OutputStream output) {
+    public void serialize(@Nonnull final Item<Element> item, @Nonnull final OutputStream output) {
         if (item == null) {
             return;
         }
@@ -59,6 +66,21 @@ public class DOMElementSerializer implements ItemSerializer<Element> {
             serializer.transform(new DOMSource(documentRoot.getOwnerDocument()), new StreamResult(output));
         } catch (TransformerException e) {
             log.error("Unable to write out XML", e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serializeCollection(@Nonnull final Collection<Item<Element>> items,
+            @Nonnull final OutputStream output) {
+        final Iterator<Item<Element>> iter = items.iterator();
+        if (iter.hasNext()) {
+            serialize(iter.next(), output);
+            if (iter.hasNext()) {
+                log.warn("collection contained more than one Item; rest ignored");
+            }
+        } else {
+            log.warn("collection was empty");
         }
     }
 
