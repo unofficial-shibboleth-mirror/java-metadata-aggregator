@@ -33,7 +33,7 @@
     <properties>
         <java-support.version>7.1-SNAPSHOT</java-support.version>
         <spring-extensions.version>5.1-SNAPSHOT</spring-extensions.version>
-        <svn.relative.location>java-metadata-aggregator</svn.relative.location>
+        <checkstyle.configLocation>${project.basedir}/../aggregator-parent/resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
     </properties>
 
     <repositories>
