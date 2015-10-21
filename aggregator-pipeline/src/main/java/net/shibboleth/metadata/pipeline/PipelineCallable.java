@@ -59,11 +59,6 @@ public class PipelineCallable<T> implements Callable<Collection<Item<T>>> {
         itemCollection = Constraint.isNotNull(items, "Item collection can not be null");
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws PipelineProcessingException
-     */
     @Override @Nonnull @NonnullElements public Collection<Item<T>> call() throws PipelineProcessingException {
         log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
                 itemCollection.size());

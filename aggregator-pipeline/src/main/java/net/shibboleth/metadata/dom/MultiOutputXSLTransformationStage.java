@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * the input items may result in zero, one or more XML elements, each of which results in a {@link DOMElementItem} in
  * the resulting collection. The resulting {@link DOMElementItem}s receive {@link net.shibboleth.metadata.InfoStatus},
  * {@link net.shibboleth.metadata.WarningStatus}, and {@link net.shibboleth.metadata.ErrorStatus} metadata via the
- * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
+ * {@link AbstractXSLProcessingStage.StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStage {

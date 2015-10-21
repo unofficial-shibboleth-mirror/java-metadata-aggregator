@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * is replaced by an item constructed from the result of the transform. The result {@link DOMElementItem} receives
  * {@link net.shibboleth.metadata.InfoStatus}, {@link net.shibboleth.metadata.WarningStatus}, and
  * {@link net.shibboleth.metadata.ErrorStatus} metadata via the
- * {@link AbstractXSLProcessingStage$StatusInfoAppendingErrorListener}.
+ * {@link AbstractXSLProcessingStage.StatusInfoAppendingErrorListener}.
  */
 @ThreadSafe
 public class XSLTransformationStage extends AbstractXSLProcessingStage {
