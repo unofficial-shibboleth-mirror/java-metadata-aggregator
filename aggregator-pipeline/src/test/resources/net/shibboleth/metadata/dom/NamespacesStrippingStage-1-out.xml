@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rootElement xmlns:alpha="urn:namespace:alpha">
+    <nested keepThis="1" alpha:keep="2">
+        <keepMe keep="keep" alpha:a="a">
+            <nested>
+                <alsoKept/>
+            </nested>
+        </keepMe>
+    </nested>
+    <alpha:keepMe>
+        
+    </alpha:keepMe>
+</rootElement>

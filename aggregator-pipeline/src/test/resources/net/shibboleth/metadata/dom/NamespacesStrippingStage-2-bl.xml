@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:rootElement xmlns:a="urn:namespace:alfa" xmlns:d="urn:namespace:delta">
+    <nested keepThis="1" a:keep="2">
+        <keepMe keep="keep" a:a="a">
+            <nested>
+                <alsoKept/>
+            </nested>
+        </keepMe>
+    </nested>
+    <a:keepMe keep="17">
+        
+    </a:keepMe>
+    
+    
+    <d:delta>
+        This is an element in the delta namespace
+    </d:delta>
+</a:rootElement>

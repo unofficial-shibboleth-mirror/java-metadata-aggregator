@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:rootElement xmlns:a="urn:namespace:alfa" xmlns:b="urn:namespace:bravo" xmlns:c="urn:namespace:charlie">
+    
+    <a:keepMe keep="17">
+        <b:removeMe xmlns:betaxxx="urn:namespace:bravo">
+            
+        </b:removeMe>
+    </a:keepMe>
+    <b:bravo>
+        This is an element in the bravo namespace
+    </b:bravo>
+    <c:charlie>
+        This is an element in the charlie namespace
+    </c:charlie>
+    
+</a:rootElement>

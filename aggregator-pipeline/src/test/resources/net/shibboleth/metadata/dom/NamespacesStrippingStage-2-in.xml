@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:rootElement xmlns:a="urn:namespace:alfa" xmlns:b="urn:namespace:bravo" xmlns:c="urn:namespace:charlie" xmlns:d="urn:namespace:delta">
+    <nested b:attr="bAttr" keepThis="1" a:keep="2">
+        <keepMe keep="keep" b:bb="bb" a:a="a" b:b="b">
+            <nested b:removeThis="3">
+                <alsoKept/>
+            </nested>
+        </keepMe>
+    </nested>
+    <a:keepMe keep="17">
+        <b:removeMe xmlns:betaxxx="urn:namespace:bravo">
+            <alsoRemoved/>
+        </b:removeMe>
+    </a:keepMe>
+    <b:bravo>
+        This is an element in the bravo namespace
+    </b:bravo>
+    <c:charlie>
+        This is an element in the charlie namespace
+    </c:charlie>
+    <d:delta>
+        This is an element in the delta namespace
+    </d:delta>
+</a:rootElement>
