@@ -95,12 +95,6 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
         whitelisting = wl;
     }
     
-    /**
-     * Determine whether a particular namespace should be stripped.
-     * 
-     * @param namespace potentially stripped namespace
-     * @return <code>true</code> if this namespace should be stripped
-     */
     @Override
     protected boolean removingNamespace(final String namespace) {
         return whitelisting ^ namespaces.contains(namespace);
