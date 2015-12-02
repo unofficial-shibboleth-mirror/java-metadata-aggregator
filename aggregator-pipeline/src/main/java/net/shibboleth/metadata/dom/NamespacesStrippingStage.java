@@ -32,7 +32,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * The stage can operate either to blacklist (the default) or whitelist the collection of namespaces.
  * 
  * Elements, attributes and namespace prefix definitions associated with a given namespace will be removed
- * or retained depending on the {@link whitelisting} property.
+ * or retained depending on the {@link #whitelisting} property.
  * 
  * Attributes without an explicit namespace prefix will never be removed by this stage.
  */
