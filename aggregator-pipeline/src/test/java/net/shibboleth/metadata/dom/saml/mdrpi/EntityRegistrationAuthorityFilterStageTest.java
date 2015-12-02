@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.saml;
+package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,14 +23,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.w3c.dom.Element;
 
 /** Unit test for {@link EntityRegistrationAuthorityFilterStage}. */
 public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom.saml;
+package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,16 +25,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.xml.namespace.QName;
-
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.xml.AttributeSupport;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +33,16 @@ import org.w3c.dom.Element;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
+import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /** A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority. */
 @ThreadSafe
@@ -235,8 +235,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
      */
     protected boolean filterOutDescriptor(@Nonnull final Element descriptor) {
         Element registrationInfoElement =
-                SAMLMetadataSupport.getDescriptorExtensions(descriptor, new QName(SAMLMetadataSupport.RPI_NS,
-                        "RegistrationInfo"));
+                SAMLMetadataSupport.getDescriptorExtensions(descriptor, MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
         if (registrationInfoElement == null) {
             if (requiringRegistrationInformation) {
                 log.debug(

@@ -39,9 +39,6 @@ public final class SAMLMetadataSupport {
     /** Default SAML Metadata namespace prefix. */
     public static final String MD_PREFIX = "md";
 
-    /** SAML Registration and Publication Information namespace URI. */
-    public static final String RPI_NS = "urn:oasis:names:tc:SAML:metadata:rpi";
-
     /** EntitiesDescriptor element name. */
     public static final QName ENTITIES_DESCRIPTOR_NAME = new QName(MD_NS, "EntitiesDescriptor", MD_PREFIX);
 
