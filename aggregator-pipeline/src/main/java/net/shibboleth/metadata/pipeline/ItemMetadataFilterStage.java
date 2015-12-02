@@ -51,7 +51,7 @@ public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionSta
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
 
-        final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
+        final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
         log.debug("Item {} was removed because it was marked with {}", itemId, matchingMetadata.keySet());
 
         itemCollection.remove(matchingItem);

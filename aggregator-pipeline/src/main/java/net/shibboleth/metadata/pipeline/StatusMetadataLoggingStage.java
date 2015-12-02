@@ -54,7 +54,7 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
                         List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException {
 
-        final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
+        final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
 
         logInfos(itemId, matchingMetadata.get(InfoStatus.class));
         logWarnings(itemId, matchingMetadata.get(WarningStatus.class));

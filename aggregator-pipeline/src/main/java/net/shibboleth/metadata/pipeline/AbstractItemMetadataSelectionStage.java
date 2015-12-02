@@ -55,7 +55,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
     private Collection<Class<? extends ItemMetadata>> selectionRequirements = Collections.emptyList();
 
     /** Strategy used to generate item identifiers for logging purposes. */
-    private ItemIdentificationStrategy identifierStrategy = new FirstItemIdItemIdentificationStrategy();
+    private ItemIdentificationStrategy identificationStrategy = new FirstItemIdItemIdentificationStrategy();
 
     /**
      * Gets the {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
@@ -93,8 +93,8 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
      * 
      * @return strategy used to generate {@link Item} identifiers for logging purposes
      */
-    @Nonnull public ItemIdentificationStrategy getItemIdentifierStrategy() {
-        return identifierStrategy;
+    @Nonnull public ItemIdentificationStrategy getItemIdentificationStrategy() {
+        return identificationStrategy;
     }
 
     /**
@@ -102,11 +102,11 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
      * 
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
-    public synchronized void setIdentifierStrategy(@Nonnull final ItemIdentificationStrategy strategy) {
+    public synchronized void setIdentificationStrategy(@Nonnull final ItemIdentificationStrategy strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        identifierStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
+        identificationStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
     }
 
     /** {@inheritDoc} */
@@ -134,7 +134,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
     /** {@inheritDoc} */
     @Override protected void doDestroy() {
         selectionRequirements = null;
-        identifierStrategy = null;
+        identificationStrategy = null;
 
         super.doDestroy();
     }

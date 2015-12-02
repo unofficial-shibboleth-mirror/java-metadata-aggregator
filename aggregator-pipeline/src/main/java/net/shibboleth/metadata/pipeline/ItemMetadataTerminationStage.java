@@ -49,7 +49,7 @@ public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelecti
             Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws TerminationException {
 
-        final String itemId = getItemIdentifierStrategy().getItemIdentifier(matchingItem);
+        final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
         log.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
                 matchingMetadata.keySet());
 
