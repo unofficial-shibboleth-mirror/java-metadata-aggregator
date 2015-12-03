@@ -166,7 +166,8 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
             itemCollection.add(new DOMElementItem(parserPool.parse(data)));
         } catch (XMLParserException e) {
             if (errorCausesSourceFailure) {
-                throw new StageProcessingException("Unable to parse returned XML document", e);
+                throw new StageProcessingException(getId() + " unable to parse returned XML document " +
+                        domResource.getDescription(), e);
             } else {
                 log.warn("stage {}: unable to parse XML document", getId());
                 log.debug("stage {}: parsing exception", getId(), e);

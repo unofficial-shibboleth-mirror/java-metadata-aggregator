@@ -64,7 +64,8 @@ public class DOMResourceSourceTest {
         Resource mdResource = new UrlResource("http://www.google.com/intl/en/images/about_logo.gif");
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
-        source.setId("test");
+        final String stageIdentifier = "testStage";
+        source.setId(stageIdentifier);
         source.setDOMResource(mdResource);
         source.setParserPool(parserPool);
         source.initialize();
@@ -75,6 +76,11 @@ public class DOMResourceSourceTest {
             throw new ConstraintViolationException("Invalid URL marked as parsed");
         } catch (StageProcessingException e) {
             // expected this
+            final String message = e.getMessage();
+            Assert.assertTrue(message.contains(stageIdentifier), "message should contain stage identifier");
+            Assert.assertNotNull(e.getCause(), "exception should have cause");
+            Assert.assertTrue(message.contains(mdResource.getDescription()),
+                    "message should contain resource description");
         }
     }
 
