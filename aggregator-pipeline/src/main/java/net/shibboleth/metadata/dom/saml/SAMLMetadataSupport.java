@@ -95,25 +95,24 @@ public final class SAMLMetadataSupport {
     /**
      * Gets the first instance of an extension element for a given descriptor.
      * 
-     * @param descriptor the entity or entities descriptor, never null
-     * @param extensionName the name of the extension element, never null
+     * @param descriptor the descriptor, never <code>null</code>
+     * @param extensionName the name of the extension element, never <code>null</code>
      * 
-     * @return the first instance of the extension element or null if either argument is null, the given element is not
-     *         an EntitiesDescriptor or EntityDescriptor, or no such element exists as an extension of the descriptor
+     * @return the first instance of the extension element or <code>null</code> if either argument is null,
+     *          or no such element exists as an extension of the descriptor
      */
     public static Element getDescriptorExtensions(@Nullable final Element descriptor,
             @Nullable final QName extensionName) {
-        if (descriptor == null || extensionName == null
-                || (!isEntitiesDescriptor(descriptor) && !isEntityDescriptor(descriptor))) {
+        if (descriptor == null || extensionName == null) {
             return null;
         }
 
-        List<Element> extensions = ElementSupport.getChildElements(descriptor, EXTENSIONS_NAME);
+        final List<Element> extensions = ElementSupport.getChildElements(descriptor, EXTENSIONS_NAME);
         if (extensions.isEmpty()) {
             return null;
         }
 
-        List<Element> results = ElementSupport.getChildElements(extensions.get(0), extensionName);
+        final List<Element> results = ElementSupport.getChildElements(extensions.get(0), extensionName);
         if (results.isEmpty()) {
             return null;
         }
