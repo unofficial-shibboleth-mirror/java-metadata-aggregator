@@ -176,7 +176,9 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
     }
 
     /**
-     * Iterates over all child EntitiesDescriptors and EntityDescriptor to see if they should be removed. Also removed
+     * Iterates over all child EntitiesDescriptors and EntityDescriptors to see if they should be removed.
+     * 
+     * Also remove
      * EntitiesDescriptor that no longer contain EntityDescriptor descendants after filtering if
      * {@link #isRemovingEntitylessEntitiesDescriptor()}.
      * 
@@ -186,7 +188,6 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
      */
     protected boolean processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         Iterator<Element> descriptorItr;
-        Element descriptor;
 
         if (filterOutDescriptor(entitiesDescriptor)) {
             return true;
@@ -196,7 +197,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         descriptorItr = childEntitiesDescriptors.iterator();
         while (descriptorItr.hasNext()) {
-            descriptor = descriptorItr.next();
+            final Element descriptor = descriptorItr.next();
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
                 descriptorItr.remove();
@@ -207,7 +208,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         descriptorItr = childEntityDescriptors.iterator();
         while (descriptorItr.hasNext()) {
-            descriptor = descriptorItr.next();
+            final Element descriptor = descriptorItr.next();
             if (filterOutDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
                 descriptorItr.remove();
@@ -223,7 +224,9 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
     }
 
     /**
-     * Determines if a given should be filtered out. A descriptor is filtered out if registration information is
+     * Determines if a given EntityDescriptor or EntitiesDecriptor should be filtered out.
+     * 
+     * A descriptor is filtered out if registration information is
      * required by the descriptor does not have it, registration information is present but does not contain the
      * required authority attribute, registrars are being whitelisted and the descriptor's registration authority is not
      * in the whitelist, or registrars are being blacklisted and the descriptor's registration authority is in the
@@ -248,7 +251,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
             }
         }
 
-        String registrationAuthority =
+        final String registrationAuthority =
                 AttributeSupport.getAttributeValue(registrationInfoElement, null, "registrationAuthority");
         if (registrationAuthority == null) {
             log.debug(
