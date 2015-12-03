@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Manual test for destructors being called on components in the created Spring context.
+    
+    Run the MDA CLI in verbose mode with this configuration file and with MDA137Stage available in the classpath,
+    for example by copying the test jar into the library directory.
+    
+    Failure: you see something like this:
+    
+        MDA-137 initialized
+        Pipeline 'test' execution starting at Thu Dec 03 15:11:45 GMT 2015
+        Pipeline 'test' execution completed at Thu Dec 03 15:11:45 GMT 2015; run time 0.036 seconds
+    
+    Success: you see an additional line "MDA-137 destroyed" after the pipeline execution has completed.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    default-lazy-init="true"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <bean id="component_parent" abstract="true"
+        init-method="initialize" destroy-method="destroy"/>
+    
+    <bean id="stage_parent" abstract="true" parent="component_parent"/>
+    
+    <bean id="SimplePipeline" abstract="true" parent="component_parent"
+        class="net.shibboleth.metadata.pipeline.SimplePipeline"/>
+    
+    <bean id="test" p:id="test" parent="SimplePipeline">
+        <property name="stages">
+            <list>
+                <bean id="test" p:id="test" parent="stage_parent"
+                    class="net.shibboleth.metadata.cli.MDA137Stage"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

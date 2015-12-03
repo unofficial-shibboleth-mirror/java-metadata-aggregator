@@ -88,6 +88,10 @@ public final class SimpleCommandLine {
             String fileUri = new File(cli.getInputFile()).toURI().toString();
             log.debug("Initializing Spring context with configuration file {}", fileUri);
             appCtx = new FileSystemXmlApplicationContext(fileUri);
+            
+            // Register a shutdown hook for the context, so that beans will be
+            // correctly destroyed before the CLI exits.
+            appCtx.registerShutdownHook();
         } catch (BeansException e) {
             log.error("Unable to initialize Spring context", e);
             System.exit(RC_INIT);
