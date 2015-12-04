@@ -106,7 +106,7 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
     /**
      * A simple immutable implementation of {@link EntityAttributeContext}.
      */
-    static class SimpleEntityAttributeContext implements EntityAttributeContext {
+    static class ContextImpl implements EntityAttributeContext {
 
         /** The attribute's value. */
         @Nonnull
@@ -132,7 +132,7 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
          * @param attributeNameFormat attribute <code>NameFormat</code>
          * @param registrar entity's registration authority, or <code>null</code>
          */
-        public SimpleEntityAttributeContext(@Nonnull final String attributeValue,
+        public ContextImpl(@Nonnull final String attributeValue,
                 @Nonnull final String attributeName,
                 @Nonnull final String attributeNameFormat,
                 @Nullable final String registrar) {
@@ -149,7 +149,7 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
          * @param attributeName attribute <code>Name</code>
          * @param attributeNameFormat attribute <code>NameFormat</code>
          */
-        public SimpleEntityAttributeContext(@Nonnull final String attributeValue,
+        public ContextImpl(@Nonnull final String attributeValue,
                 @Nonnull final String attributeName,
                 @Nonnull final String attributeNameFormat) {
             this(attributeValue, attributeName, attributeNameFormat, null);
@@ -302,7 +302,7 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
 
             // Construct an entity attribute context to be matched against
             final EntityAttributeContext ctx =
-                    new SimpleEntityAttributeContext(attributeValue, attributeName,
+                    new ContextImpl(attributeValue, attributeName,
                             attributeNameFormat, registrationAuthority);            
             final boolean matched = applyRules(ctx);
             if (matched ^ whitelisting) {

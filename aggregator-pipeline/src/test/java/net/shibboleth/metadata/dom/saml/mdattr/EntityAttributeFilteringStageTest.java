@@ -7,9 +7,11 @@ import java.util.List;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthorityPopulationStage;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -171,6 +173,38 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
         final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("blacklist.xml");
         assertXMLIdentical(expected, result);
+    }
+
+    // Tests for ContextImpl inner class
+
+    @Test
+    public void contextImplFour() {
+        final EntityAttributeContext ctx = new ContextImpl("a", "b", "c", "d");
+        Assert.assertEquals(ctx.getValue(), "a");
+        Assert.assertEquals(ctx.getName(), "b");
+        Assert.assertEquals(ctx.getNameFormat(), "c");
+        Assert.assertEquals(ctx.getRegistrationAuthority(), "d");
+    }
+    
+    @Test
+    public void contextImplThree() {
+        final EntityAttributeContext ctx = new ContextImpl("a", "b", "c");
+        Assert.assertEquals(ctx.getValue(), "a");
+        Assert.assertEquals(ctx.getName(), "b");
+        Assert.assertEquals(ctx.getNameFormat(), "c");
+        Assert.assertNull(ctx.getRegistrationAuthority());
+    }
+
+    @Test
+    public void contextImplstringFour() {
+        final EntityAttributeContext ctx = new ContextImpl("a", "b", "c", "d");
+        Assert.assertEquals(ctx.toString(), "{v=a, n=b, f=c, r=d}");
+    }
+
+    @Test
+    public void contextImplstringThree() {
+        final EntityAttributeContext ctx = new ContextImpl("a", "b", "c");
+        Assert.assertEquals(ctx.toString(), "{v=a, n=b, f=c, r=(none)}");
     }
 
 }

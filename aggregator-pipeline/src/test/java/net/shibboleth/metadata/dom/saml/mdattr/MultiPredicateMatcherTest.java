@@ -8,12 +8,12 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
-import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.SimpleEntityAttributeContext;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
 
 public class MultiPredicateMatcherTest {
 
     private final EntityAttributeContext context =
-            new SimpleEntityAttributeContext("valuevalue", "namename", "fmtfmt", "regreg");
+            new ContextImpl("valuevalue", "namename", "fmtfmt", "regreg");
 
     @Test
     public void testNothing() {
