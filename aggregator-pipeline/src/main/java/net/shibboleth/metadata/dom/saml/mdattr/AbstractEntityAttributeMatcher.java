@@ -23,6 +23,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.base.Predicate;
 
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
+
 /**
  * Abstract implementation of {@link Predicate} over {@link EntityAttributeContext} using
  * the template method pattern. The {@link #apply} method is broken down into matches

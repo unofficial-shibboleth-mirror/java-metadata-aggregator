@@ -23,6 +23,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.base.Predicate;
 
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
+
 /**
  * An entity attribute matcher which matches a given registration authority.
  * 

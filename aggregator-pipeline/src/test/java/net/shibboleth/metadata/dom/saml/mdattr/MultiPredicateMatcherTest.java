@@ -7,6 +7,9 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.SimpleEntityAttributeContext;
+
 public class MultiPredicateMatcherTest {
 
     private final EntityAttributeContext context =

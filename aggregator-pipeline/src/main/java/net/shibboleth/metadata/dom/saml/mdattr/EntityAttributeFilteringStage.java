@@ -61,6 +61,138 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
     private final Logger log = LoggerFactory.getLogger(EntityAttributeFilteringStage.class);
 
     /**
+     * An entity attribute context against which matches can take place. It consists
+     * of the attribute's value, <code>Name</code> and <code>NameFormat</code> attributes,
+     * and the entity's <code>registrationAuthority</code>, if any.
+     * 
+     * A matcher is a {@link Predicate} over such a context.
+     */
+    public interface EntityAttributeContext {
+
+        /**
+         * Returns the registration authority component, or <code>null</code>.
+         * 
+         * @return the registration authority, or <code>null</code>
+         */
+        @Nullable
+        String getRegistrationAuthority();
+        
+        /**
+         * Returns the attribute's <code>NameFormat</code>.
+         * 
+         * @return the attribute's <code>NameFormat</code>.
+         */
+        @Nonnull
+        String getNameFormat();
+        
+        /**
+         * Returns the attribute's <code>Name</code>.
+         * 
+         * @return the attribute's <code>Name</code>
+         */
+        @Nonnull
+        String getName();
+        
+        /**
+         * Returns the attribute's value.
+         * 
+         * @return the attribute's value
+         */
+        @Nonnull
+        String getValue();
+        
+    }
+
+    /**
+     * A simple immutable implementation of {@link EntityAttributeContext}.
+     */
+    static class SimpleEntityAttributeContext implements EntityAttributeContext {
+
+        /** The attribute's value. */
+        @Nonnull
+        private final String value;
+        
+        /** The attribute's <code>Name</code>. */
+        @Nonnull
+        private final String name;
+        
+        /** The attribute's <code>NameFormat</code>. */
+        @Nonnull
+        private final String nameFormat;
+        
+        /** The entity's registration authority, or <code>null</code>. */
+        @Nullable
+        private final String registrationAuthority;
+        
+        /**
+         * Constructor.
+         * 
+         * @param attributeValue attribute value
+         * @param attributeName attribute <code>Name</code>
+         * @param attributeNameFormat attribute <code>NameFormat</code>
+         * @param registrar entity's registration authority, or <code>null</code>
+         */
+        public SimpleEntityAttributeContext(@Nonnull final String attributeValue,
+                @Nonnull final String attributeName,
+                @Nonnull final String attributeNameFormat,
+                @Nullable final String registrar) {
+            value = Constraint.isNotNull(attributeValue, "value may not be null");
+            name = Constraint.isNotNull(attributeName, "name may not be null");
+            nameFormat = Constraint.isNotNull(attributeNameFormat, "name format may not be null");
+            registrationAuthority = registrar;
+        }
+        
+        /**
+         * Shorthand three-argument constructor.
+         * 
+         * @param attributeValue attribute value
+         * @param attributeName attribute <code>Name</code>
+         * @param attributeNameFormat attribute <code>NameFormat</code>
+         */
+        public SimpleEntityAttributeContext(@Nonnull final String attributeValue,
+                @Nonnull final String attributeName,
+                @Nonnull final String attributeNameFormat) {
+            this(attributeValue, attributeName, attributeNameFormat, null);
+        }    
+
+        @Override
+        public String getRegistrationAuthority() {
+            return registrationAuthority;
+        }
+
+        @Override
+        public String getNameFormat() {
+            return nameFormat;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder b = new StringBuilder();
+            b.append("{v=").append(getValue());
+            b.append(", n=").append(getName());
+            b.append(", f=").append(getNameFormat());
+            b.append(", r=");
+            if (getRegistrationAuthority() == null) {
+                b.append("(none)");
+            } else {
+                b.append(getRegistrationAuthority());
+            }
+            b.append('}');
+            return b.toString();
+        }
+    }
+
+    /**
      * List of matching rules to apply to each attribute value. The list is applied in
      * order, with the first rule returning <code>true</code> terminating the evaluation.
      * This amounts to an implicit ORing of the individual rules, with early

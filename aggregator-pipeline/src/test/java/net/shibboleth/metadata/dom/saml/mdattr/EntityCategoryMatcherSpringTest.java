@@ -8,6 +8,9 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.SimpleEntityAttributeContext;
+
 /**
  * This is the same as {@link EntityCategoryMatcherTest}, but pulls the matcher beans
  * from a configured application context. This is just to make sure that Spring can

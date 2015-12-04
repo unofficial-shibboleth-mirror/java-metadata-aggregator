@@ -5,6 +5,9 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.SimpleEntityAttributeContext;
+
 public class SimpleEntityAttributeContextTest {
 
     @Test

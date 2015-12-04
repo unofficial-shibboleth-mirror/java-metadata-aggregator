@@ -6,6 +6,9 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.SimpleEntityAttributeContext;
+
 public class RegistrationAuthorityMatcherTest {
 
     private void test(final boolean expected, final Predicate<EntityAttributeContext> matcher,

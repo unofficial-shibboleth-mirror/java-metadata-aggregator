@@ -7,6 +7,7 @@ import java.util.List;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthorityPopulationStage;
 
 import org.testng.annotations.Test;
