@@ -1,0 +1,30 @@
+# After these initial comments, each line must consist of the lower-case key
+# modulus checksum:
+#   openssl rsa -noout -modulus -in /tmp/key.pem | sha1sum | cut -d ' ' -f 1)
+# with the first 20 characters removed (that is, the lower 80 bits of the
+# fingerprint). Unless these rules are followed, the blacklist will not work
+# properly. See openssl-vulnkey(1).
+#
+# This is a VERY PARTIAL blacklist for unit test purposes. The only functional
+# line in this is the one for "3c430072d96e4a1e1809".
+#
+00005890bc78bcbee3ca
+00005c9c49fd31e889a3
+0000d80c186767f2473a
+# blank line follows
+
+3c3fbae22fb5042dae07
+3c40449f0aaee9f5eb7b
+3c40bdd31f303df8e1c8
+3c416e5fca4e7df4d8d9
+3c41ac4bc8747130838c
+3c420cf47b3e8f665abf
+3c4238ffe4c068746c7a
+3c42db7c1fca6f51a7b2
+3c430072d96e4a1e1809
+3c432fd43c320b2a5b77
+3c435501b066f7cccafb
+3c4367280d2d0643af64
+3c43989c6111ff32453e
+3c43dc57da6198ec8173
+3c43e49d2832a4ac2742
