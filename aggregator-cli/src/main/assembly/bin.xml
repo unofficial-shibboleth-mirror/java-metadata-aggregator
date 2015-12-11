@@ -10,7 +10,7 @@
     
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/lib</outputDirectory>
+            <outputDirectory>lib</outputDirectory>
             <directoryMode>774</directoryMode>
             <fileMode>444</fileMode>
             <scope>runtime</scope>
@@ -22,7 +22,7 @@
     
     <fileSets>
         <fileSet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory/>
             <directory>${project.basedir}/src/script/bash</directory>
             <fileMode>700</fileMode>
             <includes>
@@ -30,7 +30,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory/>
             <directory>${project.basedir}/src/script/bat</directory>
             <fileMode>700</fileMode>
             <includes>
@@ -41,7 +41,7 @@
         <!-- Documentation pulled from parent project. -->
         <fileSet>
             <directory>${project.basedir}/../aggregator-parent/doc/</directory>
-            <outputDirectory>/doc</outputDirectory>
+            <outputDirectory>doc</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

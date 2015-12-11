@@ -9,13 +9,13 @@
     <dependencySets>
         <dependencySet>
             <scope>provided</scope>
-            <outputDirectory>/war</outputDirectory>
+            <outputDirectory>war</outputDirectory>
             <includes>
                 <include>*:war:*</include>
             </includes>
         </dependencySet>
         <dependencySet>
-        <outputDirectory>/installer/lib</outputDirectory>
+        <outputDirectory>installer/lib</outputDirectory>
             <scope>provided</scope>
             <includes>
                 <include>org.apache.ant:*</include>
@@ -26,22 +26,22 @@
 	<fileSets>
 		<fileSet>
 			<directory>target/jetty-distribution-7.2.1.v20101111</directory>
-			<outputDirectory>/jetty</outputDirectory>
+			<outputDirectory>jetty</outputDirectory>
 		</fileSet>
         <fileSet>
             <directory>src/jetty</directory>
-            <outputDirectory>/jetty</outputDirectory>
+            <outputDirectory>jetty</outputDirectory>
             <includes>
                 <include>start.ini</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>src/jetty/contexts</directory>
-            <outputDirectory>/jetty/contexts</outputDirectory>
+            <outputDirectory>jetty/contexts</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>src/jetty/etc</directory>
-            <outputDirectory>/jetty/etc</outputDirectory>
+            <outputDirectory>jetty/etc</outputDirectory>
         </fileSet>
 	</fileSets>
 
