@@ -12,7 +12,7 @@
 
     <name>Shibboleth Metadata Aggregator</name>
     <description>
-        A framework for processing metadata, with an emphasis on SAML metadata.
+        A framework and tool for processing metadata, with an emphasis on SAML metadata.
         
         For more information, including how to install and configure the command-line tool,
         see https://wiki.shibboleth.net/confluence/display/MA1/Home
