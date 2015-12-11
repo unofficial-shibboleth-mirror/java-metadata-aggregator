@@ -91,7 +91,7 @@ public abstract class AbstractCompositeItemIdentificationStrategy implements Ite
         
         final String extra = getExtraIdentifier(item);
         if (extra != null) {
-            res.append("( ");
+            res.append(" (");
             res.append(extra);
             res.append(")");
         }
