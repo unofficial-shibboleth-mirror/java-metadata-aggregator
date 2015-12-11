@@ -20,48 +20,27 @@ package net.shibboleth.metadata;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import javax.annotation.Nullable;
 
 /**
  * Strategy that returns the first {@link ItemId} associated with an {@link Item} or, if no {@link ItemId} is
  * associated with the item, a generic identifier is returned.
  */
-public class FirstItemIdItemIdentificationStrategy implements ItemIdentificationStrategy {
+public class FirstItemIdItemIdentificationStrategy extends AbstractCompositeItemIdentificationStrategy {
 
-    /** Identifier to use if an {@link Item} does not have an {@link ItemId}. Default value: "unidentified" */
-    private String noItemIdIdentifier = "unidentified";
-
-    /**
-     * Gets the identifier to use if an {@link Item} does not have an {@link ItemId}.
-     * 
-     * @return identifier to use if an {@link Item} does not have an {@link ItemId}
-     */
-    public String getNoItemIdIdentifier() {
-        return noItemIdIdentifier;
-    }
-
-    /**
-     * Sets the identifier to use if an {@link Item} does not have an {@link ItemId}.
-     * 
-     * @param identifier identifier to use if an {@link Item} does not have an {@link ItemId}
-     */
-    public void setNoItemIdIdentifier(@Nonnull @NotEmpty final String identifier) {
-        noItemIdIdentifier =
-                Constraint.isNotNull(StringSupport.trimOrNull(identifier), "Identifier can not be null or empty");
-    }
-
-    /** {@inheritDoc} */
-    @Override @Nonnull public String getItemIdentifier(@Nonnull final Item<?> item) {
-        Constraint.isNotNull(item, "Item can not equal null");
-        
-        List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
-        if (itemIds != null && !itemIds.isEmpty()) {
+    @Override
+    @Nullable protected String getBasicIdentifier(@Nonnull final Item<?> item) {
+        final List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
+        if (!itemIds.isEmpty()) {
             return itemIds.get(0).getId();
         } else {
-            return noItemIdIdentifier;
+            return null;
         }
     }
+
+    @Override
+    @Nullable protected String getExtraIdentifier(@Nonnull final Item<?> item) {
+        return null;
+    }
+
 }
