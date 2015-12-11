@@ -12,9 +12,10 @@
 
     <name>Shibboleth Metadata Aggregator</name>
     <description>
-        A tool for reading in, transforming, and outputting SAML metadata.
+        A framework for processing metadata, with an emphasis on SAML metadata.
         
-        For more information, including how to install and configure the IdP, see https://wiki.shibboleth.net/confluence/display/MA1/Home
+        For more information, including how to install and configure the command-line tool,
+        see https://wiki.shibboleth.net/confluence/display/MA1/Home
     </description>
     
     
