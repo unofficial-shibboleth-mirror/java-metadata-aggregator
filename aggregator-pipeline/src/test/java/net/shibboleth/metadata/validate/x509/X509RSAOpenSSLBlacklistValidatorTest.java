@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.validate.Validator;
 
 public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest {
     
@@ -26,7 +27,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("ok.pem");
-        val.validate(cert, item, "stage");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
     }
 
@@ -39,7 +40,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("1024.pem");
-        val.validate(cert, item, "stage");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 1, 0);
     }
 
@@ -52,7 +53,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("1024.pem");
-        val.validate(cert, item, "stage");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 1, 0);
     }
 
@@ -65,7 +66,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("1024.pem");
-        val.validate(cert, item, "stage");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
     }
 
@@ -79,7 +80,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("2048.pem");
         val.validate(cert, item, "stage");
-        errorsAndWarnings(item, 0, 0);
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
     }
 
     @Test
@@ -92,7 +93,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("2048.pem");
         val.validate(cert, item, "stage");
-        errorsAndWarnings(item, 1, 0);
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
     }
 
     @Test
@@ -105,7 +106,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("2048.pem");
         val.validate(cert, item, "stage");
-        errorsAndWarnings(item, 1, 0);
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
     }
 
     @Test
@@ -117,7 +118,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("2048.pem");
-        val.validate(cert, item, "stage");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
     }
 
@@ -137,7 +138,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         
         final Item<String> item = new MockItem("foo");
         final X509Certificate cert = getCertificate("2048.pem");
-        val.validate(cert, item, "stage");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 1, 0);
     }
     

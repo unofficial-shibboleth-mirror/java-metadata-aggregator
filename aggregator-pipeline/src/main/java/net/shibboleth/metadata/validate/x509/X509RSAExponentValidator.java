@@ -94,7 +94,7 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
     }
     
     @Override
-    public void validate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
+    public void doValidate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
         final PublicKey key = cert.getPublicKey();
         if ("RSA".equals(key.getAlgorithm())) {

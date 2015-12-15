@@ -18,8 +18,13 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
+import java.util.List;
 
 import net.shibboleth.metadata.BaseTest;
+import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -74,7 +79,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @return the document root of the data file, never null
      * 
-     * @throws XMLParserException thrown if the file does not exists or there is a problem parsing it
+     * @throws XMLParserException thrown if the file does not exist or there is a problem parsing it
      */
     public Element readXMLData(final String path) throws XMLParserException {
         String trimmedPath = StringSupport.trimOrNull(path);
@@ -93,6 +98,20 @@ public abstract class BaseDOMTest extends BaseTest {
     }
 
     /**
+     * Reads in an XML file and returns it as a new {@link DOMElementItem}.
+     * 
+     * @param path classpath path to the data file, never null
+     * 
+     * @return an {@link Item} wrapping the document representing the data file, never null
+     * 
+     * @throws XMLParserExceptionthrown if the file does not exist or there is a problem parsing it
+     */
+    public Item<Element> readDOMItem(final String path) throws XMLParserException {
+        final Element e = readXMLData(path);
+        return new DOMElementItem(e);
+    }
+
+    /**
      * Checks whether two nodes are identical based on {@link Diff#identical()}.
      * 
      * @param expected the expected node against which the actual node will be tested, never null
@@ -106,6 +125,12 @@ public abstract class BaseDOMTest extends BaseTest {
         if (!diff.identical()) {
             org.testng.Assert.fail(diff.toString());
         }
+    }
+    
+    protected int countErrors(final Item<Element> item) {
+        final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
+        final List<ErrorStatus> errors = metadata.get(ErrorStatus.class);
+        return errors.size();
     }
     
 }

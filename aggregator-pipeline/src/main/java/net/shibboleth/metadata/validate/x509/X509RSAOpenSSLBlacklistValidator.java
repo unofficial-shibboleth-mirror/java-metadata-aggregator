@@ -165,7 +165,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
     
     /** {@inheritDoc} */
     @Override
-    public void validate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
+    public void doValidate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) throws StageProcessingException {
         ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
         final PublicKey key = cert.getPublicKey();

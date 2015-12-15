@@ -73,8 +73,11 @@ public abstract class AbstractDOMValidationStage<V> extends AbstractDOMTraversal
      */
     protected void applyValidators(@Nonnull final V obj, @Nonnull final TraversalContext context)
             throws StageProcessingException {
-        for (Validator<V> validator: validators) {
-            validator.validate(obj, context.getItem(), getId());
+        for (final Validator<V> validator: validators) {
+            final Validator.Action action = validator.validate(obj, context.getItem(), getId());
+            if (action == Validator.Action.DONE) {
+                return;
+            }
         }
     }
     
