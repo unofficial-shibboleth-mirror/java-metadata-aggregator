@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foo>
+    top level text
+    <bar a="ok">
+        second level text
+        <baz a="&#13;">more stuff here</baz>
+        more text
+    </bar>
+</foo>

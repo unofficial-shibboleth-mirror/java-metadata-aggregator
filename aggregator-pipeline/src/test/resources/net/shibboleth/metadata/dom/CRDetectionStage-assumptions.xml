@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>text&#13;text<foo fop="x&#13;y">bar</foo>zap</root>
