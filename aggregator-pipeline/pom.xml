@@ -12,6 +12,7 @@
     </parent>
 
     <name>Shibboleth Metadata Aggregator :: Processing Pipeline</name>
+    <description>Processing Pipeline</description>
     <artifactId>aggregator-pipeline</artifactId>
     <packaging>jar</packaging>
 
@@ -104,5 +105,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <url>dav:${aggregator-module.site.url}</url>
+        </site>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:https://git.shibboleth.net/git/java-metadata-aggregator</connection>
+        <developerConnection>scm:git:git@git.shibboleth.net:java-metadata-aggregator</developerConnection>
+        <url>https://git.shibboleth.net/view/?p=java-metadata-aggregator.git</url>
+    </scm>
 
 </project>
