@@ -26,7 +26,7 @@ import com.google.common.net.UrlEscapers;
  * A {@link Function} that transforms a {@link String} such that it can be used
  * as a path segment in a URL.
  * 
- * Note that this is emphatically <i>not</u> the same as {@link java.net.URLEncoder},
+ * Note that this is emphatically <i>not</i> the same as {@link java.net.URLEncoder},
  * which is intended for the query parameter use case.
  */
 public class PathSegmentStringTransformer implements Function<String, String> {
