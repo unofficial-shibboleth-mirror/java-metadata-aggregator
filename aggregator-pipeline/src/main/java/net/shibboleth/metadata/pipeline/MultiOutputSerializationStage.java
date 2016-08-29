@@ -52,10 +52,10 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class MultiOutputSerializationStage<T> extends BaseStage<T> {
 
     /**
-     * Interface implemented by destination objects created by a {@link Strategy}.
+     * Interface implemented by destination objects created by an {@link OutputStrategy}.
      * 
-     * The {@Destination} must be closed after the associated {@OutputStream}. This
-     * extra level of processing allows the {@Destination} to perform other tasks
+     * The {@link Destination} must be closed after the associated {@link OutputStream}. This
+     * extra level of processing allows the {@link Destination} to perform other tasks
      * after the stream is closed without having to subclass or proxy the stream
      * class.
      */
