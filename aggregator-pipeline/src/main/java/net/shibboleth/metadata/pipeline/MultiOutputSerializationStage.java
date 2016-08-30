@@ -166,7 +166,7 @@ public class MultiOutputSerializationStage<T> extends BaseStage<T> {
         super.doInitialize();
 
         if (outputStrategy == null) {
-            throw new ComponentInitializationException("Output file can not be null");
+            throw new ComponentInitializationException("Output strategy can not be null");
         }
 
         if (serializer == null) {
