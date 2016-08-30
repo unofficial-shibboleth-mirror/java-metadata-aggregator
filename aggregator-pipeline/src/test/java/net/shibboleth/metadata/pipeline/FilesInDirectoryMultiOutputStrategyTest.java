@@ -38,7 +38,7 @@ public class FilesInDirectoryMultiOutputStrategyTest {
         final FilesInDirectoryMultiOutputStrategy<String> strategy = new FilesInDirectoryMultiOutputStrategy<>();
         strategy.setDirectory(tempDir);
         strategy.setNamePrefix("pre");
-        strategy.setNameTransform(new Function<String, String>() {
+        strategy.setNameTransformer(new Function<String, String>() {
             @Override
             public String apply(String input) {
                 return input + input;
