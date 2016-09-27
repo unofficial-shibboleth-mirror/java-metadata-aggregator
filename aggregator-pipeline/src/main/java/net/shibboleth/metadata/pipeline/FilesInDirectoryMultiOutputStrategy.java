@@ -51,6 +51,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * <li>each item's {@link ItemId} transformed by an optional {@link Function},
  * <li>an optional suffix string.
  * </ul>
+ * 
+ * @param <T> the type of {@link Item} to operate on
  */
 public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializableComponent
     implements MultiOutputSerializationStage.OutputStrategy<T> {
@@ -58,10 +60,19 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(FilesInDirectoryMultiOutputStrategy.class);
 
+    /**
+     * Class implementing the returned {@link MultiOutputSerializationStage.Destination} objects.
+     */
     private class FileDestination implements MultiOutputSerializationStage.Destination {
 
+        /** The destination {@link File}. */
         private final File file;
 
+        /**
+         * Constructor.
+         *
+         * @param f the destination {@link File}
+         */
         protected FileDestination(@Nonnull final File f) {
             file = f;
         }
@@ -89,76 +100,92 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
     @NonnullAfterInit private File directory;
 
     /**
-     * @return Returns the namePrefix.
+     * Gets the name prefix in use.
+     * 
+     * @return the name prefix in use
      */
     @Nonnull public String getNamePrefix() {
         return namePrefix;
     }
 
     /**
-     * @param namePrefix The namePrefix to set.
+     * Sets the name prefix to use.
+     * 
+     * @param prefix the name prefix to use
      */
-    public void setNamePrefix(@Nonnull final String namePrefix) {
+    public void setNamePrefix(@Nonnull final String prefix) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        this.namePrefix = Constraint.isNotNull(namePrefix, "name prefix may not be null");
+        namePrefix = Constraint.isNotNull(prefix, "name prefix may not be null");
     }
 
     /**
-     * @return Returns the nameTransformer.
+     * Gets the name transformer in use.
+     * 
+     * @return the name transformer in use.
      */
     @Nonnull public Function<String, String> getNameTransformer() {
         return nameTransformer;
     }
 
     /**
-     * @param nameTransformer The nameTransformer to set.
+     * Sets the name transformer to use.
+     * 
+     * @param transformer the name transformer to use
      */
-    public void setNameTransformer(@Nonnull final Function<String, String> nameTransformer) {
+    public void setNameTransformer(@Nonnull final Function<String, String> transformer) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        this.nameTransformer = Constraint.isNotNull(nameTransformer,
+        nameTransformer = Constraint.isNotNull(transformer,
                 "name transformer may not be null");
     }
 
     /**
-     * @return Returns the nameSuffix.
+     * Gets the name suffix in use.
+     * 
+     * @return the name suffix in use
      */
     @Nonnull public String getNameSuffix() {
         return nameSuffix;
     }
 
     /**
-     * @param nameSuffix The nameSuffix to set.
+     * Sets the name suffix to use.
+     * 
+     * @param suffix the name suffix to use
      */
-    public void setNameSuffix(@Nonnull final String nameSuffix) {
+    public void setNameSuffix(@Nonnull final String suffix) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        this.nameSuffix = Constraint.isNotNull(nameSuffix, "name suffix may not be null");
+        nameSuffix = Constraint.isNotNull(suffix, "name suffix may not be null");
     }
 
     /**
-     * @return Returns the directory.
+     * Gets the directory in use.
+     * 
+     * @return the directory in use
      */
     @Nonnull public File getDirectory() {
         return directory;
     }
 
     /**
-     * @param directory The directory to set.
+     * Sets the directory to use.
+     * 
+     * @param dir the directory to use
      */
-    public void setDirectory(@Nonnull final File directory) {
+    public void setDirectory(@Nonnull final File dir) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        this.directory = Constraint.isNotNull(directory, "directory may not be null");
+        directory = Constraint.isNotNull(dir, "directory may not be null");
     }
 
     @Override
-    public Destination getDestination(Item<T> item) throws StageProcessingException {
+    public Destination getDestination(final Item<T> item) throws StageProcessingException {
         // Locate the item's identifier.
         final List<ItemId> ids = item.getItemMetadata().get(ItemId.class);
         if (ids.isEmpty()) {
