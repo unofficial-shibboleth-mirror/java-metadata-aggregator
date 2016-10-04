@@ -36,7 +36,11 @@ import org.springframework.beans.factory.FactoryBean;
  * Spring bean factory for extracting a {@link PrivateKey} from a PKCS#11 keystore.
  * 
  * This relies on the SunPKCS11 provider.
+ * 
+ * @deprecated this class will be removed in V0.10.0, replaced by an identical class
+ *    in the spring-extensions project
  */
+@Deprecated
 public class PKCS11PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
 
     /** The class name for the PKCS#11 provider class. */
