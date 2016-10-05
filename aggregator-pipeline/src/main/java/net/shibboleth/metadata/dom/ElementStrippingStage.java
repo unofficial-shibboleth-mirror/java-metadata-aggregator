@@ -97,12 +97,12 @@ public class ElementStrippingStage extends BaseStage<Element> {
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
-        for (Item<Element> item : items) {
+        for (final Item<Element> item : items) {
             final Element docElement = item.unwrap();
 
             // List all the matching descendant elements in this document in document order
             // Note that this list will never include the document element itself
-            NodeList nodeList = docElement.getElementsByTagNameNS(elementNamespace, elementName);
+            final NodeList nodeList = docElement.getElementsByTagNameNS(elementNamespace, elementName);
 
             // Copy these into a list, because a NodeList can change length at any time
             final int nNodes = nodeList.getLength();
@@ -112,7 +112,7 @@ public class ElementStrippingStage extends BaseStage<Element> {
             }
             
             // Remove the elements from the document
-            for (Element element : elements) {
+            for (final Element element : elements) {
                 element.getParentNode().removeChild(element);
             }
         }

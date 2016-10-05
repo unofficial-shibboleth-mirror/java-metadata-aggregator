@@ -42,14 +42,14 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
         List<ItemId> itemIds;
         final HashSet<ItemId> presentItemIds = new HashSet<>();
 
-        for (Item<T> item : target) {
+        for (final Item<T> item : target) {
             itemIds = item.getItemMetadata().get(ItemId.class);
             if (itemIds != null) {
                 presentItemIds.addAll(itemIds);
             }
         }
 
-        for (Collection<Item<T>> source : sources) {
+        for (final Collection<Item<T>> source : sources) {
             merge(presentItemIds, target, source);
         }
     }
@@ -69,7 +69,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
             @Nonnull @NonnullElements final Collection<Item<T>> sourceItems) {
         boolean itemAlreadyPresent;
         List<ItemId> itemIds;
-        for (Item<T> sourceItem : sourceItems) {
+        for (final Item<T> sourceItem : sourceItems) {
             itemIds = sourceItem.getItemMetadata().get(ItemId.class);
             if (itemIds == null || itemIds.isEmpty()) {
                 target.add(sourceItem);
@@ -77,7 +77,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
             }
 
             itemAlreadyPresent = false;
-            for (ItemId itemId : itemIds) {
+            for (final ItemId itemId : itemIds) {
                 if (presentItemIds.contains(itemId)) {
                     itemAlreadyPresent = true;
                     break;

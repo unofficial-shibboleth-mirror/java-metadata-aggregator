@@ -41,12 +41,12 @@ public final class ItemMetadataSupport {
      *            collection
      */
     public static void addToAll(@Nullable final Collection<? extends Item<?>> itemCollection,
-            @Nullable @NullableElements Iterable<? extends ItemMetadata> metadatas) {
+            @Nullable @NullableElements final Iterable<? extends ItemMetadata> metadatas) {
         if (itemCollection == null || metadatas == null) {
             return;
         }
 
-        for (Item<?> item : itemCollection) {
+        for (final Item<?> item : itemCollection) {
             addAll(item, metadatas);
         }
     }
@@ -63,7 +63,7 @@ public final class ItemMetadataSupport {
             return;
         }
 
-        for (ItemMetadata metadata : metadatas) {
+        for (final ItemMetadata metadata : metadatas) {
             if (metadata != null) {
                 item.getItemMetadata().put(metadata);
             }
@@ -87,8 +87,8 @@ public final class ItemMetadataSupport {
             return;
         }
 
-        ItemCollectionWithMetadata<T> collection = (ItemCollectionWithMetadata<T>) itemCollection;
-        for (ItemMetadata metadata : itemMetadatas) {
+        final ItemCollectionWithMetadata<T> collection = (ItemCollectionWithMetadata<T>) itemCollection;
+        for (final ItemMetadata metadata : itemMetadatas) {
             if (metadata != null) {
                 collection.getCollectionMetadata().put(metadata);
             }

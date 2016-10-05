@@ -135,14 +135,14 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
             final char[] encodedModulus = Hex.encodeHex(modulusBytes,  false);
             
             // Now construct the thing we want to hash
-            ByteArrayOutputStream bb = new ByteArrayOutputStream();
+            final ByteArrayOutputStream bb = new ByteArrayOutputStream();
             try {
                 bb.write(openSSLprefix);
-                for (char c : encodedModulus) {
+                for (final char c : encodedModulus) {
                     bb.write((byte) c);
                 }
                 bb.write('\n');
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new StageProcessingException("internal error writing to ByteArrayStream", e);
             }
             //System.out.println("To be digested: " + bb.toString());
@@ -153,12 +153,12 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
             final byte[] bytes = digest.digest();
             
             // Convert the digest to a lower-case hex string
-            char [] encodedDigest = Hex.encodeHex(bytes, true);
+            final char [] encodedDigest = Hex.encodeHex(bytes, true);
             final String strValue = String.valueOf(encodedDigest);
             final String trimmed = strValue.substring(20);
             //System.out.println("Digest: " + strValue + " trimmed " + trimmed);
             return trimmed;
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new StageProcessingException("could not create message digester", e);
         }
     }
@@ -224,7 +224,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
                     blacklistedValues.add(line);
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", error reading blacklistResource " + blacklistResource.getDescription() + " information", e);
         }

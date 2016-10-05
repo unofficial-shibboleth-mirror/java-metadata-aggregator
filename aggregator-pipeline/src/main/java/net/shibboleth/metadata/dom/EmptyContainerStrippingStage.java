@@ -101,14 +101,14 @@ public class EmptyContainerStrippingStage extends BaseStage<Element> {
      * @return true if and only if the Element has child elements.
      */
     private boolean hasChildElements(@Nonnull final Element element) {
-        Node firstChild = ElementSupport.getFirstChildElement(Constraint.isNotNull(element, "Element can not be null"));
+        final Node firstChild = ElementSupport.getFirstChildElement(Constraint.isNotNull(element, "Element can not be null"));
         return firstChild != null;
     }
     
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
-        for (Item<Element> item : items) {
+        for (final Item<Element> item : items) {
             final Element element = item.unwrap();
             
             // List all the relevant elements in this document in document order

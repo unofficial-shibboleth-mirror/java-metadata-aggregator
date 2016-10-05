@@ -97,8 +97,8 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<Element> {
 
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        Element descriptor = item.unwrap();
-        Long cacheDuration = getShortestCacheDuration(descriptor);
+        final Element descriptor = item.unwrap();
+        final Long cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);
         return true;
     }
@@ -118,25 +118,25 @@ public class PullUpCacheDurationStage extends BaseIteratingStage<Element> {
         }
 
         Long cacheDuration = null;
-        List<Element> entitiesDescriptors =
+        final List<Element> entitiesDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
-        for (Element entitiesDescriptor : entitiesDescriptors) {
+        for (final Element entitiesDescriptor : entitiesDescriptors) {
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
                 shortestCacheDuration = cacheDuration;
             }
         }
 
-        List<Element> entityDescriptors =
+        final List<Element> entityDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
-        for (Element entityDescriptor : entityDescriptors) {
+        for (final Element entityDescriptor : entityDescriptors) {
             cacheDuration = getShortestCacheDuration(entityDescriptor);
             if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
                 shortestCacheDuration = cacheDuration;
             }
         }
 
-        Attr cacheDurationAttr =
+        final Attr cacheDurationAttr =
                 AttributeSupport.getAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         if (cacheDurationAttr != null) {
             cacheDuration = AttributeSupport.getDurationAttributeValueAsLong(cacheDurationAttr);

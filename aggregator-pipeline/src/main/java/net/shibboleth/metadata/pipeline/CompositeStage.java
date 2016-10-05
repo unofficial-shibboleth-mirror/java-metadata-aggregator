@@ -63,9 +63,9 @@ public class CompositeStage<T> extends BaseStage<T> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        ArrayList<Stage<T>> newStages = new ArrayList<>();
+        final ArrayList<Stage<T>> newStages = new ArrayList<>();
         if (stages != null) {
-            for (Stage<T> stage : stages) {
+            for (final Stage<T> stage : stages) {
                 if (stage != null) {
                     newStages.add(stage);
                 }
@@ -79,7 +79,7 @@ public class CompositeStage<T> extends BaseStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        for (Stage<T> stage : composedStages) {
+        for (final Stage<T> stage : composedStages) {
             stage.execute(itemCollection);
         }
     }

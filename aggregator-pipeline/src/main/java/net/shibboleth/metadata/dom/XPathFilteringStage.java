@@ -116,16 +116,16 @@ public class XPathFilteringStage extends BaseStage<Element> {
 
     /** {@inheritDoc} */
     @Override public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection) {
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
+        final XPathFactory factory = XPathFactory.newInstance();
+        final XPath xpath = factory.newXPath();
         if (namespaceContext != null) {
             xpath.setNamespaceContext(namespaceContext);
         }
 
-        XPathExpression compiledExpression;
+        final XPathExpression compiledExpression;
         try {
             compiledExpression = xpath.compile(xpathExpression);
-        } catch (XPathExpressionException e) {
+        } catch (final XPathExpressionException e) {
             log.error("error compiling XPath expression; no filtering performed", e);
             return;
         }
@@ -134,12 +134,12 @@ public class XPathFilteringStage extends BaseStage<Element> {
         while (iterator.hasNext()) {
             final Item<Element> item = iterator.next();
             try {
-                Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
+                final Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
                 if (filterThis) {
                     log.debug("removing item matching XPath condition");
                     iterator.remove();
                 }
-            } catch (XPathExpressionException e) {
+            } catch (final XPathExpressionException e) {
                 log.error("removing item due to XPath expression error", e);
                 iterator.remove();
             }

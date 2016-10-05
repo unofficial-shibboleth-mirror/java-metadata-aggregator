@@ -222,7 +222,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
         final Collection<Item<T>> selectedItems = collectionFactory.get();
         final Collection<Item<T>> nonselectedItems = collectionFactory.get();
 
-        for (Item<T> item : itemCollection) {
+        for (final Item<T> item : itemCollection) {
             if (item == null) {
                 continue;
             }
@@ -256,7 +256,7 @@ public class SplitMergeStage<T> extends BaseStage<T> {
      * 
      * @return the token representing the background execution of the pipeline
      */
-    @Nonnull protected Future<Collection<Item<T>>> executePipeline(Pipeline<T> pipeline,
+    @Nonnull protected Future<Collection<Item<T>>> executePipeline(final Pipeline<T> pipeline,
             final Collection<Item<T>> items) {
 
         /*

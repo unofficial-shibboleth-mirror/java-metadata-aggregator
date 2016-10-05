@@ -100,7 +100,7 @@ public class SerializationStage<T> extends BaseStage<T> {
      * 
      * @param isOverwriting whether an existing output file should be overwritten
      */
-    public synchronized void setOverwritingExistingOutputFile(boolean isOverwriting) {
+    public synchronized void setOverwritingExistingOutputFile(final boolean isOverwriting) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -129,11 +129,11 @@ public class SerializationStage<T> extends BaseStage<T> {
     }
 
     /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
+    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         try (OutputStream stream = new FileOutputStream(outputFile)) {
             serializer.serializeCollection(itemCollection, stream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StageProcessingException("Error write to output file " + outputFile.getAbsolutePath(), e);
         }
     }
@@ -167,7 +167,7 @@ public class SerializationStage<T> extends BaseStage<T> {
 
             }
         } else {
-            File parentDirectory = outputFile.getParentFile();
+            final File parentDirectory = outputFile.getParentFile();
             if (parentDirectory != null) {
                 if (!parentDirectory.canWrite()) {
                     throw new ComponentInitializationException("Can not write to parent directory of output file '"

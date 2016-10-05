@@ -141,13 +141,13 @@ public class MultiOutputSerializationStage<T> extends BaseStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         for (final Item<T> item : itemCollection) {
             try (final Destination destination = outputStrategy.getDestination(item);
                     final OutputStream stream = destination.getOutputStream()) {
                 serializer.serialize(item, stream);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new StageProcessingException("Error writing to output location", e);
             }
         }

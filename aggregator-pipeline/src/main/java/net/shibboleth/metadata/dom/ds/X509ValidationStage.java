@@ -61,7 +61,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
                 context.getStash().put(cert);
                 applyValidators(cert, context);
             }
-        } catch (CertificateException e) {
+        } catch (final CertificateException e) {
             context.getItem().getItemMetadata().put(new ErrorStatus(getId(), "could not convert X509Certificate data"));
         }
     }
@@ -71,7 +71,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
         super.doInitialize();
         try {
             factory = CertificateFactory.getInstance("X.509");
-        } catch (CertificateException e) {
+        } catch (final CertificateException e) {
             throw new ComponentInitializationException("can't create X.509 certificate factory", e);
         }
     }

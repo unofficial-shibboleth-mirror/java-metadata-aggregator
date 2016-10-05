@@ -86,7 +86,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
      * 
      * @param isError whether attempting to turn an empty item collection should be treated as processing error
      */
-    public synchronized void setNoChildrenAProcessingError(boolean isError) {
+    public synchronized void setNoChildrenAProcessingError(final boolean isError) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -164,7 +164,7 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
 
         final List<Item<Element>> orderedItems = orderingStrategy.order(itemCollection);
         Element descriptor;
-        for (Item<Element> item : orderedItems) {
+        for (final Item<Element> item : orderedItems) {
             descriptor = item.unwrap();
             if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
                 descriptor = (Element) entitiesDescriptorDocument.importNode(descriptor, true);

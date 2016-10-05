@@ -159,17 +159,17 @@ public final class SAMLMetadataSupport {
             return;
         }
 
-        Element extensionsElement;
+        final Element extensionsElement;
 
-        Map<QName, List<Element>> descriptorChildren = ElementSupport.getIndexedChildElements(descriptor);
-        List<Element> extensionsElements = descriptorChildren.get(EXTENSIONS_NAME);
+        final Map<QName, List<Element>> descriptorChildren = ElementSupport.getIndexedChildElements(descriptor);
+        final List<Element> extensionsElements = descriptorChildren.get(EXTENSIONS_NAME);
         if (extensionsElements.isEmpty()) {
             extensionsElement = ElementSupport.constructElement(descriptor.getOwnerDocument(), EXTENSIONS_NAME);
 
             Element insertExtensionsElementBefore = null;
-            List<Element> signatureElements = descriptorChildren.get(XMLSignatureSigningStage.SIGNATURE_NAME);
+            final List<Element> signatureElements = descriptorChildren.get(XMLSignatureSigningStage.SIGNATURE_NAME);
             if (!signatureElements.isEmpty()) {
-                Element lastSignatureElement = signatureElements.get(signatureElements.size() - 1);
+                final Element lastSignatureElement = signatureElements.get(signatureElements.size() - 1);
                 insertExtensionsElementBefore = ElementSupport.getNextSiblingElement(lastSignatureElement);
             } else {
                 insertExtensionsElementBefore = ElementSupport.getFirstChildElement(descriptor);

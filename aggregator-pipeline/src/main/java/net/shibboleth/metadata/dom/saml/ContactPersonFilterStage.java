@@ -113,9 +113,9 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
             return;
         }
 
-        HashSet<String> checkedTypes = new HashSet<>();
+        final HashSet<String> checkedTypes = new HashSet<>();
         String checkedType;
-        for (String type : types) {
+        for (final String type : types) {
             checkedType = StringSupport.trimOrNull(type);
             if (checkedType == null) {
                 continue;
@@ -172,7 +172,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
      */
     protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
-        for (Element child : children) {
+        for (final Element child : children) {
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
             } else if (SAMLMetadataSupport.isEntityDescriptor(child)) {
@@ -194,7 +194,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
                         .getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS, "ContactPerson");
         if (!contactPersons.isEmpty()) {
             log.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
-            for (Element contactPerson : contactPersons) {
+            for (final Element contactPerson : contactPersons) {
                 if (!isRetainedContactPersonType(contactPerson)) {
                     entityDescriptor.removeChild(contactPerson);
                 }
@@ -212,7 +212,7 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
     protected boolean isRetainedContactPersonType(@Nonnull final Element contactPerson) {
         Constraint.isNotNull(contactPerson, "Contact person element can not be null");
 
-        String type = StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
+        final String type = StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
 
         if (type == null) {
             log.debug(

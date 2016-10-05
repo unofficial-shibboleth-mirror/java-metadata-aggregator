@@ -162,7 +162,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
 
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) {
-        Element descriptor;
+        final Element descriptor;
         descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {
@@ -237,7 +237,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
      * @return true if the descriptor should be filtered out
      */
     protected boolean filterOutDescriptor(@Nonnull final Element descriptor) {
-        Element registrationInfoElement =
+        final Element registrationInfoElement =
                 SAMLMetadataSupport.getDescriptorExtensions(descriptor, MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
         if (registrationInfoElement == null) {
             if (requiringRegistrationInformation) {

@@ -60,7 +60,7 @@ public final class FutureSupport {
         }
         
         @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
+        public boolean cancel(final boolean mayInterruptIfRunning) {
             return false;
         }
     
@@ -80,7 +80,7 @@ public final class FutureSupport {
         }
     
         @Override
-        public T get(long timeout, TimeUnit unit) throws InterruptedException,
+        public T get(final long timeout, final TimeUnit unit) throws InterruptedException,
                 ExecutionException, TimeoutException {
             return value;
         }
@@ -117,7 +117,7 @@ public final class FutureSupport {
      * @throws StageProcessingException unless resolution is successful
      */
     @Nonnull public static <T> Collection<Item<T>> futureItems(
-            @Nonnull Future<Collection<Item<T>>> future) throws StageProcessingException {
+            @Nonnull final Future<Collection<Item<T>>> future) throws StageProcessingException {
         assert future != null;
         try {
             final Collection<Item<T>> value = future.get();
@@ -125,7 +125,7 @@ public final class FutureSupport {
                 throw new StageProcessingException("null returned from future value");
             }
             return value;
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             LOG.debug("Pipeline threw an unexpected exception", e);
             if (e.getCause() instanceof StageProcessingException) {
                 // UN-wrap our own exceptions so as to propagate them
@@ -134,7 +134,7 @@ public final class FutureSupport {
                 // Wrap other exceptions
                 throw new StageProcessingException("ExecutionException during processing", e);
             }
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             LOG.debug("Execution service was interrupted", e);
             throw new StageProcessingException("Execution service was interrupted", e);
         }

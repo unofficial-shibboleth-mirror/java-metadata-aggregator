@@ -54,7 +54,7 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
 
         try {
             final ArrayList<Item<Element>> newItems = new ArrayList<>();
-            for (Item<Element> domItem : itemCollection) {
+            for (final Item<Element> domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 final Element element = domItem.unwrap();
 
@@ -72,7 +72,7 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
             }
             itemCollection.clear();
             itemCollection.addAll(newItems);
-        } catch (TransformerException e) {
+        } catch (final TransformerException e) {
             throw new StageProcessingException("Unable to transform DOM Element", e);
         }
     }

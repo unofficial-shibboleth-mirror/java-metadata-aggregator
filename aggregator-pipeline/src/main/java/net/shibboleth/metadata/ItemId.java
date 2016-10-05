@@ -66,7 +66,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
     }
 
     /** {@inheritDoc} */
-    @Override public boolean equals(Object obj) {
+    @Override public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -77,12 +77,12 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
             return false;
         }
 
-        ItemId other = (ItemId) obj;
+        final ItemId other = (ItemId) obj;
         return Objects.equals(id, other.id);
     }
 
     /** {@inheritDoc} */
-    @Override public int compareTo(ItemId o) {
+    @Override public int compareTo(final ItemId o) {
         return id.compareTo(o.id);
     }
 }

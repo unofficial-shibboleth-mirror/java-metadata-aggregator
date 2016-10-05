@@ -47,7 +47,7 @@ public class RegistrationAuthorityPopulationStage extends BaseStage<Element> {
     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
 
-        for (Item<Element> item : items) {
+        for (final Item<Element> item : items) {
            final Element entity = item.unwrap();
            final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
            

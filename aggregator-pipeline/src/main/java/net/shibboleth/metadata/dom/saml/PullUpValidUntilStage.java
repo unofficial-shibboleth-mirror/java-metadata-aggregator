@@ -100,8 +100,8 @@ public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
 
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        Element descriptor = item.unwrap();
-        Long nearestValidUntil = getNearestValidUntil(descriptor);
+        final Element descriptor = item.unwrap();
+        final Long nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);
         return true;
     }
@@ -121,25 +121,25 @@ public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
         }
 
         Long validUntil;
-        List<Element> entitiesDescriptors =
+        final List<Element> entitiesDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
-        for (Element entitiesDescriptor : entitiesDescriptors) {
+        for (final Element entitiesDescriptor : entitiesDescriptors) {
             validUntil = getNearestValidUntil(entitiesDescriptor);
             if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
                 nearestValidUntil = validUntil;
             }
         }
 
-        List<Element> entityDescriptors =
+        final List<Element> entityDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
-        for (Element entityDescriptor : entityDescriptors) {
+        for (final Element entityDescriptor : entityDescriptors) {
             validUntil = getNearestValidUntil(entityDescriptor);
             if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
                 nearestValidUntil = validUntil;
             }
         }
 
-        Attr validUntilAttr =
+        final Attr validUntilAttr =
                 descriptor.getAttributeNodeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME.getLocalPart());
         if (validUntilAttr != null) {
             validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
@@ -167,14 +167,14 @@ public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
             return;
         }
 
-        long now = System.currentTimeMillis();
-        long minValidUntil = now + minValidityDuration;
+        final long now = System.currentTimeMillis();
+        final long minValidUntil = now + minValidityDuration;
         long maxValidUntil = now + maxValidityDuration;
         if (maxValidUntil < 0) {
             maxValidUntil = Long.MAX_VALUE;
         }
 
-        long boundedValidUntil;
+        final long boundedValidUntil;
         if (validUntil < minValidUntil) {
             boundedValidUntil = minValidUntil;
         } else if (validUntil > maxValidUntil) {

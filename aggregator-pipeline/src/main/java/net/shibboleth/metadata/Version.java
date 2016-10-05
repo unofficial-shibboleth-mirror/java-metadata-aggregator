@@ -43,8 +43,8 @@ public final class Version {
      * 
      * @param args command line arguments
      */
-    public static void main(String[] args) {
-        Package pkg = Version.class.getPackage();
+    public static void main(final String[] args) {
+        final Package pkg = Version.class.getPackage();
         System.out.println(pkg.getImplementationTitle() + " version " + VERSION);
     }
 
@@ -86,7 +86,7 @@ public final class Version {
 
     static {
         VERSION = Version.class.getPackage().getImplementationVersion();
-        String[] versionParts = VERSION.split(".");
+        final String[] versionParts = VERSION.split(".");
         MAJOR_VERSION = Integer.parseInt(versionParts[0]);
         MINOR_VERSION = Integer.parseInt(versionParts[1]);
         MICRO_VERSION = Integer.parseInt(versionParts[2]);
