@@ -195,9 +195,9 @@ final class XMLSignatureValidator {
         /*
          * Now look for the attribute which holds the ID value, and mark it as the ID attribute.
          */
-        NamedNodeMap attributes = docElement.getAttributes();
+        final NamedNodeMap attributes = docElement.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++) {
-            Attr attribute = (Attr) attributes.item(i);
+            final Attr attribute = (Attr) attributes.item(i);
             if (id.equals(attribute.getValue())) {
                 log.debug("marking ID attribute {}", attribute.getName());
                 docElement.setIdAttributeNode(attribute, true);
@@ -230,7 +230,7 @@ final class XMLSignatureValidator {
         XMLSignature signature = null;
         try {
             signature = new XMLSignature(signatureElement, "");
-        } catch (XMLSecurityException e) {
+        } catch (final XMLSecurityException e) {
             throw new ValidationException("Unable to read XML signature", e);
         }
 
@@ -243,18 +243,18 @@ final class XMLSignatureValidator {
         
         // check reference digest algorithm against blacklist
         try {
-            String alg = ref.getMessageDigestAlgorithm().getAlgorithmURI();
+            final String alg = ref.getMessageDigestAlgorithm().getAlgorithmURI();
             log.debug("blacklist checking digest {}", alg);
             if (blacklistedDigests.contains(alg)) {
                 log.error("Digest algorithm {} is blacklisted", alg);
                 throw new ValidationException("Digest algorithm " + alg + " is blacklisted");
             }
-        } catch (XMLSignatureException e) {
+        } catch (final XMLSignatureException e) {
             throw new ValidationException("unable to retrieve signature digest algorithm");
         }
         
         // check signature algorithm against blacklist
-        String alg = signature.getSignedInfo().getSignatureMethodURI();
+        final String alg = signature.getSignedInfo().getSignatureMethodURI();
         log.debug("blacklist checking signature method {}", alg);
         if (blacklistedSignatureMethods.contains(alg)) {
             throw new ValidationException("Signature algorithm " + alg + " is blacklisted");
@@ -279,7 +279,7 @@ final class XMLSignatureValidator {
             } else {
                 throw new ValidationException("XML document signature verification failed");
             }
-        } catch (XMLSignatureException e) {
+        } catch (final XMLSignatureException e) {
             if (log.isDebugEnabled()) {
                 log.debug("Unable to validate signature", e);
             }
@@ -297,7 +297,7 @@ final class XMLSignatureValidator {
      * @throws ValidationException if a reference could not be extracted
      */
     private Reference extractReference(@Nonnull final XMLSignature signature) throws ValidationException {
-        int numReferences = signature.getSignedInfo().getLength();
+        final int numReferences = signature.getSignedInfo().getLength();
         if (numReferences != 1) {
             throw new ValidationException("Signature SignedInfo had invalid number of References: " + numReferences);
         }
@@ -313,7 +313,7 @@ final class XMLSignatureValidator {
                 }
             }
             return ref;
-        } catch (XMLSecurityException e) {
+        } catch (final XMLSecurityException e) {
             throw new ValidationException("Apache XML Security exception obtaining Reference: " + e.getMessage());
         }
     }
@@ -377,7 +377,7 @@ final class XMLSignatureValidator {
         Transforms transforms = null;
         try {
             transforms = reference.getTransforms();
-        } catch (XMLSecurityException e) {
+        } catch (final XMLSecurityException e) {
             throw new ValidationException("Apache XML Security error obtaining Transforms instance: " + e.getMessage());
         }
 
@@ -385,7 +385,7 @@ final class XMLSignatureValidator {
             throw new ValidationException("Error obtaining Transforms instance, null was returned");
         }
 
-        int numTransforms = transforms.getLength();
+        final int numTransforms = transforms.getLength();
         if (numTransforms > 2) {
             throw new ValidationException("Invalid number of Transforms was present: " + numTransforms);
         }
@@ -395,10 +395,10 @@ final class XMLSignatureValidator {
             Transform transform = null;
             try {
                 transform = transforms.item(i);
-            } catch (TransformationException e) {
+            } catch (final TransformationException e) {
                 throw new ValidationException("Error obtaining transform instance: " + e.getMessage());
             }
-            String uri = transform.getURI();
+            final String uri = transform.getURI();
             if (Transforms.TRANSFORM_ENVELOPED_SIGNATURE.equals(uri)) {
                 log.debug("Saw Enveloped signature transform");
                 sawEnveloped = true;

@@ -55,7 +55,7 @@ public abstract class AbstractDOMTraversalStage extends BaseStage<Element> {
          * 
          * @param contextItem the {@link Item} this traversal is being performed on.
          */
-        public TraversalContext(@Nonnull Item<Element> contextItem) {
+        public TraversalContext(@Nonnull final Item<Element> contextItem) {
             item = contextItem;
         }
         
@@ -111,7 +111,7 @@ public abstract class AbstractDOMTraversalStage extends BaseStage<Element> {
     private void traverse(@Nonnull final Element element, @Nonnull final TraversalContext context) 
         throws StageProcessingException {
         final List<Element> children = ElementSupport.getChildElements(element);
-        for (Element child : children) {
+        for (final Element child : children) {
             traverse(child, context);
         }
         if (applicable(element)) {
@@ -120,8 +120,8 @@ public abstract class AbstractDOMTraversalStage extends BaseStage<Element> {
     }
     
     @Override
-    protected void doExecute(Collection<Item<Element>> itemCollection) throws StageProcessingException {
-        for (Item<Element> item : itemCollection) {
+    protected void doExecute(final Collection<Item<Element>> itemCollection) throws StageProcessingException {
+        for (final Item<Element> item : itemCollection) {
             final Element docElement = item.unwrap();
             final TraversalContext context = new TraversalContext(item);
             traverse(docElement, context);
@@ -167,7 +167,7 @@ public abstract class AbstractDOMTraversalStage extends BaseStage<Element> {
             if (id != null) {
                 prefix = id.getTextContent() + ": ";
             } else {
-                Attr entityID = entity.getAttributeNode("entityID");
+                final Attr entityID = entity.getAttributeNode("entityID");
                 if (entityID != null) {
                     prefix = entityID.getTextContent() + ": ";
                 }

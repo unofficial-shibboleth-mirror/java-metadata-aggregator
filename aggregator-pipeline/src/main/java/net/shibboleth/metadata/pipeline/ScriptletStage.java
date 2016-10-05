@@ -92,8 +92,8 @@ public class ScriptletStage<T> extends BaseStage<T> {
 
         try {
             script.eval(context);
-        } catch (ScriptException e) {
-            String errMsg = getId() + " pipeline stage unable to execute script";
+        } catch (final ScriptException e) {
+            final String errMsg = getId() + " pipeline stage unable to execute script";
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }

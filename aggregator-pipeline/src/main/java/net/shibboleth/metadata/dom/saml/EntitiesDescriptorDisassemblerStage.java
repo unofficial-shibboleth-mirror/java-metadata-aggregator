@@ -53,7 +53,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<Element> {
         itemCollection.clear();
 
         Element element;
-        for (Item<Element> item : items) {
+        for (final Item<Element> item : items) {
             element = item.unwrap();
             if (SAMLMetadataSupport.isEntitiesDescriptor(element)) {
                 processEntitiesDescriptor(itemCollection, element);
@@ -77,7 +77,7 @@ public class EntitiesDescriptorDisassemblerStage extends BaseStage<Element> {
             @Nonnull final Element entitiesDescriptor) {
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
-        for (Element child : children) {
+        for (final Element child : children) {
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(itemCollection, child);
             }

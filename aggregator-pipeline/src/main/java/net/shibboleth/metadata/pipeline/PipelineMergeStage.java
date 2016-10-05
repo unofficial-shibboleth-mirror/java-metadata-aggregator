@@ -170,13 +170,13 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
             throws StageProcessingException {
         final ArrayList<Future<Collection<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
-        for (Pipeline<T> pipeline : mergedPipelines) {
+        for (final Pipeline<T> pipeline : mergedPipelines) {
             pipelineResultFutures.add(executorService.submit(
                     new PipelineCallable<>(pipeline, collectionFactory.get())));
         }
 
         final ArrayList<Collection<Item<T>>> pipelineResults = new ArrayList<>();
-        for (Future<Collection<Item<T>>> future : pipelineResultFutures) {
+        for (final Future<Collection<Item<T>>> future : pipelineResultFutures) {
             pipelineResults.add(FutureSupport.futureItems(future));
         }
 
@@ -197,7 +197,7 @@ public class PipelineMergeStage<T> extends BaseStage<T> {
     @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        for (Pipeline<T> pipeline : mergedPipelines) {
+        for (final Pipeline<T> pipeline : mergedPipelines) {
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }

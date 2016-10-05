@@ -74,8 +74,8 @@ public class ItemIdTransformStage<T> extends BaseIteratingStage<T> {
         final List<ItemId> ids = item.getItemMetadata().get(ItemId.class);
 
         final List<ItemId> transformedIds = new ArrayList<>();
-        for (ItemId id : ids) {
-            for (Converter<String, String> idTransform : idTransformers) {
+        for (final ItemId id : ids) {
+            for (final Converter<String, String> idTransform : idTransformers) {
                 final String transformedId = idTransform.convert(id.getId());
                 transformedIds.add(new ItemId(transformedId));
             }

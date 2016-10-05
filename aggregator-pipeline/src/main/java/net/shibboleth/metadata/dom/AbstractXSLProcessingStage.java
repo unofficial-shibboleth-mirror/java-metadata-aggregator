@@ -136,7 +136,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
         }
 
         final HashMap<String, Object> newAttributes = new HashMap<>();
-        for (String attributeName : attributes.keySet()) {
+        for (final String attributeName : attributes.keySet()) {
             if (attributeName != null) {
                 newAttributes.put(attributeName, attributes.get(attributeName));
             }
@@ -168,7 +168,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
         }
 
         final HashMap<String, Boolean> newFeatures = new HashMap<>();
-        for (String featuresName : features.keySet()) {
+        for (final String featuresName : features.keySet()) {
             if (featuresName != null) {
                 newFeatures.put(featuresName, features.get(featuresName));
             }
@@ -201,7 +201,7 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
         }
 
         final HashMap<String, Object> newParams = new HashMap<>();
-        for (String paramName : parameters.keySet()) {
+        for (final String paramName : parameters.keySet()) {
             if (paramName != null) {
                 newParams.put(paramName, parameters.get(paramName));
             }
@@ -236,12 +236,12 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
             throws StageProcessingException {
         try {
             final Transformer transformer = xslTemplate.newTransformer();
-            for (Map.Entry<String, Object> entry : transformParameters.entrySet()) {
+            for (final Map.Entry<String, Object> entry : transformParameters.entrySet()) {
                 transformer.setParameter(entry.getKey(), entry.getValue());
             }
 
             executeTransformer(transformer, itemCollection);
-        } catch (TransformerConfigurationException e) {
+        } catch (final TransformerConfigurationException e) {
             throw new RuntimeException("XSL transformation engine misconfigured", e);
         }
     }
@@ -289,11 +289,11 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
 
             final TransformerFactory tfactory = TransformerFactory.newInstance();
 
-            for (Entry<String, Object> attribute : transformAttributes.entrySet()) {
+            for (final Entry<String, Object> attribute : transformAttributes.entrySet()) {
                 tfactory.setAttribute(attribute.getKey(), attribute.getValue());
             }
 
-            for (Entry<String, Boolean> features : transformFeatures.entrySet()) {
+            for (final Entry<String, Boolean> features : transformFeatures.entrySet()) {
                 tfactory.setFeature(features.getKey(), features.getValue());
             }
 
@@ -304,9 +304,9 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
             log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
             xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream(), 
                                                 xslResource.getURL().toExternalForm()));
-        } catch (TransformerConfigurationException e) {
+        } catch (final TransformerConfigurationException e) {
             throw new ComponentInitializationException("XSL transformation engine misconfigured", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", error reading XslResource " + xslResource.getDescription() + " information", e);
         }
@@ -369,12 +369,12 @@ public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
          * @throws TransformerException thrown if the error does not contain the appropriate message prefix
          */
         private void parseAndAppendStatusInfo(@Nonnull final TransformerException e) throws TransformerException {
-            String errorMessage = StringSupport.trimOrNull(e.getMessage());
+            final String errorMessage = StringSupport.trimOrNull(e.getMessage());
             if (errorMessage == null) {
                 throw e;
             }
 
-            String statusMessage;
+            final String statusMessage;
             if (errorMessage.startsWith(ERROR_PREFIX)) {
                 statusMessage = StringSupport.trim(errorMessage.substring(ERROR_PREFIX.length()));
                 item.getItemMetadata().put(new ErrorStatus(getId(), statusMessage));

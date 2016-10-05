@@ -47,8 +47,8 @@ public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionSta
 
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
-            Item<T> matchingItem,
-            Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+            final Item<T> matchingItem,
+            final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);

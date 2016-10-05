@@ -60,11 +60,11 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
         final Element documentRoot = item.unwrap();
 
         try {
-            TransformerFactory tfac = TransformerFactory.newInstance();
-            Transformer serializer = tfac.newTransformer();
+            final TransformerFactory tfac = TransformerFactory.newInstance();
+            final Transformer serializer = tfac.newTransformer();
             serializer.setOutputProperty("encoding", "UTF-8");
             serializer.transform(new DOMSource(documentRoot.getOwnerDocument()), new StreamResult(output));
-        } catch (TransformerException e) {
+        } catch (final TransformerException e) {
             log.error("Unable to write out XML", e);
         }
     }

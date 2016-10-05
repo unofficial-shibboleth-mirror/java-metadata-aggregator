@@ -71,8 +71,8 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
             namespaceContext = context;
         }
 
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
+        final XPathFactory factory = XPathFactory.newInstance();
+        final XPath xpath = factory.newXPath();
         if (namespaceContext != null) {
             xpath.setNamespaceContext(namespaceContext);
         }
@@ -80,10 +80,10 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
     }
 
     /** {@inheritDoc} */
-    @Override public synchronized boolean apply(@Nonnull Item<Element> item) {
+    @Override public synchronized boolean apply(@Nonnull final Item<Element> item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
-        } catch (XPathExpressionException e) {
+        } catch (final XPathExpressionException e) {
             log.warn("Exception thrown during XPath evaluation: " + e);
             return false;
         }

@@ -115,11 +115,11 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T>
         // to the itemCollection and thus would cause issues if we were iterating over it directly
         final ArrayList<Item<T>> collectionCopy = new ArrayList<>(itemCollection);
 
-        for (Item<T> item : collectionCopy) {
+        for (final Item<T> item : collectionCopy) {
             final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
                     new HashMap<>();
 
-            for (Class<? extends ItemMetadata> infoClass : selectionRequirements) {
+            for (final Class<? extends ItemMetadata> infoClass : selectionRequirements) {
                 if (item.getItemMetadata().containsKey(infoClass)) {
                     matchingMetadata.put(infoClass, item.getItemMetadata().get(infoClass));
                 }

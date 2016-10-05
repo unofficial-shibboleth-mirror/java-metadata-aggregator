@@ -94,7 +94,7 @@ public class SimpleCommandLineArguments {
             pipelineName = otherArgs.get(1);
 
             validateCommandLineArguments();
-        } catch (ParameterException e) {
+        } catch (final ParameterException e) {
             errorAndExit(e.getMessage());
         }
     }
@@ -173,7 +173,7 @@ public class SimpleCommandLineArguments {
      * 
      * @param out location where to print the output
      */
-    public void printHelp(PrintStream out) {
+    public void printHelp(final PrintStream out) {
         out.println("SimpleCommandLine");
         out.println("Provides a command line interface for the metadata aggregator.");
         out.println();
@@ -202,7 +202,7 @@ public class SimpleCommandLineArguments {
      * 
      * @param error the error message
      */
-    private void errorAndExit(String error) {
+    private void errorAndExit(final String error) {
         System.err.println(error);
         System.err.flush();
         System.out.println();

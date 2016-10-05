@@ -74,7 +74,7 @@ public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponen
             throws PipelineProcessingException {
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        for (Stage<T> stage : pipelineStages) {
+        for (final Stage<T> stage : pipelineStages) {
             stage.execute(itemCollection);
         }
 
@@ -93,7 +93,7 @@ public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponen
     @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        for (Stage<T> stage : pipelineStages) {
+        for (final Stage<T> stage : pipelineStages) {
             if (!stage.isInitialized()) {
                 stage.initialize();
             }

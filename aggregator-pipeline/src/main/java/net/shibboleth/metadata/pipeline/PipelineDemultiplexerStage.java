@@ -111,7 +111,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
      * 
      * @param isWaiting whether this child waits for all the invoked pipelines to complete before proceeding
      */
-    public synchronized void setWaitingForPipelines(boolean isWaiting) {
+    public synchronized void setWaitingForPipelines(final boolean isWaiting) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -165,7 +165,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
         }
 
         final Builder<Pair<Pipeline<T>, Predicate<Item<T>>>> checkedPasses = new Builder<>();
-        for (Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
+        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
             Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
             Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
 
@@ -181,12 +181,12 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
         Collection<Item<T>> selectedItems;
         final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
 
-        for (Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
+        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
             final Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
             final Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
             selectedItems = collectionFactory.get();
 
-            for (Item<T> item : itemCollection) {
+            for (final Item<T> item : itemCollection) {
                 if (selectionStrategy.apply(item)) {
 //                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
 //                    selectedItems.add(copied);
@@ -198,7 +198,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
         }
 
         if (isWaitingForPipelines()) {
-            for (Future<Collection<Item<T>>> pipelineFuture : pipelineFutures) {
+            for (final Future<Collection<Item<T>>> pipelineFuture : pipelineFutures) {
                 FutureSupport.futureItems(pipelineFuture);
             }
         }
@@ -223,7 +223,7 @@ public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
         }
 
         Pipeline<T> pipeline;
-        for (Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
+        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
             pipeline = pipelineAndStrategy.getFirst();
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();

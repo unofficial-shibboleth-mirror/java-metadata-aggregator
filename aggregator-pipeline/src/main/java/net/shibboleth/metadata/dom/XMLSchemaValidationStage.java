@@ -115,7 +115,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
      * 
      * @param isRequired whether Elements are required to be schema valid
      */
-    public synchronized void setElementRequiredToBeSchemaValid(boolean isRequired) {
+    public synchronized void setElementRequiredToBeSchemaValid(final boolean isRequired) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
@@ -129,7 +129,7 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
         final Validator validator = validationSchema.newValidator();
         try {
             validator.validate(new DOMSource(item.unwrap()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug("DOM Element was not valid:\n{}", SerializeSupport.prettyPrintXML(item.unwrap()), e);
             }
@@ -163,17 +163,17 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
         try {
             log.debug("{} pipeline stage building validation schema resources", getId());
             final SchemaBuilder builder = new SchemaBuilder();
-            for (Resource schemaResource : schemaResources) {
+            for (final Resource schemaResource : schemaResources) {
                 try {
                     builder.addSchema(new StreamSource(schemaResource.getInputStream(),
                             schemaResource.getDescription()));
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     throw new ComponentInitializationException("Unable to read schema resource " +
                             schemaResource.getDescription(), e);
                 }
             }
             validationSchema = builder.buildSchema();
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new ComponentInitializationException("Unable to generate schema", e);
         }
     }

@@ -72,7 +72,7 @@ public final class SimpleCommandLine {
      * 
      * @param args command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final SimpleCommandLineArguments cli = new SimpleCommandLineArguments();
         cli.parseCommandLineArguments(args);
 
@@ -85,14 +85,14 @@ public final class SimpleCommandLine {
 
         FileSystemXmlApplicationContext appCtx = null;
         try {
-            String fileUri = new File(cli.getInputFile()).toURI().toString();
+            final String fileUri = new File(cli.getInputFile()).toURI().toString();
             log.debug("Initializing Spring context with configuration file {}", fileUri);
             appCtx = new FileSystemXmlApplicationContext(fileUri);
             
             // Register a shutdown hook for the context, so that beans will be
             // correctly destroyed before the CLI exits.
             appCtx.registerShutdownHook();
-        } catch (BeansException e) {
+        } catch (final BeansException e) {
             log.error("Unable to initialize Spring context", e);
             System.exit(RC_INIT);
         }
@@ -127,7 +127,7 @@ public final class SimpleCommandLine {
 
             System.exit(RC_OK);
             
-        } catch (TerminationException e) {
+        } catch (final TerminationException e) {
             if (cli.doVerboseOutput()) {
                 log.error("TerminationException during processing", e);
             } else {
@@ -135,7 +135,7 @@ public final class SimpleCommandLine {
             }
             System.exit(RC_INIT);
             
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Error processing information", e);
             System.exit(RC_INIT);
         }
@@ -146,7 +146,7 @@ public final class SimpleCommandLine {
      * 
      * @param cli command line arguments
      */
-    protected static void initLogging(SimpleCommandLineArguments cli) {
+    protected static void initLogging(final SimpleCommandLineArguments cli) {
         if (cli.getLoggingConfiguration() != null) {
             System.setProperty("logback.configurationFile", cli.getLoggingConfiguration());
         } else if (cli.doVerboseOutput()) {

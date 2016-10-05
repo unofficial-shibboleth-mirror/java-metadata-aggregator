@@ -313,7 +313,7 @@ public class EntityRoleFilterStage extends BaseIteratingStage<Element> {
                 continue;
             }
 
-            boolean isDesignatedRole = designatedRoles.contains(roleIdentifier);
+            final boolean isDesignatedRole = designatedRoles.contains(roleIdentifier);
             if (roleIdentifier != null) {
                 if ((isWhitelistingRoles() && !isDesignatedRole) || (!isWhitelistingRoles() && isDesignatedRole)) {
                     log.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] {getId(),

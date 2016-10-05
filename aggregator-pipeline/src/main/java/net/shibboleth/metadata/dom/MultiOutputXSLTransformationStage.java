@@ -54,7 +54,7 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
 
         try {
             final ArrayList<Item<Element>> newItems = new ArrayList<>();
-            for (Item<Element> domItem : itemCollection) {
+            for (final Item<Element> domItem : itemCollection) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 final Element element = domItem.unwrap();
 
@@ -66,15 +66,15 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
                 // becomes a new DomElementItem in the output collection carrying the same
                 // ItemMetadata objects as the input.
                 final List<Element> transformedElements = ElementSupport.getChildElements(result.getNode());
-                for (Element transformedElement : transformedElements) {
-                    DOMElementItem newItem = new DOMElementItem(transformedElement);
+                for (final Element transformedElement : transformedElements) {
+                    final DOMElementItem newItem = new DOMElementItem(transformedElement);
                     ItemMetadataSupport.addAll(newItem, domItem.getItemMetadata().values());
                     newItems.add(newItem);
                 }
             }
             itemCollection.clear();
             itemCollection.addAll(newItems);
-        } catch (TransformerException e) {
+        } catch (final TransformerException e) {
             throw new StageProcessingException("Unable to transform DOM Element", e);
         }
     }

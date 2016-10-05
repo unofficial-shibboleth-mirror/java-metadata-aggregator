@@ -81,7 +81,7 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    @Override public boolean contains(Object o) {
+    @Override public boolean contains(final Object o) {
         return delegate.contains(o);
     }
 
@@ -145,7 +145,7 @@ public class ItemCollectionWithMetadata<T> implements Collection<Item<T>> {
     }
 
     /** {@inheritDoc} */
-    @Override public boolean retainAll(@Nonnull Collection<?> c) {
+    @Override public boolean retainAll(@Nonnull final Collection<?> c) {
         Constraint.isNotNull(c, "Collection can not be null");
 
         return delegate.retainAll(c);

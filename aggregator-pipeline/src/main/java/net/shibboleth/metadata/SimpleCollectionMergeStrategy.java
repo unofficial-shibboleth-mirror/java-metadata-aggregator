@@ -37,7 +37,7 @@ public class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");
 
-        for (Collection<Item<T>> source : sources) {
+        for (final Collection<Item<T>> source : sources) {
             target.addAll(source);
         }
     }

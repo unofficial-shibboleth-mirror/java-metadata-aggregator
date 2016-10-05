@@ -78,7 +78,7 @@ public abstract class AbstractNamespacesStrippingStage extends BaseStage<Element
          * so fail quickly if the document element is in the target namespace.
          */
         if (removingNamespace(element.getNamespaceURI())) {
-            ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
+            final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
             metadata.put(new ErrorStatus(getId(), "can't strip namespace from document element"));
             return;
         }
@@ -181,7 +181,7 @@ public abstract class AbstractNamespacesStrippingStage extends BaseStage<Element
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
             throws StageProcessingException {
-        for (Item<Element> item : items) {
+        for (final Item<Element> item : items) {
             processItem(item);
         }
     }

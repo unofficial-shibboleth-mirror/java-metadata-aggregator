@@ -139,7 +139,7 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
 
         try (InputStream ins = domResource.getInputStream()) {
             populateItemCollection(itemCollection, ins);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException("Error retrieving XML document from " +
                         domResource.getDescription(), e);
@@ -159,12 +159,12 @@ public class DOMResourceSourceStage extends BaseStage<Element> {
      * 
      * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected void populateItemCollection(@Nonnull @NonnullElements Collection<Item<Element>> itemCollection,
+    protected void populateItemCollection(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
             final InputStream data) throws StageProcessingException {
         try {
             log.debug("Parsing XML document retrieved from '{}'", domResource.getDescription());
             itemCollection.add(new DOMElementItem(parserPool.parse(data)));
-        } catch (XMLParserException e) {
+        } catch (final XMLParserException e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException(getId() + " unable to parse returned XML document " +
                         domResource.getDescription(), e);

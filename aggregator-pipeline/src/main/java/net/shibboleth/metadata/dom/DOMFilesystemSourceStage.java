@@ -142,7 +142,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
      * 
      * @param filter filter used to determine if a file, in a directory, should be treated as a source file, may be null
      */
-    public synchronized void setSourceFileFilter(@Nonnull FileFilter filter) {
+    public synchronized void setSourceFileFilter(@Nonnull final FileFilter filter) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -184,7 +184,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
      * 
      * @param isError whether the lack of source files is considered an error
      */
-    public synchronized void setNoSourceFilesAnError(boolean isError) {
+    public synchronized void setNoSourceFilesAnError(final boolean isError) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -232,7 +232,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
         }
 
         DOMElementItem dme;
-        for (File source : sourceFiles) {
+        for (final File source : sourceFiles) {
             dme = processSourceFile(source);
             if (dme != null) {
                 itemCollection.add(dme);
@@ -260,7 +260,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
         // file must be a directory
         final File[] files = input.listFiles();
         if (files != null) {
-            for (File file : files) {
+            for (final File file : files) {
                 if (file.isFile() || (file.isDirectory() && recurseDirectories)) {
                     getSourceFiles(file, collector);
                 }
@@ -287,7 +287,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
             xmlIn = new FileInputStream(source);
             final Document doc = parserPool.parse(xmlIn);
             return new DOMElementItem(doc);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             if (errorCausesSourceFailure) {
                 throw new StageProcessingException(getId() + " pipeline source unable to parse XML input file "
                         + source.getPath(), e);
@@ -299,7 +299,7 @@ public class DOMFilesystemSourceStage extends BaseStage<Element> {
         } finally {
             try {
                 xmlIn.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new StageProcessingException("Exception closing input stream", e);
             }
         }

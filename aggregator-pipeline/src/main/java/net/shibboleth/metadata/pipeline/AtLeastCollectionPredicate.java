@@ -52,7 +52,7 @@ public class AtLeastCollectionPredicate<T> implements Predicate<Collection<T>> {
      * @param min minimum number of elements which will result in a <code>true</code>
      * result.
      */
-    public void setMinimum(int min) {
+    public void setMinimum(final int min) {
         minimum = min;
     }
     

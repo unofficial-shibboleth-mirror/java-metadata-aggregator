@@ -37,10 +37,10 @@ public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<El
 
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        Element metadataElement = item.unwrap();
+        final Element metadataElement = item.unwrap();
 
         if (SAMLMetadataSupport.isEntityDescriptor(metadataElement)) {
-            String entityId = AttributeSupport.getAttributeValue(metadataElement, null, "entityID");
+            final String entityId = AttributeSupport.getAttributeValue(metadataElement, null, "entityID");
             item.getItemMetadata().put(new ItemId(entityId));
         }
 

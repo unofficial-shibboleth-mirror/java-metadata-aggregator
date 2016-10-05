@@ -91,7 +91,7 @@ public abstract class AbstractDOMValidationStage<V> extends AbstractDOMTraversal
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        for (Validator<V> validator : validators) {
+        for (final Validator<V> validator : validators) {
             if (!validator.isInitialized()) {
                 validator.initialize();
             }

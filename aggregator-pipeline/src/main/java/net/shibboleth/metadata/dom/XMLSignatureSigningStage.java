@@ -641,10 +641,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
 
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        Element element = item.unwrap();
-        XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
+        final Element element = item.unwrap();
+        final XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {
-            XMLSignContext context = new DOMSignContext(privKey, element, element.getFirstChild());
+            final XMLSignContext context = new DOMSignContext(privKey, element, element.getFirstChild());
             
             // Enable caching reference values if required for debugging.
             if (isDebugPreDigest() && log.isDebugEnabled()) {
@@ -656,11 +656,11 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
             
             // Log the pre-digest data for debugging
             if (isDebugPreDigest() && log.isDebugEnabled()) {
-                Reference ref = (Reference) signature.getSignedInfo().getReferences().get(0);
-                String preDigest = CharStreams.toString(new InputStreamReader(ref.getDigestInputStream(), "UTF-8"));
+                final Reference ref = (Reference) signature.getSignedInfo().getReferences().get(0);
+                final String preDigest = CharStreams.toString(new InputStreamReader(ref.getDigestInputStream(), "UTF-8"));
                 log.debug("pre digest: {}", preDigest);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Unable to create signature for element", e);
             throw new StageProcessingException("Unable to create signature for element", e);
         }
@@ -684,20 +684,20 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
             c14nMethodSpec = new ExcC14NParameterSpec(inclusivePrefixList);
         }
 
-        CanonicalizationMethod c14nMethod;
+        final CanonicalizationMethod c14nMethod;
         try {
             c14nMethod = xmlSigFactory.newCanonicalizationMethod(c14nAlgo, c14nMethodSpec);
-        } catch (Exception e) {
-            String errMsg = "Unable to create transform " + c14nAlgo;
+        } catch (final Exception e) {
+            final String errMsg = "Unable to create transform " + c14nAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
 
-        SignatureMethod sigMethod;
+        final SignatureMethod sigMethod;
         try {
             sigMethod = xmlSigFactory.newSignatureMethod(sigAlgo, null);
-        } catch (Exception e) {
-            String errMsg = "Unable to create signature method " + sigAlgo;
+        } catch (final Exception e) {
+            final String errMsg = "Unable to create signature method " + sigAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -728,10 +728,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
 
         DigestMethod digestMethod = null;
         try {
-            DigestMethodParameterSpec digestMethodSpec = null;
+            final DigestMethodParameterSpec digestMethodSpec = null;
             digestMethod = xmlSigFactory.newDigestMethod(digestAlgo, digestMethodSpec);
-        } catch (Exception e) {
-            String errMsg = "Unable to create digest method " + digestAlgo;
+        } catch (final Exception e) {
+            final String errMsg = "Unable to create digest method " + digestAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -742,8 +742,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         try {
             transformSpec = null;
             transforms.add(xmlSigFactory.newTransform(TRANSFORM_ENVELOPED_SIGNATURE, transformSpec));
-        } catch (Exception e) {
-            String errMsg = "Unable to create transform " + TRANSFORM_ENVELOPED_SIGNATURE;
+        } catch (final Exception e) {
+            final String errMsg = "Unable to create transform " + TRANSFORM_ENVELOPED_SIGNATURE;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -754,8 +754,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
                 transformSpec = new ExcC14NParameterSpec(inclusivePrefixList);
             }
             transforms.add(xmlSigFactory.newTransform(c14nAlgo, transformSpec));
-        } catch (Exception e) {
-            String errMsg = "Unable to create transform " + c14nAlgo;
+        } catch (final Exception e) {
+            final String errMsg = "Unable to create transform " + c14nAlgo;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
@@ -841,7 +841,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         }
 
         if (keyNames != null && !keyNames.isEmpty()) {
-            for (String name : keyNames) {
+            for (final String name : keyNames) {
                 keyInfoItems.add(keyInfoFactory.newKeyName(name));
             }
         }
@@ -862,7 +862,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
 
         PublicKey key = pubKey;
         if (key == null && certificates != null) {
-            X509Certificate cert = certificates.get(0);
+            final X509Certificate cert = certificates.get(0);
             if (cert != null) {
                 key = cert.getPublicKey();
             }
@@ -870,7 +870,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         if (key != null) {
             try {
                 keyInfoItems.add(keyInfoFactory.newKeyValue(key));
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("Unable to create KeyValue", e);
                 throw new StageProcessingException("Unable to create KeyValue", e);
             }
@@ -889,10 +889,10 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         final ArrayList<Object> x509Data = new ArrayList<>();
 
         if (certificates != null && !certificates.isEmpty()) {
-            X509Certificate endEntityCert = certificates.get(0);
+            final X509Certificate endEntityCert = certificates.get(0);
 
             if (includeX509SubjectName) {
-                X500Principal subjectDn = endEntityCert.getSubjectX500Principal();
+                final X500Principal subjectDn = endEntityCert.getSubjectX500Principal();
                 keyInfoItems.add(subjectDn.getName(X500Principal.RFC2253));
             }
 
@@ -901,8 +901,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
             }
 
             if (includeX509IssuerSerial) {
-                X500Principal issuerDn = endEntityCert.getIssuerX500Principal();
-                BigInteger serialNumber = endEntityCert.getSerialNumber();
+                final X500Principal issuerDn = endEntityCert.getIssuerX500Principal();
+                final BigInteger serialNumber = endEntityCert.getSerialNumber();
                 x509Data.add(keyInfoFactory.newX509IssuerSerial(issuerDn.getName(X500Principal.RFC2253), serialNumber));
             }
         }

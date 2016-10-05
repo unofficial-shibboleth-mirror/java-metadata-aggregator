@@ -127,7 +127,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
      * 
      * @param isRequired whether the signature on a Element element is required to be valid
      */
-    public synchronized void setValidSignatureRequired(boolean isRequired) {
+    public synchronized void setValidSignatureRequired(final boolean isRequired) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -248,7 +248,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
         final Element docElement = item.unwrap();
         
         // Step 1: locate the signature element within the document.
-        Element signatureElement;
+        final Element signatureElement;
         try {
             signatureElement = validator.getSignatureElement(docElement);
             if (signatureElement == null) {
@@ -261,7 +261,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
                 }
                 return true;
             }
-        } catch (ValidationException e) {
+        } catch (final ValidationException e) {
             // pass on an error from signature location (e.g., multiple signatures)
             log.debug("setting status: ", e.getMessage());
             item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
@@ -274,7 +274,7 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
 
         try {
             validator.verifySignature(docElement, signatureElement);
-        } catch (ValidationException e) {
+        } catch (final ValidationException e) {
             final String message = "element signature is invalid: " + e.getMessage();
             log.debug("setting status: ", message);
             if (validSignatureRequired) {

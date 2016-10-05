@@ -40,7 +40,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
 
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        Element descriptor = item.unwrap();
+        final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
         } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
@@ -57,7 +57,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
      */
     protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
-        for (Element child : children) {
+        for (final Element child : children) {
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
             } else if (SAMLMetadataSupport.isEntityDescriptor(child)) {
@@ -78,7 +78,7 @@ public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
                 ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS, "Organization");
         if (!organizations.isEmpty()) {
             log.debug("{} pipeline stage filtering Organization from EntityDescriptor {}", getId(), entityId);
-            for (Element organization : organizations) {
+            for (final Element organization : organizations) {
                 entityDescriptor.removeChild(organization);
             }
         }
