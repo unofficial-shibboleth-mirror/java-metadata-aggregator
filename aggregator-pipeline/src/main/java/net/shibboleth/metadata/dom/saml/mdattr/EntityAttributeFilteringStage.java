@@ -344,10 +344,13 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
             // Establish the item's registrationAuthority, if any
             final String registrationAuthority = extractRegistrationAuthority(item);
 
-            // Locate mdattr:EntityAttributes element
-            final Element entityAttributes = SAMLMetadataSupport.getDescriptorExtensions(entity,
-                    MDAttrSupport.ENTITY_ATTRIBUTES_NAME);
-            if (entityAttributes != null) {
+            /*
+             * Process each EntityAttributes container independently. There MUST be only one
+             * such container according to the specification, but we can't count on that being
+             * picked up elsewhere as it isn't a schema constraint.
+             */
+            for (final Element entityAttributes : SAMLMetadataSupport.getDescriptorExtensionList(entity,
+                    MDAttrSupport.ENTITY_ATTRIBUTES_NAME)) {
                 filterEntityAttributes(entityAttributes, registrationAuthority);
                 
                 // remove the EntityAttributes container if it is now empty
