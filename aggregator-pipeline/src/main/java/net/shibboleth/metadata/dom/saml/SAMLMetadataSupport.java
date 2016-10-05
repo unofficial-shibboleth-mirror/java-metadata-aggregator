@@ -17,14 +17,17 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.dom.XMLSignatureSigningStage;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.w3c.dom.Element;
@@ -93,6 +96,31 @@ public final class SAMLMetadataSupport {
     }
 
     /**
+     * Gets a list of all instances of an extension element for a given descriptor.
+     * 
+     * An empty list is returned if the descriptor has no extensions, or if it
+     * has no extensions of the requested type.
+     * 
+     * @param descriptor the descriptor, never <code>null</code>
+     * @param extensionName name of the extension element, never <code>null</code>
+     * @return a possibly empty list of all extension instances
+     */
+    @Nonnull
+    public static List<Element> getDescriptorExtensionList(@Nonnull final Element descriptor,
+            @Nonnull final QName extensionName) {
+        Constraint.isNotNull(descriptor, "descriptor may not be null");
+        Constraint.isNotNull(extensionName, "extension name may not be null");
+
+        // Locate the Extensions element
+        final List<Element> extensions = ElementSupport.getChildElements(descriptor, EXTENSIONS_NAME);
+        if (extensions.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        
+        return ElementSupport.getChildElements(extensions.get(0), extensionName);
+    }
+
+    /**
      * Gets the first instance of an extension element for a given descriptor.
      * 
      * @param descriptor the descriptor, never <code>null</code>
@@ -107,12 +135,7 @@ public final class SAMLMetadataSupport {
             return null;
         }
 
-        final List<Element> extensions = ElementSupport.getChildElements(descriptor, EXTENSIONS_NAME);
-        if (extensions.isEmpty()) {
-            return null;
-        }
-
-        final List<Element> results = ElementSupport.getChildElements(extensions.get(0), extensionName);
+        final List<Element> results = getDescriptorExtensionList(descriptor, extensionName);
         if (results.isEmpty()) {
             return null;
         }
