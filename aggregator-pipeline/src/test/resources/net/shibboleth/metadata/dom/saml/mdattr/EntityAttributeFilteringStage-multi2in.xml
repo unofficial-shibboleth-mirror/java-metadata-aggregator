@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute"
+    xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    entityID="http://example.org/entity">
+    <Extensions>
+      <mdrpi:RegistrationInfo registrationAuthority="http://www.surfconext.nl/" registrationInstant="2016-08-22T16:00:00Z">
+        <mdrpi:RegistrationPolicy xml:lang="en">https://wiki.surfnet.nl/display/eduGAIN/EduGAIN</mdrpi:RegistrationPolicy>
+      </mdrpi:RegistrationInfo>
+      <mdattr:EntityAttributes>
+        <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+          <saml:AttributeValue>http://refeds.org/category/research-and-scholarship</saml:AttributeValue>
+        </saml:Attribute>
+      </mdattr:EntityAttributes>
+      <mdattr:EntityAttributes>
+        <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+          <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">http://refeds.org/category/research-and-scholarship</saml:AttributeValue>
+        </saml:Attribute>
+        <saml:Attribute Name="urn:oasis:names:tc:SAML:attribute:assurance-certification" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+          <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">https://refeds.org/sirtfi</saml:AttributeValue>
+        </saml:Attribute>
+      </mdattr:EntityAttributes>
+    </Extensions>
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="https://example.org/whatever" index="0" isDefault="true"/>
+    </SPSSODescriptor>
+</EntityDescriptor>

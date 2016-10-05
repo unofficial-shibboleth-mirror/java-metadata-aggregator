@@ -207,4 +207,41 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
         Assert.assertEquals(ctx.toString(), "{v=a, n=b, f=c, r=(none)}");
     }
 
+    // Tests for MDA-168 multiple containers issue
+    
+    @Test
+    public void testMDA168_1() throws Exception {
+        final List<Item<Element>> items = makeItems(readXMLData("multicon.xml"));
+        final List<Predicate<EntityAttributeContext>> rules = new ArrayList<>();
+        rules.add(new EntityCategoryMatcher("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
+        
+        final EntityAttributeFilteringStage stage = new EntityAttributeFilteringStage();
+        stage.setId("id");
+        stage.setRules(rules);
+        stage.initialize();
+        stage.execute(items);
+        stage.destroy();
+        
+        final Element result = items.get(0).unwrap();
+        final Element expected = readXMLData("multiout.xml");
+        assertXMLIdentical(expected, result);
+    }
+    @Test
+
+    public void testMDA168_2() throws Exception {
+        final List<Item<Element>> items = makeItems(readXMLData("multi2in.xml"));
+        final List<Predicate<EntityAttributeContext>> rules = new ArrayList<>();
+        rules.add(new EntityCategoryMatcher("http://refeds.org/category/research-and-scholarship"));
+        
+        final EntityAttributeFilteringStage stage = new EntityAttributeFilteringStage();
+        stage.setId("id");
+        stage.setRules(rules);
+        stage.initialize();
+        stage.execute(items);
+        stage.destroy();
+        
+        final Element result = items.get(0).unwrap();
+        final Element expected = readXMLData("multi2out.xml");
+        assertXMLIdentical(expected, result);
+    }
 }
