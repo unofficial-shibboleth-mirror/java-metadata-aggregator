@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class SimpleItemCollectionSerializerTest {
 
     @Test
-    public void serializeCollection() {
+    public void serializeCollection() throws Exception {
         final Item<String> i1 = new MockItem("one");
         final Item<String> i2 = new MockItem("two");
         final Item<String> i3 = new MockItem("three");

@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
@@ -50,9 +51,9 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMElementSerializer.class);
 
-    /** {@inheritDoc} */
     @Override
-    public void serialize(@Nonnull final Item<Element> item, @Nonnull final OutputStream output) {
+    public void serialize(@Nonnull final Item<Element> item, @Nonnull final OutputStream output)
+        throws IOException {
         if (item == null) {
             return;
         }
@@ -66,13 +67,13 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
             serializer.transform(new DOMSource(documentRoot.getOwnerDocument()), new StreamResult(output));
         } catch (final TransformerException e) {
             log.error("Unable to write out XML", e);
+            throw new IOException(e);
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serializeCollection(@Nonnull final Collection<Item<Element>> items,
-            @Nonnull final OutputStream output) {
+            @Nonnull final OutputStream output) throws IOException {
         final Iterator<Item<Element>> iter = items.iterator();
         if (iter.hasNext()) {
             serialize(iter.next(), output);

@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 
@@ -37,7 +38,10 @@ public interface ItemCollectionSerializer<T> {
      * @param items {@link Collection} of {@link Item}s to be serialized
      * @param output output stream to which the serialized form of the {@link Item}
      *  collection will be written
+     * 
+     * @throws IOException if an I/O exception occurs during serialization
      */
-    public void serializeCollection(@Nonnull Collection<Item<T>> items, @Nonnull OutputStream output);
+    public void serializeCollection(@Nonnull Collection<Item<T>> items, @Nonnull OutputStream output)
+        throws IOException;
 
 }

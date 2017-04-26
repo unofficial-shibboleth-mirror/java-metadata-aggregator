@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 
@@ -43,7 +44,8 @@ public class SimpleItemCollectionSerializer<T> implements ItemCollectionSerializ
     }
 
     @Override
-    public void serializeCollection(@Nonnull final Collection<Item<T>> items, @Nonnull final OutputStream output) {
+    public void serializeCollection(@Nonnull final Collection<Item<T>> items, @Nonnull final OutputStream output)
+        throws IOException {
         for (final Item<T> item : items) {
             serializer.serialize(item, output);
         }

@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
@@ -36,6 +37,9 @@ public interface ItemSerializer<T> {
      * 
      * @param item {@link Item} to be serialized
      * @param output output stream to which the serialized {@link Item} will be written
+     * 
+     * @throws IOException if an I/O exception occurs during serialization
      */
-    public void serialize(@Nonnull Item<T> item, @Nonnull OutputStream output);
+    public void serialize(@Nonnull Item<T> item, @Nonnull OutputStream output)
+        throws IOException;
 }

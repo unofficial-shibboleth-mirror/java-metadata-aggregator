@@ -34,7 +34,7 @@ public class DOMElementSerializerTest extends BaseDOMTest {
     }
 
     @Test
-    public void noItemsCollection() {
+    public void noItemsCollection() throws Exception {
         final Collection<Item<Element>> items = new ArrayList<>();
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final DOMElementSerializer ser = new DOMElementSerializer();
