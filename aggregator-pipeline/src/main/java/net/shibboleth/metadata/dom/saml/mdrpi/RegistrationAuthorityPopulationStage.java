@@ -56,7 +56,7 @@ public class RegistrationAuthorityPopulationStage extends BaseStage<Element> {
                metadata.put(new ErrorStatus(getId(), "item was not an EntityDescriptor"));
            } else {
                // Extract mdrpi:RegistrationInfo if present.
-               final Element regInfo = SAMLMetadataSupport.getDescriptorExtensions(entity,
+               final Element regInfo = SAMLMetadataSupport.getDescriptorExtension(entity,
                        MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
                if (regInfo != null) {
                    // Extract registrationAuthority

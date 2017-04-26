@@ -238,7 +238,7 @@ public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<E
      */
     protected boolean filterOutDescriptor(@Nonnull final Element descriptor) {
         final Element registrationInfoElement =
-                SAMLMetadataSupport.getDescriptorExtensions(descriptor, MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
+                SAMLMetadataSupport.getDescriptorExtension(descriptor, MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
         if (registrationInfoElement == null) {
             if (requiringRegistrationInformation) {
                 log.debug(
