@@ -126,15 +126,11 @@ public final class SAMLMetadataSupport {
      * @param descriptor the descriptor, never <code>null</code>
      * @param extensionName the name of the extension element, never <code>null</code>
      * 
-     * @return the first instance of the extension element or <code>null</code> if either argument is null,
-     *          or no such element exists as an extension of the descriptor
+     * @return the first instance of the extension element or <code>null</code> if
+     *          no such element exists as an extension of the descriptor
      */
-    public static Element getDescriptorExtensions(@Nullable final Element descriptor,
-            @Nullable final QName extensionName) {
-        if (descriptor == null || extensionName == null) {
-            return null;
-        }
-
+    public static Element getDescriptorExtensions(@Nonnull final Element descriptor,
+            @Nonnull final QName extensionName) {
         final List<Element> results = getDescriptorExtensionList(descriptor, extensionName);
         if (results.isEmpty()) {
             return null;
