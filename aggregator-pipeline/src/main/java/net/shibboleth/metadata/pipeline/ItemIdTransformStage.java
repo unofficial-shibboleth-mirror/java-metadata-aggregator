@@ -24,18 +24,17 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
-import org.springframework.core.convert.converter.Converter;
-
-import com.google.common.base.Predicates;
-
 /**
- * A pipeline stage that, takes each {@link ItemId} associated with an {@link Item}, transforms its
+ * A pipeline stage that, taking each {@link ItemId} associated with an {@link Item}, transforms its
  * value using a set of registered transformers, and associates an additional {@link ItemId} (whose value is the
  * result of the transform) with the element.
  * 
@@ -45,14 +44,14 @@ import com.google.common.base.Predicates;
 public class ItemIdTransformStage<T> extends BaseIteratingStage<T> {
 
     /** Transformers used on IDs. */
-    private Collection<Converter<String, String>> idTransformers = new LazyList<>();
+    private Collection<Function<String, String>> idTransformers = new LazyList<>();
 
     /**
      * Gets the transforms used to produce the transformed entity IDs.
      * 
      * @return transforms used to produce the transformed entity IDs, never null
      */
-    public Collection<Converter<String, String>> getIdTransformers() {
+    public Collection<Function<String, String>> getIdTransformers() {
         return idTransformers;
     }
 
@@ -61,7 +60,7 @@ public class ItemIdTransformStage<T> extends BaseIteratingStage<T> {
      * 
      * @param transformers transforms used to produce the transformed entity IDs
      */
-    public synchronized void setIdTransformers(final Collection<Converter<String, String>> transformers) {
+    public synchronized void setIdTransformers(final Collection<Function<String, String>> transformers) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -75,8 +74,8 @@ public class ItemIdTransformStage<T> extends BaseIteratingStage<T> {
 
         final List<ItemId> transformedIds = new ArrayList<>();
         for (final ItemId id : ids) {
-            for (final Converter<String, String> idTransform : idTransformers) {
-                final String transformedId = idTransform.convert(id.getId());
+            for (final Function<String, String> idTransform : idTransformers) {
+                final String transformedId = idTransform.apply(id.getId());
                 transformedIds.add(new ItemId(transformedId));
             }
         }

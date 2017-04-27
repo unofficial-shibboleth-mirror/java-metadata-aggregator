@@ -22,15 +22,15 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
-import org.springframework.core.convert.converter.Converter;
+
+import com.google.common.base.Function;
 
 /** Transforms a string into another string that is the SHA1 hash of the original string prepended with "{sha1}". */
 @ThreadSafe
-public class MDQuerySHA1ItemIdTransformer implements Converter<String, String> {
+public class MDQuerySHA1ItemIdTransformer implements Function<String, String> {
 
-    /** {@inheritDoc} */
     @Override
-    public String convert(@Nonnull final String source) {
+    public String apply(@Nonnull final String source) {
         return "{sha1}" + CodecUtil.hex(HashUtil.sha1(source.getBytes()));
     }
 }

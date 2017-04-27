@@ -20,15 +20,14 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import com.google.common.base.Function;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.pipeline.ComponentInfo;
-import net.shibboleth.metadata.pipeline.ItemIdTransformStage;
-
-import org.springframework.core.convert.converter.Converter;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 public class ItemIdTransformStageTest {
 
@@ -40,7 +39,7 @@ public class ItemIdTransformStageTest {
         final ArrayList<Item<String>> mdColl = new ArrayList<>();
         mdColl.add(item);
 
-        final ArrayList<Converter<String, String>> transforms = new ArrayList<>();
+        final ArrayList<Function<String, String>> transforms = new ArrayList<>();
         transforms.add(new MDQueryMD5ItemIdTransformer());
         transforms.add(new MDQuerySHA1ItemIdTransformer());
 

@@ -23,15 +23,15 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.bouncycastle.crypto.digests.MD5Digest;
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
-import org.springframework.core.convert.converter.Converter;
+
+import com.google.common.base.Function;
 
 /** Transforms a string into another string that is the MD5 hash of the original string prepended with "{md5}". */
 @ThreadSafe
-public class MDQueryMD5ItemIdTransformer implements Converter<String, String> {
+public class MDQueryMD5ItemIdTransformer implements Function<String, String> {
 
-    /** {@inheritDoc} */
     @Override
-    public String convert(@Nonnull final String source) {
+    public String apply(@Nonnull final String source) {
         return "{md5}" + CodecUtil.hex(HashUtil.hash(new MD5Digest(), source.getBytes()));
     }
 }
