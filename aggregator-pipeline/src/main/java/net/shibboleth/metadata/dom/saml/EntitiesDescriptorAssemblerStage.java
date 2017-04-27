@@ -215,11 +215,15 @@ public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
         /**
          * Orders a given Item collection.
          * 
-         * @param items collection of Item, never null
+         * @param items collection of {@link Item}s, never null
          * 
-         * @return sorted collection of Item, never null
+         * @return sorted collection of {@link Item}s, never null
+         * 
+         * @throws StageProcessingException if the items in the collection cannot be ordered, for example
+         *      because they do not meet required pre-conditions
          */
-        public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items);
+        public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items)
+            throws StageProcessingException;
     }
 
     /** An ordering strategy that simply returns the collection in whatever order it was already in. */
