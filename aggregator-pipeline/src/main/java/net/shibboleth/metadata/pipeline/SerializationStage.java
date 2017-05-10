@@ -134,7 +134,7 @@ public class SerializationStage<T> extends BaseStage<T> {
         try (OutputStream stream = new FileOutputStream(outputFile)) {
             serializer.serializeCollection(itemCollection, stream);
         } catch (final IOException e) {
-            throw new StageProcessingException("Error write to output file " + outputFile.getAbsolutePath(), e);
+            throw new StageProcessingException("Error writing to output file " + outputFile.getAbsolutePath(), e);
         }
     }
 
