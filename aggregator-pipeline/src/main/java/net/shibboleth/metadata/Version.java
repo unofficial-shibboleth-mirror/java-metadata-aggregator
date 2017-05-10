@@ -22,17 +22,17 @@ import javax.annotation.Nonnull;
 /** Class for getting and printing the version of the metadata pipeline. */
 public final class Version {
 
-    /** metadata pipeline version. */
+    /** Metadata pipeline version. */
     private static final String VERSION;
 
-    /** metadata pipeline major version number. */
+    /** Metadata pipeline major version number. */
     private static final int MAJOR_VERSION;
 
-    /** metadata pipeline minor version number. */
+    /** Metadata pipeline minor version number. */
     private static final int MINOR_VERSION;
 
-    /** metadata pipeline micro version number. */
-    private static final int MICRO_VERSION;
+    /** Metadata pipeline patch version number. */
+    private static final int PATCH_VERSION;
 
     /** Constructor. */
     private Version() {
@@ -76,19 +76,23 @@ public final class Version {
     }
 
     /**
-     * Gets the micro version number of the metadata pipeline.
+     * Gets the patch version number of the metadata pipeline.
      * 
-     * @return micro version number of the metadata pipeline
+     * @return patch version number of the metadata pipeline
      */
-    public static int getMicroVersion() {
-        return MICRO_VERSION;
+    public static int getPatchVersion() {
+        return PATCH_VERSION;
     }
 
     static {
         VERSION = Version.class.getPackage().getImplementationVersion();
-        final String[] versionParts = VERSION.split(".");
+
+        // Semantic versioning: three dot-separated numbers, followed by extensions
+        // separated by '-' and '+'.
+        final String[] versionParts = VERSION.split("[\\.\\+\\-]");
+
         MAJOR_VERSION = Integer.parseInt(versionParts[0]);
         MINOR_VERSION = Integer.parseInt(versionParts[1]);
-        MICRO_VERSION = Integer.parseInt(versionParts[2]);
+        PATCH_VERSION = Integer.parseInt(versionParts[2]);
     }
 }

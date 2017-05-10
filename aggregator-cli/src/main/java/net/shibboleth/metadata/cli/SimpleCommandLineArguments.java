@@ -76,6 +76,14 @@ public class SimpleCommandLineArguments {
     @Parameter(names = "--help", help=true)
     private boolean help;
 
+    // Version
+
+    /**
+     * Version has been requested.
+     */
+    @Parameter(names = "--version")
+    private boolean version;
+
     /**
      * Parse an array of command-line arguments as passed to the main program.
      *
@@ -85,6 +93,10 @@ public class SimpleCommandLineArguments {
         try {
             new JCommander(this, args);
             
+            if (doHelp() || doVersion()) {
+                return;
+            }
+
             if (otherArgs.size() != 2) {
                 printHelp(System.out);
                 System.out.flush();
@@ -155,14 +167,19 @@ public class SimpleCommandLineArguments {
     }
 
     /**
+     * Indicates the presence of the <code>--version</code> option.
+     *
+     * @return <code>true</code> if the user requested the version be printed.
+     */
+    public boolean doVersion() {
+        return version;
+    }
+
+    /**
      * Validate the provided command line arguments, for example issuing
      * an error if they are inconsistent.
      */
     private void validateCommandLineArguments() {
-        if (doHelp()) {
-            return;
-        }
-
         if (doVerboseOutput() && doQuietOutput()) {
             errorAndExit("Verbose and quiet output are mutually exclusive");
         }
@@ -185,6 +202,7 @@ public class SimpleCommandLineArguments {
         out.println("==== Command Line Options ====");
         out.println();
         out.println(String.format("  --%-20s %s", "help", "Prints this help information"));
+        out.println(String.format("  --%-20s %s", "version", "Prints aggregator framework version"));
         out.println();
 
         out.println("Logging Options - these options are mutually exclusive");

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.Version;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.TerminationException;
 
@@ -78,6 +79,11 @@ public final class SimpleCommandLine {
 
         if (cli.doHelp()) {
             cli.printHelp(System.out);
+            System.exit(RC_OK);
+        }
+
+        if (cli.doVersion()) {
+            System.out.println(Version.getVersion());
             System.exit(RC_OK);
         }
         
