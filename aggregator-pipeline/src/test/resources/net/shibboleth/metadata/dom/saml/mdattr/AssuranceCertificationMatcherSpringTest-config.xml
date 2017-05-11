@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath:net/shibboleth/metadata/beans.xml"/>
+
+    <bean id="certificationMatcherNoRA" parent="mda.AssuranceCertificationMatcher">
+        <constructor-arg value="category"/>
+    </bean>
+
+    <bean id="certificationMatcherWithRA" parent="mda.AssuranceCertificationMatcher">
+        <constructor-arg value="category"/>
+        <constructor-arg value="registrar"/>
+    </bean>
+
+    <bean id="oldMatcherNoRA" parent="mda.MultiPredicateMatcher">
+        <property name="nameFormatPredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+            />
+        </property>
+        <property name="namePredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="urn:oasis:names:tc:SAML:attribute:assurance-certification"
+            />
+        </property>
+        <property name="valuePredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="category"
+            />
+        </property>
+    </bean>
+
+    <bean id="oldMatcherWithRA" parent="mda.MultiPredicateMatcher">
+        <property name="nameFormatPredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+            />
+        </property>
+        <property name="namePredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="urn:oasis:names:tc:SAML:attribute:assurance-certification"
+            />
+        </property>
+        <property name="valuePredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="category"
+            />
+        </property>
+        <property name="registrationAuthorityPredicate">
+            <bean class="com.google.common.base.Predicates"
+                factory-method="equalTo"
+                c:_="registrar"
+            />
+        </property>
+    </bean>
+
+</beans>

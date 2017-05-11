@@ -154,6 +154,9 @@
         net.shibboleth.metadata.dom.saml.mdattr
     -->
 
+    <bean id="mda.AssuranceCertificationMatcher" abstract="true"
+        class="net.shibboleth.metadata.dom.saml.mdattr.AssuranceCertificationMatcher"/>
+
     <bean id="mda.EntityAttributeFilteringStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage"/>
 
