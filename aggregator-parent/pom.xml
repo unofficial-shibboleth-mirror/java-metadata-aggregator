@@ -35,6 +35,7 @@
         <checkstyle.configLocation>${project.basedir}/../aggregator-parent/resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
         <aggregator-parent.site.url>${shibboleth.site.url}java-metadata-aggregator/${project.version}/</aggregator-parent.site.url>
         <aggregator-module.site.url>${aggregator-parent.site.url}${project.artifactId}</aggregator-module.site.url>
+        <shibboleth.site.url>https://build.shibboleth.net/nexus/content/sites/site/</shibboleth.site.url>
     </properties>
 
     <repositories>
@@ -120,6 +121,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-webdav-jackrabbit</artifactId>
+                        <version>2.10</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>attach-descriptor</id>
