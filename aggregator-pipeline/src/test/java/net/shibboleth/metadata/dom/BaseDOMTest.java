@@ -18,7 +18,10 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.ErrorStatus;
@@ -30,10 +33,12 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,7 +53,7 @@ public abstract class BaseDOMTest extends BaseTest {
     protected BaseDOMTest(final Class<?> clazz) {
         super(clazz);
     }
-    
+
     /**
      * Setup test class. Creates and initializes the parser pool.
      * 
@@ -70,7 +75,7 @@ public abstract class BaseDOMTest extends BaseTest {
     public ParserPool getParserPool() {
         return parserPool;
     }
-    
+
     /**
      * Reads in an XML file, parses it, and returns the document element. If the given path is relative (i.e., does not
      * start with a '/') it is assumed to be relative to the class, or to /data if the class has not been set.
@@ -126,11 +131,39 @@ public abstract class BaseDOMTest extends BaseTest {
             org.testng.Assert.fail(diff.toString());
         }
     }
-    
+
+    /**
+     * Checks whether two nodes are equal based on {@link Node#isEqualNode(Node)}. Both nodes are serialized, re-parsed,
+     * and then compared for equality. This forces any changes made to the document that haven't yet been represented in
+     * the DOM (e.g., declaration of used namespaces) to be flushed to the DOM.
+     * 
+     * @param expected the expected node against which the actual node will be tested, never null
+     * @param actual the actual node tested against the expected node, never null
+     * 
+     * @throws XMLParserException thrown if there is a problem serializing and re-parsing the nodes
+     */
+    public void assertXMLEqual(@Nonnull final Node expected, @Nonnull final Node actual) throws XMLParserException {
+        Constraint.isNotNull(actual, "Actual Node may not be null");
+        final String serializedActual = SerializeSupport.nodeToString(actual);
+        Element deserializedActual = parserPool.parse(new StringReader(serializedActual)).getDocumentElement();
+
+        Constraint.isNotNull(expected, "Expected Node may not be null");
+        final String serializedExpected = SerializeSupport.nodeToString(expected);
+        Element deserializedExpected = parserPool.parse(new StringReader(serializedExpected)).getDocumentElement();
+
+        final boolean ok = deserializedExpected.isEqualNode(deserializedActual);
+        if (!ok) {
+            System.out.println("Expected:\n" + serializedExpected);
+            System.out.println("Actual:\n" + serializedActual);
+        }
+
+        Assert.assertTrue(ok, "Actual Node does not equal expected Node");
+    }
+
     protected int countErrors(final Item<Element> item) {
         final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
         final List<ErrorStatus> errors = metadata.get(ErrorStatus.class);
         return errors.size();
     }
-    
+
 }

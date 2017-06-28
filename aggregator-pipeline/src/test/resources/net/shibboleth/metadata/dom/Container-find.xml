@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="ns">
+    <child>child value</child>
+    <findme>find me 1</findme>
+    <another>ignorable child</another>
+    <findme>find me 2</findme>
+    <another>ignore me as well</another>
+    <findme>find me 3</findme>
+</root>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="ns">
+    <mid>
+        <leaf>leaf 1</leaf>
+        <leaf>leaf 2</leaf>
+    </mid>
+</root>
