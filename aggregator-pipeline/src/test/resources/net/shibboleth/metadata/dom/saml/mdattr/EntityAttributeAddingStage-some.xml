@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute"
+    xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    entityID="http://example.org/entity">
+    <Extensions>
+        <mdrpi:RegistrationInfo registrationAuthority="http://ukfederation.org.uk"
+            registrationInstant="2014-03-18T15:23:31Z">
+            <mdrpi:RegistrationPolicy xml:lang="en"
+                >http://ukfederation.org.uk/doc/mdrps-20130902</mdrpi:RegistrationPolicy>
+        </mdrpi:RegistrationInfo>
+        <mdattr:EntityAttributes>
+            <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml:AttributeValue>http://www.geant.net/uri/dataprotection-code-of-conduct/v1</saml:AttributeValue>
+            </saml:Attribute>
+            <saml:Attribute Name="http://macedir.org/entity-category-support" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml:AttributeValue>http://example.org/category2support</saml:AttributeValue>
+            </saml:Attribute>
+        </mdattr:EntityAttributes>
+    </Extensions>
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <KeyDescriptor>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIEfzCCA2egAwIBAgIQQSSnV5Mk/EXZxgrsbnU7ajANBgkqhkiG9w0BAQUFADA2
+                        MQswCQYDVQQGEwJOTDEPMA0GA1UEChMGVEVSRU5BMRYwFAYDVQQDEw1URVJFTkEg
+                        U1NMIENBMB4XDTEzMDMwNjAwMDAwMFoXDTE2MDMwNTIzNTk1OVowRzEhMB8GA1UE
+                        CxMYRG9tYWluIENvbnRyb2wgVmFsaWRhdGVkMSIwIAYDVQQDExlzcDIwMTMtaGEt
+                        YWRmczIuZ2VhbnQubmV0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+                        qzeOIPfgr/SneQUtjqDRGLbG4YKxmo2zfAIF+wjaYXnDTq/yWt852nImchvCgjWu
+                        eXnHJ6oZZGdaN4kMgPh1oxqJ4UE6dXY9HEoru/Awp2P/CGiYOQ4Q5u5+AyFznGRx
+                        y2uNYrD85C6uTIgiKytH6Lai8f6dFxHKO/u8o+kbrl2Z1CkAf6wePu2H5a44tGnF
+                        SP/s7lW4ScSthNz1OF8BoPFKpWUmJk/584rZZjR+fqB9fQBwxRoRBCFZTduXP0G9
+                        861BS6Nt6Dfuli9jdCBC0L8ai4fH43a94EQVmMfcjImrkYBg7v6lVS4IY75ONiOt
+                        sObamvbT+yNEuqw0jBjmKwIDAQABo4IBdjCCAXIwHwYDVR0jBBgwFoAUDL2TaAzz
+                        3qujSWsrN1dH6pDjue0wHQYDVR0OBBYEFBQXWZZ8RdkPMtC2o0RF+T+gH7VsMA4G
+                        A1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMB
+                        BggrBgEFBQcDAjAiBgNVHSAEGzAZMA0GCysGAQQBsjEBAgIdMAgGBmeBDAECATA6
+                        BgNVHR8EMzAxMC+gLaArhilodHRwOi8vY3JsLnRjcy50ZXJlbmEub3JnL1RFUkVO
+                        QVNTTENBLmNybDBtBggrBgEFBQcBAQRhMF8wNQYIKwYBBQUHMAKGKWh0dHA6Ly9j
+                        cnQudGNzLnRlcmVuYS5vcmcvVEVSRU5BU1NMQ0EuY3J0MCYGCCsGAQUFBzABhhpo
+                        dHRwOi8vb2NzcC50Y3MudGVyZW5hLm9yZzAkBgNVHREEHTAbghlzcDIwMTMtaGEt
+                        YWRmczIuZ2VhbnQubmV0MA0GCSqGSIb3DQEBBQUAA4IBAQCRJqxXjeInIqlPLH5+
+                        iFqL92oLPKiJDqlDWpzR9P0xF7IS4oBApWZ3f2Rgcx1dtwUf7TakMpAuxIxzMjfP
+                        xaik/AuInMjxKU9AJS/lRlLogT3YXZ2aAGZbt2P/hYn4mdn5ryB9WF/w7mnyrpBb
+                        o7vllsYXYmRX/c0MEPYfSMoKxomRAY2ViIh83m4sYk8+Nkm+3I9t0O3wBqaQYqpc
+                        Mg48AG2JwLeuKUIC+faPOckeMXdrknL0Ra7Vb+eRoEKCqw3L9ka5/rloFNEN+hMZ
+                        zubyfY3feeIV+kq3YNmjCwhDqckv5kXAdnkFprjB3X/xNfML2Jum02hKkff4AYfP
+                        2IOi
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="https://example.org/whatever" index="0" isDefault="true"/>
+    </SPSSODescriptor>
+</EntityDescriptor>
