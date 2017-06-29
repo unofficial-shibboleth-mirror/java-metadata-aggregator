@@ -29,6 +29,16 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -41,16 +51,6 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 /**
  * A pipeline stage that XML schema validates the elements within the {@link DOMElementItem} collection.
@@ -122,8 +122,8 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
         elementRequiredToBeSchemaValid = isRequired;
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
         final Validator validator = validationSchema.newValidator();
@@ -139,8 +139,6 @@ public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
                 item.getItemMetadata().put(new WarningStatus(getId(), e.getMessage()));
             }
         }
-
-        return true;
     }
 
     /** {@inheritDoc} */

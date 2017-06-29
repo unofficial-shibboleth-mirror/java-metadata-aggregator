@@ -27,6 +27,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.xml.security.Init;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
+import com.google.common.collect.ImmutableSet;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -38,13 +45,6 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-
-import org.apache.xml.security.Init;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * A pipeline stage which validates the XML digital signature found on DOM Elements.
@@ -241,9 +241,9 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
 
         permittingEmptyReferences = permit;
     }
-    
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         
         final Element docElement = item.unwrap();
         
@@ -259,13 +259,13 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
                 } else {
                     log.debug("DOM Element is not signed, no verification performed");
                 }
-                return true;
+                return;
             }
         } catch (final ValidationException e) {
             // pass on an error from signature location (e.g., multiple signatures)
             log.debug("setting status: ", e.getMessage());
             item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
-            return true;
+            return;
         }
 
         if (log.isDebugEnabled()) {
@@ -281,10 +281,8 @@ public class XMLSignatureValidationStage extends BaseIteratingStage<Element> {
                 item.getItemMetadata().put(new ErrorStatus(getId(), message));
             } else {
                 item.getItemMetadata().put(new WarningStatus(getId(), message));
-            }            
+            }
         }
-
-        return true;
     }
 
     /** {@inheritDoc} */

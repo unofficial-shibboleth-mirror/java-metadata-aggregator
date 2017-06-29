@@ -22,14 +22,14 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 /** Filtering stage that removes Organization elements from EntityDescriptors. */
 @ThreadSafe
@@ -38,15 +38,14 @@ public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
         } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
             processEntityDescriptor(descriptor);
         }
-        return true;
     }
 
     /**

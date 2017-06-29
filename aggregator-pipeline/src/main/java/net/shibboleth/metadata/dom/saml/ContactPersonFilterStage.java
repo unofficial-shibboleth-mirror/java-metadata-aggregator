@@ -27,6 +27,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
+import com.google.common.collect.ImmutableSet;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -39,12 +45,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Filtering stage that removes ContactPerson elements from EntityDescriptors.
@@ -153,15 +153,14 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
         whitelistingTypes = whitelisting;
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             processEntitiesDescriptor(descriptor);
         } else if (SAMLMetadataSupport.isEntityDescriptor(descriptor)) {
             processEntityDescriptor(descriptor);
         }
-        return true;
     }
 
     /**
@@ -212,7 +211,8 @@ public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
     protected boolean isRetainedContactPersonType(@Nonnull final Element contactPerson) {
         Constraint.isNotNull(contactPerson, "Contact person element can not be null");
 
-        final String type = StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
+        final String type =
+                StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
 
         if (type == null) {
             log.debug(

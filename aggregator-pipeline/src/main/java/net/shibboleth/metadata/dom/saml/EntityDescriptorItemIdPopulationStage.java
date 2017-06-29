@@ -20,13 +20,13 @@ package net.shibboleth.metadata.dom.saml;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
-
-import org.w3c.dom.Element;
 
 /**
  * A stage which, for each EntityDescriptor collection element, adds an {@link ItemId}, with the entity's entity ID, to
@@ -35,15 +35,13 @@ import org.w3c.dom.Element;
 @ThreadSafe
 public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<Element> {
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element metadataElement = item.unwrap();
 
         if (SAMLMetadataSupport.isEntityDescriptor(metadataElement)) {
             final String entityId = AttributeSupport.getAttributeValue(metadataElement, null, "entityID");
             item.getItemMetadata().put(new ItemId(entityId));
         }
-
-        return true;
     }
 }

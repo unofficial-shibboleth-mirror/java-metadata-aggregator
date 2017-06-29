@@ -41,7 +41,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> type of {@link Item} this stage operates upon
  */
 @ThreadSafe
-public class ItemIdTransformStage<T> extends BaseIteratingStage<T> {
+public class ItemIdTransformStage<T> extends BaseFilteringStage<T> {
 
     /** Transformers used on IDs. */
     private Collection<Function<String, String>> idTransformers = new LazyList<>();

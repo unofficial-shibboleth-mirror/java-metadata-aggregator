@@ -20,6 +20,9 @@ package net.shibboleth.metadata.dom.saml;
 import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -27,9 +30,6 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.security.Type4UUIDIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
 
 /** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
 public class GenerateIdStage extends BaseIteratingStage<Element> {
@@ -54,11 +54,11 @@ public class GenerateIdStage extends BaseIteratingStage<Element> {
         idGenerator = Constraint.isNotNull(generator, "ID generation strategy can not be null");
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element element = item.unwrap();
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(element)) {
-            return true;
+            return;
         }
 
         Attr idAttribute = AttributeSupport.getAttribute(element, ID_ATTRIB);
@@ -68,7 +68,5 @@ public class GenerateIdStage extends BaseIteratingStage<Element> {
         }
 
         idAttribute.setValue(idGenerator.generateIdentifier());
-
-        return true;
     }
 }

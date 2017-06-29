@@ -20,6 +20,8 @@ package net.shibboleth.metadata.dom.saml;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
@@ -27,8 +29,6 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
-
-import org.w3c.dom.Element;
 
 /**
  * Checks that a SAML EntitiesDescriptor or EntityDescriptor's validUntil is (optionally) present and is within a given
@@ -90,12 +90,12 @@ public class ValidateValidUntilStage extends BaseIteratingStage<Element> {
         maxValidityInterval = interval;
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element element = item.unwrap();
 
         if (!SAMLMetadataSupport.isEntitiesDescriptor(element)) {
-            return true;
+            return;
         }
 
         final Long validUntil =
@@ -119,8 +119,6 @@ public class ValidateValidUntilStage extends BaseIteratingStage<Element> {
                 }
             }
         }
-
-        return true;
     }
 
     /** {@inheritDoc} */

@@ -36,7 +36,7 @@ import com.google.common.collect.Iterables;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.BaseFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
@@ -46,7 +46,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /** A pipeline stage that will filter EntityDescriptor or EntityDescriptors based on their registration authority. */
 @ThreadSafe
-public class EntityRegistrationAuthorityFilterStage extends BaseIteratingStage<Element> {
+public class EntityRegistrationAuthorityFilterStage extends BaseFilteringStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRegistrationAuthorityFilterStage.class);

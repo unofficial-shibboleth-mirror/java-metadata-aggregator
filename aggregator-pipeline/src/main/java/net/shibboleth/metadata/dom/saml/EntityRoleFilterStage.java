@@ -30,7 +30,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.BaseFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
@@ -55,7 +55,7 @@ import com.google.common.collect.Iterables;
  * EntitiesDescriptors the role filter will effect all descendant EntityDescriptors.
  */
 @ThreadSafe
-public class EntityRoleFilterStage extends BaseIteratingStage<Element> {
+public class EntityRoleFilterStage extends BaseFilteringStage<Element> {
 
     /** QName of the RoleDescriptor element. */
     public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "RoleDescriptor");

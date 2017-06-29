@@ -50,6 +50,18 @@ import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 
+import org.apache.xml.security.Init;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.io.CharStreams;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.BaseIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -62,18 +74,6 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
-
-import org.apache.xml.security.Init;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.io.CharStreams;
 
 /**
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DOMElementItem}
@@ -639,8 +639,8 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         return digestAlgo;
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element element = item.unwrap();
         final XMLSignature signature = xmlSigFactory.newXMLSignature(buildSignedInfo(element), buildKeyInfo());
         try {
@@ -657,15 +657,14 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
             // Log the pre-digest data for debugging
             if (isDebugPreDigest() && log.isDebugEnabled()) {
                 final Reference ref = (Reference) signature.getSignedInfo().getReferences().get(0);
-                final String preDigest = CharStreams.toString(new InputStreamReader(ref.getDigestInputStream(), "UTF-8"));
+                final String preDigest =
+                        CharStreams.toString(new InputStreamReader(ref.getDigestInputStream(), "UTF-8"));
                 log.debug("pre digest: {}", preDigest);
             }
         } catch (final Exception e) {
             log.error("Unable to create signature for element", e);
             throw new StageProcessingException("Unable to create signature for element", e);
         }
-
-        return true;
     }
 
     /**
