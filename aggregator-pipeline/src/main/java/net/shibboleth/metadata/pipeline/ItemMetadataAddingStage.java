@@ -37,7 +37,7 @@ import com.google.common.base.Predicates;
  * @param <T> type of {@link Item} this stage operates upon
  */
 @ThreadSafe
-public class ItemMetadataAddingStage<T> extends AbstractFilteringStage<T> {
+public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
 
     /** {@link ItemMetadata} objects to add to each {@link Item}'s item metadata. */
     private Collection<ItemMetadata> additionalItemMetadata = new LazyList<>();
@@ -67,10 +67,8 @@ public class ItemMetadataAddingStage<T> extends AbstractFilteringStage<T> {
         CollectionSupport.addIf(additionalItemMetadata, metadata, Predicates.notNull());
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected boolean doExecute(@Nonnull final Item<T> item) throws StageProcessingException {
+    protected void doExecute(@Nonnull final Item<T> item) throws StageProcessingException {
         item.getItemMetadata().putAll(additionalItemMetadata);
-        return true;
     }
 }

@@ -18,31 +18,29 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 /**
  * A stage which removes all instances of the specified element from DOM metadata.
  */
 @ThreadSafe
-public class ElementStrippingStage extends AbstractStage<Element> {
+public class ElementStrippingStage extends AbstractIteratingStage<Element> {
 
     /** Namespace of the element to strip. */
     private String elementNamespace;
@@ -94,27 +92,25 @@ public class ElementStrippingStage extends AbstractStage<Element> {
                 "target element name can not be null or empty");
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item)
             throws StageProcessingException {
-        for (final Item<Element> item : items) {
-            final Element docElement = item.unwrap();
+        final Element docElement = item.unwrap();
 
-            // List all the matching descendant elements in this document in document order
-            // Note that this list will never include the document element itself
-            final NodeList nodeList = docElement.getElementsByTagNameNS(elementNamespace, elementName);
+        // List all the matching descendant elements in this document in document order
+        // Note that this list will never include the document element itself
+        final NodeList nodeList = docElement.getElementsByTagNameNS(elementNamespace, elementName);
 
-            // Copy these into a list, because a NodeList can change length at any time
-            final int nNodes = nodeList.getLength();
-            final List<Element> elements = new ArrayList<>(nNodes);
-            for (int eIndex = 0; eIndex < nNodes; eIndex++) {
-                elements.add((Element) nodeList.item(eIndex));
-            }
-            
-            // Remove the elements from the document
-            for (final Element element : elements) {
-                element.getParentNode().removeChild(element);
-            }
+        // Copy these into a list, because a NodeList can change length at any time
+        final int nNodes = nodeList.getLength();
+        final List<Element> elements = new ArrayList<>(nNodes);
+        for (int eIndex = 0; eIndex < nNodes; eIndex++) {
+            elements.add((Element) nodeList.item(eIndex));
+        }
+
+        // Remove the elements from the document
+        for (final Element element : elements) {
+            element.getParentNode().removeChild(element);
         }
     }
 

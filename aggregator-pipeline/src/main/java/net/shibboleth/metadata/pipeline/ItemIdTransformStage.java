@@ -41,7 +41,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> type of {@link Item} this stage operates upon
  */
 @ThreadSafe
-public class ItemIdTransformStage<T> extends AbstractFilteringStage<T> {
+public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
 
     /** Transformers used on IDs. */
     private Collection<Function<String, String>> idTransformers = new LazyList<>();
@@ -67,9 +67,8 @@ public class ItemIdTransformStage<T> extends AbstractFilteringStage<T> {
         CollectionSupport.addIf(idTransformers, transformers, Predicates.notNull());
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected boolean doExecute(@Nonnull final Item<T> item) throws StageProcessingException {
+    protected void doExecute(@Nonnull final Item<T> item) throws StageProcessingException {
         final List<ItemId> ids = item.getItemMetadata().get(ItemId.class);
 
         final List<ItemId> transformedIds = new ArrayList<>();
@@ -80,7 +79,5 @@ public class ItemIdTransformStage<T> extends AbstractFilteringStage<T> {
             }
         }
         item.getItemMetadata().putAll(transformedIds);
-        
-        return true;
     }
 }

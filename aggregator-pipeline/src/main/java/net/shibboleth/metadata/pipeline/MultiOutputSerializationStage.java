@@ -20,7 +20,6 @@ package net.shibboleth.metadata.pipeline;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +27,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -49,7 +47,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class MultiOutputSerializationStage<T> extends AbstractStage<T> {
+public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> {
 
     /**
      * Interface implemented by destination objects created by an {@link OutputStrategy}.
@@ -141,15 +139,13 @@ public class MultiOutputSerializationStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull final Item<T> item)
             throws StageProcessingException {
-        for (final Item<T> item : itemCollection) {
-            try (final Destination destination = outputStrategy.getDestination(item);
-                    final OutputStream stream = destination.getOutputStream()) {
-                serializer.serialize(item, stream);
-            } catch (final IOException e) {
-                throw new StageProcessingException("Error writing to output location", e);
-            }
+        try (final Destination destination = outputStrategy.getDestination(item);
+                final OutputStream stream = destination.getOutputStream()) {
+            serializer.serialize(item, stream);
+        } catch (final IOException e) {
+            throw new StageProcessingException("Error writing to output location", e);
         }
     }
 

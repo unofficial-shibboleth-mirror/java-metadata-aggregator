@@ -17,23 +17,11 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.metadata.dom.saml.SAMLSupport;
-import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
-import net.shibboleth.metadata.pipeline.AbstractStage;
-import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +29,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.google.common.base.Predicate;
+
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
+import net.shibboleth.metadata.dom.saml.SAMLSupport;
+import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * A stage which filters entity attributes from entity definitions according to a supplied
@@ -56,7 +54,7 @@ import com.google.common.base.Predicate;
  * The stage can be operated in a whitelisting mode (the default) or in a blacklisting mode
  * by setting the <code>whitelisting</code> property to <code>false</code>.
  */
-public class EntityAttributeFilteringStage extends AbstractStage<Element> {
+public class EntityAttributeFilteringStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityAttributeFilteringStage.class);
@@ -369,30 +367,28 @@ public class EntityAttributeFilteringStage extends AbstractStage<Element> {
             }
         }
     }
-    
-    @Override
-    protected void doExecute(final Collection<Item<Element>> itemCollection) throws StageProcessingException {
-        for (final Item<Element> item : itemCollection) {
-            final Element entity = item.unwrap();
-            
-            // Establish the item's registrationAuthority, if any
-            final String registrationAuthority = extractRegistrationAuthority(item);
 
-            /*
-             * Process each EntityAttributes container independently. There MUST be only one
-             * such container according to the specification, but we can't count on that being
-             * picked up elsewhere as it isn't a schema constraint.
-             */
-            for (final Element entityAttributes : SAMLMetadataSupport.getDescriptorExtensionList(entity,
-                    MDAttrSupport.ENTITY_ATTRIBUTES_NAME)) {
-                filterEntityAttributes(entityAttributes, registrationAuthority, item);
-                
-                // remove the EntityAttributes container if it is now empty
-                if (ElementSupport.getFirstChildElement(entityAttributes) == null) {
-                    log.debug("removing empty EntityAttributes");
-                    final Node extensions = entityAttributes.getParentNode();
-                    extensions.removeChild(entityAttributes);
-                }
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) {
+        final Element entity = item.unwrap();
+
+        // Establish the item's registrationAuthority, if any
+        final String registrationAuthority = extractRegistrationAuthority(item);
+
+        /*
+         * Process each EntityAttributes container independently. There MUST be only one
+         * such container according to the specification, but we can't count on that being
+         * picked up elsewhere as it isn't a schema constraint.
+         */
+        for (final Element entityAttributes : SAMLMetadataSupport.getDescriptorExtensionList(entity,
+                MDAttrSupport.ENTITY_ATTRIBUTES_NAME)) {
+            filterEntityAttributes(entityAttributes, registrationAuthority, item);
+
+            // remove the EntityAttributes container if it is now empty
+            if (ElementSupport.getFirstChildElement(entityAttributes) == null) {
+                log.debug("removing empty EntityAttributes");
+                final Node extensions = entityAttributes.getParentNode();
+                extensions.removeChild(entityAttributes);
             }
         }
     }

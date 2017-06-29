@@ -17,16 +17,16 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.util.Collection;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.AbstractStage;
-import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -34,15 +34,11 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 /**
  * A stage which removes all empty instances of the named container element from DOM metadata.
  */
 @ThreadSafe
-public class EmptyContainerStrippingStage extends AbstractStage<Element> {
+public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element> {
 
     /** Namespace of the element to strip. */
     private String elementNamespace;
@@ -101,26 +97,24 @@ public class EmptyContainerStrippingStage extends AbstractStage<Element> {
      * @return true if and only if the Element has child elements.
      */
     private boolean hasChildElements(@Nonnull final Element element) {
-        final Node firstChild = ElementSupport.getFirstChildElement(Constraint.isNotNull(element, "Element can not be null"));
+        final Node firstChild =
+                ElementSupport.getFirstChildElement(Constraint.isNotNull(element, "Element can not be null"));
         return firstChild != null;
     }
-    
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
-            throws StageProcessingException {
-        for (final Item<Element> item : items) {
-            final Element element = item.unwrap();
-            
-            // List all the relevant elements in this document in document order
-            final NodeList extensionList = element.getElementsByTagNameNS(elementNamespace, elementName);
-            
-            // Process in reverse order so that, for example, Extensions inside Extensions are
-            // handled correctly.
-            for (int eIndex = extensionList.getLength()-1; eIndex >= 0; eIndex--) {
-                final Element extensions = (Element) extensionList.item(eIndex);
-                if (!hasChildElements(extensions)) {
-                    extensions.getParentNode().removeChild(extensions);
-                }
+
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) {
+        final Element element = item.unwrap();
+
+        // List all the relevant elements in this document in document order
+        final NodeList extensionList = element.getElementsByTagNameNS(elementNamespace, elementName);
+
+        // Process in reverse order so that, for example, Extensions inside Extensions are
+        // handled correctly.
+        for (int eIndex = extensionList.getLength()-1; eIndex >= 0; eIndex--) {
+            final Element extensions = (Element) extensionList.item(eIndex);
+            if (!hasChildElements(extensions)) {
+                extensions.getParentNode().removeChild(extensions);
             }
         }
     }

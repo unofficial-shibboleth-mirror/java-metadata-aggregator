@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -30,7 +29,7 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -39,7 +38,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * An abstract DOM traversal class using the template method pattern.
  */
 @ThreadSafe
-public abstract class AbstractDOMTraversalStage extends AbstractStage<Element> {
+public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<Element> {
     
     /** Context for a particular traversal. */
     protected class TraversalContext {
@@ -118,14 +117,12 @@ public abstract class AbstractDOMTraversalStage extends AbstractStage<Element> {
             visit(element, context);
         }
     }
-    
+
     @Override
-    protected void doExecute(final Collection<Item<Element>> itemCollection) throws StageProcessingException {
-        for (final Item<Element> item : itemCollection) {
-            final Element docElement = item.unwrap();
-            final TraversalContext context = new TraversalContext(item);
-            traverse(docElement, context);
-        }
+    protected void doExecute(final Item<Element> item) throws StageProcessingException {
+        final Element docElement = item.unwrap();
+        final TraversalContext context = new TraversalContext(item);
+        traverse(docElement, context);
     }
 
     /**

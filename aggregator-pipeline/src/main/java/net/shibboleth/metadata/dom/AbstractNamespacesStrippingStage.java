@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -36,9 +35,7 @@ import org.w3c.dom.NodeList;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.pipeline.AbstractStage;
-import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -52,7 +49,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * Attributes without an explicit namespace prefix will never be removed.
  */
 @ThreadSafe
-public abstract class AbstractNamespacesStrippingStage extends AbstractStage<Element> {
+public abstract class AbstractNamespacesStrippingStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(AbstractNamespacesStrippingStage.class);
@@ -65,12 +62,8 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractStage<Ele
      */
     protected abstract boolean removingNamespace(final String namespace);
 
-    /**
-     * Processes the given {@link Item}.
-     * 
-     * @param item {@link Item} to process.
-     */
-    private void processItem(@Nonnull final Item<Element> item) {
+    @Override
+    protected void doExecute(@Nonnull final Item<Element> item) {
         final Element element = Constraint.isNotNull(item, "Item can not be null").unwrap();
     
         /*
@@ -176,14 +169,6 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractStage<Ele
          * including attributes acting as namespace prefix definitions.
          */
         processAttributes(element);
-    }
-
-    @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)
-            throws StageProcessingException {
-        for (final Item<Element> item : items) {
-            processItem(item);
-        }
     }
 
 }
