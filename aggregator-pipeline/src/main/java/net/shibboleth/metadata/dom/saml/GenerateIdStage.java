@@ -24,7 +24,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
@@ -32,7 +32,7 @@ import net.shibboleth.utilities.java.support.security.Type4UUIDIdentifierGenerat
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 /** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
-public class GenerateIdStage extends BaseIteratingStage<Element> {
+public class GenerateIdStage extends AbstractIteratingStage<Element> {
 
     /** QName of the ID attribute added to the descriptor. */
     public static final QName ID_ATTRIB = new QName("ID");

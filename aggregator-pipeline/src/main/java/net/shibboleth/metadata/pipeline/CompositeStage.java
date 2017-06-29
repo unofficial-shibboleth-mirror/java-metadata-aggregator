@@ -39,7 +39,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> type of metadata this stage, and its composed stages, operate upon
  */
 @ThreadSafe
-public class CompositeStage<T> extends BaseStage<T> {
+public class CompositeStage<T> extends AbstractStage<T> {
 
     /** Stages which compose this stage. */
     private List<Stage<T>> composedStages = Collections.emptyList();

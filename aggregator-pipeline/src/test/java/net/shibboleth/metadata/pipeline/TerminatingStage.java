@@ -22,7 +22,7 @@ import java.util.Collection;
 import net.shibboleth.metadata.Item;
 
 /** Stage that throws a TerminationException when it is called. */
-class TerminatingStage<T> extends BaseStage<T> {
+class TerminatingStage<T> extends AbstractStage<T> {
 
     /** Constructor. */
     public TerminatingStage() {

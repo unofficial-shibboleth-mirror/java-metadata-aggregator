@@ -27,7 +27,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -40,7 +40,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * EntitiesDescriptor and remove the valid until dates from all descendants.
  */
 @ThreadSafe
-public class PullUpValidUntilStage extends BaseIteratingStage<Element> {
+public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
 
     /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: 0 */
     private long minValidityDuration;

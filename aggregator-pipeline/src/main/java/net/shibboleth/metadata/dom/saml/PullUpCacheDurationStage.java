@@ -27,7 +27,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -40,7 +40,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * EntitiesDescriptor and remove the cache duration from all descendants.
  */
 @ThreadSafe
-public class PullUpCacheDurationStage extends BaseIteratingStage<Element> {
+public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
 
     /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
     private long minCacheDuration;

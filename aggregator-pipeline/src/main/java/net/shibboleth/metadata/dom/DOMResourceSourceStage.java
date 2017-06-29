@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * </ul>
  */
 @ThreadSafe
-public class DOMResourceSourceStage extends BaseStage<Element> {
+public class DOMResourceSourceStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMResourceSourceStage.class);

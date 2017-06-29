@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> type of item the stage operates on
  */
 @ThreadSafe
-public class ScriptletStage<T> extends BaseStage<T> {
+public class ScriptletStage<T> extends AbstractStage<T> {
 
     /** Name of the scriptlet attribute, {@value} , containing the Item collection to be transformed. */
     public static final String ITEMS = "items";

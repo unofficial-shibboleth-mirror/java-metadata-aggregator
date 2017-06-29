@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -35,7 +35,7 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
  * range. Items which are not a SAML EntitiesDescriptor or EntityDescriptor are ignored.
  */
 @ThreadSafe
-public class ValidateValidUntilStage extends BaseIteratingStage<Element> {
+public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
 
     /** Whether the item is required to have a validUntil attribute. Default value: <code>true</code> */
     private boolean requireValidUntil = true;

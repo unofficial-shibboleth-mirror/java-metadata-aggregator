@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /** Filtering stage that removes Organization elements from EntityDescriptors. */
 @ThreadSafe
-public class RemoveOrganizationStage extends BaseIteratingStage<Element> {
+public class RemoveOrganizationStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);

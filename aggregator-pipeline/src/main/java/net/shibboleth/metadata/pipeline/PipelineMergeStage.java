@@ -57,7 +57,7 @@ import com.google.common.collect.Iterables;
  * @param <T> the type of items processed by the stage
  */
 @ThreadSafe
-public class PipelineMergeStage<T> extends BaseStage<T> {
+public class PipelineMergeStage<T> extends AbstractStage<T> {
 
     /** Service used to execute the pipelines whose results will be merged. */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();

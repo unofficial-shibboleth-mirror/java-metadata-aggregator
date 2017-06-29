@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseFilteringStage;
+import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
@@ -44,7 +44,7 @@ import com.google.common.collect.Iterables;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
-public class EntityFilterStage extends BaseFilteringStage<Element> {
+public class EntityFilterStage extends AbstractFilteringStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);

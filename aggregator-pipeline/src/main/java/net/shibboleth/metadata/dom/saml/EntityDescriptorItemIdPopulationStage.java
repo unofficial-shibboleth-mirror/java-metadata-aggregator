@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
@@ -33,7 +33,7 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
  * the metadata item.
  */
 @ThreadSafe
-public class EntityDescriptorItemIdPopulationStage extends BaseIteratingStage<Element> {
+public class EntityDescriptorItemIdPopulationStage extends AbstractIteratingStage<Element> {
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {

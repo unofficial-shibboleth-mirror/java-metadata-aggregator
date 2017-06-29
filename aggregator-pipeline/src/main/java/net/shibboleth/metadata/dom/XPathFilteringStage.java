@@ -31,7 +31,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  * </ul>
  */
 @ThreadSafe
-public class XPathFilteringStage extends BaseStage<Element> {
+public class XPathFilteringStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);

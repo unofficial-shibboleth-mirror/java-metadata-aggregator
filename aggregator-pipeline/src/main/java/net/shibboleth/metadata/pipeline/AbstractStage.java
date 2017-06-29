@@ -39,7 +39,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @param <T> type of item this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseStage<T> extends AbstractIdentifiableInitializableComponent implements Stage<T> {
+public abstract class AbstractStage<T> extends AbstractIdentifiableInitializableComponent implements Stage<T> {
 
     /**
      * The {@link Predicate} applied to the supplied item collection to determine whether the stage will be executed.

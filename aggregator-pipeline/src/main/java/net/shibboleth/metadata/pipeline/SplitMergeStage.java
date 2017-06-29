@@ -66,7 +66,7 @@ import com.google.common.base.Supplier;
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class SplitMergeStage<T> extends BaseStage<T> {
+public class SplitMergeStage<T> extends AbstractStage<T> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SplitMergeStage.class);

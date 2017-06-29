@@ -49,7 +49,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class MultiOutputSerializationStage<T> extends BaseStage<T> {
+public class MultiOutputSerializationStage<T> extends AbstractStage<T> {
 
     /**
      * Interface implemented by destination objects created by an {@link OutputStrategy}.

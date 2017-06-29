@@ -30,7 +30,7 @@ import net.shibboleth.metadata.dom.saml.AttributeValueElementMaker;
 import net.shibboleth.metadata.dom.saml.AttributeValueElementMatcher;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.dom.saml.SAMLSupport;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -47,7 +47,7 @@ import com.google.common.base.Predicate;
 /**
  * A stage which adds entity attribute values to entity definitions.
  */
-public class EntityAttributeAddingStage extends BaseStage<Element> {
+public class EntityAttributeAddingStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityAttributeAddingStage.class);

@@ -26,7 +26,7 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
@@ -41,7 +41,7 @@ import com.google.common.base.Strings;
  * the entity's registration authority, to the item metadata.
  */
 @ThreadSafe
-public class RegistrationAuthorityPopulationStage extends BaseStage<Element> {
+public class RegistrationAuthorityPopulationStage extends AbstractStage<Element> {
 
     /** {@inheritDoc} */
     @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> items)

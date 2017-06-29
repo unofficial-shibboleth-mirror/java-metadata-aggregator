@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
  * </ul>
  */
 @ThreadSafe
-public class DOMFilesystemSourceStage extends BaseStage<Element> {
+public class DOMFilesystemSourceStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(DOMFilesystemSourceStage.class);

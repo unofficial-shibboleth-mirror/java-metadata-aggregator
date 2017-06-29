@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-public class BaseStageTest {
+public class AbstractStageTest {
 
     @Test
     public void getSetCollectionPredicate() {

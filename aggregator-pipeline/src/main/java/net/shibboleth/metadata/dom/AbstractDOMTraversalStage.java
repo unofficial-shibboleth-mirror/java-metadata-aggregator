@@ -30,16 +30,16 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
- * A DOM traversal class using the template method pattern.
+ * An abstract DOM traversal class using the template method pattern.
  */
 @ThreadSafe
-public abstract class AbstractDOMTraversalStage extends BaseStage<Element> {
+public abstract class AbstractDOMTraversalStage extends AbstractStage<Element> {
     
     /** Context for a particular traversal. */
     protected class TraversalContext {

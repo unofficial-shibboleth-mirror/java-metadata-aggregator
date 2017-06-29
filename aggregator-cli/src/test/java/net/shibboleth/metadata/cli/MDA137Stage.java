@@ -23,13 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
  * A stage which does nothing except be created and destroyed.
  */
-public class MDA137Stage<T> extends BaseStage<T> {
+public class MDA137Stage<T> extends AbstractStage<T> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(MDA137Stage.class);

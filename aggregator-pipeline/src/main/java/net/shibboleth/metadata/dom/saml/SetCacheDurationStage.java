@@ -23,7 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.Duration;
 import net.shibboleth.utilities.java.support.annotation.constraint.Positive;
@@ -42,7 +42,7 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
  * </ul>
  */
 @ThreadSafe
-public class SetCacheDurationStage extends BaseIteratingStage<Element> {
+public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
 
     /** Cache duration, in milliseconds, that will be set on each metadata element. */
     @Duration

@@ -40,7 +40,7 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -56,7 +56,7 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 /**
- * A pipeline stage which applies and XSLT to each element in the {@link DOMElementItem} collection.
+ * An abstract stage which applies an XSL transformation to each element in the {@link DOMElementItem} collection.
  * 
  * <p>
  * This stage requires the following properties be set prior to initialization:
@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
  * </ul>
  */
 @ThreadSafe
-public abstract class AbstractXSLProcessingStage extends BaseStage<Element> {
+public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(AbstractXSLProcessingStage.class);

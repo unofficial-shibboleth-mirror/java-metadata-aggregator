@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
  * to a single EntitiesDescriptor element.
  */
 @ThreadSafe
-public class EntitiesDescriptorAssemblerStage extends BaseStage<Element> {
+public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
     public static final QName NAME_ATTRIB_NAME = new QName("Name");

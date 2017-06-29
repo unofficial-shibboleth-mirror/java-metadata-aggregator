@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -42,7 +42,7 @@ import org.w3c.dom.NodeList;
  * A stage which removes all empty instances of the named container element from DOM metadata.
  */
 @ThreadSafe
-public class EmptyContainerStrippingStage extends BaseStage<Element> {
+public class EmptyContainerStrippingStage extends AbstractStage<Element> {
 
     /** Namespace of the element to strip. */
     private String elementNamespace;

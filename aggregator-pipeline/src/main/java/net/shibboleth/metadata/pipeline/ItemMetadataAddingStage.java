@@ -37,7 +37,7 @@ import com.google.common.base.Predicates;
  * @param <T> type of {@link Item} this stage operates upon
  */
 @ThreadSafe
-public class ItemMetadataAddingStage<T> extends BaseFilteringStage<T> {
+public class ItemMetadataAddingStage<T> extends AbstractFilteringStage<T> {
 
     /** {@link ItemMetadata} objects to add to each {@link Item}'s item metadata. */
     private Collection<ItemMetadata> additionalItemMetadata = new LazyList<>();

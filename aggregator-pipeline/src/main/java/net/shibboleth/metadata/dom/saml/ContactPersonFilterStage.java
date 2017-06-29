@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 import com.google.common.collect.ImmutableSet;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -60,7 +60,7 @@ import net.shibboleth.utilities.java.support.xml.SerializeSupport;
  * </p>
  */
 @ThreadSafe
-public class ContactPersonFilterStage extends BaseIteratingStage<Element> {
+public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
 
     /** 'technical' person type constant. */
     public static final String TECHNICAL = "technical";

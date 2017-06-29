@@ -63,7 +63,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -86,7 +86,7 @@ import net.shibboleth.utilities.java.support.xml.QNameSupport;
  * </ul>
  */
 @ThreadSafe
-public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
+public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
 
     /** The variant of SHA to use in the various signature algorithms. */
     public static enum ShaVariant {

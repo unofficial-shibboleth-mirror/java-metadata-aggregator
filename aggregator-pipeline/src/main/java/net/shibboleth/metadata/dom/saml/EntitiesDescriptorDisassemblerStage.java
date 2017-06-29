@@ -26,7 +26,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * elements contained therein.
  */
 @ThreadSafe
-public class EntitiesDescriptorDisassemblerStage extends BaseStage<Element> {
+public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);

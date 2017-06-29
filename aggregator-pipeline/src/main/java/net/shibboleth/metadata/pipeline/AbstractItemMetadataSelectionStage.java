@@ -43,13 +43,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 /**
- * A {@link Stage} that selects Items for further processing if they have a specific type of {@link ItemMetadata}
- * attached to them.
+ * An abstract {@link Stage} that selects {@link Item}s for further processing if they have a specific
+ * type of {@link ItemMetadata} attached to them.
  * 
  * @param <T> the type of data included in the items being processed
  */
 @ThreadSafe
-public abstract class AbstractItemMetadataSelectionStage<T> extends BaseStage<T> {
+public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStage<T> {
 
     /** {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be selected. */
     private Collection<Class<? extends ItemMetadata>> selectionRequirements = Collections.emptyList();

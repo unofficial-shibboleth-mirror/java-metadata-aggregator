@@ -62,7 +62,7 @@ import com.google.common.collect.ImmutableList.Builder;
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class PipelineDemultiplexerStage<T> extends BaseStage<T> {
+public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();

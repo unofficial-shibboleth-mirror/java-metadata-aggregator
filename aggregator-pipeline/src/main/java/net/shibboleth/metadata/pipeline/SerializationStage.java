@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
-public class SerializationStage<T> extends BaseStage<T> {
+public class SerializationStage<T> extends AbstractStage<T> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SerializationStage.class);

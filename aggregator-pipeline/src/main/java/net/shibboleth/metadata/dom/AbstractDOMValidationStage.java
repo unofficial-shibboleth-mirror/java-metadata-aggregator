@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 /**
- * Base stage to apply a collection of validators to each object from each item.
+ * An abstract stage to apply a collection of validators to each object from each item.
  * 
  * @param <V> type of the object to be validated
  */ 

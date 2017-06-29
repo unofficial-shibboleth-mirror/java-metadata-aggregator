@@ -36,7 +36,7 @@ import org.w3c.dom.NodeList;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
@@ -52,7 +52,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * Attributes without an explicit namespace prefix will never be removed.
  */
 @ThreadSafe
-public abstract class AbstractNamespacesStrippingStage extends BaseStage<Element> {
+public abstract class AbstractNamespacesStrippingStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(AbstractNamespacesStrippingStage.class);

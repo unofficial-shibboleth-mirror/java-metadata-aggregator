@@ -29,7 +29,7 @@ import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.dom.saml.SAMLSupport;
 import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
-import net.shibboleth.metadata.pipeline.BaseStage;
+import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -56,7 +56,7 @@ import com.google.common.base.Predicate;
  * The stage can be operated in a whitelisting mode (the default) or in a blacklisting mode
  * by setting the <code>whitelisting</code> property to <code>false</code>.
  */
-public class EntityAttributeFilteringStage extends BaseStage<Element> {
+public class EntityAttributeFilteringStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityAttributeFilteringStage.class);

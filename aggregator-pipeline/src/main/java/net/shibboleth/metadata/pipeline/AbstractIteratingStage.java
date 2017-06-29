@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -27,33 +26,24 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
- * Base class for {@link Stage} implementations that iterate over each {@link Item} in a collection and do something,
- * then optionally remove the item being processed.
+ * Base class for {@link Stage} implementations that iterate over each {@link Item} in a collection and do something.
  * 
  * @param <T> type of metadata this stage operates upon
  */
 @ThreadSafe
-public abstract class BaseFilteringStage<T> extends BaseStage<T> {
+public abstract class AbstractIteratingStage<T> extends AbstractStage<T> {
 
     /**
      * Iterates over each element of the Item collection and delegates the processing of that element to
      * {@link #doExecute(Item)}.
-     *
-     * {@link #doExecute(Item)} can request that the {@link Item} be dropped from the collection by
-     * returning <code>false</code>.
      *
      * {@inheritDoc}
      */
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        final Iterator<Item<T>> itemIterator = itemCollection.iterator();
-
-        while (itemIterator.hasNext()) {
-            final Item<T> item = itemIterator.next();
-            if (!doExecute(item)) {
-                itemIterator.remove();
-            }
+        for (final Item<T> item : itemCollection) {
+            doExecute(item);
         }
     }
 
@@ -62,9 +52,7 @@ public abstract class BaseFilteringStage<T> extends BaseStage<T> {
      * 
      * @param item {@link Item} on which to operate
      * 
-     * @return <code>true</code> if the {@link Item} should be retained in the collection, <code>false</code> if not
-     * 
      * @throws StageProcessingException thrown if there is a problem with the stage processing
      */
-    protected abstract boolean doExecute(@Nonnull final Item<T> item) throws StageProcessingException;
+    protected abstract void doExecute(@Nonnull final Item<T> item) throws StageProcessingException;
 }

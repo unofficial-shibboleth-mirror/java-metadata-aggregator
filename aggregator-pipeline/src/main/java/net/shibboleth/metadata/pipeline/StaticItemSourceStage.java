@@ -40,7 +40,7 @@ import com.google.common.collect.Iterables;
  * @param <T> the type of item produced by this source
  */
 @ThreadSafe
-public class StaticItemSourceStage<T> extends BaseStage<T> {
+public class StaticItemSourceStage<T> extends AbstractStage<T> {
 
     /** Collection of static Items added to each Item collection by {@link #execute(Collection)}. */
     private Collection<Item<T>> source = Collections.emptyList();

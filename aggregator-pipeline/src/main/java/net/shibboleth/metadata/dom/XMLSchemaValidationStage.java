@@ -42,7 +42,7 @@ import com.google.common.collect.Iterables;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.metadata.pipeline.BaseIteratingStage;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -66,7 +66,7 @@ import net.shibboleth.utilities.java.support.xml.SerializeSupport;
  * an Element is found to be invalid than an {@link WarningStatus} is set on the Element.
  */
 @ThreadSafe
-public class XMLSchemaValidationStage extends BaseIteratingStage<Element> {
+public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
