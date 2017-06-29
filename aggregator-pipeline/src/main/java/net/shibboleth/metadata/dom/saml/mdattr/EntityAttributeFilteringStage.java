@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.dom.saml.SAMLSupport;
 import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
@@ -202,7 +203,10 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
 
     /** Mode of operation: whitelisting or blacklisting. Default: whitelisting. */
     private boolean whitelisting = true;
-    
+
+    /** Whether we add status metadata to the item when entity attributes are removed. Default: no. */
+    private boolean recordingRemovals;
+
     /**
      * Sets the {@link List} of rules to be used to match attribute values.
      * 
@@ -247,7 +251,29 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
     public boolean isWhitelisting() {
         return whitelisting;
     }
-    
+
+    /**
+     * Set whether to record removed entity attributes.
+     *
+     * @param newValue whether to remove recorded entity attributes
+     */
+    public void setRecordingRemovals(final boolean newValue) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        recordingRemovals = newValue;
+    }
+
+    /**
+     * Indicates whether the stage will record removed entity attributes.
+     *
+     * @return <code>true</code> if recording,
+     *         <code>false</code> if not (default)
+     */
+    public boolean isRecordingRemovals() {
+        return recordingRemovals;
+    }
+
     /**
      * Apply the rules to a context.
      * 
@@ -284,8 +310,10 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
      * 
      * @param attribute an <code>Attribute</code> element to filter
      * @param registrationAuthority the registration authority associated with the entity
+     * @param item the {@link Item} representing the entity
      */
-    private void filterAttribute(@Nonnull final Element attribute, @Nullable final String registrationAuthority) {
+    private void filterAttribute(@Nonnull final Element attribute, @Nullable final String registrationAuthority,
+            @Nonnull final Item<Element> item) {
         // Determine the attribute's name; this will default to the empty string if not present
         final String attributeName = attribute.getAttribute("Name");
         
@@ -307,6 +335,10 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
             final boolean matched = applyRules(ctx);
             if (matched ^ whitelisting) {
                 log.debug("removing {}", ctx);
+                if (recordingRemovals) {
+                    item.getItemMetadata().put(new WarningStatus(getId(),
+                            "removing '" + ctx.getName() + "' = '" + ctx.getValue() + "'"));
+                }
                 attribute.removeChild(value);
             }
         }
@@ -317,16 +349,18 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
      * 
      * @param entityAttributes the <code>EntityAttributes</code> extension element
      * @param registrationAuthority the registration authority associated with the entity
+     * @param item the {@link Item} representing the entity
      */
     private void filterEntityAttributes(@Nonnull final Element entityAttributes,
-            @Nullable final String registrationAuthority) {
+            @Nullable final String registrationAuthority,
+            @Nonnull final Item<Element> item) {
         // Locate the Attribute elements to filter
         final List<Element> attributes =
                 ElementSupport.getChildElements(entityAttributes, SAMLSupport.ATTRIBUTE_NAME);
         
         // Filter each Attribute in turn
         for (final Element attribute : attributes) {
-            filterAttribute(attribute, registrationAuthority);
+            filterAttribute(attribute, registrationAuthority, item);
             
             // remove the Attribute container if it is now empty
             if (ElementSupport.getFirstChildElement(attribute) == null) {
@@ -351,7 +385,7 @@ public class EntityAttributeFilteringStage extends BaseStage<Element> {
              */
             for (final Element entityAttributes : SAMLMetadataSupport.getDescriptorExtensionList(entity,
                     MDAttrSupport.ENTITY_ATTRIBUTES_NAME)) {
-                filterEntityAttributes(entityAttributes, registrationAuthority);
+                filterEntityAttributes(entityAttributes, registrationAuthority, item);
                 
                 // remove the EntityAttributes container if it is now empty
                 if (ElementSupport.getFirstChildElement(entityAttributes) == null) {

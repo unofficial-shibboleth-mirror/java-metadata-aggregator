@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
@@ -243,8 +244,8 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
         final Element expected = readXMLData("multiout.xml");
         assertXMLIdentical(expected, result);
     }
-    @Test
 
+    @Test
     public void testMDA168_2() throws Exception {
         final List<Item<Element>> items = makeItems(readXMLData("multi2in.xml"));
         final List<Predicate<EntityAttributeContext>> rules = new ArrayList<>();
@@ -260,5 +261,52 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
         final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("multi2out.xml");
         assertXMLIdentical(expected, result);
+    }
+
+    // Tests for MDA-160 log removed entity attributes
+
+    @Test
+    public void testMDA160_1() throws Exception {
+        final List<Item<Element>> items = makeInputItems();
+
+        final List<Predicate<EntityAttributeContext>> rules = new ArrayList<>();
+        rules.add(new EntityCategoryMatcher("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
+
+        final EntityAttributeFilteringStage stage = new EntityAttributeFilteringStage();
+        stage.setId("id");
+        stage.setRules(rules);
+        stage.setWhitelisting(false);
+        stage.initialize();
+        stage.execute(items);
+        stage.destroy();
+
+        // should be no warnings if we don't ask for them
+        final List<WarningStatus> result = items.get(0).getItemMetadata().get(WarningStatus.class);
+        Assert.assertEquals(result.size(), 0);
+    }
+
+    @Test
+    public void testMDA160_2() throws Exception {
+        final List<Item<Element>> items = makeInputItems();
+
+        final List<Predicate<EntityAttributeContext>> rules = new ArrayList<>();
+        rules.add(new EntityCategoryMatcher("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
+
+        final EntityAttributeFilteringStage stage = new EntityAttributeFilteringStage();
+        stage.setId("id");
+        stage.setRules(rules);
+        stage.setRecordingRemovals(true);
+        stage.setWhitelisting(false);
+        stage.initialize();
+        stage.execute(items);
+        stage.destroy();
+
+        // should be one warning
+        final List<WarningStatus> result = items.get(0).getItemMetadata().get(WarningStatus.class);
+        Assert.assertEquals(result.size(), 1);
+        final WarningStatus warning = result.get(0);
+        Assert.assertEquals(warning.getComponentId(), "id");
+        Assert.assertEquals(warning.getStatusMessage(),
+                "removing 'http://macedir.org/entity-category' = 'http://www.geant.net/uri/dataprotection-code-of-conduct/v1'");
     }
 }
