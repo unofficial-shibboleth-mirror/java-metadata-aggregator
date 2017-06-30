@@ -28,6 +28,7 @@
         <module>../aggregator-blacklists</module>
         <module>../aggregator-pipeline</module>
         <module>../aggregator-cli</module>
+        <module>../aggregator-bom</module>
     </modules>
 
     <properties>
