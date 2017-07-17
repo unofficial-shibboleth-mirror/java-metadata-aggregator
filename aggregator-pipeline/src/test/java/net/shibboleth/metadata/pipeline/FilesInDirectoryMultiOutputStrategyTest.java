@@ -21,12 +21,12 @@ package net.shibboleth.metadata.pipeline;
 import java.io.File;
 import java.io.OutputStream;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.common.io.Files;
 
-import junit.framework.Assert;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
@@ -43,8 +43,8 @@ public class FilesInDirectoryMultiOutputStrategyTest {
     
     private void checkOneFile(final File dir, final String expectedName) {
         final File[] files = dir.listFiles();
-        Assert.assertEquals(1, files.length);
-        Assert.assertEquals(expectedName, files[0].getName());
+        Assert.assertEquals(files.length, 1);
+        Assert.assertEquals(files[0].getName(), expectedName);
     }
 
     // Test with a prefix, a suffix, and an ID transform that doubles the name

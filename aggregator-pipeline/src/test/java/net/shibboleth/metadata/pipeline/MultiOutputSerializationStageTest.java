@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import junit.framework.Assert;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.ItemSerializer;
@@ -110,10 +110,10 @@ public class MultiOutputSerializationStageTest {
         stage.execute(items);
         
         final Map<String, String> map = strategy.map;
-        Assert.assertEquals(3, map.size());
-        Assert.assertEquals("aaaContent", map.get("aaa"));
-        Assert.assertEquals("bbbContent", map.get("bbb"));
-        Assert.assertEquals("cccContent", map.get("ccc"));
+        Assert.assertEquals(map.size(), 3);
+        Assert.assertEquals(map.get("aaa"), "aaaContent");
+        Assert.assertEquals(map.get("bbb"), "bbbContent");
+        Assert.assertEquals(map.get("ccc"), "cccContent");
     }
 
 }
