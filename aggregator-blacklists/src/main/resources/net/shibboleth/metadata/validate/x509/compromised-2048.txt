@@ -11,5 +11,9 @@
 #   openssl x509 -noout -modulus -in /tmp/cert.pem | sha1sum | \
 #       cut -d ' ' -f 1 | cut -c 21-
 #
+
 # Shibboleth IdP dummy key, shipped in 3.0.0-alpha1 release
 959a1a153444578d010b
+
+# "jetty" demo key, shipped in jetty-distribution-9.4.6.v20170531
+6475773dd6238880de70
