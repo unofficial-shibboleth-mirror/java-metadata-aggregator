@@ -47,7 +47,7 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
         private final Item<Element> item;
         
         /** Map of data for this traversal. */
-        private final ClassToInstanceMultiMap<Object> stash = new ClassToInstanceMultiMap<>();
+        private final ClassToInstanceMultiMap<Object> stash = new ClassToInstanceMultiMap<>(true);
         
         /**
          * Constructor.
@@ -123,6 +123,7 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
         final Element docElement = item.unwrap();
         final TraversalContext context = new TraversalContext(item);
         traverse(docElement, context);
+        endTraversal(context);
     }
 
     /**
@@ -171,6 +172,14 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
             }
         }
         metadata.put(new ErrorStatus(getId(), prefix + error));
+    }
+
+    /**
+     * This method is called once the traversal has finished. It may be overridden by subclasses.
+     *
+     * @param context the context for which the traversal has finished
+     */
+    protected void endTraversal(@Nonnull final TraversalContext context) {
     }
 
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rootElement xmlns:alpha="urn:namespace:alpha" xmlns:beta="urn:namespace:beta">
+    <alpha:keep/>
+    <beta:one/>
+    <alpha:keep/>
+    
+    <alpha:keep/>
+    <beta:three/>
+    <alpha:keep/>
+    
+</rootElement>

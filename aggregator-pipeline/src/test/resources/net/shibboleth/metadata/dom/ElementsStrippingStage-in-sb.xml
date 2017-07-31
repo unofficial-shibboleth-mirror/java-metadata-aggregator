@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rootElement xmlns:alpha="urn:namespace:alpha" xmlns:beta="urn:namespace:beta">
+    <alpha:nested>
+        <beta:StripMe>
+            <nested/>
+        </beta:StripMe>
+    </alpha:nested>
+    <alpha:keepMe>
+        <beta:StripMe>
+            <nested/>
+        </beta:StripMe>
+        <beta:Keep>
+            <nested/>
+        </beta:Keep>
+    </alpha:keepMe>
+</rootElement>

@@ -64,6 +64,9 @@
     <bean id="mda.ElementStrippingStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.ElementStrippingStage"/>
 
+    <bean id="mda.ElementsStrippingStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.dom.ElementsStrippingStage"/>
+
     <bean id="mda.ElementWhitespaceTrimmingStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.ElementWhitespaceTrimmingStage"/>
 
