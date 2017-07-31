@@ -114,7 +114,7 @@ public final class SAMLMetadataSupport {
         // Locate the Extensions element
         final List<Element> extensions = ElementSupport.getChildElements(descriptor, EXTENSIONS_NAME);
         if (extensions.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return extensions;
         }
         
         return ElementSupport.getChildElements(extensions.get(0), extensionName);
