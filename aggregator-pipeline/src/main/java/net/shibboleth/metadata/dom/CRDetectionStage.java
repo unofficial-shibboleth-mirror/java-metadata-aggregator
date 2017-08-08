@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import javax.annotation.Nonnull;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -34,7 +36,40 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * 
  * @see <a href="https://issues.shibboleth.net/jira/browse/SSPCPP-684">SSPCPP-684</a>
  */
-public class CRDetectionStage extends AbstractDOMTraversalStage {
+public class CRDetectionStage extends AbstractDOMTraversalStage<CRDetectionStage.Context> {
+
+    /** Context class for this kind of traversal. */
+    protected static class Context extends SimpleDOMTraversalContext {
+
+        /** <code>true</code> once an error has been detected. */
+        private boolean error;
+
+        /**
+         * Constructor.
+         *
+         * @param contextItem the {@link Item} this traversal is being performed on.
+         */
+        public Context(@Nonnull final Item<Element> contextItem) {
+            super(contextItem);
+        }
+
+        /**
+         * Returns <code>true</code> if an error has been detected.
+         *
+         * @return <code>true</code> if an error has been detected
+         */
+        public boolean hasError() {
+            return error;
+        }
+
+        /**
+         * Record that an error has been detected.
+         */
+        public void setError() {
+            error = true;
+        }
+
+    }
 
     /** Character value we are looking for. */
     private static final char CR = '\r';
@@ -46,9 +81,9 @@ public class CRDetectionStage extends AbstractDOMTraversalStage {
     }
 
     @Override
-    protected void visit(final Element element, final TraversalContext context) throws StageProcessingException {
+    protected void visit(final Element element, final Context context) throws StageProcessingException {
         // Only permit one error; short-circuit any further examinations
-        if (!context.getStash().isEmpty()) {
+        if (context.hasError()) {
             return;
         }
 
@@ -63,7 +98,7 @@ public class CRDetectionStage extends AbstractDOMTraversalStage {
              */
             if (node.getNodeType() == Node.TEXT_NODE && node.getNodeValue().indexOf(CR) >= 0) {
                 addError(item, element, "element text content contains a carriage return character");
-                context.getStash().put(Boolean.TRUE);
+                context.setError();
                 return;
             }
         }
@@ -74,10 +109,15 @@ public class CRDetectionStage extends AbstractDOMTraversalStage {
             final Node attribute = attributes.item(index);
             if (attribute.getNodeValue().indexOf(CR) >= 0) {
                 addError(item, element, "attribute value contains a carriage return character");
-                context.getStash().put(Boolean.TRUE);
+                context.setError();
                 return;
             }
         }
+    }
+
+    @Override
+    protected Context buildContext(@Nonnull final Item<Element> item) {
+        return new Context(item);
     }
 
 }

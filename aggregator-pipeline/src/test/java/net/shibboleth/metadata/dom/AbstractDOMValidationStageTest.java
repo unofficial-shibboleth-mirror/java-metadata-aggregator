@@ -37,7 +37,7 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
         super(AbstractDOMValidationStage.class);
     }
 
-    private static class StringValidationStage extends AbstractDOMValidationStage<String> {
+    private static class StringValidationStage extends AbstractDOMValidationStage<String, DOMTraversalContext> {
 
         @Override
         protected boolean applicable(Element element) {
@@ -45,10 +45,15 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
         }
 
         @Override
-        protected void visit(Element element, TraversalContext context) throws StageProcessingException {
+        protected void visit(Element element, DOMTraversalContext context) throws StageProcessingException {
             applyValidators(element.getTextContent(), context);
         }
-        
+
+        @Override
+        protected DOMTraversalContext buildContext(Item<Element> item) {
+            return new SimpleDOMTraversalContext(item);
+        }
+
     }
 
     private static class FirstStringValidator extends BaseValidator implements Validator<String> {

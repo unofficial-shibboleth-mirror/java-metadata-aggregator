@@ -21,18 +21,28 @@ import javax.annotation.Nonnull;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.metadata.Item;
+
 /**
- * Stage to trim leading and trailing whitespace from the text content of named elements
- * within a {@link net.shibboleth.metadata.dom.DOMElementItem}.
+ * The context for a particular DOM traversal.
+ *
+ * Implementations may add additional fields and methods to the definition
+ * of a {@link DOMTraversalContext}, and may define {@link #end()} to perform
+ * operations at the end of the traversal.
  */
-public class ElementWhitespaceTrimmingStage extends AbstractElementVisitingStage {
+public interface DOMTraversalContext {
 
-    /** Visitor to apply to each visited element. */
-    @Nonnull private final ElementVisitor visitor = new WhitespaceTrimmingVisitor();
+    /**
+     * Get the {@link Item} this traversal is being performed on.
+     * 
+     * @return the context {@link Item}
+     */
+    @Nonnull Item<Element> getItem();
 
-    @Override
-    protected void visit(@Nonnull final Element e, @Nonnull final DOMTraversalContext context) {
-        visitor.visitElement(e, context.getItem());
-    }
-
+    /**
+     * Perform any clean-up or final operations for the traversal.
+     *
+     * Called at the end of the traversal, may be overridden by subclasses.
+     */
+    void end();
 }

@@ -21,27 +21,80 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.AbstractDOMValidationStage;
+import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-
-import org.w3c.dom.Element;
 
 /**
  * Stage to apply a collection of validators to each X.509 certificate in items.
  * 
  * Each X.509 certificate is processed only once per item, so that duplicate status messages are suppressed.
  */ 
-public class X509ValidationStage extends AbstractDOMValidationStage<X509Certificate> {
+public class X509ValidationStage extends AbstractDOMValidationStage<X509Certificate, X509ValidationStage.Context> {
+
+    /** Context class for this kind of traversal. */
+    protected static class Context extends SimpleDOMTraversalContext {
+
+        /**
+         * Collection of certificates we have already seen.
+         *
+         * This is used to ensure that we only issue one error for each different certificate;
+         * duplicates are ignored.
+         *
+         * This is achieved by using a {@link Map} from certificates to themselves and
+         * detecting presence using {@link Map#containsKey}.
+         */
+        private Map<X509Certificate, X509Certificate> certMap = new HashMap<>();
+
+        /**
+         * Constructor.
+         *
+         * @param contextItem the {@link Item} this traversal is being performed on.
+         */
+        public Context(@Nonnull final Item<Element> contextItem) {
+            super(contextItem);
+        }
+
+        /**
+         * Returns whether we have seen this certificate before.
+         *
+         * @param cert {@link X509Certificate} to check for.
+         * @return <code>true</code> if we have seen this certificate before.
+         */
+        protected boolean haveSeen(@Nonnull final X509Certificate cert) {
+            return certMap.containsKey(cert);
+        }
+
+        /**
+         * Add a certificate to the list of certificates we have seen and processed already.
+         *
+         * @param cert {@link X509Certificate} to add to the list of already seen certificates.
+         */
+        protected void add(@Nonnull final X509Certificate cert) {
+            certMap.put(cert, cert);
+        }
+
+    }
 
     /** Certificate factory to use to convert to X.509 certificates. */
     private CertificateFactory factory;
-    
+
+    @Override
+    protected Context buildContext(@Nonnull final Item<Element> item) {
+        return new Context(item);
+    }
+
     @Override
     protected boolean applicable(@Nonnull final Element e) {
         return XMLDSIGSupport.XML_DSIG_NS.equals(e.getNamespaceURI()) &&
@@ -49,7 +102,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     }
 
     @Override
-    protected void visit(@Nonnull final Element element, @Nonnull final TraversalContext context) 
+    protected void visit(@Nonnull final Element element, @Nonnull final Context context) 
         throws StageProcessingException {
         final String text = element.getTextContent();
         final byte[] data = Base64Support.decode(text);
@@ -57,8 +110,8 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
             final X509Certificate cert =
                     (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(data));
             // only process each certificate once per item
-            if (!context.getStash().containsValue(cert)) {
-                context.getStash().put(cert);
+            if (!context.haveSeen(cert)) {
+                context.add(cert);
                 applyValidators(cert, context);
             }
         } catch (final CertificateException e) {

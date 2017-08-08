@@ -22,21 +22,23 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 /**
  * An abstract stage to apply a collection of validators to each object from each item.
- * 
+ *
  * @param <V> type of the object to be validated
- */ 
-public abstract class AbstractDOMValidationStage<V> extends AbstractDOMTraversalStage {
+ * @param <C> the context to carry through the traversal
+ */
+public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContext>
+    extends AbstractDOMTraversalStage<C> {
 
     /** The list of validators to apply. */
     @Nonnull
@@ -71,7 +73,7 @@ public abstract class AbstractDOMValidationStage<V> extends AbstractDOMTraversal
      * @param context context for the validation
      * @throws StageProcessingException if errors occur during processing
      */
-    protected void applyValidators(@Nonnull final V obj, @Nonnull final TraversalContext context)
+    protected void applyValidators(@Nonnull final V obj, @Nonnull final C context)
             throws StageProcessingException {
         for (final Validator<V> validator: validators) {
             final Validator.Action action = validator.validate(obj, context.getItem(), getId());

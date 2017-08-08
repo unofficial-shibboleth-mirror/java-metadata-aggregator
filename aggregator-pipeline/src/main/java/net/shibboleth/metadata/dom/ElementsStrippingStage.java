@@ -17,8 +17,10 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -27,6 +29,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -51,7 +54,42 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * do <i>not</i> appear in the collection of names.
  */
 @ThreadSafe
-public class ElementsStrippingStage extends AbstractDOMTraversalStage {
+public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsStrippingStage.Context> {
+
+    /** Context class for this kind of traversal. */
+    protected static class Context extends SimpleDOMTraversalContext {
+
+        /**
+         * List of {@link Element}s to be removed from the document at the
+         * end of the traversal.
+         */
+        private List<Element> elements = new ArrayList<>();
+
+        /**
+         * Constructor.
+         *
+         * @param contextItem the {@link Item} we are traversing
+         */
+        public Context(@Nonnull final Item<Element> contextItem) {
+            super(contextItem);
+        }
+
+        /**
+         * Add the given {@link Element} to the list for later removal.
+         *
+         * @param element the {@link Element} to be removed
+         */
+        protected void add(@Nonnull final Element element) {
+            elements.add(element);
+        }
+
+        @Override
+        public void end() {
+            for (final Element element : elements) {
+                element.getParentNode().removeChild(element);
+            }
+        }
+    }
 
     /** Namespace of the elements to strip. */
     private String elementNamespace;
@@ -106,7 +144,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage {
     }
 
     /**
-     * Set whether the {@link #names} are to be used as a whitelist.
+     * Set whether the {@link #elementNames} are to be used as a whitelist.
      *
      * The default behaviour is for the names to be used as a blacklist.
      *
@@ -117,7 +155,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage {
     }
 
     /**
-     * Indicates whether the {@link #names} are being used as a whitelist.
+     * Indicates whether the {@link #elementNames} are being used as a whitelist.
      *
      * @return <code>true</code> if the names are being used as a whitelist
      */
@@ -138,15 +176,8 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage {
 
     @Override
     protected void visit(@Nonnull final Element element,
-            @Nonnull final TraversalContext context) {
-        context.getStash().put(element);
-    }
-
-    @Override
-    protected void endTraversal(@Nonnull final TraversalContext context) {
-        for (final Element element : context.getStash().get(Element.class)) {
-            element.getParentNode().removeChild(element);
-        }
+            @Nonnull final Context context) {
+        context.add(element);
     }
 
     @Override
@@ -163,6 +194,11 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage {
         if (elementNamespace == null) {
             throw new ComponentInitializationException("target namespace can not be null or empty");
         }
+    }
+
+    @Override
+    protected Context buildContext(@Nonnull final Item<Element> item) {
+        return new Context(item);
     }
 
 }

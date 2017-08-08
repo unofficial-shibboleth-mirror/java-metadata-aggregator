@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -34,7 +35,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * Abstract parent class for stages which visit {@link Element}s named by a
  * collection of {@link QName}s.
  */
-public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalStage {
+public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalStage<DOMTraversalContext> {
 
     /** Collection of element names for those elements we will be visiting. */
     @Nonnull private Set<QName> elementNames = Collections.emptySet();
@@ -86,6 +87,11 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
     protected boolean applicable(@Nonnull final Element e) {
         final QName q = new QName(e.getNamespaceURI(), e.getLocalName());
         return elementNames.contains(q);
+    }
+
+    @Override
+    protected DOMTraversalContext buildContext(@Nonnull final Item<Element> item) {
+        return new SimpleDOMTraversalContext(item);
     }
 
 }

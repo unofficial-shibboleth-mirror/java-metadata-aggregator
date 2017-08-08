@@ -36,47 +36,30 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * An abstract DOM traversal class using the template method pattern.
+ *
+ * A context object, extending {@link DOMTraversalContext}, is created by the
+ * implementing subclass and passed to the {@link #visit} method when
+ * each applicable {@link Element} is visited. In very simple cases, the
+ * {@link SimpleDOMTraversalContext} may suffice, but more complicated
+ * behaviour can be built up by extending or re-implementing that class.
+ *
+ * At the end of the traversal, the context's {@link DOMTraversalContext#end()}
+ * method is called to perform any post-processing required.
+ *
+ * @param <C> the context to carry through the traversal
  */
 @ThreadSafe
-public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<Element> {
-    
-    /** Context for a particular traversal. */
-    protected class TraversalContext {
-        
-        /** The {@link Item} this traversal is being performed on. */
-        private final Item<Element> item;
-        
-        /** Map of data for this traversal. */
-        private final ClassToInstanceMultiMap<Object> stash = new ClassToInstanceMultiMap<>(true);
-        
-        /**
-         * Constructor.
-         * 
-         * @param contextItem the {@link Item} this traversal is being performed on.
-         */
-        public TraversalContext(@Nonnull final Item<Element> contextItem) {
-            item = contextItem;
-        }
-        
-        /**
-         * Get the {@link Item} this traversal is being performed on.
-         * 
-         * @return the context {@link Item}
-         */
-        public Item<Element> getItem() {
-            return item;
-        }
-        
-        /**
-         * Get the stashed information for this traversal.
-         * 
-         * @return the stashed information
-         */
-        public ClassToInstanceMultiMap<Object> getStash() {
-            return stash;
-        }
-        
-    }
+public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
+    extends AbstractIteratingStage<Element> {
+
+    /**
+     * Build the context for a particular traversal.
+     *
+     * @param item the {@link Item} we are traversing
+     *
+     * @return an appropriate context
+     */
+    protected abstract C buildContext(@Nonnull final Item<Element> item);
 
     /**
      * Indicates whether the visitor should be applied to a particular {@link Element}.
@@ -94,9 +77,9 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
      * @param context the traversal context
      * @throws StageProcessingException if errors occur during processing
      */
-    protected abstract void visit(@Nonnull final Element element, @Nonnull final TraversalContext context)
+    protected abstract void visit(@Nonnull final Element element, @Nonnull final C context)
         throws StageProcessingException;
-    
+
     /**
      * Depth-first traversal of the DOM tree rooted in an element, applying the
      * visitor when appropriate.  The traversal snapshots the child elements at
@@ -107,7 +90,7 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
      * @param context context for the traversal
      * @throws StageProcessingException if errors occur during processing
      */
-    private void traverse(@Nonnull final Element element, @Nonnull final TraversalContext context) 
+    private void traverse(@Nonnull final Element element, @Nonnull final C context) 
         throws StageProcessingException {
         final List<Element> children = ElementSupport.getChildElements(element);
         for (final Element child : children) {
@@ -121,9 +104,9 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
     @Override
     protected void doExecute(final Item<Element> item) throws StageProcessingException {
         final Element docElement = item.unwrap();
-        final TraversalContext context = new TraversalContext(item);
+        final C context = buildContext(item);
         traverse(docElement, context);
-        endTraversal(context);
+        context.end();
     }
 
     /**
@@ -172,14 +155,6 @@ public abstract class AbstractDOMTraversalStage extends AbstractIteratingStage<E
             }
         }
         metadata.put(new ErrorStatus(getId(), prefix + error));
-    }
-
-    /**
-     * This method is called once the traversal has finished. It may be overridden by subclasses.
-     *
-     * @param context the context for which the traversal has finished
-     */
-    protected void endTraversal(@Nonnull final TraversalContext context) {
     }
 
 }
