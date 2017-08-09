@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +25,11 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.dom.XMLSignatureSigningStage;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
-import org.w3c.dom.Element;
 
 /** Helper class for dealing with SAML metadata. */
 @ThreadSafe

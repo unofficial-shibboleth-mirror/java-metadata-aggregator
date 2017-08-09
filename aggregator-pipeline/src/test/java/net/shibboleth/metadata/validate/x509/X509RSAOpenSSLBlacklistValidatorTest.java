@@ -20,7 +20,6 @@ package net.shibboleth.metadata.validate.x509;
 
 import java.security.cert.X509Certificate;
 
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
