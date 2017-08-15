@@ -29,8 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
@@ -38,6 +36,7 @@ import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * An abstract stage which removes all evidence of given XML namespaces from each metadata item.
@@ -156,12 +155,9 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractIterating
         /*
          * Recursively process the DOM below this element.
          */
-        final NodeList children = element.getChildNodes();
-        for (int eIndex = 0; eIndex < children.getLength(); eIndex++) {
-            final Node child = children.item(eIndex);
-            if (child instanceof Element) {
-                processElement((Element) child, depth+1);
-            }
+        final List<Element> children = ElementSupport.getChildElements(element);
+        for (final Element child : children) {
+            processElement(child, depth+1);
         }
     
         /*
