@@ -21,6 +21,7 @@ import java.util.List;
 
 import net.shibboleth.metadata.pipeline.ComponentInfo;
 import net.shibboleth.utilities.java.support.component.Component;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.testng.Assert;
 
@@ -41,21 +42,15 @@ public final class AssertSupport {
      */
     public static void assertValidComponentInfo(Item<?> metadataElement, int expectedComponentInfos,
             Class<? extends Component> expectedComponentType, String expectedComponentId) {
-        net.shibboleth.utilities.java.support.logic.Constraint.isNotNull(metadataElement,
-                "Metadata element must not be null");
-        net.shibboleth.utilities.java.support.logic.Constraint.isGreaterThan(0, expectedComponentInfos,
-                "Expected ComponentInfos must be greater than 0");
-        net.shibboleth.utilities.java.support.logic.Constraint.isNotNull(expectedComponentType,
-                "Expected Component type must not be null");
-        net.shibboleth.utilities.java.support.logic.Constraint.isNotNull(expectedComponentId,
-                "Expected Component ID must not be null");
+        Constraint.isNotNull(metadataElement, "Metadata element must not be null");
+        Constraint.isGreaterThan(0, expectedComponentInfos, "Expected ComponentInfos must be greater than 0");
+        Constraint.isNotNull(expectedComponentType, "Expected Component type must not be null");
+        Constraint.isNotNull(expectedComponentId, "Expected Component ID must not be null");
 
-        List<ComponentInfo> compInfos = metadataElement.getItemMetadata().get(ComponentInfo.class);
+        final List<ComponentInfo> compInfos = metadataElement.getItemMetadata().get(ComponentInfo.class);
         Assert.assertEquals(compInfos.size(), expectedComponentInfos);
 
-        ComponentInfo compInfo;
-        for (int i = 0; i < expectedComponentInfos; i++) {
-            compInfo = compInfos.get(i);
+        for (final ComponentInfo compInfo : compInfos) {
             if (expectedComponentType.equals(compInfo.getComponentType())
                     && expectedComponentId.equals(compInfo.getComponentId())) {
                 Assert.assertNotNull(compInfo.getCompleteInstant());
