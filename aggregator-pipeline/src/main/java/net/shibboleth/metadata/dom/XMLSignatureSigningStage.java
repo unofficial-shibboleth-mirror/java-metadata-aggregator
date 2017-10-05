@@ -884,16 +884,15 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
      * 
      * @throws StageProcessingException thrown if there is a problem creating the X509Data content
      */
-    protected void addX509Data(@Nonnull @NonnullElements @Live final ArrayList<Object> keyInfoItems)
-            throws StageProcessingException {
-        final ArrayList<Object> x509Data = new ArrayList<>();
+    protected void addX509Data(@Nonnull @NonnullElements @Live final ArrayList<Object> keyInfoItems) {
+        final List<Object> x509Data = new ArrayList<>();
 
         if (certificates != null && !certificates.isEmpty()) {
             final X509Certificate endEntityCert = certificates.get(0);
 
             if (includeX509SubjectName) {
                 final X500Principal subjectDn = endEntityCert.getSubjectX500Principal();
-                keyInfoItems.add(subjectDn.getName(X500Principal.RFC2253));
+                x509Data.add(subjectDn.getName(X500Principal.RFC2253));
             }
 
             if (includeX509Certificates) {

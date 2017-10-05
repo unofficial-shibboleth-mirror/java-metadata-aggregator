@@ -72,7 +72,41 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         Element expected = readXMLData("output.xml");
         assertXMLIdentical(expected, result.unwrap());
     }
-    
+
+    /** MDA-196: XMLSignatureSigningStage's includeX509SubjectName property causes exception */
+    @Test
+    public void testMDA196() throws Exception {
+        final Element testInput = readXMLData("input.xml");
+
+        final List<Item<Element>> mdCol = new ArrayList<>();
+        mdCol.add(new DOMElementItem(testInput));
+
+        final PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
+                .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        final X509Certificate signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+                .getResourceAsStream(classRelativeResource("signingCert.pem")));
+        final List<X509Certificate> certs = new ArrayList<>();
+        certs.add(signingCert);
+
+        final XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
+        stage.setId("test");
+        stage.setIncludeKeyValue(false);
+        stage.setIncludeX509IssuerSerial(true);
+        stage.setIncludeX509SubjectName(true);
+        stage.setPrivateKey(signingKey);
+        stage.setCertificates(certs);
+        stage.initialize();
+
+        stage.execute(mdCol);
+        Assert.assertEquals(mdCol.size(), 1);
+
+        final Item<Element> result = mdCol.iterator().next();
+        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
+
+        final Element expected = readXMLData("mda196.xml");
+        assertXMLIdentical(expected, result.unwrap());
+    }
+
     @Test
     public void testSetIdAttributeNamesNull() throws Exception {
         final XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
@@ -84,5 +118,5 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
             // expected
         }
     }
-    
+
 }
