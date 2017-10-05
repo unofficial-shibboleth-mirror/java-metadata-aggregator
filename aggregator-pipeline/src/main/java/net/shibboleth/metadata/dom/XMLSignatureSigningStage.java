@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.security.auth.x500.X500Principal;
+import javax.xml.crypto.XMLStructure;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Reference;
@@ -815,7 +816,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
      * @throws StageProcessingException thrown if there is a problem creating the KeyInfo descriptor
      */
     @Nonnull protected KeyInfo buildKeyInfo() throws StageProcessingException {
-        final ArrayList<Object> keyInfoItems = new ArrayList<>();
+        final List<XMLStructure> keyInfoItems = new ArrayList<>();
 
         addKeyNames(keyInfoItems);
         addKeyValue(keyInfoItems);
@@ -834,7 +835,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
      * 
      * @throws StageProcessingException thrown if there is a problem creating the KeyName content
      */
-    protected void addKeyNames(@Nonnull @NonnullElements @Live final ArrayList<Object> keyInfoItems)
+    protected void addKeyNames(@Nonnull @NonnullElements @Live final List<XMLStructure> keyInfoItems)
             throws StageProcessingException {
         if (!includeKeyNames) {
             return;
@@ -854,7 +855,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
      * 
      * @throws StageProcessingException thrown if there is a problem creating the KeyValue content
      */
-    protected void addKeyValue(@Nonnull @NonnullElements @Live final ArrayList<Object> keyInfoItems)
+    protected void addKeyValue(@Nonnull @NonnullElements @Live final List<XMLStructure> keyInfoItems)
             throws StageProcessingException {
         if (!includeKeyValue) {
             return;
@@ -884,7 +885,7 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
      * 
      * @throws StageProcessingException thrown if there is a problem creating the X509Data content
      */
-    protected void addX509Data(@Nonnull @NonnullElements @Live final ArrayList<Object> keyInfoItems) {
+    protected void addX509Data(@Nonnull @NonnullElements @Live final List<XMLStructure> keyInfoItems) {
         final List<Object> x509Data = new ArrayList<>();
 
         if (certificates != null && !certificates.isEmpty()) {
