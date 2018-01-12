@@ -38,6 +38,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
     public void testNotBlacklisted() throws Exception {
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("1024.txt"));
+        val.setId("test");
         val.initialize();
         Assert.assertEquals(val.getKeySize(), 0); // no key size restriction
         
@@ -51,6 +52,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
     public void test1024on1024noRestriction() throws Exception {
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("1024.txt"));
+        val.setId("test");
         val.initialize();
         Assert.assertEquals(val.getKeySize(), 0); // no key size restriction
         
@@ -65,6 +67,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("1024.txt"));
         val.setKeySize(1024);
+        val.setId("test");
         val.initialize();
         
         final Item<String> item = new MockItem("foo");
@@ -78,6 +81,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("1024.txt"));
         val.setKeySize(2048); // untrue, but should prevent any matches
+        val.setId("test");
         val.initialize();
         
         final Item<String> item = new MockItem("foo");
@@ -90,6 +94,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
     public void test2048on1024noRestriction() throws Exception {
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("1024.txt"));
+        val.setId("test");
         val.initialize();
         Assert.assertEquals(val.getKeySize(), 0); // no key size restriction
         
@@ -103,6 +108,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
     public void test2048on2048noRestriction() throws Exception {
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("2048.txt"));
+        val.setId("test");
         val.initialize();
         Assert.assertEquals(val.getKeySize(), 0); // no key size restriction
         
@@ -117,6 +123,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("2048.txt"));
         val.setKeySize(2048);
+        val.setId("test");
         val.initialize();
         
         final Item<String> item = new MockItem("foo");
@@ -130,6 +137,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("2048.txt"));
         val.setKeySize(1024); // untrue, but should prevent any matches
+        val.setId("test");
         val.initialize();
         
         final Item<String> item = new MockItem("foo");
@@ -142,7 +150,14 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
     public void testBlankLineIssue9() throws Exception {
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(getClasspathResource("issue9.txt"));
+        val.setId("test");
         val.initialize();
     }
-    
+
+    @Test
+    public void mda198() throws Exception {
+        final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
+        // do not initialize
+        Assert.assertNull(val.getId(), "unset ID should be null");
+    }
 }

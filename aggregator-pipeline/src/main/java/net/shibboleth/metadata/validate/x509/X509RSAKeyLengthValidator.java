@@ -44,14 +44,6 @@ public class X509RSAKeyLengthValidator extends AbstractX509Validator {
     
     /** The RSA key length below which a warning should result. Default: 0 (disabled). */
     private int warningBoundary;
-    
-    /**
-     * Constructor.
-     */
-    public X509RSAKeyLengthValidator() {
-        super();
-        setId("RSAKeyLength");
-    }
 
     /**
      * Get the RSA key length below which an error will result.

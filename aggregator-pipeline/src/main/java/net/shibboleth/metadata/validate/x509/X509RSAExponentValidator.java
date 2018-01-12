@@ -46,14 +46,6 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
     
     /** The RSA public exponent value below which a warning should result. Default: 0 (disabled). */
     private BigInteger warningBoundary = BigInteger.ZERO;
-    
-    /**
-     * Constructor.
-     */
-    public X509RSAExponentValidator() {
-        super();
-        setId("RSAExponent");
-    }
 
     /**
      * Get the RSA public exponent below which an error will result.

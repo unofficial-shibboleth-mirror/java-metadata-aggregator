@@ -55,6 +55,8 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
     @Test
     public void testDefaults() throws Exception {
         final X509RSAExponentValidator val = new X509RSAExponentValidator();
+        val.setId("test");
+        val.initialize();
         testThreeCerts(val, 1, 0, 0, 0, 0, 0);
     }
 
@@ -62,6 +64,8 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
     public void testNISTWarning() throws Exception {
         final X509RSAExponentValidator val = new X509RSAExponentValidator();
         val.setWarningBoundary(65537);
+        val.setId("test");
+        val.initialize();
         testThreeCerts(val, 1, 0, 0, 1, 0, 0);
     }
 
@@ -69,6 +73,8 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
     public void testNISTError() throws Exception {
         final X509RSAExponentValidator val = new X509RSAExponentValidator();
         val.setErrorBoundary(65537);
+        val.setId("test");
+        val.initialize();
         testThreeCerts(val, 1, 0, 1, 0, 0, 0);
     }
 
@@ -77,7 +83,15 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
         final X509RSAExponentValidator val = new X509RSAExponentValidator();
         val.setErrorBoundary(0);
         val.setWarningBoundary(65537);
+        val.setId("test");
+        val.initialize();
         testThreeCerts(val, 0, 1, 0, 1, 0, 0);
     }
 
+    @Test
+    public void mda198() throws Exception {
+        final X509RSAExponentValidator val = new X509RSAExponentValidator();
+        // do not initialize
+        Assert.assertNull(val.getId(), "unset ID should be null");
+    }
 }

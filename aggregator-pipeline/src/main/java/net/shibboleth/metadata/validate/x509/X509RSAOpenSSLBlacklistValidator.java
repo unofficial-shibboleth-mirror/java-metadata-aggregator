@@ -65,14 +65,6 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
 
     /** Set of digest values blacklisted by this validator. */
     private final Set<String> blacklistedValues = new HashSet<>();
-    
-    /**
-     * Constructor.
-     */
-    public X509RSAOpenSSLBlacklistValidator() {
-        super();
-        setId("OpenSSLBlacklist");
-    }
 
     /**
      * Gets the resource that provides the blacklist.

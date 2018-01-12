@@ -38,6 +38,9 @@ public class X509RSAKeyLengthValidatorTest extends BaseX509ValidatorTest {
     public void testDefaults2048() throws Exception {
         final Item<String> item = new MockItem("foo");
         final Validator<X509Certificate> val = new X509RSAKeyLengthValidator();
+        val.setId("test");
+        val.initialize();
+
         final X509Certificate cert = getCertificate("2048.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
@@ -47,6 +50,9 @@ public class X509RSAKeyLengthValidatorTest extends BaseX509ValidatorTest {
     public void testDefaults1024() throws Exception {
         final Item<String> item = new MockItem("foo");
         final Validator<X509Certificate> val = new X509RSAKeyLengthValidator();
+        val.setId("test");
+        val.initialize();
+
         final X509Certificate cert = getCertificate("1024.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 1, 0);
@@ -58,9 +64,19 @@ public class X509RSAKeyLengthValidatorTest extends BaseX509ValidatorTest {
         final X509RSAKeyLengthValidator val = new X509RSAKeyLengthValidator();
         val.setErrorBoundary(1024);
         val.setWarningBoundary(2048);
+        val.setId("test");
+        val.initialize();
+
         final X509Certificate cert = getCertificate("1024.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 1);
+    }
+
+    @Test
+    public void mda198() throws Exception {
+        final X509RSAKeyLengthValidator val = new X509RSAKeyLengthValidator();
+        // do not initialize
+        Assert.assertNull(val.getId(), "unset ID should be null");
     }
 
 }

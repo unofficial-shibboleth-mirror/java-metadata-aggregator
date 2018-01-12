@@ -96,6 +96,8 @@ public class X509ValidationStageTest extends BaseDOMTest {
         final X509RSAKeyLengthValidator val =
                 new X509RSAKeyLengthValidator();
         val.setErrorBoundary(2049);
+        val.setId("test");
+        val.initialize();
         
         final List<Validator<X509Certificate>> vals = new ArrayList<>();
         vals.add(val);
@@ -120,6 +122,8 @@ public class X509ValidationStageTest extends BaseDOMTest {
                 new X509RSAKeyLengthValidator();
         val.setWarningBoundary(2049);
         val.setErrorBoundary(2048);
+        val.setId("test");
+        val.initialize();
         
         final List<Validator<X509Certificate>> vals = new ArrayList<>();
         vals.add(val);
