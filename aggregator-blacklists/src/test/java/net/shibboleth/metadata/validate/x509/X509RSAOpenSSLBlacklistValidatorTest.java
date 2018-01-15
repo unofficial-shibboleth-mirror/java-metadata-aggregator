@@ -39,6 +39,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setBlacklistResource(new ClassPathResource("net/shibboleth/metadata/validate/x509/debian-2048.txt"));
         val.setKeySize(2048);
+        val.setId("test");
         val.initialize();
 
         final Item<String> item = new MockItem("foo");
