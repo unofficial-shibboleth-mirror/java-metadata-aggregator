@@ -24,6 +24,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.saml.AbstractSAMLTraversalStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
@@ -36,7 +37,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * 
  * @see <a href="https://issues.shibboleth.net/jira/browse/SSPCPP-684">SSPCPP-684</a>
  */
-public class CRDetectionStage extends AbstractDOMTraversalStage<CRDetectionStage.Context> {
+public class CRDetectionStage extends AbstractSAMLTraversalStage<CRDetectionStage.Context> {
 
     /** Context class for this kind of traversal. */
     protected static class Context extends SimpleDOMTraversalContext {

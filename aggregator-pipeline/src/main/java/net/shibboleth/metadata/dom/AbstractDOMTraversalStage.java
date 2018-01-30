@@ -22,13 +22,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
@@ -110,20 +108,13 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
     }
 
     /**
-     * Returns the {@link Element} representing the EntityDescriptor which is the
-     * closest-containing ancestor of the given element.
-     * 
-     * @param element {@link Element} to locate the ancestor Entity of.
-     * @return ancestor EntityDescriptor {@link Element}, or null.
+     * Computes a prefix to be put in front of the message in {@link #addError}.
+     *
+     * @param element {@link Element} forming the context for the prefix
+     * @return a prefix for the error message
      */
-    protected Element ancestorEntity(@Nonnull final Element element) {
-        assert element != null;
-        for (Element e = element; e != null; e = (Element) e.getParentNode()) {
-            if (SAMLMetadataSupport.isEntityDescriptor(e)) {
-                return e;
-            }
-        }
-        return null;
+    protected String errorPrefix(@Nonnull final Element element) {
+        return "";
     }
 
     /**
@@ -141,19 +132,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
         assert element != null;
         assert error != null;
         final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
-        String prefix = "";
-        if (SAMLMetadataSupport.isEntitiesDescriptor(element)) {
-            final Element entity = ancestorEntity(element);
-            final Attr id = entity.getAttributeNode("ID");
-            if (id != null) {
-                prefix = id.getTextContent() + ": ";
-            } else {
-                final Attr entityID = entity.getAttributeNode("entityID");
-                if (entityID != null) {
-                    prefix = entityID.getTextContent() + ": ";
-                }
-            }
-        }
+        final String prefix = errorPrefix(element);
         metadata.put(new ErrorStatus(getId(), prefix + error));
     }
 
