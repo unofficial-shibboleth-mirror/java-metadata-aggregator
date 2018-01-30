@@ -265,6 +265,12 @@
 
     <bean id="mda.validator_parent" abstract="true" parent="mda.component_parent"/>
 
+    <bean id="mda.AcceptAllValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.AcceptAllValidator"/>
+
+    <bean id="mda.RejectAllValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.RejectAllValidator"/>
+
     <!--
         net.shibboleth.metadata.validate.x509
     -->
