@@ -15,29 +15,37 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom;
+package net.shibboleth.metadata.validate;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+
+import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.validate.Validator;
-import net.shibboleth.metadata.validate.ValidatorSequence;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
- * An abstract stage to apply a collection of validators to each object from each item.
+ * A {@link Validator} implementation which encapsulates the functionality of stepping
+ * through a sequence of other validators.
+ *
+ * The {@link #validate} method of this class returns the
+ * {@link net.shibboleth.metadata.validate.Validator.Action#DONE} value
+ * to indicate that one of the called validators returned that value.
  *
  * @param <V> type of the object to be validated
- * @param <C> the context to carry through the traversal
  */
-public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContext>
-    extends AbstractDOMTraversalStage<C> {
+public class ValidatorSequence<V> extends BaseValidator implements Validator<V> {
 
-    /** The validator sequence to apply. */
+    /** The list of validators to apply. */
     @Nonnull
-    private ValidatorSequence<V> validators = new ValidatorSequence<>();
+    private List<Validator<V>> validators = Collections.emptyList();
 
     /**
      * Set the list of validators to apply to each item.
@@ -45,7 +53,10 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
      * @param newValidators the list of validators to set
      */
     public void setValidators(@Nonnull final List<Validator<V>> newValidators) {
-        validators.setValidators(newValidators);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        validators = ImmutableList.copyOf(Iterables.filter(newValidators, Predicates.notNull()));
     }
 
     /**
@@ -55,24 +66,23 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
      */
     @Nonnull
     public List<Validator<V>> getValidators() {
-        return validators.getValidators();
+        return Collections.unmodifiableList(validators);
     }
 
-    /**
-     * Apply each of the configured validators in turn to the provided object.
-     * 
-     * @param obj object to be validated
-     * @param context context for the validation
-     * @throws StageProcessingException if errors occur during processing
-     */
-    protected void applyValidators(@Nonnull final V obj, @Nonnull final C context)
+    @Override
+    public Action validate(@Nonnull final V value, @Nonnull final Item<?> item, @Nonnull final String stageId)
             throws StageProcessingException {
-        validators.validate(obj, context.getItem(), getId());
+        for (final Validator<V> validator: validators) {
+            final Action action = validator.validate(value, item, stageId);
+            if (action == Action.DONE) {
+                return action;
+            }
+        }
+        return Action.CONTINUE;
     }
-    
+
     @Override
     protected void doDestroy() {
-        validators.destroy();
         validators = null;
         super.doDestroy();
     }
@@ -80,8 +90,12 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
     @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        validators.setId(getId());
-        validators.initialize();
+
+        for (final Validator<V> validator : validators) {
+            if (!validator.isInitialized()) {
+                validator.initialize();
+            }
+        }
     }
 
 }
