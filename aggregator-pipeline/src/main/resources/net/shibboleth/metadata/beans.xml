@@ -269,6 +269,9 @@
         net.shibboleth.metadata.validate.x509
     -->
 
+    <bean id="mda.X509ROCAValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.x509.X509ROCAValidator"/>
+
     <bean id="mda.X509RSAExponentValidator" abstract="true" parent="mda.validator_parent"
         class="net.shibboleth.metadata.validate.x509.X509RSAExponentValidator"/>
 
