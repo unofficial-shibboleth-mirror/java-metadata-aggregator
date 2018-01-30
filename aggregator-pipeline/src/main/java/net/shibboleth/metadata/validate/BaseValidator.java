@@ -23,6 +23,8 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * Base class for validator implementations.
@@ -31,6 +33,39 @@ import net.shibboleth.utilities.java.support.component.AbstractIdentifiableIniti
  * methods for constructing status metadata.
  */
 public abstract class BaseValidator extends AbstractIdentifiableInitializableComponent {
+
+    /**
+     * Message format string.
+     *
+     * The generated message is formatted using this with the object being validated passed
+     * as an argument.
+     *
+     * Defaults to <code>"value rejected: '%s'"</code>.
+     */
+    @Nonnull
+    private String message = "value rejected: '%s'";
+
+    /**
+     * Returns the message format string.
+     *
+     * @return the message format string
+     */
+    @Nonnull
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Set the message format string.
+     * 
+     * @param newMessage the new message format string
+     */
+    public void setMessage(@Nonnull final String newMessage) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        message = Constraint.isNotNull(newMessage, "message format string may not be null");
+    }
 
     /**
      * Construct a modified component identifier from the stage identifier and the
@@ -52,42 +87,58 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
     /**
      * Add an {@link ErrorStatus} to the given {@link Item}.
      * 
-     * @param message message to include in the status metadata
+     * @param mess message to include in the status metadata
      * @param item {@link Item} to add the status metadata to
      * @param stageId component identifier for the calling stage
      */
-    protected void addError(@Nonnull final String message, @Nonnull final Item<?> item,
+    protected void addError(@Nonnull final String mess, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
-        item.getItemMetadata().put(new ErrorStatus(makeComponentId(stageId), message));
+        item.getItemMetadata().put(new ErrorStatus(makeComponentId(stageId), mess));
     }
     
     /**
      * Add a {@link WarningStatus} to the given {@link Item}.
      * 
-     * @param message message to include in the status metadata
+     * @param mess message to include in the status metadata
      * @param item {@link Item} to add the status metadata to
      * @param stageId component identifier for the calling stage
      */
-    protected void addWarning(@Nonnull final String message, @Nonnull final Item<?> item,
+    protected void addWarning(@Nonnull final String mess, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
-        item.getItemMetadata().put(new WarningStatus(makeComponentId(stageId), message));
+        item.getItemMetadata().put(new WarningStatus(makeComponentId(stageId), mess));
     }
     
     /**
      * Add a {@link WarningStatus} or {@link ErrorStatus} to the given {@link Item}.
      * 
      * @param error <code>true</code> if an {@link ErrorStatus} should be added
-     * @param message message to include in the status metadata
+     * @param mess message to include in the status metadata
      * @param item {@link Item} to add the status metadata to
      * @param stageId component identifier for the calling stage
      */
-    protected void addStatus(final boolean error, @Nonnull final String message, @Nonnull final Item<?> item,
+    protected void addStatus(final boolean error, @Nonnull final String mess, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
         if (error) {
-            addError(message, item, stageId);
+            addError(mess, item, stageId);
         } else {
-            addWarning(message, item, stageId);
+            addWarning(mess, item, stageId);
         }
     }
-    
+
+    /**
+     * Add an {@link ErrorStatus} to the given {@link Item}.
+     *
+     * The status message included in the {@link ErrorStatus} is generated
+     * by formatting the provided value with the {@link #message} field.
+     *
+     * @param extra extra value to include in the status metadata
+     * @param item {@link Item} to add the status metadata to
+     * @param stageId component identifier for the calling stage
+     */
+    protected void addErrorMessage(@Nonnull final Object extra, @Nonnull final Item<?> item,
+            @Nonnull final String stageId) {
+        final String mess = String.format(getMessage(), extra);
+        addError(mess, item, stageId);
+    }
+
 }
