@@ -272,6 +272,22 @@
         class="net.shibboleth.metadata.validate.RejectAllValidator"/>
 
     <!--
+        net.shibboleth.metadata.validate.string
+    -->
+
+    <bean id="mda.AcceptStringRegexValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.string.AcceptStringRegexValidator"/>
+
+    <bean id="mda.AcceptStringValueValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.string.AcceptStringValueValidator"/>
+
+    <bean id="mda.RejectStringRegexValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.string.RejectStringRegexValidator"/>
+
+    <bean id="mda.RejectStringValueValidator" abstract="true" parent="mda.validator_parent"
+        class="net.shibboleth.metadata.validate.string.RejectStringValueValidator"/>
+
+    <!--
         net.shibboleth.metadata.validate.x509
     -->
 
