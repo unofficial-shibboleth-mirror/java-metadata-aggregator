@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.time.Instant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,9 +26,6 @@ import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
-import org.joda.time.DateTime;
-import org.joda.time.chrono.ISOChronology;
 
 /** Some basic information related to a component's processing of an {@link net.shibboleth.metadata.Item}. */
 public class ComponentInfo implements ItemMetadata {
@@ -41,10 +40,10 @@ public class ComponentInfo implements ItemMetadata {
     private Class<?> componentType;
 
     /** Instant when the component operation started. */
-    private DateTime startInstant;
+    private Instant startInstant;
 
     /** Instant when the component operation completed. */
-    private DateTime completeInstant;
+    private Instant completeInstant;
 
     /** Constructor. */
     public ComponentInfo() {
@@ -60,7 +59,7 @@ public class ComponentInfo implements ItemMetadata {
         Constraint.isNotNull(component, "Component can not be null");
         componentId = component.getId();
         componentType = component.getClass();
-        startInstant = new DateTime(ISOChronology.getInstanceUTC());
+        startInstant = Instant.now();
     }
 
     /**
@@ -104,7 +103,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @return instant when the component operation started
      */
-    @Nullable public DateTime getStartInstant() {
+    @Nullable public Instant getStartInstant() {
         return startInstant;
     }
 
@@ -113,7 +112,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param instant instant when the component operation started
      */
-    public void setStartInstant(@Nullable final DateTime instant) {
+    public void setStartInstant(@Nullable final Instant instant) {
         startInstant = instant;
     }
 
@@ -122,13 +121,13 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @return instant when the component operation completed
      */
-    @Nullable public DateTime getCompleteInstant() {
+    @Nullable public Instant getCompleteInstant() {
         return completeInstant;
     }
 
     /** Sets the complete instant of the component to now. */
     public void setCompleteInstant() {
-        completeInstant = new DateTime(ISOChronology.getInstanceUTC());
+        completeInstant = Instant.now();
     }
 
     /**
@@ -136,7 +135,7 @@ public class ComponentInfo implements ItemMetadata {
      * 
      * @param instant when the component operation completed
      */
-    public void setCompleteInstant(@Nullable final DateTime instant) {
+    public void setCompleteInstant(@Nullable final Instant instant) {
         completeInstant = instant;
     }
 }
