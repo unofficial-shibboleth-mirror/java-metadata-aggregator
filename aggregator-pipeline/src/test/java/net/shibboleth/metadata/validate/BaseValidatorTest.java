@@ -3,9 +3,9 @@ package net.shibboleth.metadata.validate;
 
 import java.util.List;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import junit.framework.Assert;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
@@ -32,10 +32,10 @@ public class BaseValidatorTest {
         b.initialize();
         Assert.assertEquals(b.getMessage(), "value rejected: '%s'");
         final Item<String> item = new MockItem("test");
-        Assert.assertEquals(Action.DONE, b.validate("foo", item, "stage"));
+        Assert.assertEquals(b.validate("foo", item, "stage"), Action.DONE);
         final List<ErrorStatus> errs = item.getItemMetadata().get(ErrorStatus.class);
-        Assert.assertEquals(1, errs.size());
-        Assert.assertEquals("value rejected: 'foo'", errs.get(0).getStatusMessage());
+        Assert.assertEquals(errs.size(), 1);
+        Assert.assertEquals(errs.get(0).getStatusMessage(), "value rejected: 'foo'");
     }
 
     @Test
@@ -46,9 +46,9 @@ public class BaseValidatorTest {
         b.initialize();
         Assert.assertEquals(b.getMessage(), "%s is bad");
         final Item<String> item = new MockItem("test");
-        Assert.assertEquals(Action.DONE, b.validate("foo", item, "stage"));
+        Assert.assertEquals(b.validate("foo", item, "stage"), Action.DONE);
         final List<ErrorStatus> errs = item.getItemMetadata().get(ErrorStatus.class);
-        Assert.assertEquals(1, errs.size());
-        Assert.assertEquals("foo is bad", errs.get(0).getStatusMessage());
+        Assert.assertEquals(errs.size(), 1);
+        Assert.assertEquals(errs.get(0).getStatusMessage(), "foo is bad");
     }
 }
