@@ -45,9 +45,11 @@ public class ComponentInfoTest {
         Assert.assertEquals(infos.get(2).getComponentId(), "pipe", "2");
 
         // Check that we're getting ISO 8601 Z time out from toString
+        final String zuluPattern =
+                "\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d\\d\\dZ";
         for (final ComponentInfo c : infos) {
-            Assert.assertTrue(c.getStartInstant().toString().matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT.*Z"), "start");
-            Assert.assertTrue(c.getCompleteInstant().toString().matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT.*Z"), "complete");
+            Assert.assertTrue(c.getStartInstant().toString().matches(zuluPattern), "start");
+            Assert.assertTrue(c.getCompleteInstant().toString().matches(zuluPattern), "complete");
         }
     }
 
