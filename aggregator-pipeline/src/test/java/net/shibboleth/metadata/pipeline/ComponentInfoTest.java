@@ -45,11 +45,17 @@ public class ComponentInfoTest {
         Assert.assertEquals(infos.get(2).getComponentId(), "pipe", "2");
 
         // Check that we're getting ISO 8601 Z time out from toString
+        // Java 8 gives a result with three sub-second digits (millisecond precision)
+        // Java 9 gives six digits (microsecond precision)
+        // Accept anything with at least three, which is what we used to get from
+        // Joda-Time DateTime values.
         final String zuluPattern =
-                "\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d\\d\\dZ";
+                "\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d\\d\\d\\d*Z";
         for (final ComponentInfo c : infos) {
-            Assert.assertTrue(c.getStartInstant().toString().matches(zuluPattern), "start");
-            Assert.assertTrue(c.getCompleteInstant().toString().matches(zuluPattern), "complete");
+            final String startString = c.getStartInstant().toString();
+            Assert.assertTrue(startString.matches(zuluPattern), "start: " + startString);
+            final String completeString = c.getCompleteInstant().toString();
+            Assert.assertTrue(completeString.matches(zuluPattern), "complete: " + completeString);
         }
     }
 
