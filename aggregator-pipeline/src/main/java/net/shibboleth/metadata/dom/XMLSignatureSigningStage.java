@@ -938,7 +938,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
         super.doInitialize();
 
         if (!Init.isInitialized()) {
-            Init.isInitialized();
+            Init.init();
         }
 
         xmlSigFactory = XMLSignatureFactory.getInstance();
