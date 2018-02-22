@@ -40,7 +40,7 @@ public class RejectAllValidatorTest {
         v.initialize();
 
         final Item<String> item = new MockItem("test");
-        final Validator.Action action = v.validate(new Double(1.25), item, "stage");
+        final Validator.Action action = v.validate(1.25, item, "stage");
         Assert.assertEquals(action, Action.DONE);
 
         final List<ErrorStatus> errs = item.getItemMetadata().get(ErrorStatus.class);
