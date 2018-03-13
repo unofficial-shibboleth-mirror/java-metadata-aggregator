@@ -1,0 +1,5 @@
+<!--this is a comment--><values>
+    <firstValue>17 bananas</firstValue>
+    <secondValue value="99"/>
+    <thirdValue>33</thirdValue>
+</values>

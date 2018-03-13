@@ -79,7 +79,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         pipeline.execute(itemCollection);
         final Element result = itemCollection.get(0).unwrap();
         final Element expected = readXMLData("added1.xml");
-        assertXMLEqual(expected, result);
+        assertXMLIdentical(expected, result);
     }
 
     /*
@@ -98,7 +98,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         pipeline.execute(itemCollection);
         final Element result = itemCollection.get(0).unwrap();
         final Element expected = readXMLData("added2.xml");
-        assertXMLEqual(expected, result);
+        assertXMLIdentical(expected, result);
     }
 
     /*
@@ -122,7 +122,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         pipeline.execute(itemCollection);
         final Element result = itemCollection.get(0).unwrap();
         final Element expected = readXMLData("added3.xml");
-        assertXMLEqual(expected, result);
+        assertXMLIdentical(expected, result);
     }
 
     /*
@@ -141,7 +141,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         pipeline.execute(itemCollection);
         final Element result = itemCollection.get(0).unwrap();
         final Element expected = readXMLData("added2.xml");
-        assertXMLEqual(expected, result);
+        assertXMLIdentical(expected, result);
     }
 
     /*
@@ -160,6 +160,6 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         pipeline.execute(itemCollection);
         final Element result = itemCollection.get(0).unwrap();
         final Element expected = readXMLData("added2.xml");
-        assertXMLEqual(expected, result);
+        assertXMLIdentical(expected, result);
     }
 }

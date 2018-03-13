@@ -9,5 +9,6 @@
         <beta:StripMe>
             <nested/>
         </beta:StripMe>
+        
     </alpha:keepMe>
 </rootElement>

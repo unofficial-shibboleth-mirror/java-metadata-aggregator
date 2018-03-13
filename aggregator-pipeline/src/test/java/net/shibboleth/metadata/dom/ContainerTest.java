@@ -56,13 +56,13 @@ public class ContainerTest extends BaseDOMTest {
         c1.addChild(e2, Container.FIRST_CHILD);
 
         final Element ok = readXMLData("add1.xml");
-        assertXMLEqual(ok, e1);
+        assertXMLIdentical(ok, e1);
 
         final Element e3 = doc.createElementNS("ns", "child2");
         e3.setTextContent("child 2 value");
         c1.addChild(e3, Container.FIRST_CHILD);
         final Element ok2 = readXMLData("addFirst.xml");
-        assertXMLEqual(ok2, e1);
+        assertXMLIdentical(ok2, e1);
     }
 
     @Test
@@ -74,13 +74,13 @@ public class ContainerTest extends BaseDOMTest {
         c1.addChild(e2, Container.LAST_CHILD);
 
         final Element ok = readXMLData("add1.xml");
-        assertXMLEqual(ok, e1);
+        assertXMLIdentical(ok, e1);
 
         final Element e3 = doc.createElementNS("ns", "child2");
         e3.setTextContent("child 2 value");
         c1.addChild(e3, Container.LAST_CHILD);
         final Element ok2 = readXMLData("addLast.xml");
-        assertXMLEqual(ok2, e1);
+        assertXMLIdentical(ok2, e1);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ContainerTest extends BaseDOMTest {
         midContainer.addChild(leaf2, Container.LAST_CHILD);
 
         final Element ok = readXMLData("nested.xml");
-        assertXMLEqual(ok, root);
+        assertXMLIdentical(ok, root);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ContainerTest extends BaseDOMTest {
         }, Container.FIRST_CHILD);
 
         final Element ok = readXMLData("add1.xml");
-        assertXMLEqual(ok, e1);
+        assertXMLIdentical(ok, e1);
 
         c1.addChild(new Function<Container, Element>(){
 
@@ -131,7 +131,7 @@ public class ContainerTest extends BaseDOMTest {
         }, Container.FIRST_CHILD);
 
         final Element ok2 = readXMLData("addFirst.xml");
-        assertXMLEqual(ok2, e1);
+        assertXMLIdentical(ok2, e1);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class ContainerTest extends BaseDOMTest {
         }, Container.LAST_CHILD);
 
         final Element ok = readXMLData("add1.xml");
-        assertXMLEqual(ok, e1);
+        assertXMLIdentical(ok, e1);
 
         c1.addChild(new Function<Container, Element>(){
 
@@ -165,7 +165,7 @@ public class ContainerTest extends BaseDOMTest {
         }, Container.LAST_CHILD);
 
         final Element ok2 = readXMLData("addLast.xml");
-        assertXMLEqual(ok2, e1);
+        assertXMLIdentical(ok2, e1);
     }
 
     @Test
@@ -242,7 +242,7 @@ public class ContainerTest extends BaseDOMTest {
         }, Container.LAST_CHILD);
 
         final Element ok = readXMLData("add1.xml");
-        assertXMLEqual(ok, e1);
+        assertXMLIdentical(ok, e1);
 
         // same again should NOT change the result for locate
 
@@ -266,7 +266,7 @@ public class ContainerTest extends BaseDOMTest {
         }, Container.LAST_CHILD);
 
         final Element ok2 = readXMLData("add1.xml");
-        assertXMLEqual(ok2, e1);
+        assertXMLIdentical(ok2, e1);
 
     }
 }

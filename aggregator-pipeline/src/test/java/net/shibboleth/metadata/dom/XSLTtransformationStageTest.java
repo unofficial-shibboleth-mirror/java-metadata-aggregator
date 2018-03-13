@@ -232,8 +232,9 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
-        final Element expected = readXMLData("output.xml");
-        assertXMLIdentical(expected, result.unwrap());
+        final Element expected = readXMLData("transform1.xml");
+        // Compare *documents* here so that we include the prolog
+        assertXMLIdentical(expected.getOwnerDocument(), result.unwrap().getOwnerDocument());
 
         // peek at the first node in the document; should be a comment
         final Node firstNode = result.unwrap().getOwnerDocument().getFirstChild();

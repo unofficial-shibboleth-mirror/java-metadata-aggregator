@@ -18,10 +18,19 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.xml.transform.Source;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.input.NormalizedSource;
 
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.ErrorStatus;
@@ -36,17 +45,22 @@ import net.shibboleth.utilities.java.support.xml.ParserPool;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 /** A base class for DOM related tests. */
 public abstract class BaseDOMTest extends BaseTest {
 
-    /** Initialized parser pool used to parser data. */
+    /**
+     * Initialized parser pool used to parse data.
+     *
+     * Parsers produced by this pool are set up slightly differently
+     * than the default Shibboleth {@link BasicParserPool}.
+     * In particular, they do <i>not</i> ignore either comment
+     * nodes or "ignoreable" whitespace in element content.
+     *
+     * This means that tests have access to <i>all</i> of the
+     * contents of test resources. It is the responsibility of
+     * each test to perform appropriate XMLUnit source wrapping
+     * or comparisons if that is appropriate in any given case.
+     */
     private BasicParserPool parserPool;
 
     /** Constructor */
@@ -61,9 +75,13 @@ public abstract class BaseDOMTest extends BaseTest {
      */
     @BeforeClass
     public void setUp() throws ComponentInitializationException {
-        XMLUnit.setIgnoreWhitespace(true);
-
+        // Use defaults of BasicParserPool as a basis.
         parserPool = new BasicParserPool();
+
+        // Override defaults to present ALL of the XML in the resource.
+        parserPool.setIgnoreComments(false);
+        parserPool.setIgnoreElementContentWhitespace(false);
+
         parserPool.initialize();
     }
 
@@ -117,47 +135,41 @@ public abstract class BaseDOMTest extends BaseTest {
     }
 
     /**
-     * Checks whether two nodes are identical based on {@link Diff#identical()}.
-     * 
+     * Checks whether two nodes are identical.
+     *
+     * The only variation that is permitted for the purpose of comparison is that
+     * adjacent text nodes will be coalesced.
+     *
+     * Tests requiring other semantics should call XMLUnit directly.
+     *
      * @param expected the expected node against which the actual node will be tested, never null
      * @param actual the actual node tested against the expected node, never null
      */
-    public void assertXMLIdentical(Node expected, Node actual) {
+    public void assertXMLIdentical(@Nonnull final Node expected, @Nonnull final Node actual) {
         Constraint.isNotNull(expected, "Expected Node may not be null");
         Constraint.isNotNull(actual, "Actual Node may not be null");
 
-        Diff diff = new Diff(expected.getOwnerDocument(), actual.getOwnerDocument());
-        if (!diff.identical()) {
-            org.testng.Assert.fail(diff.toString());
+        /*
+         * Normalize empty and adjacent text nodes within the source nodes.
+         *
+         * Don't try to simplify this by passing expected and actual directly to the
+         * NormalizedSource(Node) constructor. That's much faster, as the constructor just
+         * normalizes the provided node, but by the same token it causes the original
+         * node to be changed, and side-effects are undesirable in a general-use method
+         * like this one.
+         */
+        final Source expectedSource = new NormalizedSource(Input.fromNode(expected).build());
+        final Source actualSource = new NormalizedSource(Input.fromNode(actual).build());
+
+        final Diff diff = DiffBuilder.compare(expectedSource).withTest(actualSource)
+                .checkForIdentical()
+                .build();
+
+        if (diff.hasDifferences()) {
+            System.out.println("Expected:\n" + SerializeSupport.nodeToString(expected));
+            System.out.println("Actual:\n" + SerializeSupport.nodeToString(actual));
+            Assert.fail(diff.toString());
         }
-    }
-
-    /**
-     * Checks whether two nodes are equal based on {@link Node#isEqualNode(Node)}. Both nodes are serialized, re-parsed,
-     * and then compared for equality. This forces any changes made to the document that haven't yet been represented in
-     * the DOM (e.g., declaration of used namespaces) to be flushed to the DOM.
-     * 
-     * @param expected the expected node against which the actual node will be tested, never null
-     * @param actual the actual node tested against the expected node, never null
-     * 
-     * @throws XMLParserException thrown if there is a problem serializing and re-parsing the nodes
-     */
-    public void assertXMLEqual(@Nonnull final Node expected, @Nonnull final Node actual) throws XMLParserException {
-        Constraint.isNotNull(actual, "Actual Node may not be null");
-        final String serializedActual = SerializeSupport.nodeToString(actual);
-        Element deserializedActual = parserPool.parse(new StringReader(serializedActual)).getDocumentElement();
-
-        Constraint.isNotNull(expected, "Expected Node may not be null");
-        final String serializedExpected = SerializeSupport.nodeToString(expected);
-        Element deserializedExpected = parserPool.parse(new StringReader(serializedExpected)).getDocumentElement();
-
-        final boolean ok = deserializedExpected.isEqualNode(deserializedActual);
-        if (!ok) {
-            System.out.println("Expected:\n" + serializedExpected);
-            System.out.println("Actual:\n" + serializedActual);
-        }
-
-        Assert.assertTrue(ok, "Actual Node does not equal expected Node");
     }
 
     protected int countErrors(final Item<Element> item) {
