@@ -141,4 +141,9 @@ public class PipelineDemultiplexerStageTest {
             // this was expected
         }
     }
+
+    @Test public void testMDA206() throws Exception {
+        final PipelineDemultiplexerStage<String> stage = new PipelineDemultiplexerStage<>();
+        Assert.assertTrue(stage.isWaitingForPipelines());
+    }
 }

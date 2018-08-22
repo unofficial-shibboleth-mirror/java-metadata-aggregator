@@ -67,8 +67,12 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     /** Service used to execute the selected and/or non-selected item pipelines. */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    /** Whether this child waits for all the invoked pipelines to complete before proceeding. */
-    private boolean waitingForPipelines;
+    /**
+     * Whether this child waits for all the invoked pipelines to complete before proceeding.
+     *
+     * Default: <code>true</code>.
+     */
+    private boolean waitingForPipelines = true;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
     private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
