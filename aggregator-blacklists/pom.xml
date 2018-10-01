@@ -15,6 +15,10 @@
     <artifactId>aggregator-blacklists</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <automatic.module.name>net.shibboleth.metadata.blacklists</automatic.module.name>
+    </properties>
+
     <dependencies>
         <!-- Compile Dependencies -->
 

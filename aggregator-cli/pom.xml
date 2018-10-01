@@ -16,6 +16,10 @@
     <artifactId>aggregator-cli</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <automatic.module.name>net.shibboleth.metadata.cli</automatic.module.name>
+    </properties>
+
     <dependencies>
         <!-- Compile Dependencies -->
         <dependency>
