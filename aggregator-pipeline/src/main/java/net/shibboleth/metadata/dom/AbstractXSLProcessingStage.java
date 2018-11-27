@@ -313,15 +313,27 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     }
 
     /**
-     * {@link Transformer} {@link ErrorListener} that sets an {@link ErrorStatus} or {@link WarningStatus} on its
-     * {@link Item} depending on the {@link TransformerException} message. If the message begins with
-     * {@value #ERROR_PREFIX} the remainder of the error message is used as the message for the added
-     * {@link ErrorStatus}. If the message begins with {@value #WARN_PREFIX} the remainder of the error message is used
-     * as the message for the added {@link WarningStatus}. If the message begins with {@value #INFO_PREFIX} the
-     * remainder of the error message is used as the message for the added {@link InfoStatus}. If the message does not
-     * begin with either prefix the exception is re-thrown to be handed by the {@link Transformer}.
-     * 
-     * This listener works well in conjunction with &lt;xsl:message&gt;
+     * {@link Transformer} {@link ErrorListener} that sets an {@link ErrorStatus}, {@link WarningStatus} or
+     * {@link InfoStatus} on its {@link Item} depending on the {@link TransformerException} message.
+     *
+     * <ul>
+     * <li><p>If the message begins with
+     * {@value net.shibboleth.metadata.dom.AbstractXSLProcessingStage.StatusInfoAppendingErrorListener#ERROR_PREFIX}
+     * the remainder of the error message is used as the message for the added {@link ErrorStatus}.</p></li>
+     *
+     * <li><p>If the message begins with
+     * {@value net.shibboleth.metadata.dom.AbstractXSLProcessingStage.StatusInfoAppendingErrorListener#WARN_PREFIX}
+     * the remainder of the error message is used as the message for the added {@link WarningStatus}.</p></li>
+     *
+     * <li><p>If the message begins with
+     * {@value net.shibboleth.metadata.dom.AbstractXSLProcessingStage.StatusInfoAppendingErrorListener#INFO_PREFIX}
+     * the remainder of the error message is used as the message for the added {@link InfoStatus}.</p></li>
+     * </ul>
+     *
+     * <p>If the message does not
+     * begin with any of the prefixes the exception is re-thrown to be handed by the {@link Transformer}.</p>
+     *
+     * <p>This listener works well in conjunction with &lt;xsl:message&gt;.</p>
      */
     public class StatusInfoAppendingErrorListener implements ErrorListener {
 
