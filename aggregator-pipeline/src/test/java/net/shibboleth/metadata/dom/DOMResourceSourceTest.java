@@ -23,18 +23,19 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.xml.BasicParserPool;
-
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
+
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 public class DOMResourceSourceTest {
 
@@ -46,7 +47,7 @@ public class DOMResourceSourceTest {
     }
     
     @Test public void testSuccessfulFetchAndParse() throws Exception {
-        Resource mdResource = new UrlResource("https://issues.shibboleth.net/jira/Shibboleth.sso/Metadata");
+        Resource mdResource = new ByteArrayResource("<test/>".getBytes("UTF-8"));
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
