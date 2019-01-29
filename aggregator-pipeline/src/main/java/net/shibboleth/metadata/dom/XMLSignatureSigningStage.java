@@ -62,6 +62,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
 import org.apache.xml.security.Init;
@@ -70,6 +71,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -187,6 +190,9 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
 
     /** Whether to include comments in the canonicalized data. Default value: <code>false</code> */
     private boolean c14nWithComments;
+
+    /** Whether to remove CR characters from generated signatures. Default value: <code>true</code>. */
+    private boolean removingCRsFromSignature = true;
 
     /**
      * Canonicalization algorithm to use. This is determined from the {@link #c14nExclusive} and
@@ -640,6 +646,44 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
         return digestAlgo;
     }
 
+    /**
+     * Gets whether CR characters will be removed from generated signatures.
+     *
+     * @return <code>true</code> if CR characters will be removed from generated signatures.
+     */
+    public boolean isRemovingCRsFromSignature() {
+        return removingCRsFromSignature;
+    }
+
+    /**
+     * Sets whether to remove CR characters from generated signatures.
+     *
+     * @param newValue whether to remove CR characters from generated signatures.
+     */
+    public void setRemovingCRsFromSignature(final boolean newValue) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        removingCRsFromSignature = newValue;
+    }
+
+    /**
+     * Remove any CRs from the text content of named child elements.
+     *
+     * @param signature The <code>Signature</code> element to process.
+     * @param elementName The element name within the XML DSIG namespace to look for.
+     */
+    private void removeCRsFromNamedChildren(@Nonnull final Element signature, @Nonnull final String elementName) {
+        final NodeList nodes = signature.getElementsByTagNameNS(XML_SIG_NS_URI, elementName);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            final Node node = nodes.item(i);
+            final String text = node.getTextContent();
+            if (text.indexOf('\r') >= 0) {
+                node.setTextContent(text.replaceAll("\\r", ""));
+            }
+        }
+    }
+
     /** {@inheritDoc} */
     @Override protected boolean doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element element = item.unwrap();
@@ -655,6 +699,13 @@ public class XMLSignatureSigningStage extends BaseIteratingStage<Element> {
             // Perform the signature operation
             signature.sign(context);
             
+            // Remove any CRs from selected signature elements.
+            if (isRemovingCRsFromSignature()) {
+                final Element signatureElement = ElementSupport.getFirstChildElement(element, SIGNATURE_NAME);
+                removeCRsFromNamedChildren(signatureElement, "SignatureValue");
+                removeCRsFromNamedChildren(signatureElement, "X509Certificate");
+            }
+
             // Log the pre-digest data for debugging
             if (isDebugPreDigest() && log.isDebugEnabled()) {
                 final Reference ref = (Reference) signature.getSignedInfo().getReferences().get(0);
