@@ -36,7 +36,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
-public class DOMResourceSourceTest {
+public class DOMResourceSourceStageTest {
 
     BasicParserPool parserPool;
     
