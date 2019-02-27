@@ -34,7 +34,6 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 public class DOMResourceSourceTest {
@@ -61,8 +60,8 @@ public class DOMResourceSourceTest {
         Assert.assertEquals(metadataCollection.size(), 1);
     }
 
-    @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
-        Resource mdResource = new UrlResource("http://www.google.com/intl/en/images/about_logo.gif");
+    @Test public void testFailedParse() throws Exception {
+        Resource mdResource = new ByteArrayResource("this is not valid XML".getBytes("UTF-8"));
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         final String stageIdentifier = "testStage";
@@ -74,7 +73,7 @@ public class DOMResourceSourceTest {
         try {
             final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
             source.execute(metadataCollection);
-            throw new ConstraintViolationException("Invalid URL marked as parsed");
+            Assert.fail("Invalid resource reported as parsed");
         } catch (StageProcessingException e) {
             // expected this
             final String message = e.getMessage();
