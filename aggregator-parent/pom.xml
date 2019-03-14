@@ -159,6 +159,34 @@
                     </archive>
                 </configuration>
              </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <!--
+                        Ensure that we're not either directly or indirectly making use of the
+                        joda-time package. Our time handling should be exclusive based on the
+                        java.time package introduced in Java 8.
+                    -->
+                    <execution>
+                        <id>no-joda-time</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>joda-time:joda-time</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
