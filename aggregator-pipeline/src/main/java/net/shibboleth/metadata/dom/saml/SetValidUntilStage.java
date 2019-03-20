@@ -17,6 +17,9 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -25,8 +28,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.Duration;
-import net.shibboleth.utilities.java.support.annotation.constraint.Positive;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -44,29 +46,32 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 @ThreadSafe
 public class SetValidUntilStage extends AbstractIteratingStage<Element> {
 
-    /** Amount of time the descriptors will be valid, expressed in milliseconds. */
-    @Duration
-    private long validityDuration;
+    /** Amount of time the descriptors will be valid. */
+    @NonnullAfterInit private Duration validityDuration;
 
     /**
-     * Gets the amount of time the descriptors will be valid, expressed in milliseconds.
+     * Gets the amount of time the descriptors will be valid.
      * 
-     * @return amount of time the descriptors will be valid, expressed in milliseconds
+     * @return amount of time the descriptors will be valid
      */
-    public long getValidityDuration() {
+    public Duration getValidityDuration() {
         return validityDuration;
     }
 
     /**
-     * Sets the amount of time the descriptors will be valid, expressed in milliseconds.
+     * Sets the amount of time the descriptors will be valid.
      * 
-     * @param duration amount of time the descriptors will be valid, expressed in milliseconds
+     * @param duration amount of time the descriptors will be valid
      */
-    public synchronized void setValidityDuration(@Duration @Positive final long duration) {
+    public synchronized void setValidityDuration(@Nonnull final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        validityDuration = Constraint.isGreaterThan(0, duration, "validity duration must be greater than 0");
+        Constraint.isNotNull(duration, "validity duration cannot be null");
+        Constraint.isFalse(duration.isZero(), "validity duration cannot be zero");
+        Constraint.isFalse(duration.isNegative(), "validity duration cannot be negative");
+
+        validityDuration = duration;
     }
 
     @Override
@@ -75,16 +80,16 @@ public class SetValidUntilStage extends AbstractIteratingStage<Element> {
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
-                    System.currentTimeMillis() + validityDuration);
+                    Instant.now().plus(validityDuration));
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        if (validityDuration <= 0) {
-            throw new ComponentInitializationException("validity duration must be greater than 0");
+        if (validityDuration == null) {
+            throw new ComponentInitializationException("validity duration must be set");
         }
     }
 }

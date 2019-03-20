@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -43,17 +44,17 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
 
     /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
-    private long minCacheDuration;
+    private Duration minCacheDuration = Duration.ZERO;
 
     /** The maximum cache duration in milliseconds. Default value: {@value java.lang.Long#MAX_VALUE} */
-    private long maxCacheDuration = Long.MAX_VALUE;
+    private Duration maxCacheDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
-     * Gets the minimum cache duration in milliseconds.
+     * Gets the minimum cache duration.
      * 
-     * @return minimum cache duration in milliseconds, always 0 or greater
+     * @return minimum cache duration, always 0 or greater
      */
-    public long getMinimumCacheDuration() {
+    public Duration getMinimumCacheDuration() {
         return minCacheDuration;
     }
 
@@ -62,43 +63,43 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * 
      * @param duration the minimum cache duration in milliseconds
      */
-    public synchronized void setMinimumCacheDuration(final long duration) {
+    public synchronized void setMinimumCacheDuration(final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (duration < 0) {
-            minCacheDuration = 0;
+        if (duration.isNegative()) {
+            minCacheDuration = Duration.ZERO;
         } else {
             minCacheDuration = duration;
         }
     }
 
     /**
-     * Gets the maximum cache duration in milliseconds.
+     * Gets the maximum cache duration.
      * 
-     * @return maximum cache duration in milliseconds, always greater than 0
+     * @return maximum cache duration, always greater than 0
      */
-    public long getMaximumCacheDuration() {
+    public Duration getMaximumCacheDuration() {
         return maxCacheDuration;
     }
 
     /**
-     * Sets the maximum cache duration in milliseconds.
+     * Sets the maximum cache duration.
      * 
-     * @param duration maximum cache duration in milliseconds, must be greater than 0
+     * @param duration maximum cache duration, must be greater than 0
      */
-    public synchronized void setMaximumCacheDuration(final long duration) {
+    public synchronized void setMaximumCacheDuration(final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        Constraint.isGreaterThan(0, duration, "Maximum cache duration must be greater than 0");
+        Constraint.isGreaterThan(0, duration.toMillis(), "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element descriptor = item.unwrap();
-        final Long cacheDuration = getShortestCacheDuration(descriptor);
+        final Duration cacheDuration = getShortestCacheDuration(descriptor);
         setCacheDuration(descriptor, cacheDuration);
     }
 
@@ -110,18 +111,19 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    protected Long getShortestCacheDuration(@Nonnull final Element descriptor) {
-        Long shortestCacheDuration = null;
+    protected Duration getShortestCacheDuration(@Nonnull final Element descriptor) {
+        Duration shortestCacheDuration = null;
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return shortestCacheDuration;
         }
 
-        Long cacheDuration = null;
+        Duration cacheDuration = null;
         final List<Element> entitiesDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final Element entitiesDescriptor : entitiesDescriptors) {
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
-            if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
+            if (cacheDuration != null &&
+                    (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
                 shortestCacheDuration = cacheDuration;
             }
         }
@@ -130,7 +132,8 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final Element entityDescriptor : entityDescriptors) {
             cacheDuration = getShortestCacheDuration(entityDescriptor);
-            if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
+            if (cacheDuration != null &&
+                    (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
                 shortestCacheDuration = cacheDuration;
             }
         }
@@ -138,8 +141,9 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
         final Attr cacheDurationAttr =
                 AttributeSupport.getAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         if (cacheDurationAttr != null) {
-            cacheDuration = AttributeSupport.getDurationAttributeValueAsLong(cacheDurationAttr);
-            if (cacheDuration != null && (shortestCacheDuration == null || (cacheDuration < shortestCacheDuration))) {
+            cacheDuration = AttributeSupport.getDurationAttributeValue(cacheDurationAttr);
+            if (cacheDuration != null &&
+                    (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
                 shortestCacheDuration = cacheDuration;
             }
 
@@ -158,15 +162,15 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param descriptor entity or entities descriptor to receive the cache duration, never null
      * @param cacheDuration cache duration to be set, may be null
      */
-    protected void setCacheDuration(@Nonnull final Element descriptor, @Nullable final Long cacheDuration) {
-        if (cacheDuration == null || cacheDuration <= 0) {
+    protected void setCacheDuration(@Nonnull final Element descriptor, @Nullable final Duration cacheDuration) {
+        if (cacheDuration == null || cacheDuration.isNegative() || cacheDuration.isZero()) {
             return;
         }
 
-        if (cacheDuration < minCacheDuration) {
+        if (cacheDuration.compareTo(minCacheDuration) < 0) {
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     minCacheDuration);
-        } else if (cacheDuration > maxCacheDuration) {
+        } else if (cacheDuration.compareTo(maxCacheDuration) > 0) {
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     maxCacheDuration);
         } else {

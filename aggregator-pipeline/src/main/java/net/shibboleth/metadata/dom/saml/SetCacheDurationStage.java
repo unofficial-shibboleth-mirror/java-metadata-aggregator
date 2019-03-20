@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -25,8 +27,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.Duration;
-import net.shibboleth.utilities.java.support.annotation.constraint.Positive;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -44,29 +45,32 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 @ThreadSafe
 public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
 
-    /** Cache duration, in milliseconds, that will be set on each metadata element. */
-    @Duration
-    private long cacheDuration;
+    /** Cache duration that will be set on each metadata element. */
+    @NonnullAfterInit private Duration cacheDuration;
 
     /**
-     * Gets the cache duration, in milliseconds, that will be set on each metadata element.
+     * Gets the cache duration that will be set on each metadata element.
      * 
-     * @return cache duration, in milliseconds
+     * @return cache duration
      */
-    public long getCacheDuration() {
+    public Duration getCacheDuration() {
         return cacheDuration;
     }
 
     /**
-     * Sets the cache duration, in milliseconds, that will be set on each metadata element.
+     * Sets the cache duration that will be set on each metadata element.
      * 
-     * @param duration cache duration, in milliseconds
+     * @param duration cache duration
      */
-    public synchronized void setCacheDuration(@Duration @Positive final long duration) {
+    public synchronized void setCacheDuration(@Nonnull final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        cacheDuration = Constraint.isGreaterThan(0, duration, "cache duration must be greater than 0");
+        Constraint.isNotNull(duration, "cache duration cannot be null");
+        Constraint.isFalse(duration.isZero(), "cache duration cannot be zero");
+        Constraint.isFalse(duration.isNegative(), "cache duration cannot be negative");
+
+        cacheDuration = duration;
     }
 
     @Override
@@ -79,12 +83,12 @@ public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        if (cacheDuration <= 0) {
-            throw new ComponentInitializationException("cache duration must be greater than 0");
+        if (cacheDuration == null) {
+            throw new ComponentInitializationException("cache duration must be set");
         }
     }
 }

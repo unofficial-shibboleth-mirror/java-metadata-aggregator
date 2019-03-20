@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,8 +57,8 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
-        long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
-        Assert.assertEquals(duration, 1000 * 60 * 60);
+        final var duration = AttributeSupport.getDurationAttributeValue(durationAttr);
+        Assert.assertEquals(duration, Duration.ofHours(1));
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
                 SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
@@ -77,7 +78,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
-        stage.setMinimumCacheDuration(1000 * 60 * 60 * 2);
+        stage.setMinimumCacheDuration(Duration.ofHours(2));
         stage.initialize();
         
         stage.execute(metadataCollection);
@@ -87,8 +88,8 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
-        long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
-        Assert.assertEquals(duration, 1000 * 60 * 60 * 2);
+        final var duration = AttributeSupport.getDurationAttributeValue(durationAttr);
+        Assert.assertEquals(duration, Duration.ofHours(2));
     }
 
     /** Test that the maximum cache duration is used when the shortest duration is greater than it. */
@@ -99,7 +100,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
 
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
-        stage.setMaximumCacheDuration(1000 * 60 * 30);
+        stage.setMaximumCacheDuration(Duration.ofMinutes(30));
         stage.initialize();
         
         stage.execute(metadataCollection);
@@ -109,7 +110,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(durationAttr);
 
-        long duration = AttributeSupport.getDurationAttributeValueAsLong(durationAttr);
-        Assert.assertEquals(duration, 1000 * 60 * 30);
+        final var duration = AttributeSupport.getDurationAttributeValue(durationAttr);
+        Assert.assertEquals(duration, Duration.ofMinutes(30));
     }
 }

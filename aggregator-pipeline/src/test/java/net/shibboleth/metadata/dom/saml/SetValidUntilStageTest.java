@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.Item;
@@ -57,8 +59,8 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
-        long duration = 123456;
-        long now = System.currentTimeMillis();
+        final var duration = Duration.ofMillis(123456);
+        final var now = Instant.now();
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
         stage.setValidityDuration(duration);
@@ -69,9 +71,9 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
-        long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
-        Assert.assertTrue(validUntil > now + duration - 100);
-        Assert.assertTrue(validUntil < now + duration + 100);
+        final var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        Assert.assertTrue(validUntil.isAfter(now.plus(duration).minus(Duration.ofMillis(100))));
+        Assert.assertTrue(validUntil.isBefore(now.plus(duration).plus(Duration.ofMillis(100))));
     }
 
     /**
@@ -88,8 +90,8 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
-        long duration = 123456;
-        long now = System.currentTimeMillis();
+        final var duration = Duration.ofMillis(123456);
+        final var now = Instant.now();
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
         stage.setValidityDuration(duration);
@@ -100,9 +102,9 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         Assert.assertNotNull(validUntilAttr);
 
-        long validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
-        Assert.assertTrue(validUntil > (now + duration - 100));
-        Assert.assertTrue(validUntil < (now + duration + 100));
+        final var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        Assert.assertTrue(validUntil.isAfter(now.plus(duration).minus(Duration.ofMillis(100))));
+        Assert.assertTrue(validUntil.isBefore(now.plus(duration).plus(Duration.ofMillis(100))));
     }
 
     /**
@@ -122,7 +124,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(root));
 
-        long duration = 123456;
+        final var duration = Duration.ofMillis(123456);
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
         stage.setValidityDuration(duration);
@@ -138,7 +140,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
     @Test
     public void testNegativeDuration() {
 
-        long duration = -987654;
+        final var duration = Duration.ofMillis(-987654);
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
 
@@ -149,4 +151,33 @@ public class SetValidUntilStageTest extends BaseDOMTest {
             // expected this
         }
     }
+
+    /** Tests that the stage properly rejects zero durations. */
+    @Test
+    public void testZeroDuration() {
+        final var stage = new SetValidUntilStage();
+        stage.setId("test");
+
+        try {
+            stage.setValidityDuration(Duration.ZERO);
+            Assert.fail();
+        } catch (ConstraintViolationException e) {
+            // expected this
+        }
+    }
+
+    /** Tests that the stage properly rejects null durations. */
+    @Test
+    public void testNullDuration() {
+        final var stage = new SetValidUntilStage();
+        stage.setId("test");
+
+        try {
+            stage.setValidityDuration(null);
+            Assert.fail();
+        } catch (ConstraintViolationException e) {
+            // expected this
+        }
+    }
+
 }

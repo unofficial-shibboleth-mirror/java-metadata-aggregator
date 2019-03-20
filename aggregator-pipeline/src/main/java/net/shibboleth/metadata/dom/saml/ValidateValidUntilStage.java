@@ -17,6 +17,9 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -26,8 +29,8 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 /**
@@ -41,10 +44,10 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
     private boolean requireValidUntil = true;
 
     /**
-     * Interval, in milliseconds, from now within which the validUntil date must fall. A value of 0 indicates that no
+     * Interval from now within which the validUntil date must fall. A value of 0 indicates that no
      * maximum interval is checked. Default value: 1 week
      */
-    private long maxValidityInterval = 1000 * 60 * 60 * 24 * 7;
+    @Nonnull private Duration maxValidityInterval = Duration.ofDays(7);
 
     /**
      * Gets whether the item is required to have a validUntil attribute.
@@ -68,24 +71,27 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
     }
 
     /**
-     * Gets the interval, in milliseconds, from now within which the validUntil date must fall.
+     * Gets the interval from now within which the validUntil date must fall.
      * 
-     * @return Interval, in milliseconds, from now within which the validUntil date must fall
+     * @return Interval from now within which the validUntil date must fall
      */
-    public long getMaxValidityInterval() {
+    public Duration getMaxValidityInterval() {
         return maxValidityInterval;
     }
 
     /**
-     * Sets the interval, in milliseconds, from now within which the validUntil date must fall. A value of 0 indicates
+     * Sets the interval from now within which the validUntil date must fall. A value of 0 indicates
      * that there is no check on the upper bound of the validity period.
      * 
-     * @param interval interval, in milliseconds, from now within which the validUntil date must fall; must be greater
+     * @param interval interval from now within which the validUntil date must fall; must be greater
      *            than or equal to 0
      */
-    public synchronized void setMaxValidityInterval(final long interval) {
+    public synchronized void setMaxValidityInterval(@Nonnull final Duration interval) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+
+        Constraint.isNotNull(interval, "max validity interval can not be null");
+        Constraint.isFalse(interval.isNegative(), "max validity interval can not be negative");
 
         maxValidityInterval = interval;
     }
@@ -98,35 +104,26 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
             return;
         }
 
-        final Long validUntil =
-                AttributeSupport.getDateTimeAttributeAsLong(AttributeSupport.getAttribute(element,
+        final Instant validUntil =
+                AttributeSupport.getDateTimeAttribute(AttributeSupport.getAttribute(element,
                         SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
         if (validUntil == null) {
             if (requireValidUntil) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
             }
         } else {
-            final long lowerBound = System.currentTimeMillis();
-            if (validUntil < lowerBound) {
+            final var lowerBound = Instant.now();
+            if (validUntil.isBefore(lowerBound)) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item has a validUntil prior to the current time"));
             }
 
-            if (maxValidityInterval > 0) {
-                final long upperBound = lowerBound + maxValidityInterval;
-                if (validUntil > upperBound) {
+            if (!maxValidityInterval.isZero()) {
+                final var upperBound = lowerBound.plus(maxValidityInterval);
+                if (validUntil.isAfter(upperBound)) {
                     item.getItemMetadata().put(
                             new ErrorStatus(getId(), "Item has validUntil larger than the maximum validity interval"));
                 }
             }
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-
-        if (maxValidityInterval < 0) {
-            throw new ComponentInitializationException("Max validity interval must be greater than or equal to 0");
         }
     }
 }

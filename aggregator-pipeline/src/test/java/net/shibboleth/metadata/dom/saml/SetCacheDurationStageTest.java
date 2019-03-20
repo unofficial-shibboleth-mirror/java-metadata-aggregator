@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -46,19 +47,19 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
     }
 
     /**
-     * Helper method to extract the value of a descriptor's XML duration attribute in milliseconds.
+     * Helper method to extract the value of a descriptor's XML duration attribute.
      * 
      * @param descriptor EntitiesDescriptor or EntityDescriptor to pull the attribute from
-     * @return the cache duration attribute value converted to milliseconds
+     * @return the cache duration attribute value converted to a {@link Duration}
      * @throws DatatypeConfigurationException if a {@link DatatypeFactory} can't be constructed
      */
-    private long fetchDuration(Element descriptor) throws DatatypeConfigurationException {
+    private Duration fetchDuration(Element descriptor) throws DatatypeConfigurationException {
         final Date baseDate = new Date(0);
         final DatatypeFactory dtf = DatatypeFactory.newInstance();
         final Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor,
                 SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
         Assert.assertNotNull(cacheDurationAttr);
-        return dtf.newDuration(cacheDurationAttr.getValue()).getTimeInMillis(baseDate);
+        return Duration.ofMillis(dtf.newDuration(cacheDurationAttr.getValue()).getTimeInMillis(baseDate));
     }
     
     /**
@@ -76,7 +77,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(item);
 
-        long duration = 123456;
+        final var duration = Duration.ofMillis(123456);
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
         stage.setCacheDuration(duration);
@@ -97,7 +98,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         final Element entitiesDescriptor = readXMLData("in.xml");
         final Item<Element> item = new DOMElementItem(entitiesDescriptor);
         
-        final long originalDuration = 987654;
+        final var originalDuration = Duration.ofMillis(987654);
         AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                 originalDuration);
 
@@ -107,7 +108,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(item);
 
-        long duration = 123456;
+        final var duration = Duration.ofMillis(123456);
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
         stage.setCacheDuration(duration);
@@ -135,7 +136,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(root));
 
-        long duration = 123456;
+        final var duration = Duration.ofMillis(123456);
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
         stage.setCacheDuration(duration);
@@ -150,16 +151,43 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
     /** Tests that the stage properly rejects negative durations. */
     @Test
     public void testNegativeDuration() {
-
-        long duration = -987654;
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
 
         try {
-            stage.setCacheDuration(duration);
+            stage.setCacheDuration(Duration.ofMillis(-987654));
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // expected this
         }
     }
+
+    /** Tests that the stage properly rejects zero durations. */
+    @Test
+    public void testZeroDuration() {
+        final var stage = new SetCacheDurationStage();
+        stage.setId("test");
+
+        try {
+            stage.setCacheDuration(Duration.ZERO);
+            Assert.fail();
+        } catch (ConstraintViolationException e) {
+            // expected this
+        }
+    }
+
+    /** Tests that the stage properly rejects null durations. */
+    @Test
+    public void testNullDuration() {
+        final var stage = new SetCacheDurationStage();
+        stage.setId("test");
+
+        try {
+            stage.setCacheDuration(null);
+            Assert.fail();
+        } catch (ConstraintViolationException e) {
+            // expected this
+        }
+    }
+
 }

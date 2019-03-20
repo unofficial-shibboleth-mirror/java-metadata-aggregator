@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -42,89 +44,89 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 @ThreadSafe
 public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
 
-    /** The minimum amount of time, in milliseconds, a descriptor may be valid . Default value: 0 */
-    private long minValidityDuration;
+    /** The minimum amount of time a descriptor may be valid. Default value: 0 */
+    private Duration minValidityDuration = Duration.ZERO;
 
     /**
-     * The maximum amount of time, in milliseconds, a descriptor may be valid. Default value:
+     * The maximum amount of time a descriptor may be valid. Default value:
      * {@value java.lang.Long#MAX_VALUE}
      */
-    private long maxValidityDuration = Long.MAX_VALUE;
+    private Duration maxValidityDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
-     * Gets the minimum amount of time, in milliseconds, a descriptor may be valid.
+     * Gets the minimum amount of time a descriptor may be valid.
      * 
-     * @return minimum amount of time, in milliseconds, a descriptor may be valid, always 0 or greater
+     * @return minimum amount of time a descriptor may be valid, always 0 or greater
      */
-    public long getMinimumValidityDuration() {
+    public Duration getMinimumValidityDuration() {
         return minValidityDuration;
     }
 
     /**
-     * Sets the minimum amount of time, in milliseconds, a descriptor may be valid.
+     * Sets the minimum amount of time a descriptor may be valid.
      * 
-     * @param duration minimum amount of time, in milliseconds, a descriptor may be valid
+     * @param duration minimum amount of time a descriptor may be valid
      */
-    public synchronized void setMinimumValidityDuration(final long duration) {
+    public synchronized void setMinimumValidityDuration(@Nonnull final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (duration < 0) {
-            minValidityDuration = 0;
+        if (duration.isNegative()) {
+            minValidityDuration = Duration.ZERO;
         } else {
             minValidityDuration = duration;
         }
     }
 
     /**
-     * Gets the maximum amount of time, in milliseconds, a descriptor may be valid.
+     * Gets the maximum amount of time a descriptor may be valid.
      * 
-     * @return maximum maximum amount of time, in milliseconds, a descriptor may be valid, always greater than 0
+     * @return maximum maximum amount of time a descriptor may be valid, always greater than 0
      */
-    public long getMaximumValidityDuration() {
+    public Duration getMaximumValidityDuration() {
         return maxValidityDuration;
     }
 
     /**
-     * Sets the maximum amount of time, in milliseconds, a descriptor may be valid.
+     * Sets the maximum amount of time a descriptor may be valid.
      * 
-     * @param duration maximum amount of time, in milliseconds, a descriptor may be valid, must be greater than 0
+     * @param duration maximum amount of time a descriptor may be valid, must be greater than 0
      */
-    public synchronized void setMaximumValidityDuration(final long duration) {
+    public synchronized void setMaximumValidityDuration(@Nonnull final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        Constraint.isGreaterThan(0, duration, "Maximum validity duration must be greater than 0");
+        Constraint.isGreaterThan(0, duration.toMillis(), "Maximum validity duration must be greater than 0");
         maxValidityDuration = duration;
     }
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element descriptor = item.unwrap();
-        final Long nearestValidUntil = getNearestValidUntil(descriptor);
+        final Instant nearestValidUntil = getNearestValidUntil(descriptor);
         setValidUntil(descriptor, nearestValidUntil);
     }
 
     /**
-     * Gets the shorts cache duration for a given entity and entities descriptor an all its descendant descriptors.
+     * Gets the shortest cache duration for a given entity and entities descriptor and all its descendant descriptors.
      * 
      * @param descriptor descriptor from which to get the shortest cache duration
      * 
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    protected Long getNearestValidUntil(@Nonnull final Element descriptor) {
-        Long nearestValidUntil = null;
+    protected Instant getNearestValidUntil(@Nonnull final Element descriptor) {
+        Instant nearestValidUntil = null;
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return nearestValidUntil;
         }
 
-        Long validUntil;
+        Instant validUntil;
         final List<Element> entitiesDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final Element entitiesDescriptor : entitiesDescriptors) {
             validUntil = getNearestValidUntil(entitiesDescriptor);
-            if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
+            if (validUntil != null && (nearestValidUntil == null || (validUntil.isBefore(nearestValidUntil)))) {
                 nearestValidUntil = validUntil;
             }
         }
@@ -133,7 +135,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final Element entityDescriptor : entityDescriptors) {
             validUntil = getNearestValidUntil(entityDescriptor);
-            if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
+            if (validUntil != null && (nearestValidUntil == null || (validUntil.isBefore(nearestValidUntil)))) {
                 nearestValidUntil = validUntil;
             }
         }
@@ -141,8 +143,8 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
         final Attr validUntilAttr =
                 descriptor.getAttributeNodeNS(null, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME.getLocalPart());
         if (validUntilAttr != null) {
-            validUntil = AttributeSupport.getDateTimeAttributeAsLong(validUntilAttr);
-            if (validUntil != null && (nearestValidUntil == null || (validUntil < nearestValidUntil))) {
+            validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+            if (validUntil != null && (nearestValidUntil == null || (validUntil.isBefore(nearestValidUntil)))) {
                 nearestValidUntil = validUntil;
             }
 
@@ -161,22 +163,19 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @param descriptor entity or entities descriptor to receive the validUntil, never null
      * @param validUntil validUntil time to be set on the given descriptor
      */
-    protected void setValidUntil(@Nonnull final Element descriptor, @Nullable final Long validUntil) {
+    protected void setValidUntil(@Nonnull final Element descriptor, @Nullable final Instant validUntil) {
         if (validUntil == null) {
             return;
         }
 
-        final long now = System.currentTimeMillis();
-        final long minValidUntil = now + minValidityDuration;
-        long maxValidUntil = now + maxValidityDuration;
-        if (maxValidUntil < 0) {
-            maxValidUntil = Long.MAX_VALUE;
-        }
+        final Instant now = Instant.now();
+        final Instant minValidUntil = now.plus(minValidityDuration);
+        final Instant maxValidUntil = now.plus(maxValidityDuration);
 
-        final long boundedValidUntil;
-        if (validUntil < minValidUntil) {
+        final Instant boundedValidUntil;
+        if (validUntil.isBefore(minValidUntil)) {
             boundedValidUntil = minValidUntil;
-        } else if (validUntil > maxValidUntil) {
+        } else if (validUntil.isAfter(maxValidUntil)) {
             boundedValidUntil = maxValidUntil;
         } else {
             boundedValidUntil = validUntil;

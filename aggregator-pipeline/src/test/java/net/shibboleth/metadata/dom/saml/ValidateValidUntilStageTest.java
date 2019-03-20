@@ -22,6 +22,11 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
+import java.time.Duration;
+import java.time.Instant;
+
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -42,7 +47,7 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
         stage.setRequireValidUntil(false);
         stage.initialize();
 
-        DOMElementItem item = buildDomElementItem(0);
+        DOMElementItem item = buildDomElementItem(Duration.ZERO);
         stage.doExecute(item);
         Assert.assertFalse(item.getItemMetadata().containsKey(ErrorStatus.class));
 
@@ -51,7 +56,7 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
         stage.setRequireValidUntil(true);
         stage.initialize();
         
-        item = buildDomElementItem(0);
+        item = buildDomElementItem(Duration.ZERO);
         stage.doExecute(item);
         Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
     }
@@ -64,15 +69,15 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
         stage.setRequireValidUntil(false);
         stage.initialize();
 
-        DOMElementItem item = buildDomElementItem(10000);
+        DOMElementItem item = buildDomElementItem(Duration.ofSeconds(10));
         stage.doExecute(item);
         Assert.assertFalse(item.getItemMetadata().containsKey(ErrorStatus.class));
 
-        item = buildDomElementItem(-10000);
+        item = buildDomElementItem(Duration.ofSeconds(-10));
         stage.doExecute(item);
         Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
 
-        item = buildDomElementItem(1000 * 60 * 60 * 24 * 8);
+        item = buildDomElementItem(Duration.ofDays(8));
         stage.doExecute(item);
         Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
     }
@@ -85,11 +90,11 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
      * 
      * @return the created Item
      */
-    private DOMElementItem buildDomElementItem(long validUntilInterval) throws Exception {
+    private DOMElementItem buildDomElementItem(@Nonnull final Duration validUntilInterval) throws Exception {
         Element descriptor = readXMLData("in.xml");
-        if (validUntilInterval != 0) {
+        if (!validUntilInterval.isZero()) {
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
-                    System.currentTimeMillis() + validUntilInterval);
+                    Instant.now().plus(validUntilInterval));
         }else{
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         }
