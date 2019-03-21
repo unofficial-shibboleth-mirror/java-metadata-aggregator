@@ -43,10 +43,10 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 @ThreadSafe
 public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
 
-    /** The minimum cache duration in milliseconds. Default value: <code>0</code> */
+    /** The minimum cache duration. Default value: <code>0</code> */
     private Duration minCacheDuration = Duration.ZERO;
 
-    /** The maximum cache duration in milliseconds. Default value: {@value java.lang.Long#MAX_VALUE} */
+    /** The maximum cache duration. Default value: {@value java.lang.Long#MAX_VALUE} */
     private Duration maxCacheDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
@@ -59,9 +59,9 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
     }
 
     /**
-     * Sets the minimum cache duration in milliseconds.
+     * Sets the minimum cache duration.
      * 
-     * @param duration the minimum cache duration in milliseconds
+     * @param duration the minimum cache duration
      */
     public synchronized void setMinimumCacheDuration(final Duration duration) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
