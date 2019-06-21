@@ -28,7 +28,7 @@ import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
-import net.shibboleth.utilities.java.support.security.Type4UUIDIdentifierGenerationStrategy;
+import net.shibboleth.utilities.java.support.security.impl.Type4UUIDIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 /** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
