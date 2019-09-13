@@ -202,10 +202,6 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
     protected boolean processEntityDescriptor(@Nonnull final Element entityDescriptor) {
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
-        if (designatedEntities.isEmpty()) {
-            return false;
-        }
-
         // if we're whitelisting entities and this entity isn't in the list, kick it out
         if (isWhitelistingEntities() && !designatedEntities.contains(entityId)) {
             log.debug("{} pipeline stage removing entity {} because it wasn't on the whitelist", getId(), entityId);

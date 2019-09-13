@@ -122,6 +122,38 @@ public class EntityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(metadataCollection.size(), 1);
     }
 
+    /**
+     * Test that whitelisting an empty set of IDs removes everything from the collection.
+     */
+    @Test public void testWhitelistEmptySet() throws Exception {
+        final var metadataCollection = buildMetadataCollection();
+
+        final var stage = new EntityFilterStage();
+        stage.setId("test");
+        stage.setWhitelistingEntities(true);
+        stage.setDesignatedEntities(Collections.emptySet());
+        stage.initialize();
+        stage.execute(metadataCollection);
+
+        Assert.assertEquals(metadataCollection.size(), 0);
+    }
+
+    /**
+     * Test that blacklisting an empty set of IDs leaves everything in the collection.
+     */
+    @Test public void testBlacklistEmptySet() throws Exception {
+        final var metadataCollection = buildMetadataCollection();
+
+        final var stage = new EntityFilterStage();
+        stage.setId("test");
+        stage.setWhitelistingEntities(false);
+        stage.setDesignatedEntities(Collections.emptySet());
+        stage.initialize();
+        stage.execute(metadataCollection);
+
+        Assert.assertEquals(metadataCollection.size(), 3);
+    }
+    
     /** Build up a metadata collection containing 3 EntityDescriptors. */
     private Collection<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
