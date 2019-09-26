@@ -120,10 +120,11 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * Certificate chain, with end entity certificate as element 0, to be included with the signature. Default value:
      * empty list
      */
-    private List<X509Certificate> certificates;
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<X509Certificate> certificates = List.of();
 
     /** CRLs to be included with the signature. Default value: empty list */
-    private List<X509CRL> crls;
+    private List<X509CRL> crls = Collections.emptyList();
 
     /** Signature algorithm used. */
     private String sigAlgo;
@@ -147,7 +148,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     private String c14nAlgo;
 
     /** Inclusive prefix list used with exclusive canonicalization. Default value: empty list */
-    private List<String> inclusivePrefixList;
+    private List<String> inclusivePrefixList = Collections.emptyList();
 
     /**
      * Names of attributes to treat as ID attributes for signature referencing. Default value: list containing the
@@ -156,7 +157,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     private List<QName> idAttributeNames;
 
     /** Explicit names to associate with the given signing key. Default value: empty list */
-    private List<String> keyNames;
+    private List<String> keyNames = Collections.emptyList();
 
     /** Whether key names should be included in the signature's KeyInfo. Default value: <code>true</code> */
     private boolean includeKeyNames;
@@ -199,12 +200,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public XMLSignatureSigningStage() {
         shaVariant = ShaVariant.SHA256;
-        certificates = Collections.emptyList();
-        crls = Collections.emptyList();
         c14nExclusive = true;
-        inclusivePrefixList = Collections.emptyList();
         idAttributeNames = Arrays.asList(new QName[]{new QName("ID"), new QName("id"), new QName("Id")});
-        keyNames = Collections.emptyList();
         includeKeyNames = true;
         includeX509Certificates = true;
     }
@@ -278,7 +275,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @return certificates associated with the key used to sign the content
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<X509Certificate> getCertificates() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<X509Certificate> getCertificates() {
         return certificates;
     }
 
@@ -288,15 +286,12 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @param certs certificates associated with the key used to sign the content
      */
-    public synchronized void setCertificates(@Nullable @NullableElements final List<X509Certificate> certs) {
+    public synchronized void setCertificates(
+            @Nonnull @NonnullElements @Unmodifiable final List<X509Certificate> certs) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (certs == null || certs.isEmpty()) {
-            certificates = Collections.emptyList();
-        } else {
-            certificates = ImmutableList.copyOf(Iterables.filter(certs, Predicates.notNull()));
-        }
+        certificates = List.copyOf(certs);
     }
 
     /**
@@ -918,8 +913,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         xmlSigFactory = null;
         keyInfoFactory = null;
         privKey = null;
@@ -936,8 +931,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (!Init.isInitialized()) {

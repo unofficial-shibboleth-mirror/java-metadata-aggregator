@@ -18,26 +18,21 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.ImmutableSet;
-
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -81,11 +76,12 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** Allowed contact person types. */
-    private Set<String> allowedTypes = ImmutableSet.copyOf(new String[] {TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING,
-            OTHER,});
+    @Nonnull @NonnullElements @Unmodifiable
+    private final Set<String> allowedTypes = Set.of(TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING, OTHER);
 
     /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
-    private Set<String> designatedTypes = ImmutableSet.copyOf(allowedTypes);
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<String> designatedTypes = Set.copyOf(allowedTypes);
 
     /** Whether {@link #designatedTypes} should be considered a whitelist. Default value: true */
     private boolean whitelistingTypes = true;
@@ -95,41 +91,32 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
      * 
      * @return list of designated person types
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<String> getDesignateTypes() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<String> getDesignateTypes() {
         return designatedTypes;
     }
 
     /**
-     * Sets the list of designated entity roles. The list may contain either role element names or schema types.
+     * Sets the designated entity roles. The collection may contain either role element names or schema types.
      * 
-     * @param types list of designated entity roles
+     * @param types collection of designated entity roles
      */
-    public synchronized void setDesignatedTypes(@Nullable @NullableElements final Collection<String> types) {
+    public synchronized void setDesignatedTypes(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<String> types) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (types == null || types.isEmpty()) {
-            designatedTypes = Collections.emptySet();
-            return;
-        }
-
-        final HashSet<String> checkedTypes = new HashSet<>();
-        String checkedType;
+        final Set<String> checkedTypes = new HashSet<>();
         for (final String type : types) {
-            checkedType = StringSupport.trimOrNull(type);
-            if (checkedType == null) {
-                continue;
-            }
-
-            if (allowedTypes.contains(checkedType)) {
-                checkedTypes.add(checkedType);
+            if (allowedTypes.contains(type)) {
+                checkedTypes.add(type);
             } else {
                 log.debug("Stage {}: {} is not an allowed contact person type and so has been ignored", getId(),
-                        checkedType);
+                        type);
             }
         }
 
-        designatedTypes = Collections.unmodifiableSet(checkedTypes);
+        designatedTypes = Set.copyOf(checkedTypes);
     }
 
     /**
@@ -234,7 +221,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
         }
 
         if (!isWhitelistingTypes() && !designatedTypes.contains(type)) {
-            // if we're blacklist types and the person's type does not appear in the designated type list, keep them
+            // if we're blacklisting types and the person's type does not appear in the designated type list, keep them
             return true;
         }
 
@@ -242,8 +229,8 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
         return false;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         designatedTypes = null;
         super.doDestroy();
     }

@@ -17,17 +17,14 @@
 
 package net.shibboleth.metadata.validate;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -44,19 +41,19 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 public class ValidatorSequence<V> extends BaseValidator implements Validator<V> {
 
     /** The list of validators to apply. */
-    @Nonnull
-    private List<Validator<V>> validators = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Validator<V>> validators = List.of();
 
     /**
      * Set the list of validators to apply to each item.
      * 
      * @param newValidators the list of validators to set
      */
-    public void setValidators(@Nonnull final List<Validator<V>> newValidators) {
+    public void setValidators(@Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        validators = ImmutableList.copyOf(Iterables.filter(newValidators, Predicates.notNull()));
+        validators = List.copyOf(newValidators);
     }
 
     /**
@@ -64,9 +61,9 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
      * 
      * @return list of validators
      */
-    @Nonnull
+    @Nonnull @NonnullElements @Unmodifiable
     public List<Validator<V>> getValidators() {
-        return Collections.unmodifiableList(validators);
+        return validators;
     }
 
     @Override

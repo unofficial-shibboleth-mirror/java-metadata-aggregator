@@ -18,27 +18,21 @@
 package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -55,7 +49,8 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
     private boolean requiringRegistrationInformation;
 
     /** Registrars which are white/black listed depending on the value of {@link #whitelistingAuthorities}. */
-    private Collection<String> designatedAuthorities = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<String> designatedAuthorities = Set.of();
 
     /** Whether {@link #designatedAuthorities} should be considered a whitelist or a blacklist. Default value: false */
     private boolean whitelistingAuthorities;
@@ -89,7 +84,8 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * 
      * @return list of designated registration authority, never null
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<String> getDesignatedRegistrationAuthorities() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<String> getDesignatedRegistrationAuthorities() {
         return designatedAuthorities;
     }
 
@@ -99,15 +95,11 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @param authorities list of designated registration authority
      */
     public synchronized void setDesignatedRegistrationAuthorities(
-            @Nullable @NullableElements final Collection<String> authorities) {
+            @Nonnull @NonnullElements @Unmodifiable final Collection<String> authorities) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (authorities == null || authorities.isEmpty()) {
-            designatedAuthorities = Collections.emptyList();
-        } else {
-            designatedAuthorities = ImmutableList.copyOf(Iterables.filter(authorities, Predicates.notNull()));
-        }
+        designatedAuthorities = Set.copyOf(authorities);
     }
 
     /**
@@ -153,15 +145,15 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
         removingEntitylessEntitiesDescriptor = remove;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         designatedAuthorities = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) {
+    @Override
+    protected boolean doExecute(@Nonnull final Item<Element> item) {
         final Element descriptor;
         descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {

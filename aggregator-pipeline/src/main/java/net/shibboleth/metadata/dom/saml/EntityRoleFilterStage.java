@@ -18,35 +18,27 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
-
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
 /**
  * A pipeline stage that will filter SAML role descriptors from EntityDescriptors.
@@ -85,11 +77,13 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * {@link #SP_SSO_DESCRIPTOR_NAME}, {@link #AUTHN_AUTHORITY_DESCRIPTOR_NAME},
      * {@link #ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME}, {@link #PDP_DESCRIPTOR_NAME}.
      */
-    private final Set<QName> namedRoles = ImmutableSet.of(IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
+    @Nonnull @NonnullElements @Unmodifiable
+    private final Set<QName> namedRoles = Set.of(IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
             AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME);
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
-    private Collection<QName> designatedRoles = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<QName> designatedRoles = Set.of();
 
     /** Whether {@link #designatedRoles} should be considered a whitelist or a blacklist. Default value: false */
     private boolean whitelistingRoles;
@@ -108,7 +102,8 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * 
      * @return list of designated entity roles, never null
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<QName> getDesignatedRoles() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<QName> getDesignatedRoles() {
         return designatedRoles;
     }
 
@@ -117,15 +112,11 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * 
      * @param roles list of designated entity roles
      */
-    public synchronized void setDesignatedRoles(@Nullable @NullableElements final Collection<QName> roles) {
+    public synchronized void setDesignatedRoles(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> roles) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (roles == null || roles.isEmpty()) {
-            designatedRoles = Collections.emptyList();
-        } else {
-            designatedRoles = ImmutableList.copyOf(Iterables.filter(roles, Predicates.notNull()));
-        }
+        designatedRoles = Set.copyOf(roles);
     }
 
     /**
@@ -191,15 +182,15 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
         removingEntitylessEntitiesDescriptor = remove;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         designatedRoles = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) {
+    @Override
+    protected boolean doExecute(@Nonnull final Item<Element> item) {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {

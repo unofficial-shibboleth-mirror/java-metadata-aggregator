@@ -25,6 +25,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
@@ -51,7 +52,8 @@ public interface Pipeline<T> extends DestructableComponent, IdentifiedComponent,
      * 
      * @return unmodifiable list of stages within the pipeline
      */
-    @Nonnull @NonnullElements public List<Stage<T>> getStages();
+    @Nonnull @NonnullElements @Unmodifiable
+    List<Stage<T>> getStages();
 
     /**
      * Executes each registered {@link Stage} in turn.
@@ -60,6 +62,6 @@ public interface Pipeline<T> extends DestructableComponent, IdentifiedComponent,
      * 
      * @throws PipelineProcessingException thrown if there is a problem processing the pipeline
      */
-    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws PipelineProcessingException;
 }

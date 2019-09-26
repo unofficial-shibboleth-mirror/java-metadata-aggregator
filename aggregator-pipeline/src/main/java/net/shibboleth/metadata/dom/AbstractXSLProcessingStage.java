@@ -19,8 +19,6 @@ package net.shibboleth.metadata.dom;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -43,7 +41,6 @@ import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -77,17 +74,20 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     private Templates xslTemplate;
 
     /** Attributes set on the {@link Transformer} used by this stage. */
-    private Map<String, Object> transformAttributes = Collections.emptyMap();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Map<String, Object> transformAttributes = Map.of();
 
     /** Features set on the {@link Transformer} used by this stage. */
-    private Map<String, Boolean> transformFeatures = Collections.emptyMap();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Map<String, Boolean> transformFeatures = Map.of();
 
     /**
      * Collection of named parameters to make available to the transform.
      * 
      * If not set, an empty collection.
      */
-    private Map<String, Object> transformParameters = Collections.emptyMap();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Map<String, Object> transformParameters = Map.of();
 
     /** {@link URIResolver} to use in the transformer. Default value: <code>null</code>. */
     @Nullable private URIResolver uriResolver;
@@ -118,7 +118,8 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @return unmodifiable collection of attributes used by the XSLT transformer, never null nor containing null keys
      */
-    @Nonnull @NonnullElements @Unmodifiable public Map<String, Object> getTransformAttributes() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Map<String, Object> getTransformAttributes() {
         return transformAttributes;
     }
 
@@ -127,22 +128,12 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @param attributes collection of attributes used by the XSLT transformer, may be null or contain null keys
      */
-    public synchronized void setTransformAttributes(@Nullable @NullableElements final Map<String, Object> attributes) {
+    public synchronized void setTransformAttributes(
+            @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> attributes) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (attributes == null || attributes.isEmpty()) {
-            transformAttributes = Collections.emptyMap();
-        }
-
-        final HashMap<String, Object> newAttributes = new HashMap<>();
-        for (final String attributeName : attributes.keySet()) {
-            if (attributeName != null) {
-                newAttributes.put(attributeName, attributes.get(attributeName));
-            }
-        }
-
-        transformAttributes = Collections.unmodifiableMap(newAttributes);
+        transformAttributes = Map.copyOf(attributes);
     }
 
     /**
@@ -150,7 +141,8 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @return unmodifiable collection of features used by the XSLT transformer, never null nor containing null keys
      */
-    @Nonnull @NonnullElements @Unmodifiable public Map<String, Boolean> getTransformFeatures() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Map<String, Boolean> getTransformFeatures() {
         return transformFeatures;
     }
 
@@ -159,22 +151,12 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @param features collection of features used by the XSLT transformer, may be null or contain null keys
      */
-    public synchronized void setTransformFeatures(@Nullable @NullableElements final Map<String, Boolean> features) {
+    public synchronized void setTransformFeatures(
+            @Nonnull @NonnullElements @Unmodifiable final Map<String, Boolean> features) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (features == null || features.isEmpty()) {
-            transformFeatures = Collections.emptyMap();
-        }
-
-        final HashMap<String, Boolean> newFeatures = new HashMap<>();
-        for (final String featuresName : features.keySet()) {
-            if (featuresName != null) {
-                newFeatures.put(featuresName, features.get(featuresName));
-            }
-        }
-
-        transformFeatures = Collections.unmodifiableMap(newFeatures);
+        transformFeatures = Map.copyOf(features);
     }
 
     /**
@@ -182,7 +164,8 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @return parameters used by the XSLT transformer, never null nor containing null keys
      */
-    @Nonnull @NonnullElements @Unmodifiable public Map<String, Object> getTransformParameters() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Map<String, Object> getTransformParameters() {
         return transformParameters;
     }
 
@@ -191,23 +174,12 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @param parameters parameters for the transform, may be null or contain null keys
      */
-    public synchronized void setTransformParameters(@Nullable @NullableElements final Map<String, Object> parameters) {
+    public synchronized void setTransformParameters(
+            @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> parameters) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (parameters == null) {
-            transformParameters = Collections.emptyMap();
-            return;
-        }
-
-        final HashMap<String, Object> newParams = new HashMap<>();
-        for (final String paramName : parameters.keySet()) {
-            if (paramName != null) {
-                newParams.put(paramName, parameters.get(paramName));
-            }
-        }
-
-        transformParameters = Collections.unmodifiableMap(newParams);
+        transformParameters = Map.copyOf(parameters);
     }
 
     /**
@@ -259,9 +231,8 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
             @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException;
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
-
+    @Override
+    protected void doDestroy() {
         xslResource = null;
         xslTemplate = null;
         transformAttributes = null;

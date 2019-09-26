@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.ValidatorSequence;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 /**
@@ -36,7 +38,7 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
     extends AbstractDOMTraversalStage<C> {
 
     /** The validator sequence to apply. */
-    @Nonnull
+    @Nonnull @NonnullElements @Unmodifiable
     private ValidatorSequence<V> validators = new ValidatorSequence<>();
 
     /**
@@ -44,7 +46,7 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
      * 
      * @param newValidators the list of validators to set
      */
-    public void setValidators(@Nonnull final List<Validator<V>> newValidators) {
+    public void setValidators(@Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
         validators.setValidators(newValidators);
     }
 
@@ -53,7 +55,7 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
      * 
      * @return list of validators
      */
-    @Nonnull
+    @Nonnull @NonnullElements @Unmodifiable
     public List<Validator<V>> getValidators() {
         return validators.getValidators();
     }

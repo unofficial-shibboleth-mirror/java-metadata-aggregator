@@ -20,7 +20,6 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -29,7 +28,8 @@ import com.google.common.base.Function;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
@@ -43,13 +43,15 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
 
     /** Transformers used on IDs. */
-    private Collection<Function<String, String>> idTransformers = new LazyList<>();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Function<String, String>> idTransformers = List.of();
 
     /**
      * Gets the transforms used to produce the transformed entity IDs.
      * 
      * @return transforms used to produce the transformed entity IDs, never null
      */
+    @Nonnull @NonnullElements @Unmodifiable
     public Collection<Function<String, String>> getIdTransformers() {
         return idTransformers;
     }
@@ -59,11 +61,12 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
      * 
      * @param transformers transforms used to produce the transformed entity IDs
      */
-    public synchronized void setIdTransformers(final Collection<Function<String, String>> transformers) {
+    public synchronized void setIdTransformers(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<Function<String, String>> transformers) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
-        idTransformers.addAll(transformers.stream().filter(e -> e!=null).collect(Collectors.toList()));
+        idTransformers = List.copyOf(transformers);
     }
 
     @Override

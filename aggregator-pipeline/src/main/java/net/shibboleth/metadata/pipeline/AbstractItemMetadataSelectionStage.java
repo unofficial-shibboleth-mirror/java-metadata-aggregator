@@ -19,13 +19,12 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
@@ -33,14 +32,9 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 /**
  * An abstract {@link Stage} that selects {@link Item}s for further processing if they have a specific
@@ -51,17 +45,20 @@ import com.google.common.collect.Iterables;
 @ThreadSafe
 public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStage<T> {
 
-    /** {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be selected. */
-    private Collection<Class<? extends ItemMetadata>> selectionRequirements = Collections.emptyList();
+    /**
+     * {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be selected.
+     */
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<Class<? extends ItemMetadata>> selectionRequirements = Set.of();
 
     /** Strategy used to generate item identifiers for logging purposes. */
     private ItemIdentificationStrategy identificationStrategy = new FirstItemIdItemIdentificationStrategy();
 
     /**
-     * Gets the {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
+     * Gets the {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be
      * selected.
      * 
-     * @return {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
+     * @return {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be
      *         selected, never null nor containing null elements
      */
     @Nonnull @NonnullElements @Unmodifiable
@@ -70,22 +67,18 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
     }
 
     /**
-     * Sets the {@link ItemMetadata} classes that, if the an item contains, will cause the {@link Item} to be
+     * Sets the {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be
      * selected.
      * 
-     * @param requirements {@link ItemMetadata} classes that, if the an item contains, will cause the
-     *            {@link Item} to be selected, may be null or contain null elements
+     * @param requirements {@link ItemMetadata} classes that, if an item contains them, will cause the
+     *            {@link Item} to be selected
      */
     public synchronized void setSelectionRequirements(
-            @Nullable @NullableElements final Collection<Class<? extends ItemMetadata>> requirements) {
+            @Nonnull @NonnullElements @Unmodifiable final Collection<Class<? extends ItemMetadata>> requirements) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (requirements == null) {
-            selectionRequirements = Collections.emptyList();
-        } else {
-            selectionRequirements = ImmutableList.copyOf(Iterables.filter(requirements, Predicates.notNull()));
-        }
+        selectionRequirements = Set.copyOf(requirements);
     }
 
     /**
@@ -109,8 +102,8 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
         identificationStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
+    @Override
+    protected void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
         // to the itemCollection and thus would cause issues if we were iterating over it directly
         final ArrayList<Item<T>> collectionCopy = new ArrayList<>(itemCollection);
@@ -131,8 +124,8 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         selectionRequirements = null;
         identificationStrategy = null;
 

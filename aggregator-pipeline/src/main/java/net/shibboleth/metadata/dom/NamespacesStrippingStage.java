@@ -18,12 +18,13 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
@@ -35,6 +36,10 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * or retained depending on the {@link #whitelisting} property.
  * 
  * Attributes without an explicit namespace prefix will never be removed by this stage.
+ *
+ * Note that because the collection is specified as <code>@NonnullElements</code>, this stage can not
+ * be used in blacklisting mode to remove elements in the default namespace. It will always remove
+ * elements in the default namespace if used in the whitelisting mode.
  */
 @ThreadSafe
 public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
@@ -42,7 +47,8 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
     /**
      * XML namespaces to whitelist or blacklist.
      */
-    private final Set<String> namespaces = new HashSet<>();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<String> namespaces = Set.of();
 
     /**
      * Whether we are whitelisting or blacklisting (default: blacklisting).
@@ -54,11 +60,9 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @return collection of namespaces being removed
      */
-    @Nonnull
+    @Nonnull @NonnullElements @Unmodifiable
     public Collection<String> getNamespaces() {
-        final Set<String> result = new HashSet<>();
-        result.addAll(namespaces);
-        return result;
+        return namespaces;
     }
     
     /**
@@ -66,12 +70,11 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @param nss collection of namespaces
      */
-    public void setNamespaces(@Nonnull final Collection<String> nss) {
+    public void setNamespaces(@Nonnull @NonnullElements @Unmodifiable final Collection<String> nss) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        namespaces.clear();
-        namespaces.addAll(nss);
+        namespaces = Set.copyOf(nss);
     }
 
     /**
@@ -97,12 +100,18 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
     
     @Override
     protected boolean removingNamespace(final String namespace) {
+        // Handle ineligible null element, for the default namespace case
+        if (namespace == null) {
+            return whitelisting;
+        }
+        
+        // Handle normal namespaces
         return whitelisting ^ namespaces.contains(namespace);
     }
 
     @Override
     protected void doDestroy() {
-        namespaces.clear();
+        namespaces = null;
 
         super.doDestroy();
     }

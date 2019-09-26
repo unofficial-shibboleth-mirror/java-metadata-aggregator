@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -36,6 +35,8 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.dom.saml.SAMLSupport;
 import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -197,7 +198,8 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * This amounts to an implicit ORing of the individual rules, with early
      * termination.
      */
-    private List<Predicate<EntityAttributeContext>> rules = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Predicate<EntityAttributeContext>> rules = List.of();
 
     /** Mode of operation: whitelisting or blacklisting. Default: whitelisting. */
     private boolean whitelisting = true;
@@ -210,11 +212,12 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * 
      * @param newRules new {@link List} of rules
      */
-    public void setRules(@Nonnull final List<Predicate<EntityAttributeContext>> newRules) {
+    public void setRules(
+            @Nonnull @NonnullElements @Unmodifiable final List<Predicate<EntityAttributeContext>> newRules) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        rules = Constraint.isNotNull(newRules, "rules property may not be null");
+        rules = List.copyOf(Constraint.isNotNull(newRules, "rules property may not be null"));
     }
     
     /**
@@ -222,9 +225,9 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * 
      * @return the {@link List} of rules
      */
-    @Nonnull
+    @Nonnull @NonnullElements @Unmodifiable
     public List<Predicate<EntityAttributeContext>> getRules() {
-        return Collections.unmodifiableList(rules);
+        return rules;
     }
     
     /**

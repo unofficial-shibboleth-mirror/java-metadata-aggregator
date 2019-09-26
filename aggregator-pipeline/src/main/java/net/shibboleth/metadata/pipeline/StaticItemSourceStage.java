@@ -18,21 +18,15 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 /**
  * A stage which adds a static collection of Items to a {@link Item} collection.
@@ -43,14 +37,16 @@ import com.google.common.collect.Iterables;
 public class StaticItemSourceStage<T> extends AbstractStage<T> {
 
     /** Collection of static Items added to each Item collection by {@link #execute(Collection)}. */
-    private Collection<Item<T>> source = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Item<T>> source = List.of();
 
     /**
      * Gets the collection of static Items added to the Item collection by this stage.
      * 
      * @return collection of static Items added to the Item collection by this stage
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<Item<T>> getSourceItems() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<Item<T>> getSourceItems() {
         return source;
     }
 
@@ -59,19 +55,16 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
      * 
      * @param items collection of Items added to the Item collection by this stage
      */
-    public synchronized void setSourceItems(@Nullable @NullableElements final Collection<Item<T>> items) {
+    public synchronized void setSourceItems(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<Item<T>> items) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (items == null || items.isEmpty()) {
-            source = Collections.emptyList();
-        } else {
-            source = ImmutableList.copyOf(Iterables.filter(items, Predicates.notNull()));
-        }
+        source = List.copyOf(items);
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         for (final Item<T> item : getSourceItems()) {
             if (item != null) {
@@ -80,8 +73,8 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         source = null;
 
         super.doDestroy();

@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -46,7 +47,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         super(ContactPersonFilterStage.class);
     }
 
-    private final QName contactPersonQname = new QName("urn:oasis:names:tc:SAML:2.0:metadata", "ContactPerson");
+    private final QName contactPersonQname = new QName(SAMLMetadataSupport.MD_NS, "ContactPerson");
     
     private Element entitiesDescriptor;
 
@@ -64,7 +65,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.SUPPORT));
         Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
-        stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE, null,
+        stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE,
                 ContactPersonFilterStage.TECHNICAL, "", "foo", ContactPersonFilterStage.OTHER));
         Assert.assertEquals(stage.getDesignateTypes().size(), 3);
         Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
@@ -74,12 +75,9 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage.setDesignatedTypes(Collections.<String>emptyList());
         Assert.assertEquals(stage.getDesignateTypes().size(), 0);
 
-        stage.setDesignatedTypes(null);
-        Assert.assertEquals(stage.getDesignateTypes().size(), 0);
-
         stage.initialize();
         try {
-            stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE));
+            stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (UnmodifiableComponentException e) {
             Assert.assertEquals(stage.getDesignateTypes().size(), 0);
@@ -88,7 +86,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage = new ContactPersonFilterStage();
         stage.destroy();
         try {
-            stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE));
+            stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (DestroyedComponentException e) {
             // expected this

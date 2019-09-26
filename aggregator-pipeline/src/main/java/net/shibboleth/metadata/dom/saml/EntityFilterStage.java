@@ -18,29 +18,23 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
 @ThreadSafe
@@ -50,7 +44,8 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
     private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);
 
     /** Entities which are white/black listed depending on the value of {@link #whitelistingEntities}. */
-    private Collection<String> designatedEntities = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<String> designatedEntities = Set.of();
 
     /** Whether {@link #designatedEntities} should be considered a whitelist or a blacklist. Default value: false */
     private boolean whitelistingEntities;
@@ -72,15 +67,12 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * 
      * @param ids list of designated entity IDs
      */
-    public synchronized void setDesignatedEntities(@Nullable @NullableElements final Collection<String> ids) {
+    public synchronized void setDesignatedEntities(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<String> ids) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (ids == null || ids.isEmpty()) {
-            designatedEntities = Collections.emptyList();
-        } else {
-            designatedEntities = ImmutableList.copyOf(Iterables.filter(ids, Predicates.notNull()));
-        }
+        designatedEntities = Set.copyOf(ids);
     }
 
     /**
@@ -125,15 +117,15 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
         removingEntitylessEntitiesDescriptor = remove;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         designatedEntities = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected boolean doExecute(@Nonnull final Item<Element> item) {
+    @Override
+    protected boolean doExecute(@Nonnull final Item<Element> item) {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntitiesDescriptor(descriptor)) {
             if (processEntitiesDescriptor(descriptor)) {

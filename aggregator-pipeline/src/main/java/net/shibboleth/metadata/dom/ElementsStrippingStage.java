@@ -19,7 +19,6 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +29,9 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -95,7 +96,8 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     private String elementNamespace;
 
     /** Names of the elements to strip. */
-    private Set<String> elementNames = new HashSet<>();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<String> elementNames = Set.of();
 
     /** Whether we are operating in a whitelisting mode (<code>false</code> by default). */
     private boolean whitelisting;
@@ -127,7 +129,8 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * 
      * @return the names of the elements to strip
      */
-    @Nullable public Collection<String> getElementNames() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<String> getElementNames() {
         return elementNames;
     }
 
@@ -136,11 +139,12 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * 
      * @param names the names of the elements to strip
      */
-    public void setElementNames(@Nonnull @NotEmpty final Collection<String> names) {
+    public void setElementNames(
+            @Nonnull @NonnullElements @Unmodifiable @NotEmpty final Collection<String> names) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        elementNames = new HashSet<String>(names);
+        elementNames = Set.copyOf(names);
     }
 
     /**

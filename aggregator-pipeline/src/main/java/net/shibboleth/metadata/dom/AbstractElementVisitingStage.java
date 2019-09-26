@@ -18,8 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -28,6 +26,8 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -38,7 +38,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalStage<DOMTraversalContext> {
 
     /** Collection of element names for those elements we will be visiting. */
-    @Nonnull private Set<QName> elementNames = Collections.emptySet();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<QName> elementNames = Set.of();
 
     @Override
     protected void doDestroy() {
@@ -52,7 +53,8 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * 
      * @return collection of element names to visit.
      */
-    @Nonnull public Collection<QName> getElementNames() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<QName> getElementNames() {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         return elementNames;
     }
@@ -62,11 +64,11 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * 
      * @param names collection of element names to visit.
      */
-    public void setElementNames(@Nonnull final Collection<QName> names) {
+    public void setElementNames(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> names) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         Constraint.isNotNull(names, "elementNames may not be null");
-        elementNames = new HashSet<>(names);
+        elementNames = Set.copyOf(names);
     }
     
     /**
@@ -80,7 +82,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         Constraint.isNotNull(name, "elementName may not be null");
-        elementNames = Collections.singleton(name);
+        elementNames = Set.of(name);
     }
     
     @Override

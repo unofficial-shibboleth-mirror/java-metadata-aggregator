@@ -19,31 +19,25 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+
+import com.google.common.base.Supplier;
 
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 /**
  * This {@link Stage} allows the merging of multiple pipeline outputs into a single {@link Collection} that can then be
@@ -72,7 +66,8 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /** Pipelines whose results become the output of this source. */
-    private List<Pipeline<T>> mergedPipelines = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Pipeline<T>> mergedPipelines = List.of();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -100,7 +95,8 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * 
      * @return unmodifiable set of pipelines used by this stage
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<Pipeline<T>> getMergedPipelines() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<Pipeline<T>> getMergedPipelines() {
         return mergedPipelines;
     }
 
@@ -110,16 +106,11 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * @param pipelines pipelines joined by this stage
      */
     public synchronized void setMergedPipelines(
-            @Nullable @NullableElements final List<? extends Pipeline<T>> pipelines) {
+            @Nonnull @NonnullElements @Unmodifiable final List<? extends Pipeline<T>> pipelines) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (pipelines == null || pipelines.isEmpty()) {
-            mergedPipelines = Collections.emptyList();
-        } else {
-            mergedPipelines = ImmutableList.copyOf(Iterables.filter(pipelines, Predicates.notNull()));
-        }
-
+        mergedPipelines = List.copyOf(pipelines);
     }
 
     /**
@@ -165,8 +156,8 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
         mergeStrategy = strategy;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         final ArrayList<Future<Collection<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
@@ -183,8 +174,8 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
         mergeStrategy.mergeCollection(itemCollection, pipelineResults);
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         executorService = null;
         collectionFactory = null;
         mergeStrategy = null;
@@ -193,8 +184,8 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         for (final Pipeline<T> pipeline : mergedPipelines) {

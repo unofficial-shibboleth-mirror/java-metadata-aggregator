@@ -18,14 +18,15 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.utilities.java.support.collection.LazyList;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -38,14 +39,15 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
 
     /** {@link ItemMetadata} objects to add to each {@link Item}'s item metadata. */
-    private Collection<ItemMetadata> additionalItemMetadata = new LazyList<>();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<ItemMetadata> additionalItemMetadata = List.of();
 
     /**
      * Gets the {@link ItemMetadata} being added to each {@link Item}'s item metadata.
      * 
      * @return the {@link ItemMetadata} being added to each {@link Item}'s item metadata
      */
-    @Nonnull
+    @Nonnull @NonnullElements @Unmodifiable
     public Collection<ItemMetadata> getAdditionalItemMetadata() {
         return additionalItemMetadata;
     }
@@ -55,12 +57,13 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
      * 
      * @param metadata the {@link ItemMetadata} to be added to each {@link Item}'s item metadata
      */
-    public void setAdditionalItemMetadata(@Nonnull final Collection<ItemMetadata> metadata) {
+    public void setAdditionalItemMetadata(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<ItemMetadata> metadata) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         Constraint.isNotNull(metadata, "additional metadata collection must not be null");
-        additionalItemMetadata = metadata.stream().filter(e -> e!=null).collect(Collectors.toList());
+        additionalItemMetadata = List.copyOf(metadata);
     }
 
     @Override

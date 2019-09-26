@@ -32,10 +32,6 @@ import net.shibboleth.utilities.java.support.component.AbstractIdentifiableIniti
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 /**
  * A very simple implementation of {@link Pipeline}.
  * 
@@ -48,8 +44,9 @@ public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponen
     /** Stages for this pipeline. */
     private List<Stage<T>> pipelineStages = Collections.emptyList();
 
-    /** {@inheritDoc} */
-    @Override @Nonnull @NonnullElements @Unmodifiable public List<Stage<T>> getStages() {
+    @Override
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<Stage<T>> getStages() {
         return pipelineStages;
     }
 
@@ -58,15 +55,12 @@ public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponen
      * 
      * @param stages stages that make up this pipeline
      */
-    public synchronized void setStages(final List<Stage<T>> stages) {
+    public synchronized void setStages(
+            @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (stages == null || stages.isEmpty()) {
-            pipelineStages = Collections.emptyList();
-        } else {
-            pipelineStages = ImmutableList.copyOf(Iterables.filter(stages, Predicates.notNull()));
-        }
+        pipelineStages = List.copyOf(stages);
     }
 
     /** {@inheritDoc} */

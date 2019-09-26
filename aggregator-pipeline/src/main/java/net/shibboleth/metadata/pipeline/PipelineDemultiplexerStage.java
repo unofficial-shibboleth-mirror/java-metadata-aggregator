@@ -19,7 +19,6 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,6 +26,9 @@ import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
@@ -36,10 +38,6 @@ import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * A stage which, given an item collection and a list of {@link Pipeline} and {@link Predicate} pairs, sends the
@@ -78,7 +76,8 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
-    private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = List.of();
 
     /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
@@ -159,28 +158,20 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * @param passes pipeline and item selection strategies used to demultiplex item collections within this stage
      */
     public synchronized void setPipelineAndSelectionStrategies(
-            @Nonnull @NonnullElements final List<Pair<Pipeline<T>, Predicate<Item<T>>>> passes) {
+            @Nonnull @NonnullElements @Unmodifiable final List<Pair<Pipeline<T>, Predicate<Item<T>>>> passes) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (passes == null || passes.isEmpty()) {
-            pipelineAndStrategies = Collections.emptyList();
-            return;
-        }
-
-        final Builder<Pair<Pipeline<T>, Predicate<Item<T>>>> checkedPasses = new Builder<>();
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
             Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
             Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
-
-            checkedPasses.add(new Pair<>(pass));
         }
 
-        pipelineAndStrategies = checkedPasses.build();
+        pipelineAndStrategies = List.copyOf(passes);
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         Collection<Item<T>> selectedItems;
         final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
@@ -208,8 +199,8 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         executorService = null;
         collectionFactory = null;
         pipelineAndStrategies = null;
@@ -217,18 +208,17 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (pipelineAndStrategies.isEmpty()) {
             throw new ComponentInitializationException(
-                    "Pipeline and selection strategy collection can not be null or empty");
+                    "Pipeline and selection strategy collection can not be empty");
         }
 
-        Pipeline<T> pipeline;
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
-            pipeline = pipelineAndStrategy.getFirst();
+            final var pipeline = pipelineAndStrategy.getFirst();
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }

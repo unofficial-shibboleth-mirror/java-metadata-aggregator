@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -35,17 +34,12 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -72,7 +66,8 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
 
     /** Collection of schema resources. */
-    private List<Resource> schemaResources = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Resource> schemaResources = List.of();
 
     /** Whether Elements are required to be schema valid. Default value: <code>true</code> */
     private boolean elementRequiredToBeSchemaValid = true;
@@ -85,7 +80,8 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * 
      * @return unmodifiable list of schema resources against which Elements are validated
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<Resource> getSchemaResources() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<Resource> getSchemaResources() {
         return schemaResources;
     }
 
@@ -94,11 +90,12 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * 
      * @param resources schema resources against which Elements are validated
      */
-    public synchronized void setSchemaResources(@Nullable @NullableElements final List<Resource> resources) {
+    public synchronized void setSchemaResources(
+            @Nullable @NonnullElements @Unmodifiable final List<Resource> resources) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
-        schemaResources = ImmutableList.copyOf(Iterables.filter(resources, Predicates.notNull()));
+        schemaResources = List.copyOf(resources);
     }
 
     /**
@@ -153,7 +150,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
     @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        if (schemaResources == null || schemaResources.isEmpty()) {
+        if (schemaResources.isEmpty()) {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", SchemaResources may not be empty");
         }

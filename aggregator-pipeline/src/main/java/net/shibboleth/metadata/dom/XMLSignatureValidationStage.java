@@ -20,7 +20,6 @@ package net.shibboleth.metadata.dom;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -32,8 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.ImmutableSet;
-
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -41,6 +38,7 @@ import net.shibboleth.metadata.dom.XMLSignatureValidator.ValidationException;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -81,10 +79,10 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
     private PublicKey verificationKey;
     
     /** Set of blacklisted digest URIs. Default value: empty set. */
-    @Nonnull private Set<String> blacklistedDigests = Collections.emptySet();
+    @Nonnull @NonnullElements private Set<String> blacklistedDigests = Set.of();
     
     /** Set of blacklisted signature method URIs. Default value: empty set. */
-    @Nonnull private Set<String> blacklistedSignatureMethods = Collections.emptySet();
+    @Nonnull @NonnullElements private Set<String> blacklistedSignatureMethods = Set.of();
     
     /** Option to determine whether empty references are to be permitted.  Default value: <code>true</code>. */
     private boolean permittingEmptyReferences = true;
@@ -183,12 +181,11 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * 
      * @param identifiers collection of identifiers to be blacklisted
      */
-    public void setBlacklistedDigests(@Nonnull @NonnullElements final Collection<String> identifiers) {
+    public void setBlacklistedDigests(@Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        blacklistedDigests = ImmutableSet.copyOf(Constraint.isNotNull(identifiers,
-                "identifier collection may not be null"));
+
+        blacklistedDigests = Set.copyOf(identifiers);
     }
     
     /**
@@ -196,8 +193,8 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * 
      * @return the set of blacklisted digest algorithm identifiers
      */
-    @Nonnull @NonnullElements public Set<String> getBlacklistedDigests() {
-        return Collections.unmodifiableSet(blacklistedDigests);
+    @Nonnull @NonnullElements @Unmodifiable public Set<String> getBlacklistedDigests() {
+        return blacklistedDigests;
     }
 
     /**
@@ -205,11 +202,12 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * 
      * @param identifiers collection of identifiers to be blacklisted
      */
-    public void setBlacklistedSignatureMethods(@Nonnull @NonnullElements final Collection<String> identifiers) {
+    public void setBlacklistedSignatureMethods(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        blacklistedSignatureMethods = ImmutableSet.copyOf(Constraint.isNotNull(identifiers,
-                "identifier collection may not be null"));
+
+        blacklistedSignatureMethods = Set.copyOf(identifiers);
     }
     
     /**
@@ -217,8 +215,8 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * 
      * @return the set of blacklisted signature method identifiers
      */
-    @Nonnull @NonnullElements public Set<String> getBlacklistedSignatureMethods() {
-        return Collections.unmodifiableSet(blacklistedSignatureMethods);
+    @Nonnull @NonnullElements @Unmodifiable public Set<String> getBlacklistedSignatureMethods() {
+        return blacklistedSignatureMethods;
     }
 
     /**
@@ -285,8 +283,8 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         verificationCertificate = null;
         verificationKey = null;
         validator = null;
@@ -296,8 +294,8 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (verificationKey == null) {

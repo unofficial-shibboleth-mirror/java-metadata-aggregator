@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,11 +26,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 
 /**
  * Item identification strategy for interfederation use cases.
@@ -49,19 +47,22 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
     /**
      * Set of registration authorities to be ignored.
      */
-    @Nonnull private Set<String> ignoredRegistrationAuthorities = Collections.emptySet();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Set<String> ignoredRegistrationAuthorities = Set.of();
     
     /**
      * Replacement display names for registration authorities.
      */
-    @Nonnull private Map<String, String> registrationAuthorityDisplayNames = Collections.emptyMap();
+    @Nonnull @NonnullElements @Unmodifiable
+    private Map<String, String> registrationAuthorityDisplayNames = Map.of();
     
     /**
      * Returns the set of registration authorities we are ignoring.
      * 
      * @return {@link Set} of registration authority names.
      */
-    @Nonnull public Collection<String> getIgnoredRegistrationAuthorities() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public Collection<String> getIgnoredRegistrationAuthorities() {
         return ignoredRegistrationAuthorities;
     }
 
@@ -70,12 +71,9 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * 
      * @param registrars {@link Set} of registration authority names to ignore.
      */
-    public void setIgnoredRegistrationAuthorities(@Nullable final Collection<String> registrars) {
-        if (registrars == null || registrars.isEmpty()) {
-            ignoredRegistrationAuthorities = Collections.emptySet();
-        } else {
-            ignoredRegistrationAuthorities = ImmutableSet.copyOf(registrars);
-        }
+    public void setIgnoredRegistrationAuthorities(
+            @Nonnull @NonnullElements @Unmodifiable final Collection<String> registrars) {
+        ignoredRegistrationAuthorities = Set.copyOf(registrars);
     }
 
     /**
@@ -83,6 +81,7 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * 
      * @return {@link Map} of display names for authorities.
      */
+    @Nonnull @NonnullElements @Unmodifiable
     public Map<String, String> getRegistrationAuthorityDisplayNames() {
         return registrationAuthorityDisplayNames;
     }
@@ -92,12 +91,9 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * 
      * @param names {@link Map} of display names for registration authorities.
      */
-    public void setRegistrationAuthorityDisplayNames(@Nullable final Map<String, String> names) {
-        if (names == null || names.isEmpty()) {
-            registrationAuthorityDisplayNames = Collections.emptyMap();
-        } else {
-            registrationAuthorityDisplayNames = ImmutableMap.copyOf(names);
-        }
+    public void setRegistrationAuthorityDisplayNames(
+            @Nonnull @NonnullElements @Unmodifiable final Map<String, String> names) {
+        registrationAuthorityDisplayNames = Map.copyOf(names);
     }
     
     /**

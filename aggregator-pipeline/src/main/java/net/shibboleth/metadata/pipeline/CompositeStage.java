@@ -17,19 +17,15 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
@@ -42,40 +38,33 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 public class CompositeStage<T> extends AbstractStage<T> {
 
     /** Stages which compose this stage. */
-    private List<Stage<T>> composedStages = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<Stage<T>> composedStages = List.of();
 
 
     /**
-     * Gets an unmodifiable list the stages that compose this stage.
+     * Gets an unmodifiable list of the stages that compose this stage.
      * 
      * @return list the stages that compose this stage, never null nor containing null elements
      */
-    @Nonnull @NonnullElements public List<Stage<T>> getComposedStages() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<Stage<T>> getComposedStages() {
         return composedStages;
     }
 
     /**
-     * Sets the list the stages that compose this stage.
+     * Sets the list of stages that compose this stage.
      * 
-     * @param stages list the stages that compose this stage, may be null or contain null elements
+     * @param stages list of the stages that compose this stage
      */
-    public synchronized void setComposedStages(@Nullable @NullableElements final List<Stage<T>> stages) {
+    public synchronized void setComposedStages(
+            @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        final ArrayList<Stage<T>> newStages = new ArrayList<>();
-        if (stages != null) {
-            for (final Stage<T> stage : stages) {
-                if (stage != null) {
-                    newStages.add(stage);
-                }
-            }
-        }
-
-        composedStages = Collections.unmodifiableList(newStages);
+        composedStages = List.copyOf(stages);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
@@ -84,19 +73,10 @@ public class CompositeStage<T> extends AbstractStage<T> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         composedStages = null;
 
         super.doDestroy();
-    }
-
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-
-        if (composedStages == null || composedStages.isEmpty()) {
-            composedStages = Collections.emptyList();
-        }
     }
 }
