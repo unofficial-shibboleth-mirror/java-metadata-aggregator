@@ -320,7 +320,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     }
 
     /**
-     * Gets the certificates associated with the key used to sign the content. The end-entity certificate is the 0th
+     * Gets the certificates associated with the key used to sign the content. The end-entity certificate is the first
      * element in the list.
      * 
      * @return certificates associated with the key used to sign the content
@@ -331,7 +331,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
 
     /**
      * Sets the certificates associated with the key used to sign the content. The end-entity certificate must be the
-     * 0th element in the list.
+     * first element in the list.
      * 
      * @param certs certificates associated with the key used to sign the content
      */
@@ -726,7 +726,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @return signed content descriptor
      * 
-     * @throws StageProcessingException thrown if there is a problem create the signed content descriptor
+     * @throws StageProcessingException thrown if there is a problem creating the signed content descriptor
      */
     @Nonnull protected SignedInfo buildSignedInfo(@Nonnull final Element target) throws StageProcessingException {
         C14NMethodParameterSpec c14nMethodSpec = null;
