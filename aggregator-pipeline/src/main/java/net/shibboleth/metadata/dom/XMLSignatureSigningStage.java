@@ -865,7 +865,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @throws StageProcessingException thrown if there is a problem creating the KeyInfo descriptor
      */
-    @Nonnull protected KeyInfo buildKeyInfo() throws StageProcessingException {
+    @Nullable protected KeyInfo buildKeyInfo() throws StageProcessingException {
         final List<XMLStructure> keyInfoItems = new ArrayList<>();
 
         addKeyNames(keyInfoItems);
