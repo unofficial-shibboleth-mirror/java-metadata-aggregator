@@ -26,6 +26,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -425,8 +426,7 @@ final class XMLSignatureValidator {
      */
     @Nullable public Element getSignatureElement(@Nonnull final Element docElement) throws ValidationException {
         final List<Element> sigElements =
-                ElementSupport.getChildElementsByTagNameNS(docElement,
-                        XMLSignatureSigningStage.XML_SIG_NS_URI, "Signature");
+                ElementSupport.getChildElements(docElement, XMLDSIGSupport.SIGNATURE_NAME);
 
         if (sigElements.isEmpty()) {
             return null;

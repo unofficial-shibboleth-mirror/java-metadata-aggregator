@@ -66,6 +66,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
@@ -96,61 +97,6 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     public static enum ShaVariant {
         SHA1, SHA256, SHA384, SHA512
     };
-
-    /** XML Signature base URI: {@value} . */
-    public static final String XML_SIG_NS_URI = "http://www.w3.org/2000/09/xmldsig#";
-
-    /** QName of the Signature element. */
-    public static final QName SIGNATURE_NAME = new QName(XML_SIG_NS_URI, "Signature");
-
-    /** XML Encryption base URI: {@value} . */
-    public static final String XML_ENC_NS_URI = "http://www.w3.org/2001/04/xmlenc#";
-
-    /**
-     * RFC4501 base URI: {@value} .
-     * 
-     * @see <a href="http://tools.ietf.org/html/rfc4501">RFC 4501</a>
-     */
-    public static final String RFC4501_BASE_URI = "http://www.w3.org/2001/04/xmldsig-more";
-
-    /** RSA-SHA1 signature algorithm ID: {@value} . */
-    public static final String ALGO_ID_SIGNATURE_RSA_SHA1 = XML_SIG_NS_URI + "rsa-sha1";
-
-    /** RSA-SHA256 signature algorithm ID: {@value} . */
-    public static final String ALGO_ID_SIGNATURE_RSA_SHA256 = RFC4501_BASE_URI + "#rsa-sha256";
-
-    /** RSA-SHA384 signature algorithm ID: {@value} . */
-    public static final String ALGO_ID_SIGNATURE_RSA_SHA384 = RFC4501_BASE_URI + "#rsa-sha384";
-
-    /** RSA-SHA512 signature algorithm ID: {@value} . */
-    public static final String ALGO_ID_SIGNATURE_RSA_SHA512 = RFC4501_BASE_URI + "#rsa-sha512";
-
-    /** SHA1 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA1 = XML_SIG_NS_URI + "sha1";
-
-    /** SHA256 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA256 = XML_ENC_NS_URI + "sha256";
-
-    /** SHA384 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA384 = RFC4501_BASE_URI + "#sha384";
-
-    /** SHA512 digest algorithm ID: {@value} . */
-    public static final String ALGO_ID_DIGEST_SHA512 = XML_ENC_NS_URI + "sha512";
-
-    /** Inclusive canonicalization, <strong>WITHOUT</strong> comments, algorithm ID: {@value} . */
-    public static final String ALGO_ID_C14N_OMIT_COMMENTS = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315";
-
-    /** Inclusive canonicalization, <strong>WITH</strong> comments, algorithm ID: {@value} . */
-    public static final String ALGO_ID_C14N_WITH_COMMENTS = ALGO_ID_C14N_OMIT_COMMENTS + "#WithComments";
-
-    /** Exclusive canonicalization, <strong>WITHOUT</strong> comments, algorithm ID: {@value} . */
-    public static final String ALGO_ID_C14N_EXCL_OMIT_COMMENTS = "http://www.w3.org/2001/10/xml-exc-c14n#";
-
-    /** Exclusive canonicalization, <strong>WITH</strong> comments, algorithm ID: {@value} . */
-    public static final String ALGO_ID_C14N_EXCL_WITH_COMMENTS = ALGO_ID_C14N_EXCL_OMIT_COMMENTS + "WithComments";
-
-    /** Enveloped signature transform ID: {@value} . */
-    public static final String TRANSFORM_ENVELOPED_SIGNATURE = XML_SIG_NS_URI + "enveloped-signature";
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureSigningStage.class);
@@ -681,7 +627,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param elementName The element name within the XML DSIG namespace to look for.
      */
     private void removeCRsFromNamedChildren(@Nonnull final Element signature, @Nonnull final String elementName) {
-        final NodeList nodes = signature.getElementsByTagNameNS(XML_SIG_NS_URI, elementName);
+        final NodeList nodes = signature.getElementsByTagNameNS(XMLSignature.XMLNS, elementName);
         for (int i = 0; i < nodes.getLength(); i++) {
             final Node node = nodes.item(i);
             final String text = node.getTextContent();
@@ -708,7 +654,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
             
             // Remove any CRs from selected signature elements.
             if (isRemovingCRsFromSignature()) {
-                final Element signatureElement = ElementSupport.getFirstChildElement(element, SIGNATURE_NAME);
+                final Element signatureElement = ElementSupport.getFirstChildElement(element,
+                        XMLDSIGSupport.SIGNATURE_NAME);
                 removeCRsFromNamedChildren(signatureElement, "SignatureValue");
                 removeCRsFromNamedChildren(signatureElement, "X509Certificate");
             }
@@ -737,7 +684,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     @Nonnull protected SignedInfo buildSignedInfo(@Nonnull final Element target) throws StageProcessingException {
         C14NMethodParameterSpec c14nMethodSpec = null;
-        if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
+        if (c14nAlgo.startsWith(CanonicalizationMethod.EXCLUSIVE) && inclusivePrefixList != null
                 && !inclusivePrefixList.isEmpty()) {
             c14nMethodSpec = new ExcC14NParameterSpec(inclusivePrefixList);
         }
@@ -799,15 +746,15 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
 
         try {
             transformSpec = null;
-            transforms.add(xmlSigFactory.newTransform(TRANSFORM_ENVELOPED_SIGNATURE, transformSpec));
+            transforms.add(xmlSigFactory.newTransform(Transform.ENVELOPED, transformSpec));
         } catch (final Exception e) {
-            final String errMsg = "Unable to create transform " + TRANSFORM_ENVELOPED_SIGNATURE;
+            final String errMsg = "Unable to create transform " + Transform.ENVELOPED;
             log.error(errMsg, e);
             throw new StageProcessingException(errMsg, e);
         }
 
         try {
-            if (c14nAlgo.startsWith(ALGO_ID_C14N_EXCL_OMIT_COMMENTS) && inclusivePrefixList != null
+            if (c14nAlgo.startsWith(CanonicalizationMethod.EXCLUSIVE) && inclusivePrefixList != null
                     && !inclusivePrefixList.isEmpty()) {
                 transformSpec = new ExcC14NParameterSpec(inclusivePrefixList);
             }
@@ -1004,37 +951,38 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
 
         switch (shaVariant) {
             case SHA1:
-                sigAlgo = ALGO_ID_SIGNATURE_RSA_SHA1;
-                digestAlgo = ALGO_ID_DIGEST_SHA1;
+                sigAlgo = SignatureMethod.RSA_SHA1;
+                digestAlgo = DigestMethod.SHA1;
                 break;
+
             case SHA384:
-                sigAlgo = ALGO_ID_SIGNATURE_RSA_SHA384;
-                digestAlgo = ALGO_ID_DIGEST_SHA384;
+                sigAlgo = SignatureMethod.RSA_SHA384;
+                digestAlgo = DigestMethod.SHA384;
                 break;
 
             case SHA512:
-                sigAlgo = ALGO_ID_SIGNATURE_RSA_SHA512;
-                digestAlgo = ALGO_ID_DIGEST_SHA512;
+                sigAlgo = SignatureMethod.RSA_SHA512;
+                digestAlgo = DigestMethod.SHA512;
                 break;
 
             case SHA256:
             default:
-                sigAlgo = ALGO_ID_SIGNATURE_RSA_SHA256;
-                digestAlgo = ALGO_ID_DIGEST_SHA256;
+                sigAlgo = SignatureMethod.RSA_SHA256;
+                digestAlgo = DigestMethod.SHA256;
                 break;
         }
 
         if (c14nExclusive) {
             if (c14nWithComments) {
-                c14nAlgo = ALGO_ID_C14N_EXCL_WITH_COMMENTS;
+                c14nAlgo = CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS;
             } else {
-                c14nAlgo = ALGO_ID_C14N_EXCL_OMIT_COMMENTS;
+                c14nAlgo = CanonicalizationMethod.EXCLUSIVE;
             }
         } else {
             if (c14nWithComments) {
-                c14nAlgo = ALGO_ID_C14N_WITH_COMMENTS;
+                c14nAlgo = CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS;
             } else {
-                c14nAlgo = ALGO_ID_C14N_OMIT_COMMENTS;
+                c14nAlgo = CanonicalizationMethod.INCLUSIVE;
             }
         }
 

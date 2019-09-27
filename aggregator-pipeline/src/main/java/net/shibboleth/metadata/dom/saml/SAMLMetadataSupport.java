@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import net.shibboleth.metadata.dom.XMLSignatureSigningStage;
+import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -162,7 +162,7 @@ public final class SAMLMetadataSupport {
             extensionsElement = ElementSupport.constructElement(descriptor.getOwnerDocument(), EXTENSIONS_NAME);
 
             Element insertExtensionsElementBefore = null;
-            final List<Element> signatureElements = descriptorChildren.get(XMLSignatureSigningStage.SIGNATURE_NAME);
+            final List<Element> signatureElements = descriptorChildren.get(XMLDSIGSupport.SIGNATURE_NAME);
             if (!signatureElements.isEmpty()) {
                 final Element lastSignatureElement = signatureElements.get(signatureElements.size() - 1);
                 insertExtensionsElementBefore = ElementSupport.getNextSiblingElement(lastSignatureElement);

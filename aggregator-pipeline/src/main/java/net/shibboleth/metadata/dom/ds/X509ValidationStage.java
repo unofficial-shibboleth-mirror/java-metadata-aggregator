@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.xml.crypto.dsig.XMLSignature;
 
 import org.w3c.dom.Element;
 
@@ -97,7 +98,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
 
     @Override
     protected boolean applicable(@Nonnull final Element e) {
-        return XMLDSIGSupport.XML_DSIG_NS.equals(e.getNamespaceURI()) &&
+        return XMLSignature.XMLNS.equals(e.getNamespaceURI()) &&
                 "X509Certificate".equals(e.getLocalName());
     }
 

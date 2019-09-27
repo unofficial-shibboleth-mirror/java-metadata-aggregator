@@ -39,6 +39,7 @@ import org.xmlunit.input.NormalizedSource;
 
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.testing.TestSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -305,8 +306,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     }
 
     private Element extractKeyInfo(@Nonnull final Element root) {
-        final var signature = ElementSupport.getFirstChildElement(root,
-                new QName(XMLSignature.XMLNS, "Signature"));
+        final var signature = ElementSupport.getFirstChildElement(root, XMLDSIGSupport.SIGNATURE_NAME);
         final var keyInfos = signature.getElementsByTagNameNS(XMLSignature.XMLNS, "KeyInfo");
         Assert.assertNotNull(keyInfos);
         if (keyInfos.getLength() != 0) {

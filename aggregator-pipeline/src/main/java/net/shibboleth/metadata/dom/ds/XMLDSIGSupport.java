@@ -18,13 +18,15 @@
 package net.shibboleth.metadata.dom.ds;
 
 import javax.annotation.concurrent.ThreadSafe;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.namespace.QName;
 
 /** Support class for dealing with the XML DSIG specification. */
 @ThreadSafe
 public final class XMLDSIGSupport {
 
-    /** Namespace URI for the XML DSIG specification. */
-    public static final String XML_DSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
+    /** Signature element name. */
+    public static final QName SIGNATURE_NAME = new QName(XMLSignature.XMLNS, "Signature");
 
     /** Constructor. */
     private XMLDSIGSupport() {
