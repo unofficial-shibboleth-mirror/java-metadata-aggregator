@@ -168,7 +168,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     private PrivateKey privKey;
 
     /** Public key associated with the given private key. */
-    private PublicKey pubKey;
+    private PublicKey publicKey;
 
     /**
      * Certificate chain, with end entity certificate as element 0, to be included with the signature. Default value:
@@ -215,7 +215,14 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     /** Whether key names should be included in the signature's KeyInfo. Default value: <code>true</code> */
     private boolean includeKeyNames;
 
-    /** Whether the public key should be included in the signature's KeyInfo. Default value: <code>false</code> */
+    /**
+     * Whether the public key should be included in the signature's KeyInfo.
+     * 
+     * The public key can be sourced from either the {@link #publicKey} property or from the
+     * first provided certificate.
+     * 
+     * Default value: <code>false</code>
+     */
     private boolean includeKeyValue;
 
     /**
@@ -304,7 +311,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @return public key associated with private key used to sign the content
      */
     @Nullable public PublicKey getPublicKey() {
-        return pubKey;
+        return publicKey;
     }
 
     /**
@@ -316,7 +323,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        pubKey = key;
+        publicKey = key;
     }
 
     /**
@@ -911,13 +918,13 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
             return;
         }
 
-        PublicKey key = pubKey;
-        if (key == null && certificates != null) {
-            final X509Certificate cert = certificates.get(0);
-            if (cert != null) {
-                key = cert.getPublicKey();
-            }
+        PublicKey key = publicKey;
+        
+        // If we have no explicit public key, we can extract one from a certificate, if we have one.
+        if (key == null && !certificates.isEmpty()) {
+            key = certificates.get(0).getPublicKey();
         }
+
         if (key != null) {
             try {
                 keyInfoItems.add(keyInfoFactory.newKeyValue(key));
@@ -971,7 +978,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
         xmlSigFactory = null;
         keyInfoFactory = null;
         privKey = null;
-        pubKey = null;
+        publicKey = null;
         certificates = null;
         crls = null;
         sigAlgo = null;

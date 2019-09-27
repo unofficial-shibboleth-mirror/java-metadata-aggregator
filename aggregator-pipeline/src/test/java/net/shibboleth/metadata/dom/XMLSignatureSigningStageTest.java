@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.cryptacular.util.CertUtil;
@@ -39,6 +41,7 @@ import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.testing.TestSupport;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
@@ -243,5 +246,72 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
             Assert.assertFalse(containsCRs(result2.unwrap()), "did not expect CRs in result");
             Assert.assertFalse(diff.hasDifferences(), "results were different, expected same");
         }
+    }
+    
+    @Test
+    public void mda224defaultingPublicKeyFromCertificate() throws Exception {
+        final var signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
+                .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        final var md = getInput("input.xml");
+        final var stage = new XMLSignatureSigningStage();
+        
+        final var signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+                .getResourceAsStream(classRelativeResource("signingCert.pem")));
+        final var certs = List.of(signingCert);
+
+        stage.setId("test");
+        stage.setIncludeKeyValue(true);
+        stage.setPrivateKey(signingKey);
+        stage.setCertificates(certs);
+        stage.initialize();
+
+        stage.execute(md);
+        Assert.assertEquals(md.size(), 1);
+        
+        final var entitiesDescriptor = md.get(0).unwrap(); // document element
+        final var keyInfo = extractKeyInfo(entitiesDescriptor);
+        Assert.assertNotNull(keyInfo);
+
+        // If we had a certificate, expect to see that as an X509Data, and expect to see
+        // its public key as well as a KeyValue
+        Assert.assertTrue(hasChildNamed(keyInfo, new QName(XMLSignature.XMLNS, "X509Data")));
+        Assert.assertTrue(hasChildNamed(keyInfo, new QName(XMLSignature.XMLNS, "KeyValue")));
+    }
+
+    @Test
+    public void mda224defaultingPublicKeyFromAbsentCertificate() throws Exception {
+        final var signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
+                .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        final var md = getInput("input.xml");
+        final var stage = new XMLSignatureSigningStage();
+        
+        stage.setId("test");
+        stage.setIncludeKeyValue(true);
+        stage.setPrivateKey(signingKey);
+        stage.initialize();
+
+        stage.execute(md);
+        Assert.assertEquals(md.size(), 1);
+        
+        final var entitiesDescriptor = md.get(0).unwrap(); // document element
+        final var keyInfo = extractKeyInfo(entitiesDescriptor);
+
+        // If we didn't have a public key or a certificate, we don't expect to see a KeyInfo at all.
+        Assert.assertNull(keyInfo);
+    }
+    
+    private boolean hasChildNamed(@Nonnull final Element element, @Nonnull final QName name) {
+        return !ElementSupport.getChildElements(element, name).isEmpty();
+    }
+
+    private Element extractKeyInfo(@Nonnull final Element root) {
+        final var signature = ElementSupport.getFirstChildElement(root,
+                new QName(XMLSignature.XMLNS, "Signature"));
+        final var keyInfos = signature.getElementsByTagNameNS(XMLSignature.XMLNS, "KeyInfo");
+        Assert.assertNotNull(keyInfos);
+        if (keyInfos.getLength() != 0) {
+            return (Element)keyInfos.item(0);            
+        }
+        return null;
     }
 }
