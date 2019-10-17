@@ -38,7 +38,6 @@ import org.xmlunit.input.NormalizedSource;
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.testing.TestSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
@@ -75,7 +74,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
      */
     private boolean containsCRs(@Nonnull final Element element) {
         final String string = SerializeSupport.nodeToString(element);
-        return string.contains("&#13;");
+        return string.contains("&#13;") || string.contains("&#xd");
     }
 
     /** Test signing with and verifying the result against a known good. */
@@ -203,6 +202,9 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
         /*
          * The second result disables CR stripping.
+         *
+         * Whether this results in CRs depends on the version of Java: anything Java 11 onwards
+         * will, but so will Oracle Java 8u231.
          */
         final List<Item<Element>> mdCol2 = getInput("input.xml");
 
@@ -231,17 +233,11 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
                 .build();
 
         /*
-         * Under Java 11 or later, with the latest Santuario, we expect the two results to be
-         * different. Under previous versions of Java, we expect them to be the same.
-         *
-         * We ascertained in other tests that they are both valid.
+         * If there are differences, the second result should be the one with CRs in it.
          */
-        if (TestSupport.isJavaV11OrLater()) {
-            Assert.assertTrue(containsCRs(result2.unwrap()), "expected CRs in result");
-            Assert.assertTrue(diff.hasDifferences(), "results were same, expected different");
-        } else {
-            Assert.assertFalse(containsCRs(result2.unwrap()), "did not expect CRs in result");
-            Assert.assertFalse(diff.hasDifferences(), "results were different, expected same");
+        if (diff.hasDifferences()) {
+            Assert.assertFalse(containsCRs(result1.unwrap())); // already tested above
+            Assert.assertTrue(containsCRs(result2.unwrap()));
         }
     }
 }
