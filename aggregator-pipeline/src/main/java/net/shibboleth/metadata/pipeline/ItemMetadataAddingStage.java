@@ -18,18 +18,16 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import com.google.common.base.Predicates;
 
 /**
  * A pipeline stage that adds a collection of {@link ItemMetadata} objects to each {@link Item}'s item metadata.
@@ -62,9 +60,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         Constraint.isNotNull(metadata, "additional metadata collection must not be null");
-
-        additionalItemMetadata = new LazyList<>();
-        CollectionSupport.addIf(additionalItemMetadata, metadata, Predicates.notNull());
+        additionalItemMetadata = metadata.stream().filter(e -> e!=null).collect(Collectors.toList());
     }
 
     @Override

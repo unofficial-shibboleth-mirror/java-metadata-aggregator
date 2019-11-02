@@ -20,16 +20,15 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicates;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.utilities.java.support.collection.CollectionSupport;
 import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
@@ -63,8 +62,8 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
     public synchronized void setIdTransformers(final Collection<Function<String, String>> transformers) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
-        CollectionSupport.addIf(idTransformers, transformers, Predicates.notNull());
+        
+        idTransformers.addAll(transformers.stream().filter(e -> e!=null).collect(Collectors.toList()));
     }
 
     @Override
