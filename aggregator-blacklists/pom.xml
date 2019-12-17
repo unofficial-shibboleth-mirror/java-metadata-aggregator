@@ -66,4 +66,10 @@
         </site>
     </distributionManagement>
 
+    <scm>
+        <connection>${shibboleth.scm.connection}java-metadata-aggregator</connection>
+        <developerConnection>${shibboleth.scm.developerConnection}java-metadata-aggregator</developerConnection>
+        <url>${shibboleth.scm.url}java-metadata-aggregator.git</url>
+    </scm>
+
 </project>

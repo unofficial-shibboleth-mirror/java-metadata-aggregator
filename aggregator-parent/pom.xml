@@ -57,9 +57,9 @@
     </repositories>
 
     <scm>
-        <connection>scm:git:https://git.shibboleth.net/git/java-metadata-aggregator</connection>
-        <developerConnection>scm:git:git@git.shibboleth.net:java-metadata-aggregator</developerConnection>
-        <url>https://git.shibboleth.net/view/?p=java-metadata-aggregator.git</url>
+        <connection>${shibboleth.scm.connection}java-metadata-aggregator</connection>
+        <developerConnection>${shibboleth.scm.developerConnection}java-metadata-aggregator</developerConnection>
+        <url>${shibboleth.scm.url}java-metadata-aggregator.git</url>
     </scm>
 
     <!-- Dependencies which are required by every single project module should go here and will be inherited by all modules. -->
