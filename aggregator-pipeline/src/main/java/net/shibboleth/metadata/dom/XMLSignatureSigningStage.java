@@ -886,8 +886,6 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * Adds X509 data (subject names, certificates, CRLs, and Issuer/Serial) set to be included, into the key info.
      * 
      * @param keyInfoItems collector for KeyInfo children
-     * 
-     * @throws StageProcessingException thrown if there is a problem creating the X509Data content
      */
     protected void addX509Data(@Nonnull @NonnullElements @Live final List<XMLStructure> keyInfoItems) {
         final List<Object> x509Data = new ArrayList<>();
