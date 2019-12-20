@@ -40,7 +40,11 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         super(PullUpCacheDurationStage.class);
     }
 
-    /** Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor. */
+    /**
+     * Test that the shortest duration (1 hour) is pulled up to the EntitiesDescriptor.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testPullCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -70,7 +74,11 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         }
     }
 
-    /** Test that the minimum cache duration is used when the shortest duration is less than it. */
+    /**
+     * Test that the minimum cache duration is used when the shortest duration is less than it.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMinCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -92,7 +100,11 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         Assert.assertEquals(duration, Duration.ofHours(2));
     }
 
-    /** Test that the maximum cache duration is used when the shortest duration is greater than it. */
+    /**
+     * Test that the maximum cache duration is used when the shortest duration is greater than it.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMaxCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();

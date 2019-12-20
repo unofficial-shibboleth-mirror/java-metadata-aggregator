@@ -44,8 +44,11 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     /**
      * Test that whitelisted roles are retained and all other roles are removed. Also tests that roleless entities are
      * removed.
+     * 
+     * @throws Exception if something bad happens
      */
-    @Test public void testRoleWhitelist() throws Exception {
+    @Test
+    public void testRoleWhitelist() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
         stage.setDesignatedRoles(Collections.singletonList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
@@ -65,8 +68,11 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     /**
      * Test that blacklisted roles are removed and all other roles are retained. Also tests that roleless entities are
      * removed.
+     * 
+     * @throws Exception if something bad happens
      */
-    @Test public void testRoleBlacklist() throws Exception {
+    @Test
+    public void testRoleBlacklist() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
         stage.setDesignatedRoles(Collections.singletonList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
@@ -90,8 +96,11 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     /**
      * Test that EntityDescriptors that have had all their roles removed are not themselves removed if
      * {@link EntityRoleFilterStage#isRemovingRolelessEntities()} is false.
+     * 
+     * @throws Exception if something bad happens
      */
-    @Test public void testDontRemoveRolelessEntityDescriptor() throws Exception {
+    @Test
+    public void testDontRemoveRolelessEntityDescriptor() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
         stage.setDesignatedRoles(Collections.singletonList(EntityRoleFilterStage.IDP_SSO_DESCRIPTOR_NAME));
@@ -119,8 +128,11 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
     /**
      * Test that role filtering is performed on descendant elements of metadata collection elements.
+     * 
+     * @throws Exception if something bad happens
      */
-    @Test public void testEntitiesDescriptorFiltering() throws Exception {
+    @Test
+    public void testEntitiesDescriptorFiltering() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
@@ -146,8 +158,11 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
     /**
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are themselves removed.
+     * 
+     * @throws Exception if something bad happens
      */
-    @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
+    @Test
+    public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
@@ -166,8 +181,11 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     /**
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are not themselves removed
      * when {@link EntityRoleFilterStage#isRemovingEntitylessEntitiesDescriptor()} is false.
+     * 
+     * @throws Exception if something bad happens
      */
-    @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
+    @Test
+    public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
@@ -184,7 +202,13 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(metadataCollection.size(), 1);
     }
 
-    /** Build up a metadata collection containing 3 EntityDescriptors. */
+    /**
+     * Build up a metadata collection containing three EntityDescriptors.
+     * 
+     * @return metadata collection
+     * 
+     * @throws Exception if something bad happens
+     */
     private List<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 

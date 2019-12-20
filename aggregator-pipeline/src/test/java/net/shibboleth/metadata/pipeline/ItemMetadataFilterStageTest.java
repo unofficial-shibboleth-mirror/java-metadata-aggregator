@@ -70,7 +70,11 @@ public class ItemMetadataFilterStageTest {
         metadataCollectionPrototype.add(md4);
     }
 
-    /** Tests a {@link ItemMetadataFilterStage} without any filter requirements. */
+    /**
+     * Tests a {@link ItemMetadataFilterStage} without any filter requirements.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testNoFilterRequirements() throws Exception {
         final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
@@ -87,7 +91,11 @@ public class ItemMetadataFilterStageTest {
         Assert.assertTrue(metadataCollection.contains(md4));
     }
 
-    /** Tests a {@link ItemMetadataFilterStage} containing one filter requirement. */
+    /**
+     * Tests a {@link ItemMetadataFilterStage} containing one filter requirement.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testSingleFilterRequirement() throws Exception {
         final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
@@ -108,7 +116,11 @@ public class ItemMetadataFilterStageTest {
         Assert.assertFalse(metadataCollection.contains(md4));
     }
 
-    /** Tests a {@link ItemMetadataFilterStage} containing multiple filter requirements. */
+    /**
+     * Tests a {@link ItemMetadataFilterStage} containing multiple filter requirements.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMultiFilterRequirement() throws Exception {
         final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);

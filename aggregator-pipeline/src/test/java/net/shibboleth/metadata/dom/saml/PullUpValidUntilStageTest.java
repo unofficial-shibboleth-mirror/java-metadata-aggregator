@@ -41,7 +41,11 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         super(PullUpValidUntilStage.class);
     }
 
-    /** Test that the nearest validUntil is pulled up to the EntitiesDescriptor. */
+    /**
+     * Test that the nearest validUntil is pulled up to the EntitiesDescriptor.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testPullCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -71,7 +75,11 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         }
     }
 
-    /** Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration + now. */
+    /**
+     * Test that the minimum validUntil is used when the nearest validUntil is earlier than min duration + now.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMinCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -95,7 +103,11 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         Assert.assertTrue(validUntil.isAfter(Instant.now().plus(hundredYears).minus(Duration.ofMinutes(1))));
     }
 
-    /** Test that the maximum validUntil is used when the nearest validUntil is later than max duration + now. */
+    /**
+     * Test that the maximum validUntil is used when the nearest validUntil is later than max duration + now.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMaxCacheDuration() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();

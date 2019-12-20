@@ -40,7 +40,11 @@ public class EntityFilterStageTest extends BaseDOMTest {
         super(EntityFilterStage.class);
     }
 
-    /** Test whitelisted entity is retained and ensure everything else is removed. */
+    /**
+     * Test whitelisted entity is retained and ensure everything else is removed.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test public void testEntityWhitelist() throws Exception {
         final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -54,7 +58,11 @@ public class EntityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(metadataCollection.size(), 1);
     }
 
-    /** Test blacklisted entity is remove and ensure everything else is retained. */
+    /**
+     * Test blacklisted entity is remove and ensure everything else is retained.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test public void testEntityBlacklist() throws Exception {
         final EntityFilterStage stage = new EntityFilterStage();
         stage.setId("test");
@@ -68,7 +76,11 @@ public class EntityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(metadataCollection.size(), 2);
     }
 
-    /** Test that filtering logic descends in to EntitiesDescriptors. */
+    /**
+     * Test that filtering logic descends in to EntitiesDescriptors.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test public void testEntitiesDescriptorFiltering() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
@@ -86,6 +98,8 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
     /**
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are themselves removed.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -105,6 +119,8 @@ public class EntityFilterStageTest extends BaseDOMTest {
     /**
      * Test that EntitiesDescriptors that have had all their EntityDescriptor children remove are not themselves removed
      * when {@link EntityFilterStage#isRemovingEntitylessEntitiesDescriptor()} is false.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -124,6 +140,8 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
     /**
      * Test that whitelisting an empty set of IDs removes everything from the collection.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test public void testWhitelistEmptySet() throws Exception {
         final var metadataCollection = buildMetadataCollection();
@@ -140,6 +158,8 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
     /**
      * Test that blacklisting an empty set of IDs leaves everything in the collection.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test public void testBlacklistEmptySet() throws Exception {
         final var metadataCollection = buildMetadataCollection();
@@ -154,7 +174,13 @@ public class EntityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(metadataCollection.size(), 3);
     }
     
-    /** Build up a metadata collection containing 3 EntityDescriptors. */
+    /**
+     * Build up a metadata collection containing three EntityDescriptors.
+     * 
+     * @return metadata collection
+     * 
+     * @throws Exception if something bad happens
+     */
     private Collection<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 

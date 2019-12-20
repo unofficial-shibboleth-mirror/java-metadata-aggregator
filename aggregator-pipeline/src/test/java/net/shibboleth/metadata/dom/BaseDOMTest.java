@@ -63,7 +63,11 @@ public abstract class BaseDOMTest extends BaseTest {
      */
     private BasicParserPool parserPool;
 
-    /** Constructor */
+    /**
+     * Constructor
+     * 
+     * @param clazz class under test
+     */
     protected BaseDOMTest(final Class<?> clazz) {
         super(clazz);
     }
@@ -127,7 +131,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @return an {@link Item} wrapping the document representing the data file, never null
      * 
-     * @throws XMLParserExceptionthrown if the file does not exist or there is a problem parsing it
+     * @throws XMLParserException if the file does not exist or there is a problem parsing it
      */
     public Item<Element> readDOMItem(final String path) throws XMLParserException {
         final Element e = readXMLData(path);

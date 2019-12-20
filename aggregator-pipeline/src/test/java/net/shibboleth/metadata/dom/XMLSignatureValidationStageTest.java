@@ -40,7 +40,6 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
     private final Certificate signingCert;
     
-    /** Constructor sets class under test. */
     public XMLSignatureValidationStageTest() throws IOException {
         super(XMLSignatureValidationStage.class);
         signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
@@ -54,6 +53,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
     /**
      * Tests verifying a file with a valid signature.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testValidSignature() throws Exception {
@@ -84,6 +85,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
 
     /**
      * Test that a metadata element with an invalid signature is labelled with an error.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testInvalidSignature() throws Exception {
@@ -103,6 +106,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     /**
      * Test that metadata elements that do not contain signature are appropriately labelled when valid signatures
      * are required.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testRequiredSignature() throws Exception {
@@ -140,6 +145,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
     /**
      * Test digest algorithm blacklist.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testDigestBlacklist() throws Exception {
@@ -171,6 +178,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
 
     /**
      * Test signature method blacklist.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testSignatureMethodBlacklist() throws Exception {
@@ -202,6 +211,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
     /**
      * Test that a signature with an empty reference is permitted by default.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testEmptyRefPermitted() throws Exception {
@@ -232,6 +243,8 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
 
     /**
      * Test that a signature with an empty reference is not permitted if disallowed.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void testEmptyRefNotPermitted() throws Exception {

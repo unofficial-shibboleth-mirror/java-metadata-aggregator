@@ -42,7 +42,11 @@ public abstract class BaseTest {
      */
     private final String basePackagePath;
     
-    /** Constructor */
+    /**
+     * Constructor
+     * 
+     * @param clazz class under test
+     */
     protected BaseTest(final Class<?> clazz) {
         testingClass = clazz;
         baseClassPath = nameToPath(testingClass.getName());

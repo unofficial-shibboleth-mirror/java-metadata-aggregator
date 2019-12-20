@@ -29,7 +29,6 @@ import net.shibboleth.metadata.validate.Validator;
 
 public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest {
     
-    /** Constructor sets class under test. */
     public X509RSAOpenSSLBlacklistValidatorTest() throws Exception {
         super(X509RSAOpenSSLBlacklistValidator.class);
     }

@@ -37,7 +37,11 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
         super(RemoveOrganizationStage.class);
     }
 
-    /** Test the organization elements are removed from top level metadata elements. */
+    /**
+     * Test the organization elements are removed from top level metadata elements.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testRemoveOrganization() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -66,7 +70,11 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
         }
     }
 
-    /** Test that contact person elements are removed from children of top level metadata elements. */
+    /**
+     * Test that contact person elements are removed from children of top level metadata elements.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testRemoveOrganizationFromNestedElements() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();

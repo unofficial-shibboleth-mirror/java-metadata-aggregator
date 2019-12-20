@@ -40,7 +40,6 @@ import org.w3c.dom.Element;
 
 public class X509ValidationStageTest extends BaseDOMTest {
 
-    /** Constructor sets class under test. */
     public X509ValidationStageTest() throws Exception {
         super(X509ValidationStage.class);
     }

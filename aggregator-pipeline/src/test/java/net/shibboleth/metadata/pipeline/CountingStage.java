@@ -21,7 +21,11 @@ import java.util.Collection;
 
 import net.shibboleth.metadata.Item;
 
-/** Stage that counts the number of times it was invoked and the number of items it has observed. */
+/**
+ * Stage that counts the number of times it was invoked and the number of items it has observed.
+ * 
+ * @param <T> type of {@link Item} being processed
+ */
 public class CountingStage<T> extends AbstractStage<T> {
 
     /** Number of times the stage was invoked. */

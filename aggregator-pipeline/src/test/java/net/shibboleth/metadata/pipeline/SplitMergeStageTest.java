@@ -152,7 +152,11 @@ public class SplitMergeStageTest {
         Assert.assertTrue(items.contains(item3));
     }
     
-    /** Tests case where the selected items pipeline throws a {@link TerminationException}. */
+    /**
+     * Tests case where the selected items pipeline throws a {@link TerminationException}.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test public void testThrowSelected() throws Exception {
         final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
@@ -187,7 +191,11 @@ public class SplitMergeStageTest {
         }
     }
     
-    /** Tests case where the nonselected items pipeline throws a {@link TerminationException}. */
+    /**
+     * Tests case where the nonselected items pipeline throws a {@link TerminationException}.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test public void testThrowNonselected() throws Exception {
         final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");

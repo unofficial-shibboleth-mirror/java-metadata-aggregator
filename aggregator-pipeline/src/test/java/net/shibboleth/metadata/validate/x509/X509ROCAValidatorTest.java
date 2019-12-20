@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 public class X509ROCAValidatorTest extends BaseX509ValidatorTest {
 
-    /** Constructor sets class under test. */
     public X509ROCAValidatorTest() throws Exception {
         super(X509ROCAValidator.class);
     }

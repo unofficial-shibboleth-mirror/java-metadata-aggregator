@@ -82,7 +82,11 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         return string.contains("&#13;");
     }
 
-    /** Test signing with and verifying the result against a known good. */
+    /**
+     * Test signing with and verifying the result against a known good.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testSigning() throws Exception {
         Element testInput = readXMLData("input.xml");
@@ -115,7 +119,11 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         assertXMLIdentical(expected, result.unwrap());
     }
 
-    /** MDA-196: XMLSignatureSigningStage's includeX509SubjectName property causes exception */
+    /**
+     * MDA-196: XMLSignatureSigningStage's includeX509SubjectName property causes exception.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMDA196() throws Exception {
         final Element testInput = readXMLData("input.xml");

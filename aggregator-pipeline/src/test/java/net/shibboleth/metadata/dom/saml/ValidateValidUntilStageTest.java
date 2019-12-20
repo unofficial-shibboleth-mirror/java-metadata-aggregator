@@ -39,7 +39,11 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
         super(ValidateValidUntilStage.class);
     }
 
-    /** Tests that optional check flag on the stage operates properly. */
+    /**
+     * Tests that optional check flag on the stage operates properly.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testOptionalCheck() throws Exception {
         ValidateValidUntilStage stage = new ValidateValidUntilStage();
@@ -61,7 +65,11 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
         Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
     }
 
-    /** Tests that Items within range are not marked as in error and Items outside range are marked as in error. */
+    /**
+     * Tests that Items within range are not marked as in error and Items outside range are marked as in error.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testValidUntilRangeCheck() throws Exception {
         ValidateValidUntilStage stage = new ValidateValidUntilStage();
@@ -89,6 +97,8 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
      *            attribute
      * 
      * @return the created Item
+     * 
+     * @throws Exception if something bad happens
      */
     private DOMElementItem buildDomElementItem(@Nonnull final Duration validUntilInterval) throws Exception {
         Element descriptor = readXMLData("in.xml");

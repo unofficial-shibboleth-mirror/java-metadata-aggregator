@@ -21,7 +21,11 @@ import java.util.Collection;
 
 import net.shibboleth.metadata.Item;
 
-/** Stage that throws a TerminationException when it is called. */
+/**
+ * Stage that throws a {@link TerminationException} when it is called.
+ * 
+ * @param <T> type of {@link Item} being processed
+ */
 class TerminatingStage<T> extends AbstractStage<T> {
 
     /** Constructor. */

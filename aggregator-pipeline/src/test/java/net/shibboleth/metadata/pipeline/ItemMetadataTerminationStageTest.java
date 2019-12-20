@@ -70,7 +70,11 @@ public class ItemMetadataTerminationStageTest {
         metadataCollectionPrototype.add(md4);
     }
 
-    /** Tests a {@link ItemMetadataFilterStage} without any selection requirements. */
+    /**
+     * Tests a {@link ItemMetadataFilterStage} without any selection requirements.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testNoSelectionRequirements() throws Exception {
         final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
@@ -91,7 +95,11 @@ public class ItemMetadataTerminationStageTest {
 
     }
 
-    /** Tests a {@link ItemMetadataFilterStage} containing one selection requirement. */
+    /**
+     * Tests a {@link ItemMetadataFilterStage} containing one selection requirement.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testSingleSelectionRequirement() throws Exception {
         final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
@@ -111,7 +119,11 @@ public class ItemMetadataTerminationStageTest {
         }
     }
 
-    /** Tests a {@link ItemMetadataFilterStage} containing multiple selection requirements. */
+    /**
+     * Tests a {@link ItemMetadataFilterStage} containing multiple selection requirements.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMultiSelectionRequirement() throws Exception {
         final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);

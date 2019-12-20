@@ -40,8 +40,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         super(EntityRegistrationAuthorityFilterStage.class);
     }
 
-    /** Tests filtering out Items based on an authority whitelist. */
-    @Test public void testAuthorityWhitelist() throws Exception {
+    /**
+     * Tests filtering out Items based on an authority whitelist.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testAuthorityWhitelist() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRequiringRegistrationInformation(false);
@@ -56,8 +61,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 2);
     }
 
-    /** Tests filtering out Items based on an authority blacklist. */
-    @Test public void testAuthorityBlacklist() throws Exception {
+    /**
+     * Tests filtering out Items based on an authority blacklist.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testAuthorityBlacklist() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setWhitelistingRegistrationAuthorities(false);
@@ -72,8 +82,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 1);
     }
 
-    /** Tests filtering out Items that do not contain registration information. */
-    @Test public void testRequireRegistrationInfo() throws Exception {
+    /**
+     * Tests filtering out Items that do not contain registration information.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testRequireRegistrationInfo() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRequiringRegistrationInformation(true);
@@ -90,8 +105,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 0);
     }
 
-    /** Tests removing EntitiesDescriptors that no longer contain any EntityDescriptors. */
-    @Test public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
+    /**
+     * Tests removing EntitiesDescriptors that no longer contain any EntityDescriptors.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testRemoveEntitylessEntitiesDescriptor() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRequiringRegistrationInformation(true);
@@ -109,8 +129,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 0);
     }
 
-    /** Tests not removing EntitiesDescriptors that no longer contain any EntityDescriptors. */
-    @Test public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
+    /**
+     * Tests not removing EntitiesDescriptors that no longer contain any EntityDescriptors.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testDontRemoveEntitylessEntitiesDescriptor() throws Exception {
         EntityRegistrationAuthorityFilterStage stage = new EntityRegistrationAuthorityFilterStage();
         stage.setId("test");
         stage.setRemovingEntitylessEntitiesDescriptor(false);
@@ -129,7 +154,13 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(ElementSupport.getChildElements(mdCollection.get(0).unwrap()).size(), 0);
     }
 
-    /** Build up a metadata collection containing 3 EntityDescriptors. */
+    /**
+     * Build up a metadata collection containing three EntityDescriptors.
+     * 
+     * @return metadata collection
+     * 
+     * @throws Exception if something bad happens
+     */
     private Collection<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 

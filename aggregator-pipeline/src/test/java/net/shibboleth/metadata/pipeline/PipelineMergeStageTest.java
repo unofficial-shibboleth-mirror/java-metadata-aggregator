@@ -189,8 +189,13 @@ public class PipelineMergeStageTest {
         Assert.assertEquals(target.size(), 6);
     }
     
-    /** Tests the case where one of the pipelines throws an exception. */
-    @Test public void testThrow() throws Exception {
+    /**
+     * Tests the case where one of the pipelines throws an exception.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testThrow() throws Exception {
         Item<String> md1 = new MockItem("one");
         StaticItemSourceStage<String> source1 = new StaticItemSourceStage<>();
         source1.setId("src1");

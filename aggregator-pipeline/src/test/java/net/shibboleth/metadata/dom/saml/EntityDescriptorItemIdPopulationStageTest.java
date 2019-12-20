@@ -37,7 +37,11 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
         super(EntityDescriptorItemIdPopulationStage.class);
     }
 
-    /** Tests running the stage on an empty collection. */
+    /**
+     * Tests running the stage on an empty collection.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testEmptyCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -50,7 +54,11 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
         Assert.assertTrue(metadataCollection.isEmpty());
     }
 
-    /** Tests running the stage on a collection that does not contain EntityDescriptors. */
+    /**
+     * Tests running the stage on a collection that does not contain EntityDescriptors.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testDifferentElement() throws Exception {
         final ArrayList<DOMElementItem> metadataCollection = new ArrayList<>();
@@ -64,7 +72,11 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
         Assert.assertEquals(itemIds.size(), 0);
     }
 
-    /** Tests running the stage on a collection that contains a single EntityDescriptor. */
+    /**
+     * Tests running the stage on a collection that contains a single EntityDescriptor.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testSingleRecord() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
@@ -87,7 +99,11 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
         Assert.assertEquals(itemId.getId(), entityDescriptor.getAttributeNS(null, "entityID"));
     }
 
-    /** Tests running the stage on a collection that contains multiple EntityDescriptors. */
+    /**
+     * Tests running the stage on a collection that contains multiple EntityDescriptors.
+     * 
+     * @throws Exception if something bad happens
+     */
     @Test
     public void testMultipleRecords() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();

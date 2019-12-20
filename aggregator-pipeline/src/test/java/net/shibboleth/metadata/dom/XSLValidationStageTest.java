@@ -43,7 +43,9 @@ public class XSLValidationStageTest extends BaseDOMTest {
     /**
      * Utility method to grab our standard input file and turn it into a {@link DOMElementItem}.
      * 
-     * @throws XMLParserException
+     * @return the parsed document wrapped in a {@link DOMElementItem}
+     * 
+     * @throws XMLParserException if the file does not exist or there is a problem parsing it
      */
     private DOMElementItem makeInput() throws XMLParserException {
         Element testInput = readXMLData("input.xml");
@@ -57,6 +59,8 @@ public class XSLValidationStageTest extends BaseDOMTest {
 
     /**
      * Test a validation transform.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test public void testValidation() throws Exception {
 
@@ -105,6 +109,8 @@ public class XSLValidationStageTest extends BaseDOMTest {
 
     /**
      * Test for MDA-45.
+     * 
+     * @throws Exception if something bad happens
      */
     @Test public void testMDA45() throws Exception {
 

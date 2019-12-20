@@ -42,6 +42,8 @@ public class GenerateIdStageTest {
     /**
      * Test for MDA-90 (default identifier strategy used by GenerateIdStage
      * sometimes generates bad IDs).
+     * 
+     * @throws Exception if something bad happens
      */
     @Test
     public void mda90() throws Exception {
