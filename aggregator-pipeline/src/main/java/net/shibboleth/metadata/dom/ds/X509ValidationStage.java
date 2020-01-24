@@ -35,6 +35,7 @@ import net.shibboleth.metadata.dom.AbstractDOMValidationStage;
 import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
+import net.shibboleth.utilities.java.support.codec.DecodingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 /**
@@ -105,9 +106,9 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     @Override
     protected void visit(@Nonnull final Element element, @Nonnull final Context context) 
         throws StageProcessingException {
-        final String text = element.getTextContent();
-        final byte[] data = Base64Support.decode(text);
+        final String text = element.getTextContent();        
         try {
+            final byte[] data = Base64Support.decode(text);
             final X509Certificate cert =
                     (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(data));
             // only process each certificate once per item
@@ -115,7 +116,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
                 context.add(cert);
                 applyValidators(cert, context);
             }
-        } catch (final CertificateException e) {
+        } catch (final CertificateException | DecodingException e) {
             context.getItem().getItemMetadata().put(new ErrorStatus(getId(), "could not convert X509Certificate data"));
         }
     }
