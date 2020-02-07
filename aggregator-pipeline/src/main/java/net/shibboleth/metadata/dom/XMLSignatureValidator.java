@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
+import net.shibboleth.utilities.java.support.codec.EncodingException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -261,8 +262,15 @@ final class XMLSignatureValidator {
             throw new ValidationException("Signature algorithm " + alg + " is blacklisted");
         }        
 
-        log.debug("Verifying XML signature with key\n{}",
-                Base64Support.encode(verificationKey.getEncoded(), false));
+        if (log.isDebugEnabled()) {
+            try {
+                log.debug("Verifying XML signature with key\n{}",
+                        Base64Support.encode(verificationKey.getEncoded(), false));
+            } catch (final EncodingException e) {
+                //do nothing, as only logging, and this is unlikely. 
+            }
+        }
+        
         
         try {
             if (signature.checkSignatureValue(verificationKey)) {
