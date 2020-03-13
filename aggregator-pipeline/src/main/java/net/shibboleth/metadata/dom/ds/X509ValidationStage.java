@@ -29,7 +29,6 @@ import javax.xml.crypto.dsig.XMLSignature;
 
 import org.w3c.dom.Element;
 
-import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.AbstractDOMValidationStage;
 import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
@@ -117,7 +116,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
                 applyValidators(cert, context);
             }
         } catch (final CertificateException | DecodingException e) {
-            context.getItem().getItemMetadata().put(new ErrorStatus(getId(), "could not convert X509Certificate data"));
+            addError(context.getItem(), element, "could not convert X509Certficate data");
         }
     }
 
