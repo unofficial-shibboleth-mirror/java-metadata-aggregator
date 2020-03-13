@@ -24,7 +24,6 @@ import java.security.PublicKey;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,9 +59,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 
 import net.shibboleth.metadata.Item;
@@ -71,7 +67,6 @@ import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -124,7 +119,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     private List<X509Certificate> certificates = List.of();
 
     /** CRLs to be included with the signature. Default value: empty list */
-    private List<X509CRL> crls = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<X509CRL> crls = List.of();
 
     /** Signature algorithm used. */
     private String sigAlgo;
@@ -133,7 +129,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     private String digestAlgo;
 
     /** Whether to use exclusive canonicalization. Default value: <code>true</code> */
-    private boolean c14nExclusive;
+    private boolean c14nExclusive = true;
 
     /** Whether to include comments in the canonicalized data. Default value: <code>false</code> */
     private boolean c14nWithComments;
@@ -148,19 +144,22 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     private String c14nAlgo;
 
     /** Inclusive prefix list used with exclusive canonicalization. Default value: empty list */
-    private List<String> inclusivePrefixList = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<String> inclusivePrefixList = List.of();
 
     /**
      * Names of attributes to treat as ID attributes for signature referencing. Default value: list containing the
      * non-namespace-qualified attributes 'ID', 'Id', 'id'
      */
-    private List<QName> idAttributeNames;
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<QName> idAttributeNames = List.of(new QName[]{new QName("ID"), new QName("id"), new QName("Id")});
 
     /** Explicit names to associate with the given signing key. Default value: empty list */
-    private List<String> keyNames = Collections.emptyList();
+    @Nonnull @NonnullElements @Unmodifiable
+    private List<String> keyNames = List.of();
 
     /** Whether key names should be included in the signature's KeyInfo. Default value: <code>true</code> */
-    private boolean includeKeyNames;
+    private boolean includeKeyNames = true;
 
     /**
      * Whether the public key should be included in the signature's KeyInfo.
@@ -181,7 +180,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
     /**
      * Whether the certificates chain should be included in the signature's KeyInfo. Default value: <code>true</code>
      */
-    private boolean includeX509Certificates;
+    private boolean includeX509Certificates = true;
 
     /** Whether the CRLs should be included in the signature's KeyInfo. Default value: <code>false</code> */
     private boolean includeX509Crls;
@@ -200,10 +199,6 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public XMLSignatureSigningStage() {
         shaVariant = ShaVariant.SHA256;
-        c14nExclusive = true;
-        idAttributeNames = Arrays.asList(new QName[]{new QName("ID"), new QName("id"), new QName("Id")});
-        includeKeyNames = true;
-        includeX509Certificates = true;
     }
 
     /**
@@ -299,7 +294,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @return CRLs associated with certificates
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<X509CRL> getCrls() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<X509CRL> getCrls() {
         return crls;
     }
 
@@ -308,15 +304,12 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @param revocationLists CRLs associated with certificates
      */
-    public synchronized void setCrls(@Nullable @NullableElements final List<X509CRL> revocationLists) {
+    public synchronized void setCrls(
+            @Nonnull @NonnullElements @Unmodifiable final List<X509CRL> revocationLists) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (revocationLists == null | revocationLists.isEmpty()) {
-            crls = Collections.emptyList();
-        } else {
-            crls = ImmutableList.copyOf(Iterables.filter(revocationLists, Predicates.notNull()));
-        }
+        crls = List.copyOf(revocationLists);
     }
 
     /**
@@ -366,7 +359,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @return inclusive prefix list used during exclusive canonicalization
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<String> getInclusivePrefixList() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<String> getInclusivePrefixList() {
         return inclusivePrefixList;
     }
 
@@ -375,15 +369,12 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @param prefixList inclusive prefix list used during exclusive canonicalization
      */
-    public synchronized void setInclusivePrefixList(@Nullable @NullableElements final List<String> prefixList) {
+    public synchronized void setInclusivePrefixList(
+            @Nonnull @NonnullElements @Unmodifiable final List<String> prefixList) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        if (prefixList == null || prefixList.isEmpty()) {
-            inclusivePrefixList = Collections.emptyList();
-        } else {
-            inclusivePrefixList = ImmutableList.copyOf(Iterables.filter(prefixList, Predicates.notNull()));
-        }
+        inclusivePrefixList = List.copyOf(prefixList);
     }
 
     /**
@@ -391,7 +382,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @return names of the attributes treated as reference IDs
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<QName> getIdAttributeNames() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<QName> getIdAttributeNames() {
         return idAttributeNames;
     }
 
@@ -400,12 +392,13 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @param names names of the attributes treated as reference IDs
      */
-    public synchronized void setIdAttributeNames(@Nonnull @NullableElements final List<QName> names) {
+    public synchronized void setIdAttributeNames(
+            @Nonnull @NonnullElements @Unmodifiable final List<QName> names) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         Constraint.isNotNull(names, "names property may not be null");
 
-        idAttributeNames = ImmutableList.copyOf(Iterables.filter(names, Predicates.notNull()));
+        idAttributeNames = List.copyOf(names);
     }
 
     /**
@@ -413,7 +406,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @return explicit key names added to the KeyInfo
      */
-    @Nonnull @NonnullElements public List<String> getKeyNames() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public List<String> getKeyNames() {
         return keyNames;
     }
 
@@ -422,11 +416,12 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * 
      * @param names explicit key names added to the KeyInfo
      */
-    public synchronized void setKeyNames(@Nullable @NullableElements final List<String> names) {
+    public synchronized void setKeyNames(
+            @Nonnull @NonnullElements @Unmodifiable final List<String> names) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
-        keyNames = ImmutableList.copyOf(Iterables.filter(names, Predicates.notNull()));
+        keyNames = List.copyOf(names);
     }
 
     /**
