@@ -38,7 +38,7 @@ public class SimpleItemCollectionSerializerTest {
         items.add(i2);
         items.add(i3);
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        final ItemSerializer<String> base = new ItemSerializer<String>() {
+        final var base = new ItemSerializer<String>() {
             @Override
             public void serialize(Item<String> item, OutputStream output) {
                 try {
