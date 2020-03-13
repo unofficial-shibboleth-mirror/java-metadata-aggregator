@@ -23,18 +23,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 /**
  * Item selection strategy which selects items on the basis of a boolean XPath expression.
@@ -82,7 +81,7 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
     @Override
     public synchronized boolean test(@Nonnull final Item<Element> item) {
         try {
-            return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
+            return compiledExpression.evaluateExpression(item.unwrap(), Boolean.class);
         } catch (final XPathExpressionException e) {
             log.warn("Exception thrown during XPath evaluation: " + e);
             return false;
