@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 
 import org.testng.Assert;
@@ -66,6 +68,31 @@ public class XPathFilteringStageTest extends BaseDOMTest {
         Element element = metadataCollection.get(0).unwrap();
         String id = element.getAttribute("id");
         Assert.assertEquals(id, "entity2");
+    }
+
+    // Test that an invalid expression results in an exception at initialization time
+    @Test(expectedExceptions=ComponentInitializationException.class)
+    public void testMDA223init() throws Exception {
+        final var stage = new XPathFilteringStage();
+        stage.setId("test");
+        stage.setXPathExpression("a:b");
+        stage.initialize();
+    }
+
+    // Test that a run-time expression error results in an exception
+    // by referencing a variable. As we haven't attached a variable
+    // resolver, this is an error, but not one that can be determined at
+    // compile time.
+    @Test(expectedExceptions=StageProcessingException.class)
+    public void testMDA223exec() throws Exception {
+        final var stage = new XPathFilteringStage();
+        stage.setId("test");
+        stage.setXPathExpression("$foo");
+        stage.initialize();
+        
+        final List<Item<Element>> items = new ArrayList<>();
+        items.add(new DOMElementItem(readXMLData("1.xml")));
+        stage.execute(items);
     }
 
 }

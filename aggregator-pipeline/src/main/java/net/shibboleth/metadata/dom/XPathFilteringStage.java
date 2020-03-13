@@ -25,13 +25,18 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -39,10 +44,6 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 /**
  * Pipeline stage which allows filtering of @{link DomElementItem}s according to an XPath expression. Each
@@ -65,6 +66,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
     private String xpathExpression;
 
     /** The {@link NamespaceContext} to use in interpreting the XPath expression. */
+    @Nonnull
     private NamespaceContext namespaceContext = new SimpleNamespaceContext();
 
     /**
@@ -72,7 +74,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * 
      * @return XPath expression to execute on each {@link DOMElementItem}
      */
-    @Nullable public String getXPathExpression() {
+    @NonnullAfterInit @NotEmpty public String getXPathExpression() {
         return xpathExpression;
     }
 
@@ -114,52 +116,61 @@ public class XPathFilteringStage extends AbstractStage<Element> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection) {
+    @Override
+    public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection)
+            throws StageProcessingException {
         final XPathFactory factory = XPathFactory.newInstance();
         final XPath xpath = factory.newXPath();
-        if (namespaceContext != null) {
-            xpath.setNamespaceContext(namespaceContext);
-        }
+        xpath.setNamespaceContext(namespaceContext);
 
         final XPathExpression compiledExpression;
         try {
             compiledExpression = xpath.compile(xpathExpression);
         } catch (final XPathExpressionException e) {
-            log.error("error compiling XPath expression; no filtering performed", e);
-            return;
+            // This should never occur, as we attempted the same operation at initialization time.
+            throw new StageProcessingException("error compiling XPath expression", e);
         }
 
         final Iterator<Item<Element>> iterator = metadataCollection.iterator();
         while (iterator.hasNext()) {
             final Item<Element> item = iterator.next();
             try {
-                final Boolean filterThis = (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
-                if (filterThis) {
+                if (compiledExpression.evaluateExpression(item.unwrap(), Boolean.class)) {
                     log.debug("removing item matching XPath condition");
                     iterator.remove();
                 }
             } catch (final XPathExpressionException e) {
-                log.error("removing item due to XPath expression error", e);
-                iterator.remove();
+                // Rare in practice; happens, for example, if you use a $variable, as there is
+                // no variable resolver attached to our XPath object.
+                throw new StageProcessingException("error evaluating XPath expression", e);
             }
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         xpathExpression = null;
         namespaceContext = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (xpathExpression == null) {
             throw new ComponentInitializationException("XPath expression can not be null or empty");
+        }
+        
+        // Check to see if the expression is valid
+        final var factory = XPathFactory.newInstance();
+        final var xpath = factory.newXPath();
+        xpath.setNamespaceContext(namespaceContext);
+        try {
+            xpath.compile(xpathExpression);
+        } catch (final XPathExpressionException e) {
+            throw new ComponentInitializationException("error compiling XPath expression", e);
         }
     }
 }
