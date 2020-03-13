@@ -37,8 +37,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.Sets;
-
 /** Unit test for {@link ContactPersonFilterStage}. */
 public class ContactPersonFilterStageTest extends BaseDOMTest {
 
@@ -156,7 +154,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
     @Test public void testBlacklistContactPersons() throws Exception {
         ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
-        stage.setDesignatedTypes(Sets.newHashSet(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
+        stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
         stage.setWhitelistingTypes(false);
         stage.initialize();
 
