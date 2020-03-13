@@ -23,11 +23,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-
-import com.google.common.base.Supplier;
 
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;

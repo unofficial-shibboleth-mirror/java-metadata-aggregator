@@ -23,12 +23,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
@@ -182,7 +181,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
             selectedItems = collectionFactory.get();
 
             for (final Item<T> item : itemCollection) {
-                if (selectionStrategy.apply(item)) {
+                if (selectionStrategy.test(item)) {
 //                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
 //                    selectedItems.add(copied);
                     selectedItems.add(item.copy());

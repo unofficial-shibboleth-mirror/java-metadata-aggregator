@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
@@ -33,8 +35,6 @@ import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
-
-import com.google.common.base.Predicate;
 
 /**
  * Item selection strategy which selects items on the basis of a boolean XPath expression.
@@ -79,8 +79,8 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
         compiledExpression = xpath.compile(expression);
     }
 
-    /** {@inheritDoc} */
-    @Override public synchronized boolean apply(@Nonnull final Item<Element> item) {
+    @Override
+    public synchronized boolean test(@Nonnull final Item<Element> item) {
         try {
             return (Boolean) compiledExpression.evaluate(item.unwrap(), XPathConstants.BOOLEAN);
         } catch (final XPathExpressionException e) {

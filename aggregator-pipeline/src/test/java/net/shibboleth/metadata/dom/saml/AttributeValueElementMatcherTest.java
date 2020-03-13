@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Predicate;
-
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -30,21 +28,21 @@ public class AttributeValueElementMatcherTest extends BaseDOMTest {
 
     @Test
     public void apply() throws Exception {
-        final Predicate<Element> matcher1 = new AttributeValueElementMatcher("value");
+        final var matcher1 = new AttributeValueElementMatcher("value");
 
         value.setTextContent("value");
-        Assert.assertTrue(matcher1.apply(value));
+        Assert.assertTrue(matcher1.test(value));
 
         value.setTextContent("other");
-        Assert.assertFalse(matcher1.apply(value));
+        Assert.assertFalse(matcher1.test(value));
 
-        final Predicate<Element> matcher2 = new AttributeValueElementMatcher("other");
+        final var matcher2 = new AttributeValueElementMatcher("other");
 
         value.setTextContent("value");
-        Assert.assertFalse(matcher2.apply(value));
+        Assert.assertFalse(matcher2.test(value));
 
         value.setTextContent("other");
-        Assert.assertTrue(matcher2.apply(value));
+        Assert.assertTrue(matcher2.test(value));
     }
 
 }

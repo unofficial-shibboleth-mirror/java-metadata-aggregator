@@ -2,15 +2,13 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 public class ContainerTest extends BaseDOMTest {
 
@@ -37,7 +35,7 @@ public class ContainerTest extends BaseDOMTest {
         // an indented container
         final Element e2 = doc.createElementNS("ns", "el2");
         e1.insertBefore(e2, e1.getFirstChild());
-        final Container c2 = c1.findChild(Predicates.<Element>alwaysTrue());
+        final Container c2 = c1.findChild(x -> true);
         Assert.assertNotNull(c2);
         c2.prime();
         Assert.assertEquals(e2.getTextContent(), "\n    ");
@@ -190,7 +188,7 @@ public class ContainerTest extends BaseDOMTest {
         final Container child = root.findChild(new Predicate<Element>(){
 
             @Override
-            public boolean apply(Element input) {
+            public boolean test(Element input) {
                 return "findme".equals(input.getLocalName());
             }
             
@@ -205,7 +203,7 @@ public class ContainerTest extends BaseDOMTest {
         final List<Container> children = root.findChildren(new Predicate<Element>(){
 
             @Override
-            public boolean apply(Element input) {
+            public boolean test(Element input) {
                 return "findme".equals(input.getLocalName());
             }
             
@@ -225,7 +223,7 @@ public class ContainerTest extends BaseDOMTest {
         c1.locateChild(new Predicate<Element>(){
 
             @Override
-            public boolean apply(Element input) {
+            public boolean test(Element input) {
                 return "child".equals(input.getLocalName());
             }
             
@@ -249,7 +247,7 @@ public class ContainerTest extends BaseDOMTest {
         c1.locateChild(new Predicate<Element>(){
 
             @Override
-            public boolean apply(Element input) {
+            public boolean test(Element input) {
                 return "child".equals(input.getLocalName());
             }
             

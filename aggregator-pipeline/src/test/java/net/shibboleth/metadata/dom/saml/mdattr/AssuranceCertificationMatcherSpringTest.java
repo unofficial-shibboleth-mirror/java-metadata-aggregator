@@ -17,12 +17,12 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.function.Predicate;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Predicate;
 
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
@@ -43,8 +43,8 @@ public class AssuranceCertificationMatcherSpringTest extends AbstractTestNGSprin
             final Predicate<EntityAttributeContext> matcher,
             final Predicate<EntityAttributeContext> oldMatcher,
             final EntityAttributeContext context) {
-        Assert.assertEquals(matcher.apply(context), expected, context.toString());
-        Assert.assertEquals(oldMatcher.apply(context), expected, context.toString());
+        Assert.assertEquals(matcher.test(context), expected, context.toString());
+        Assert.assertEquals(oldMatcher.test(context), expected, context.toString());
     }
 
     @Test

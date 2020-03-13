@@ -19,6 +19,8 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,9 +31,6 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 /**
  * A wrapper for a DOM {@link Element} allowing its use as a container for either
@@ -213,7 +212,7 @@ public class Container {
     @Nullable
     public Container findChild(@Nonnull final Predicate<Element> matcher) {
         for (final Element e : ElementSupport.getChildElements(element)) {
-            if (matcher.apply(e)) {
+            if (matcher.test(e)) {
                 return new Container(e, this);
             }
         }
@@ -230,7 +229,7 @@ public class Container {
     public List<Container> findChildren(@Nonnull final Predicate<Element> matcher) {
         final List<Container> list = new ArrayList<>();
         for (final Element e : ElementSupport.getChildElements(element)) {
-            if (matcher.apply(e)) {
+            if (matcher.test(e)) {
                 list.add(new Container(e, this));
             }
         }

@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,10 +40,6 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
@@ -78,7 +76,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** Strategy used to split the given item collection. */
-    private Predicate<Item<T>> selectionStrategy = Predicates.alwaysFalse();
+    private Predicate<Item<T>> selectionStrategy = x -> false;
 
     /** Pipeline that receives the selected items. */
     private Pipeline<T> selectedItemPipeline;
@@ -227,7 +225,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
                 continue;
             }
 
-            if (selectionStrategy.apply(item)) {
+            if (selectionStrategy.test(item)) {
                 selectedItems.add(item);
             } else {
                 nonselectedItems.add(item);

@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -32,9 +33,6 @@ import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthorityPopulationSta
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 public class EntityAttributeFilteringStageTest extends BaseDOMTest {
 
@@ -159,7 +157,7 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
     public void testKeepEverything() throws Exception {
         final List<Item<Element>> items = makeInputItems();
         final List<Predicate<EntityAttributeContext>> rules = new ArrayList<>();
-        rules.add(Predicates.<EntityAttributeContext>alwaysTrue());
+        rules.add(x -> true);
         
         final EntityAttributeFilteringStage stage = new EntityAttributeFilteringStage();
         stage.setId("id");

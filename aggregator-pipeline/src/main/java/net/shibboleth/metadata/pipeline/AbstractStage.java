@@ -19,12 +19,10 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
@@ -46,7 +44,7 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
      * Default value: always <code>true</code>.
      */
     @Nonnull
-    private Predicate<Collection<Item<T>>> collectionPredicate = Predicates.alwaysTrue();
+    private Predicate<Collection<Item<T>>> collectionPredicate = x -> true;
     
     /**
      * Sets the {@link Predicate} applied to the supplied item collection to determine whether
@@ -87,7 +85,7 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
 
         final ComponentInfo compInfo = new ComponentInfo(this);
 
-        if (collectionPredicate.apply(itemCollection)) {
+        if (collectionPredicate.test(itemCollection)) {
             doExecute(itemCollection);
         }
 
@@ -108,4 +106,5 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
      */
     protected abstract void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException;
+
 }

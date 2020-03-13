@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -25,8 +27,6 @@ import javax.xml.namespace.QName;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.w3c.dom.Element;
-
-import com.google.common.base.Predicate;
 
 /**
  * Basic matcher class for {@link Element}s for use with the {@link Container} system.
@@ -48,7 +48,7 @@ public class ElementMatcher implements Predicate<Element> {
     }
 
     @Override
-    public boolean apply(@Nonnull final Element input) {
+    public boolean test(@Nonnull final Element input) {
         return ElementSupport.isElementNamed(input, qname);
     }
 

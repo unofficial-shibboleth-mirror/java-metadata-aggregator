@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
@@ -30,9 +31,6 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 /** Unit test of {@link SplitMergeStage}. */
 public class SplitMergeStageTest {
@@ -72,8 +70,9 @@ public class SplitMergeStageTest {
     @Test public void testSelectionStrategy() {
         SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
-        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
-        Assert.assertEquals(stage.getSelectionStrategy(), Predicates.alwaysTrue());
+        final Predicate<Item<Object>> pred = x -> true;
+        stage.setSelectionStrategy(pred);
+        Assert.assertEquals(stage.getSelectionStrategy(), pred);
     }
 
     @Test public void testInitialization() throws Exception {
@@ -86,7 +85,7 @@ public class SplitMergeStageTest {
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
+        stage.setSelectionStrategy(x -> true);
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
@@ -94,19 +93,19 @@ public class SplitMergeStageTest {
         stage = new SplitMergeStage<>();
         stage.setId("test");
         stage.setSelectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
+        stage.setSelectionStrategy(x -> true);
         stage.initialize();
 
         stage = new SplitMergeStage<>();
         stage.setId("test");
         stage.setNonselectedItemPipeline(pipeline);
-        stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
+        stage.setSelectionStrategy(x -> true);
         stage.initialize();
 
         try {
             stage = new SplitMergeStage<>();
             stage.setId("test");
-            stage.setSelectionStrategy(Predicates.<Item<Object>>alwaysTrue());
+            stage.setSelectionStrategy(x -> true);
             stage.initialize();
             Assert.fail();
         } catch (ComponentInitializationException e) {
@@ -135,7 +134,7 @@ public class SplitMergeStageTest {
 
         SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
-        stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
+        stage.setSelectionStrategy(x -> true);
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();
@@ -178,7 +177,7 @@ public class SplitMergeStageTest {
 
         SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
-        stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
+        stage.setSelectionStrategy(x -> true);
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();
@@ -217,7 +216,7 @@ public class SplitMergeStageTest {
 
         final SplitMergeStage<String> stage = new SplitMergeStage<>();
         stage.setId("test");
-        stage.setSelectionStrategy(Predicates.<Item<String>>alwaysTrue());
+        stage.setSelectionStrategy(x -> true);
         stage.setNonselectedItemPipeline(nonselectedPipeline);
         stage.setSelectedItemPipeline(selectedPipeline);
         stage.initialize();
@@ -249,7 +248,7 @@ public class SplitMergeStageTest {
         stage.setId("test");
         stage.setSelectionStrategy(new Predicate<Item<String>>(){
             @Override
-            public boolean apply(Item<String> input) {
+            public boolean test(Item<String> input) {
                 return input.unwrap().equals("one");
             }
             
@@ -280,7 +279,7 @@ public class SplitMergeStageTest {
         stage.setId("test");
         stage.setSelectionStrategy(new Predicate<Item<String>>(){
             @Override
-            public boolean apply(Item<String> input) {
+            public boolean test(Item<String> input) {
                 return input.unwrap().equals("one");
             }
             

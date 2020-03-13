@@ -52,9 +52,9 @@ public class XPathItemSelectionStrategyTest extends BaseDOMTest {
         DOMElementItem item2 = new DOMElementItem(readXMLData("2.xml"));
         DOMElementItem item3 = new DOMElementItem(readXMLData("3.xml"));
 
-        Assert.assertTrue(strategy.apply(item1));
-        Assert.assertFalse(strategy.apply(item2));
-        Assert.assertTrue(strategy.apply(item3));
+        Assert.assertTrue(strategy.test(item1));
+        Assert.assertFalse(strategy.test(item2));
+        Assert.assertTrue(strategy.test(item3));
     }
 
 }

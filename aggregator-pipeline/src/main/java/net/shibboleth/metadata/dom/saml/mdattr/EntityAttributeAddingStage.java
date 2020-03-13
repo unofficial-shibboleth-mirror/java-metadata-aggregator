@@ -18,15 +18,14 @@
 package net.shibboleth.metadata.dom.saml.mdattr;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.Container;

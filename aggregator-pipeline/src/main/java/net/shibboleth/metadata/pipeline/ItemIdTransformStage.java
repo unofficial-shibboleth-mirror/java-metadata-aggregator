@@ -20,11 +20,10 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-
-import com.google.common.base.Function;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;

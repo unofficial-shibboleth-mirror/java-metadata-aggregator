@@ -6,8 +6,6 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Function;
-
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.Container;
 
@@ -23,7 +21,7 @@ public class AttributeValueElementMakerTest extends BaseDOMTest {
 
     @Test
     public void apply() {
-        final Function<Container, Element> maker = new AttributeValueElementMaker("value text");
+        final var maker = new AttributeValueElementMaker("value text");
         final Element root = doc.createElementNS("ns", "root");
         final Container rootContainer = new Container(root);
         final Element newElement = maker.apply(rootContainer);

@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom.saml.mdattr;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,8 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.google.common.base.Predicate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -284,7 +283,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      */
     private boolean applyRules(final EntityAttributeContext ctx) {
         for (final Predicate<EntityAttributeContext> rule : rules) {
-            if (rule.apply(ctx)) {
+            if (rule.test(ctx)) {
                 return true;
             }
         }

@@ -18,8 +18,7 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.Collection;
-
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 /**
  * A {@link Predicate} which returns <code>true</code> if and only if the number of elements
@@ -56,9 +55,8 @@ public class AtLeastCollectionPredicate<T> implements Predicate<Collection<T>> {
         minimum = min;
     }
     
-    /** {@inheritDoc} */
     @Override
-    public boolean apply(final Collection<T> input) {
+    public boolean test(final Collection<T> input) {
         return input.size() >= minimum;
     }
 

@@ -19,11 +19,10 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Function;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;

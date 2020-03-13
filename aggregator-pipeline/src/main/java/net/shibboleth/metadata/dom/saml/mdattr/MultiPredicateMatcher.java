@@ -17,14 +17,13 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 /**
  * An entity attribute matcher implementation that delegates each
@@ -41,19 +40,19 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
 
     /** {@link Predicate} to use to match the context's attribute value. */
     @Nonnull
-    private Predicate<CharSequence> valuePredicate = Predicates.alwaysTrue();
+    private Predicate<CharSequence> valuePredicate = x -> true;
     
     /** {@link Predicate} to use to match the context's attribute name. */
     @Nonnull
-    private Predicate<CharSequence> namePredicate = Predicates.alwaysTrue();
+    private Predicate<CharSequence> namePredicate = x -> true;
     
     /** {@link Predicate} to use to match the context's attribute name format. */
     @Nonnull
-    private Predicate<CharSequence> nameFormatPredicate = Predicates.alwaysTrue();
+    private Predicate<CharSequence> nameFormatPredicate = x -> true;
     
     /** {@link Predicate} to use to match the context's registration authority. */
     @Nonnull
-    private Predicate<CharSequence> registrationAuthorityPredicate = Predicates.alwaysTrue();
+    private Predicate<CharSequence> registrationAuthorityPredicate = x -> true;
     
     /**
      * Gets the {@link Predicate} being used to match the context's attribute value.
@@ -134,22 +133,22 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
     
     @Override
     protected boolean matchAttributeValue(@Nonnull final String inputValue) {
-        return valuePredicate.apply(inputValue);
+        return valuePredicate.test(inputValue);
     }
 
     @Override
     protected boolean matchAttributeName(@Nonnull final String inputName) {
-         return namePredicate.apply(inputName);
+         return namePredicate.test(inputName);
     }
 
     @Override
     protected boolean matchAttributeNameFormat(@Nonnull final String inputNameFormat) {
-        return nameFormatPredicate.apply(inputNameFormat);
+        return nameFormatPredicate.test(inputNameFormat);
     }
 
     @Override
     protected boolean matchRegistrationAuthority(@Nullable final String inputRegistrationAuthority) {
-        return registrationAuthorityPredicate.apply(inputRegistrationAuthority);
+        return registrationAuthorityPredicate.test(inputRegistrationAuthority);
     }
 
 }

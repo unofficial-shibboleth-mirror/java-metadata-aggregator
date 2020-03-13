@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
@@ -31,9 +32,6 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 /** Unit test of {@link PipelineDemultiplexerStage}. */
 public class PipelineDemultiplexerStageTest {
@@ -78,7 +76,7 @@ public class PipelineDemultiplexerStageTest {
         stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
         stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
-                Predicates.<Item<String>>alwaysTrue())));
+                x -> true)));
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutorService());
@@ -108,7 +106,7 @@ public class PipelineDemultiplexerStageTest {
         stage.setId("test");
         stage.setWaitingForPipelines(true);
         stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
-                Predicates.<Item<String>>alwaysTrue())));
+                x -> true)));
         stage.initialize();
 
         stage.execute(items);
@@ -131,7 +129,7 @@ public class PipelineDemultiplexerStageTest {
         stage.setId("test");
         stage.setWaitingForPipelines(true);
         stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
-                Predicates.<Item<String>>alwaysTrue())));
+                x -> true)));
         stage.initialize();
 
         try {
@@ -146,4 +144,5 @@ public class PipelineDemultiplexerStageTest {
         final PipelineDemultiplexerStage<String> stage = new PipelineDemultiplexerStage<>();
         Assert.assertTrue(stage.isWaitingForPipelines());
     }
+
 }

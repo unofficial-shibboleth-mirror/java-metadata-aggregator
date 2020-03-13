@@ -18,12 +18,12 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.function.Predicate;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Predicate;
 
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
@@ -39,7 +39,7 @@ public class EntityCategoryMatcherSpringTest extends AbstractTestNGSpringContext
 
     private void test(final boolean expected, final Predicate<EntityAttributeContext> matcher,
             final EntityAttributeContext context) {
-        Assert.assertEquals(matcher.apply(context), expected, context.toString());
+        Assert.assertEquals(matcher.test(context), expected, context.toString());
     }
     
     @Test

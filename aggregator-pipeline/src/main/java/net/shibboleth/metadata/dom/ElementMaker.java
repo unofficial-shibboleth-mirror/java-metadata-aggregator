@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
@@ -24,8 +26,6 @@ import javax.xml.namespace.QName;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 import org.w3c.dom.Element;
-
-import com.google.common.base.Function;
 
 /**
  * Basic maker class for {@link Element}s for use with the {@link Container} system.

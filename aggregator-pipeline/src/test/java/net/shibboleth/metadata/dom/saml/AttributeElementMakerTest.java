@@ -8,8 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.google.common.base.Function;
-
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.Container;
 
@@ -25,7 +23,7 @@ public class AttributeElementMakerTest extends BaseDOMTest {
 
     @Test
     public void apply() {
-        final Function<Container, Element> maker = new AttributeElementMaker("name", "nameFormat");
+        final var maker = new AttributeElementMaker("name", "nameFormat");
         final Element root = doc.createElementNS("ns", "root");
         final Container rootContainer = new Container(root);
         final Element newElement = maker.apply(rootContainer);

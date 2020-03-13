@@ -1,14 +1,14 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.function.Function;
+
 import javax.xml.namespace.QName;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.google.common.base.Function;
 
 public class ElementMakerTest extends BaseDOMTest {
 

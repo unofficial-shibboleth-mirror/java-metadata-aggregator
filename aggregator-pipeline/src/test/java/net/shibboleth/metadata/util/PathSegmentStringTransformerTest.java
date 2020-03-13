@@ -18,10 +18,10 @@
 
 package net.shibboleth.metadata.util;
 
+import java.util.function.Function;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Function;
 
 public class PathSegmentStringTransformerTest {
     

@@ -18,14 +18,13 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.function.Predicate;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
-import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
+import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 
 public class MultiPredicateMatcherTest {
 
@@ -35,43 +34,43 @@ public class MultiPredicateMatcherTest {
     @Test
     public void testNothing() {
         final Predicate<EntityAttributeContext> matcher = new MultiPredicateMatcher();
-        Assert.assertTrue(matcher.apply(context));
+        Assert.assertTrue(matcher.test(context));
     }
     
     @Test
     public void setNameFormatPredicate() {
         final MultiPredicateMatcher matcher = new MultiPredicateMatcher();
-        matcher.setNameFormatPredicate(Predicates.containsPattern("tfm"));
-        Assert.assertTrue(matcher.apply(context));
-        matcher.setNameFormatPredicate(Predicates.containsPattern("xxx"));
-        Assert.assertFalse(matcher.apply(context));
+        matcher.setNameFormatPredicate(x -> x.toString().contains("tfm"));
+        Assert.assertTrue(matcher.test(context));
+        matcher.setNameFormatPredicate(x -> x.toString().contains("xxx"));
+        Assert.assertFalse(matcher.test(context));
     }
 
     @Test
     public void setNamePredicate() {
         final MultiPredicateMatcher matcher = new MultiPredicateMatcher();
-        matcher.setNamePredicate(Predicates.containsPattern("ena"));
-        Assert.assertTrue(matcher.apply(context));
-        matcher.setNamePredicate(Predicates.containsPattern("xxx"));
-        Assert.assertFalse(matcher.apply(context));
+        matcher.setNamePredicate(x -> x.toString().contains("ena"));
+        Assert.assertTrue(matcher.test(context));
+        matcher.setNamePredicate(x -> x.toString().contains("xxx"));
+        Assert.assertFalse(matcher.test(context));
     }
 
     @Test
     public void setRegistrationAuthorityPredicate() {
         final MultiPredicateMatcher matcher = new MultiPredicateMatcher();
-        matcher.setRegistrationAuthorityPredicate(Predicates.containsPattern("egr"));
-        Assert.assertTrue(matcher.apply(context));
-        matcher.setRegistrationAuthorityPredicate(Predicates.containsPattern("xxx"));
-        Assert.assertFalse(matcher.apply(context));
+        matcher.setRegistrationAuthorityPredicate(x -> x.toString().contains("egr"));
+        Assert.assertTrue(matcher.test(context));
+        matcher.setRegistrationAuthorityPredicate(x -> x.toString().contains("xxx"));
+        Assert.assertFalse(matcher.test(context));
     }
 
     @Test
     public void setValuePredicate() {
         final MultiPredicateMatcher matcher = new MultiPredicateMatcher();
-        matcher.setValuePredicate(Predicates.containsPattern("eva"));
-        Assert.assertTrue(matcher.apply(context));
-        matcher.setValuePredicate(Predicates.containsPattern("xxx"));
-        Assert.assertFalse(matcher.apply(context));
+        matcher.setValuePredicate(x -> x.toString().contains("eva"));
+        Assert.assertTrue(matcher.test(context));
+        matcher.setValuePredicate(x -> x.toString().contains("xxx"));
+        Assert.assertFalse(matcher.test(context));
     }
 
 }

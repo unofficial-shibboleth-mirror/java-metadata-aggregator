@@ -17,11 +17,11 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-
-import com.google.common.base.Predicate;
 
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 
@@ -71,7 +71,7 @@ public abstract class AbstractEntityAttributeMatcher implements Predicate<Entity
     protected abstract boolean matchRegistrationAuthority(@Nullable final String inputRegistrationAuthority);
 
     @Override
-    public boolean apply(@Nonnull final EntityAttributeContext input) {
+    public boolean test(@Nonnull final EntityAttributeContext input) {
         return matchRegistrationAuthority(input.getRegistrationAuthority()) &&
                 matchAttributeNameFormat(input.getNameFormat()) &&
                 matchAttributeName(input.getName()) &&

@@ -17,12 +17,12 @@
 
 package net.shibboleth.metadata.util;
 
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
-
-import com.google.common.base.Function;
 
 /**
  * A {@link Function} that transforms a {@link String} into a hex-encoded representation of

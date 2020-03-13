@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Predicate;
-
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -30,27 +28,27 @@ public class AttributeElementMatcherTest extends BaseDOMTest {
 
     @Test
     public void matchNormal() throws Exception {
-        final Predicate<Element> matcher1 = new AttributeElementMatcher("name", "name-format");
+        final var matcher1 = new AttributeElementMatcher("name", "name-format");
         attr.setAttribute("Name", "name");
         attr.setAttribute("NameFormat", "name-format");
-        Assert.assertTrue(matcher1.apply(attr));
+        Assert.assertTrue(matcher1.test(attr));
 
-        final Predicate<Element> matcher2 = new AttributeElementMatcher("name2", "name-format");
-        Assert.assertFalse(matcher2.apply(attr));
+        final var matcher2 = new AttributeElementMatcher("name2", "name-format");
+        Assert.assertFalse(matcher2.test(attr));
 
-        final Predicate<Element> matcher3 = new AttributeElementMatcher("name", "name-format2");
-        Assert.assertFalse(matcher3.apply(attr));
+        final var matcher3 = new AttributeElementMatcher("name", "name-format2");
+        Assert.assertFalse(matcher3.test(attr));
     }
 
     @Test
     public void matchDefaultFormat() throws Exception {
         attr.setAttribute("Name", "name");
 
-        final Predicate<Element> matcher1 = new AttributeElementMatcher("name", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
-        Assert.assertTrue(matcher1.apply(attr));
+        final var matcher1 = new AttributeElementMatcher("name", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
+        Assert.assertTrue(matcher1.test(attr));
 
-        final Predicate<Element> matcher2 = new AttributeElementMatcher("name2", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
-        Assert.assertFalse(matcher2.apply(attr));
+        final var matcher2 = new AttributeElementMatcher("name2", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
+        Assert.assertFalse(matcher2.test(attr));
     }
 
 }

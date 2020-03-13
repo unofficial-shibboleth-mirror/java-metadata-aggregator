@@ -17,13 +17,13 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
-
-import com.google.common.base.Function;
 
 /** Transforms a string into another string that is the SHA1 hash of the original string prepended with "{sha1}". */
 @ThreadSafe

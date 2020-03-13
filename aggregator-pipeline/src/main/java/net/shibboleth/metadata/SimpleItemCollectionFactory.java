@@ -19,10 +19,9 @@ package net.shibboleth.metadata;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
-
-import com.google.common.base.Supplier;
 
 /**
  * Implementation {@link Supplier} that produces {@link ArrayList} instances.
@@ -31,8 +30,9 @@ import com.google.common.base.Supplier;
  */
 public class SimpleItemCollectionFactory<T> implements Supplier<Collection<Item<T>>> {
 
-    /** {@inheritDoc} */
-    @Override @Nonnull public Collection<Item<T>> get() {
+    @Override
+    @Nonnull public Collection<Item<T>> get() {
         return new ArrayList<>();
     }
+
 }

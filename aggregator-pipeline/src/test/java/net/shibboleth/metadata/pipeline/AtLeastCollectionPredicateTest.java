@@ -32,11 +32,11 @@ public class AtLeastCollectionPredicateTest {
         Assert.assertEquals(pred.getMinimum(), 0);
         
         final Collection<String> empty = new ArrayList<>();
-        Assert.assertTrue(pred.apply(empty));
+        Assert.assertTrue(pred.test(empty));
         
         final Collection<String> single = new ArrayList<>();
         single.add("single");
-        Assert.assertTrue(pred.apply(single));
+        Assert.assertTrue(pred.test(single));
     }
     
     @Test
@@ -46,11 +46,11 @@ public class AtLeastCollectionPredicateTest {
         Assert.assertEquals(pred.getMinimum(), 1);
         
         final Collection<String> empty = new ArrayList<>();
-        Assert.assertFalse(pred.apply(empty));
+        Assert.assertFalse(pred.test(empty));
         
         final Collection<String> single = new ArrayList<>();
         single.add("single");
-        Assert.assertTrue(pred.apply(single));
+        Assert.assertTrue(pred.test(single));
     }
     
 }

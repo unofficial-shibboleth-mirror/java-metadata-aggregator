@@ -25,7 +25,7 @@ import net.shibboleth.metadata.dom.ElementMatcher;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
- * Match {@link com.google.common.base.Predicate} for SAML <code>Attribute</code> elements with specific
+ * Match {@link java.util.function.Predicate} for SAML <code>Attribute</code> elements with specific
  * <code>Name</code> and <code>NameFormat</code> attributes,
  * for use with the {@link net.shibboleth.metadata.dom.Container} system.
  */
@@ -50,9 +50,9 @@ public class AttributeElementMatcher extends ElementMatcher {
     }
 
     @Override
-    public boolean apply(@Nonnull final Element element) {
+    public boolean test(@Nonnull final Element element) {
         // check for element name
-        if (!super.apply(element)) {
+        if (!super.test(element)) {
             return false;
         }
 

@@ -20,11 +20,11 @@ package net.shibboleth.metadata.pipeline;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.function.Function;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
 import com.google.common.io.Files;
 
 import net.shibboleth.metadata.Item;

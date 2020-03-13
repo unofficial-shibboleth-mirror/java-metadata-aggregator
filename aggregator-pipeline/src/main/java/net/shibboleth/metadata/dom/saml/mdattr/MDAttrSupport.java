@@ -17,13 +17,13 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;

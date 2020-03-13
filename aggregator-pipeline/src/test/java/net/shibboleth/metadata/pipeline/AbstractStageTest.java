@@ -21,6 +21,7 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
@@ -28,19 +29,16 @@ import net.shibboleth.metadata.MockItem;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
 public class AbstractStageTest {
 
     @Test
     public void getSetCollectionPredicate() {
         final CountingStage<String> c = new CountingStage<>();
-        final Predicate<Collection<Item<String>>> pred = c.getCollectionPredicate();
+        final var pred = c.getCollectionPredicate();
         final List<Item<String>> list = new ArrayList<>();
-        Assert.assertTrue(pred.apply(list));
+        Assert.assertTrue(pred.test(list));
         
-        final Predicate<Collection<Item<String>>> pred2 = Predicates.alwaysFalse();
+        final Predicate<Collection<Item<String>>> pred2 = x -> false;
         Assert.assertNotSame(pred, pred2);
         c.setCollectionPredicate(pred2);
         Assert.assertSame(c.getCollectionPredicate(), pred2);
