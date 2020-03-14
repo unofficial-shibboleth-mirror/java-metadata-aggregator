@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,24 +25,25 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.metadata.pipeline.impl.NoOpItemOrderingStrategy;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.NamespaceSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * A {@link net.shibboleth.metadata.pipeline.Stage} capable of assembling a collection of EntityDescriptor elements in
@@ -65,7 +65,8 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
     private boolean noChildrenAProcessingError;
 
     /** Strategy used to order a collection of Items. The default strategy performs no ordering. */
-    private ItemOrderingStrategy orderingStrategy = new NoOpItemOrderingStrategy();
+    @Nonnull
+    private ItemOrderingStrategy<Element> orderingStrategy = new NoOpItemOrderingStrategy<>();
 
     /** Name to use for the EntitiesDescriptor. */
     private String descriptorName;
@@ -98,7 +99,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * 
      * @return strategy used to order a collection of Items
      */
-    @Nonnull public ItemOrderingStrategy getItemOrderingStrategy() {
+    @Nonnull public ItemOrderingStrategy<Element> getItemOrderingStrategy() {
         return orderingStrategy;
     }
 
@@ -107,7 +108,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * 
      * @param strategy strategy used to order a collection of Items
      */
-    public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy strategy) {
+    public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy<Element> strategy) {
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
@@ -192,46 +193,12 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         orderingStrategy = null;
         descriptorName = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-
-        if (orderingStrategy == null) {
-            orderingStrategy = new NoOpItemOrderingStrategy();
-        }
-    }
-
-    /** A strategy that defines how to order a {@link net.shibboleth.metadata.Item} collection. */
-    public static interface ItemOrderingStrategy {
-
-        /**
-         * Orders a given Item collection.
-         * 
-         * @param items collection of {@link Item}s, never null
-         * 
-         * @return sorted collection of {@link Item}s, never null
-         * 
-         * @throws StageProcessingException if the items in the collection cannot be ordered, for example
-         *      because they do not meet required pre-conditions
-         */
-        public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items)
-            throws StageProcessingException;
-    }
-
-    /** An ordering strategy that simply returns the collection in whatever order it was already in. */
-    private class NoOpItemOrderingStrategy implements ItemOrderingStrategy {
-
-        /** {@inheritDoc} */
-        @Override public List<Item<Element>> order(@Nonnull @NonnullElements final Collection<Item<Element>> items) {
-            return new ArrayList<>(items);
-        }
-    }
 }

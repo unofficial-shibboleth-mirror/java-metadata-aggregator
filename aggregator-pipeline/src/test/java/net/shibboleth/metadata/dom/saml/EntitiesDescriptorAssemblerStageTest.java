@@ -25,7 +25,7 @@ import java.util.List;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage.ItemOrderingStrategy;
+import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -85,10 +85,10 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
     public void testAssemblingWithOrdering() throws Exception {
         
         /** Ordering strategy class which simply reverses the order of items. */
-        class ReverseOrder implements ItemOrderingStrategy {
+        class ReverseOrder implements ItemOrderingStrategy<Element> {
 
-            /** {@inheritDoc} */
-        	@Override public List<Item<Element>> order(Collection<Item<Element>> items) {
+        	@Override
+        	public List<Item<Element>> order(Collection<Item<Element>> items) {
                 final List<Item<Element>> result = new ArrayList<>(items);
                 Collections.reverse(result);
                 return result;

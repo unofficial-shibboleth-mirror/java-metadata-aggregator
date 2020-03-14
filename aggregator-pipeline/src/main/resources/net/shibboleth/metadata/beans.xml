@@ -216,6 +216,9 @@
     <bean id="mda.ItemMetadataTerminationStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.pipeline.ItemMetadataTerminationStage"/>
 
+    <bean id="mda.ItemOrderingStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.pipeline.ItemOrderingStage"/>
+    
     <bean id="mda.MDQueryMD5ItemIdTransformer" abstract="true"
         class="net.shibboleth.metadata.pipeline.MDQueryMD5ItemIdTransformer"/>
 
