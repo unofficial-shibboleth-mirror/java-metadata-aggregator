@@ -27,7 +27,7 @@ import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.Ent
 
 /**
  * Abstract implementation of {@link Predicate} over {@link EntityAttributeContext} using
- * the template method pattern. The {@link #apply} method is broken down into matches
+ * the template method pattern. The {@link #test} method is broken down into matches
  * against the four components of the {@link EntityAttributeContext}. All four sub-matches
  * must succeed for the {@link Predicate} to be <code>true</code>
  * 

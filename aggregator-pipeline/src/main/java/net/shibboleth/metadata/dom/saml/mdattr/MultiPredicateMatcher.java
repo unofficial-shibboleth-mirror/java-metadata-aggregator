@@ -28,12 +28,11 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 /**
  * An entity attribute matcher implementation that delegates each
  * component match to a different @{link Predicate}. Each such
- * {@link Predicate} defaults to {@link Predicates#alwaysTrue} so that
+ * {@link Predicate} defaults to one returning <code>true</code> so that
  * in most cases a minimum number of properties need to be set.
  * 
  * The individual {@link Predicate}s operate over {@link CharSequence}
- * rather than {@link String} both for generality and to allow the use
- * of instances produced by {@link Predicates#containsPattern}.
+ * rather than {@link String} for generality.
  */
 @ThreadSafe
 public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
