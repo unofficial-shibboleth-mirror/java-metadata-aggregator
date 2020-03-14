@@ -91,7 +91,8 @@ public class SimpleCommandLineArguments {
      */
     public void parseCommandLineArguments(final String[] args) {
         try {
-            new JCommander(this, args);
+            final var jc = new JCommander(this);
+            jc.parse(args);
             
             if (doHelp() || doVersion()) {
                 return;
