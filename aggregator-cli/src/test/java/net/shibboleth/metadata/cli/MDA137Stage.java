@@ -28,6 +28,8 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
  * A stage which does nothing except be created and destroyed.
+ * 
+ * @param <T> type of item to be processed by the stage
  */
 public class MDA137Stage<T> extends BaseStage<T> {
 
