@@ -28,7 +28,7 @@ import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /** {@link ItemMetadataFilterStage} unit test. */
@@ -50,7 +50,7 @@ public class ItemMetadataFilterStageTest {
     private Item<String> md4;
 
     /** Unit test setup, initializes {@link #metadataCollectionPrototype} and metadata elements. */
-    @BeforeTest
+    @BeforeMethod
     public void setup() {
         metadataCollectionPrototype = new ArrayList<>();
 
