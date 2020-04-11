@@ -41,7 +41,7 @@ public interface ItemCollectionSerializer<T> {
      * 
      * @throws IOException if an I/O exception occurs during serialization
      */
-    public void serializeCollection(@Nonnull Collection<Item<T>> items, @Nonnull OutputStream output)
+    void serializeCollection(@Nonnull Collection<Item<T>> items, @Nonnull OutputStream output)
         throws IOException;
 
 }

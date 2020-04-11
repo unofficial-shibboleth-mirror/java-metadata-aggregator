@@ -35,6 +35,6 @@ public interface AttrVisitor {
      * @param visited the {@link Attr} being visited.
      * @param item the {@link Item} which is the context for the visit.
      */
-    public void visitAttr(Attr visited, Item<Element> item);
+    void visitAttr(Attr visited, Item<Element> item);
     
 }

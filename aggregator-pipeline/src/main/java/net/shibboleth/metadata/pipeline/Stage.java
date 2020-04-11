@@ -46,6 +46,6 @@ public interface Stage<T> extends DestructableComponent, IdentifiedComponent,
      * 
      * @throws StageProcessingException thrown if there is a problem running this stage on the given input
      */
-    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException;
 }

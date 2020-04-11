@@ -34,6 +34,6 @@ public interface ElementVisitor {
      * @param visited the {@link Element} being visited.
      * @param item the {@link Item} which is the context for the visit.
      */
-    public void visitElement(Element visited, Item<Element> item);
+    void visitElement(Element visited, Item<Element> item);
     
 }

@@ -40,6 +40,6 @@ public interface ItemSerializer<T> {
      * 
      * @throws IOException if an I/O exception occurs during serialization
      */
-    public void serialize(@Nonnull Item<T> item, @Nonnull OutputStream output)
+    void serialize(@Nonnull Item<T> item, @Nonnull OutputStream output)
         throws IOException;
 }

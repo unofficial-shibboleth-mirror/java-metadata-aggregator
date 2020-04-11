@@ -29,6 +29,6 @@ public interface ItemIdentificationStrategy {
      * 
      * @return the identifier, never null
      */
-    public String getItemIdentifier(@Nonnull final Item<?> item);
+    String getItemIdentifier(@Nonnull final Item<?> item);
 
 }

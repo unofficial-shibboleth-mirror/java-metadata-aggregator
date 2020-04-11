@@ -34,6 +34,6 @@ public interface CollectionMergeStrategy {
      * @param sources collections of Items to be merged in to the target, never null not containing any null elements
      * @param <T> type of data contained in the items
      */
-    public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
+    <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
             @Nonnull @NonnullElements final List<Collection<Item<T>>> sources);
 }

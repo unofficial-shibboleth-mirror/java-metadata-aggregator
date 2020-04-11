@@ -42,7 +42,7 @@ public interface Validator<V> extends DestructableComponent, IdentifiableCompone
      * short-circuit evaluation in the case where the problem detected would
      * invalidate subsequent tests.
      */
-    public enum Action {
+    enum Action {
         /** Evaluation of other {@link Validator}s may proceed. */
         CONTINUE,
         
@@ -62,7 +62,7 @@ public interface Validator<V> extends DestructableComponent, IdentifiableCompone
      * @return an indication of whether to process additional validators
      * @throws StageProcessingException if an error occurs during validation
      */
-    public Action validate(@Nonnull V e, @Nonnull Item<?> item, @Nonnull String stageId)
+    Action validate(@Nonnull V e, @Nonnull Item<?> item, @Nonnull String stageId)
         throws StageProcessingException;
     
 }

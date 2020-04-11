@@ -35,6 +35,6 @@ public interface NodeVisitor {
      * @param visited the {@link Node} being visited.
      * @param item the {@link Item} which is the context for the visit.
      */
-    public void visitNode(Node visited, Item<Element> item);
+    void visitNode(Node visited, Item<Element> item);
     
 }

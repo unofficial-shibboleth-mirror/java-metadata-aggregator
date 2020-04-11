@@ -36,14 +36,14 @@ public interface Item<T> extends Serializable {
      * 
      * @return the wrapped item data
      */
-    @Nullable public T unwrap();
+    @Nullable T unwrap();
 
     /**
      * Gets all of the metadata attached to this Item.
      * 
      * @return metadata attached to this Item
      */
-    @Nonnull public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
+    @Nonnull ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
 
     /**
      * Performs a copy of this Item. All member fields, except {@link ItemMetadata}, should be deep cloned.
@@ -51,5 +51,5 @@ public interface Item<T> extends Serializable {
      * 
      * @return the clone of this element
      */
-    @Nonnull public Item<T> copy();
+    @Nonnull Item<T> copy();
 }
