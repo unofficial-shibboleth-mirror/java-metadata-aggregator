@@ -28,7 +28,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.metadata.dom.ds.X509ValidationStage;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.x509.X509RSAKeyLengthValidator;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
