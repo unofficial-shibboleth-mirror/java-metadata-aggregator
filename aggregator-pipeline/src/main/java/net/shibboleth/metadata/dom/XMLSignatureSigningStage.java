@@ -152,7 +152,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * non-namespace-qualified attributes 'ID', 'Id', 'id'
      */
     @Nonnull @NonnullElements @Unmodifiable
-    private List<QName> idAttributeNames = List.of(new QName[]{new QName("ID"), new QName("id"), new QName("Id")});
+    private List<QName> idAttributeNames = List.of(new QName("ID"), new QName("id"), new QName("Id"));
 
     /** Explicit names to associate with the given signing key. Default value: empty list */
     @Nonnull @NonnullElements @Unmodifiable
