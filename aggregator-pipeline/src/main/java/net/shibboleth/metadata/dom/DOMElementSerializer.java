@@ -33,6 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
     }
 
     @Override
-    public void serializeCollection(@Nonnull final Collection<Item<Element>> items,
+    public void serializeCollection(@Nonnull @NonnullElements final Collection<Item<Element>> items,
             @Nonnull final OutputStream output) throws IOException {
         final Iterator<Item<Element>> iter = items.iterator();
         if (iter.hasNext()) {

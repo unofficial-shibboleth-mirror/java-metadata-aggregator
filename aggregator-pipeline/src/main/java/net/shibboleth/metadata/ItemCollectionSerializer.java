@@ -23,6 +23,8 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /**
  * Item collection serializers convert a {@link Collection} of {@link Item}s into an octet stream.
  * 
@@ -41,7 +43,7 @@ public interface ItemCollectionSerializer<T> {
      * 
      * @throws IOException if an I/O exception occurs during serialization
      */
-    void serializeCollection(@Nonnull Collection<Item<T>> items, @Nonnull OutputStream output)
+    void serializeCollection(@Nonnull @NonnullElements Collection<Item<T>> items, @Nonnull OutputStream output)
         throws IOException;
 
 }

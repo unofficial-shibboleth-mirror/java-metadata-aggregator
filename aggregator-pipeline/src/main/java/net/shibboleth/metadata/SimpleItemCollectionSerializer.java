@@ -23,6 +23,8 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /**
  * A simple {@link ItemCollectionSerializer} which just serializes each {@link Item}
  * in turn.
@@ -44,7 +46,8 @@ public class SimpleItemCollectionSerializer<T> implements ItemCollectionSerializ
     }
 
     @Override
-    public void serializeCollection(@Nonnull final Collection<Item<T>> items, @Nonnull final OutputStream output)
+    public void serializeCollection(@Nonnull @NonnullElements final Collection<Item<T>> items,
+            @Nonnull final OutputStream output)
         throws IOException {
         for (final Item<T> item : items) {
             serializer.serialize(item, output);
