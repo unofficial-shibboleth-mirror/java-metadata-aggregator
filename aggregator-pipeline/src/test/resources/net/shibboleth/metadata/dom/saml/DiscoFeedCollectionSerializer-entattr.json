@@ -1,0 +1,55 @@
+[
+{
+ "entityID": "https://idp.example.com/idp/shibboleth",
+ "DisplayNames": [
+  {
+  "value": "Example Organization",
+  "lang": "en"
+  }
+ ],
+ "Descriptions": [
+  {
+  "value": "This is the identity provider for The Example Organization.",
+  "lang": "en"
+  }
+ ],
+ "Logos": [
+  {
+  "value": "https://idp.example.com/images/heads_80x80.jpg",
+  "height": "80",
+  "width": "80"
+  },
+  {
+  "value": "https://idp.example.com/images/heads_100x43.jpg",
+  "height": "43",
+  "width": "100"
+  },
+  {
+  "value": "https://idp.example.com/images/heads_240x104.jpg",
+  "height": "104",
+  "width": "240"
+  }
+ ],
+ "EntityAttributes": [
+  {
+  "name": "http://macedir.org/entity-category-support",
+  "values": [
+     "http://refeds.org/category/research-and-scholarship"
+  ]
+  },
+  {
+  "name": "urn:oasis:names:tc:SAML:attribute:assurance-certification",
+  "values": [
+     "https://refeds.org/sirtfi",
+     "second-assurance-value"
+  ]
+  },
+  {
+  "name": "something",
+  "values": [
+     "whatever"
+  ]
+  }
+ ]
+}
+]

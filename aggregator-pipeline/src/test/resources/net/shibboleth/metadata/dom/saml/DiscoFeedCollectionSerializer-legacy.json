@@ -1,0 +1,18 @@
+[
+{
+ "entityID": "https://idp.example.com/idp/shibboleth",
+ "Logos": [
+  {
+  "value": "https://idp.example.com/images/heads_80x80.jpg",
+  "height": "80",
+  "width": "80"
+  }
+ ],
+ "DisplayNames": [
+  {
+  "value": "The Example Organization",
+  "lang": "en"
+  }
+ ]
+}
+]

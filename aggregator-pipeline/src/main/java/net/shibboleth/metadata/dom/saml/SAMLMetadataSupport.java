@@ -76,6 +76,18 @@ public final class SAMLMetadataSupport {
     /** QName of the PDPDescriptor element. */
     public static final QName PDP_DESCRIPTOR_NAME = new QName(MD_NS, "PDPDescriptor");
 
+    /** QName of the Organization element. */
+    public static final QName ORGANIZATION_NAME = new QName(MD_NS, "Organization", MD_PREFIX);
+
+    /** QName of the OrganizationName element. */
+    public static final QName ORGANIZATIONNAME_NAME = new QName(MD_NS, "OrganizationName", MD_PREFIX);
+
+    /** QName of the OrganizationDisplayName element. */
+    public static final QName ORGANIZATIONDISPLAYNAME_NAME = new QName(MD_NS, "OrganizationDisplayName", MD_PREFIX);
+
+    /** QName of the OrganizationURL element. */
+    public static final QName ORGANIZATIONURL_NAME = new QName(MD_NS, "OrganizationURL", MD_PREFIX);
+
     /** Constructor. */
     private SAMLMetadataSupport() {
 

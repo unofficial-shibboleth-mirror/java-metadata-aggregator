@@ -117,6 +117,9 @@
     <bean id="mda.ContactPersonFilterStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.saml.ContactPersonFilterStage"/>
 
+    <bean id="mda.DiscoFeedCollectionSerializer" abstract="true" parent="mda.component_parent"
+        class="net.shibboleth.metadata.dom.saml.DiscoFeedCollectionSerializer"/>
+
     <bean id="mda.EntitiesDescriptorAssemblerStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.saml.EntitiesDescriptorAssemblerStage"/>
 

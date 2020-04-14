@@ -1,0 +1,34 @@
+[
+{
+ "entityID": "https://idp.example.com/idp/shibboleth",
+ "DisplayNames": [
+  {
+  "value": "Example Organization",
+  "lang": "en"
+  }
+ ],
+ "Descriptions": [
+  {
+  "value": "This is the identity provider for The Example Organization.",
+  "lang": "en"
+  }
+ ],
+ "InformationURLs": [
+  {
+  "value": "https://example.org/info-english",
+  "lang": "en"
+  },
+  {
+  "value": "https://example.org/info-welsh",
+  "lang": "cy"
+  }
+ ],
+ "Logos": [
+  {
+  "value": "https://idp.example.com/images/heads_80x80.jpg",
+  "height": "80",
+  "width": "80"
+  }
+ ]
+}
+]
