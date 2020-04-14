@@ -56,6 +56,26 @@ public final class SAMLMetadataSupport {
     /** cacheDuration attribute name. */
     public static final QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");
 
+    /** QName of the RoleDescriptor element. */
+    public static final QName ROLE_DESCRIPTOR_NAME = new QName(MD_NS, "RoleDescriptor");
+
+    /** QName of the IDPSSODescriptor element. */
+    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(MD_NS, "IDPSSODescriptor");
+
+    /** QName of the SPSSODescriptor element. */
+    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(MD_NS, "SPSSODescriptor");
+
+    /** QName of the AuthnAuthorityDescriptor element. */
+    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(MD_NS,
+            "AuthnAuthorityDescriptor");
+
+    /** QName of the AttributeAuthorityDescriptor element. */
+    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(MD_NS,
+            "AttributeAuthorityDescriptor");
+
+    /** QName of the PDPDescriptor element. */
+    public static final QName PDP_DESCRIPTOR_NAME = new QName(MD_NS, "PDPDescriptor");
+
     /** Constructor. */
     private SAMLMetadataSupport() {
 

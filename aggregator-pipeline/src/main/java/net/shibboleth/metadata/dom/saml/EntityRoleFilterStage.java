@@ -49,37 +49,20 @@ import net.shibboleth.utilities.java.support.xml.QNameSupport;
 @ThreadSafe
 public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
 
-    /** QName of the RoleDescriptor element. */
-    public static final QName ROLE_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "RoleDescriptor");
-
-    /** QName of the IDPSSODescriptor element. */
-    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "IDPSSODescriptor");
-
-    /** QName of the SPSSODescriptor element. */
-    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "SPSSODescriptor");
-
-    /** QName of the AuthnAuthorityDescriptor element. */
-    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS,
-            "AuthnAuthorityDescriptor");
-
-    /** QName of the AttributeAuthorityDescriptor element. */
-    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS,
-            "AttributeAuthorityDescriptor");
-
-    /** QName of the PDPDescriptor element. */
-    public static final QName PDP_DESCRIPTOR_NAME = new QName(SAMLMetadataSupport.MD_NS, "PDPDescriptor");
-
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStage.class);
 
     /**
-     * Set containing the SAML-defined, named role descriptors: {@link #IDP_SSO_DESCRIPTOR_NAME},
-     * {@link #SP_SSO_DESCRIPTOR_NAME}, {@link #AUTHN_AUTHORITY_DESCRIPTOR_NAME},
-     * {@link #ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME}, {@link #PDP_DESCRIPTOR_NAME}.
+     * Set containing the SAML-defined, named role descriptors: {@link SAMLMetadataSupport#IDP_SSO_DESCRIPTOR_NAME},
+     * {@link SAMLMetadataSupport#SP_SSO_DESCRIPTOR_NAME}, {@link SAMLMetadataSupport#AUTHN_AUTHORITY_DESCRIPTOR_NAME},
+     * {@link SAMLMetadataSupport#ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME}, {@link SAMLMetadataSupport#PDP_DESCRIPTOR_NAME}.
      */
     @Nonnull @NonnullElements @Unmodifiable
-    private final Set<QName> namedRoles = Set.of(IDP_SSO_DESCRIPTOR_NAME, SP_SSO_DESCRIPTOR_NAME,
-            AUTHN_AUTHORITY_DESCRIPTOR_NAME, ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME, PDP_DESCRIPTOR_NAME);
+    private final Set<QName> namedRoles = Set.of(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
+            SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME,
+            SAMLMetadataSupport.AUTHN_AUTHORITY_DESCRIPTOR_NAME,
+            SAMLMetadataSupport.ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME,
+            SAMLMetadataSupport.PDP_DESCRIPTOR_NAME);
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
     @Nonnull @NonnullElements @Unmodifiable
@@ -295,7 +278,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
             childQName = QNameSupport.getNodeQName(child);
             roleIdentifier = null;
 
-            if (Objects.equals(childQName, ROLE_DESCRIPTOR_NAME)) {
+            if (Objects.equals(childQName, SAMLMetadataSupport.ROLE_DESCRIPTOR_NAME)) {
                 roleIdentifier = DOMTypeSupport.getXSIType(child);
             } else if (namedRoles.contains(childQName)) {
                 roleIdentifier = childQName;
