@@ -58,7 +58,7 @@ public class RegistrationAuthorityPopulationStage extends AbstractIteratingStage
                if (attr == null) {
                    final String eid = entity.getAttribute("entityID");
                    metadata.put(new ErrorStatus(getId(), "RegistrationInfo for " + eid +
-                           " did not have a RegistrationAuthority attribute"));
+                           " did not have a registrationAuthority attribute"));
                } else {
                    metadata.put(new RegistrationAuthority(attr));
                }
