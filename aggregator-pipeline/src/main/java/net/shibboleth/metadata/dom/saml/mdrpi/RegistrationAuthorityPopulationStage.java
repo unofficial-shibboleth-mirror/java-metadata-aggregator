@@ -22,8 +22,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
 
-import com.google.common.base.Strings;
-
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
@@ -58,8 +56,7 @@ public class RegistrationAuthorityPopulationStage extends AbstractIteratingStage
                // Extract registrationAuthority
                final String attr = AttributeSupport.getAttributeValue(regInfo, null, "registrationAuthority");
                if (attr == null) {
-                   final String eid = Strings.nullToEmpty(
-                           AttributeSupport.getAttributeValue(entity, null, "entityID"));
+                   final String eid = entity.getAttribute("entityID");
                    metadata.put(new ErrorStatus(getId(), "RegistrationInfo for " + eid +
                            " did not have a RegistrationAuthority attribute"));
                } else {

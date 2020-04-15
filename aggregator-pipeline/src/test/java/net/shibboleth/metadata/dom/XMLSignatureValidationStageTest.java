@@ -268,6 +268,6 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
         Assert.assertEquals(errors.size(), 1);
         final String message = errors.get(0).getStatusMessage();
-        Assert.assertTrue(message.contains("reference"));
+        Assert.assertTrue(message.contains("empty references are not permitted"));
     }
 }

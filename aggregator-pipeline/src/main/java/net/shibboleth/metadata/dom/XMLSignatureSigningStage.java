@@ -17,8 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509CRL;
@@ -58,8 +58,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.google.common.io.CharStreams;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
@@ -652,9 +650,8 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
 
             // Log the pre-digest data for debugging
             if (isDebugPreDigest() && log.isDebugEnabled()) {
-                final Reference ref = (Reference) signature.getSignedInfo().getReferences().get(0);
-                final String preDigest =
-                        CharStreams.toString(new InputStreamReader(ref.getDigestInputStream(), "UTF-8"));
+                final Reference ref = signature.getSignedInfo().getReferences().get(0);
+                final String preDigest = new String(ref.getDigestInputStream().readAllBytes(), StandardCharsets.UTF_8);
                 log.debug("pre digest: {}", preDigest);
             }
         } catch (final Exception e) {

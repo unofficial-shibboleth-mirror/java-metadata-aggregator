@@ -50,8 +50,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.google.common.base.Strings;
-
 /**
  * A class that encapsulates the various stages in validation of XML signatures as methods.
  * 
@@ -171,7 +169,7 @@ final class XMLSignatureValidator {
          * If the reference is empty, it implicitly references the document element
          * and no attribute is being referenced.
          */
-        if (Strings.isNullOrEmpty(referenceURI)) {
+        if (referenceURI.isEmpty()) {
             log.debug("reference was empty; no ID marking required");
             return;
         }
@@ -317,7 +315,7 @@ final class XMLSignatureValidator {
                 throw new ValidationException("Signature Reference was null");
             }
             if (!emptyReferencePermitted) {
-                if (Strings.isNullOrEmpty(ref.getURI())) {
+                if (ref.getURI().isEmpty()) {
                     throw new ValidationException("empty references are not permitted");
                 }
             }
