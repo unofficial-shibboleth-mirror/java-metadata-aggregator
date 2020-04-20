@@ -29,6 +29,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
@@ -57,6 +58,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
     private final Logger log = LoggerFactory.getLogger(SerializationStage.class);
 
     /** File to which the item will be written. */
+    @NonnullAfterInit
     private File outputFile;
 
     /** Whether an existing output file should be overwritten. Default value: <code>true</code> */
@@ -70,7 +72,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * 
      * @return file to which the item will be written
      */
-    @Nullable public File getOutputFile() {
+    @NonnullAfterInit public File getOutputFile() {
         return outputFile;
     }
 
