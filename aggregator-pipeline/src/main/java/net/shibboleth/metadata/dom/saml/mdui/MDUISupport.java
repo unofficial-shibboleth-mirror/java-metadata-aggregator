@@ -27,27 +27,27 @@ public final class MDUISupport {
     /** MDUI namespace. */
     public static final String MDUI_NS = "urn:oasis:names:tc:SAML:metadata:ui";
 
-    /** {@link QName} representing an <code>mdui:DisplayName</code>. */
-    public static final QName DISPLAYNAME_NAME = new QName(MDUISupport.MDUI_NS, "DisplayName");
-    
     /** {@link QName} representing an <code>mdui:UIInfo</code>. */
-    public static final QName UIINFO_NAME = new QName(MDUISupport.MDUI_NS, "UIInfo");
+    public static final QName UIINFO_NAME = new QName(MDUI_NS, "UIInfo");
+    
+    /** {@link QName} representing an <code>mdui:DisplayName</code>. */
+    public static final QName DISPLAYNAME_NAME = new QName(MDUI_NS, "DisplayName");
     
     /** {@link QName} representing an <code>mdui:Description</code>. */
-    public static final QName DESCRIPTION_NAME = new QName(MDUISupport.MDUI_NS, "Description");
+    public static final QName DESCRIPTION_NAME = new QName(MDUI_NS, "Description");
     
     /** {@link QName} representing an <code>mdui:Keywords</code>. */
-    public static final QName KEYWORDS_NAME = new QName(MDUISupport.MDUI_NS, "Keywords");
+    public static final QName KEYWORDS_NAME = new QName(MDUI_NS, "Keywords");
     
     /** {@link QName} representing an <code>mdui:Logo</code>. */
-    public static final QName LOGO_NAME = new QName(MDUISupport.MDUI_NS, "Logo");
+    public static final QName LOGO_NAME = new QName(MDUI_NS, "Logo");
     
     /** {@link QName} representing an <code>mdui:InformationURL</code>. */
-    public static final QName INFORMATIONURL_NAME = new QName(MDUISupport.MDUI_NS, "InformationURL");
+    public static final QName INFORMATIONURL_NAME = new QName(MDUI_NS, "InformationURL");
     
     /** {@link QName} representing an <code>mdui:PrivacyStatementURL</code>. */
-    public static final QName PRIVACYSTATEMENTURL_NAME = new QName(MDUISupport.MDUI_NS, "PrivacyStatementURL");
-    
+    public static final QName PRIVACYSTATEMENTURL_NAME = new QName(MDUI_NS, "PrivacyStatementURL");
+
     /** Constructor. */
     private MDUISupport() {
     }
