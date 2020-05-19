@@ -106,7 +106,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
      * @throws IOException if there are parsing issues with the JSON file
      * @throws XMLParserException if there are parsing issues with the XML file
      */
-    private JsonObject checkSingle(@Nonnull final String name, @Nonnull final ItemCollectionSerializer ser)
+    private JsonObject checkSingle(@Nonnull final String name, @Nonnull final ItemCollectionSerializer<Element> ser)
             throws IOException, XMLParserException {
         final String output;
         try (final var out = new ByteArrayOutputStream()) {

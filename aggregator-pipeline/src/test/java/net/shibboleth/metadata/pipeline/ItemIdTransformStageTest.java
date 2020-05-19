@@ -85,7 +85,7 @@ public class ItemIdTransformStageTest {
     
     @Test
     public void testMDA226() throws Exception {
-        final var stage = new ItemIdTransformStage();
+        final var stage = new ItemIdTransformStage<>();
         
         // Initial list should be empty
         Assert.assertEquals(stage.getIdTransformers().size(), 0);
