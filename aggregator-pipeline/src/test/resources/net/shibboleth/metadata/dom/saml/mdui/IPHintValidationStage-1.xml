@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    ID="uk000283" entityID="https://idp.glowscotland.org.uk/shibboleth">
+    <IDPSSODescriptor
+        protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        <Extensions>
+            <mdui:DiscoHints xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+                <mdui:IPHint>198.81.223.0/28</mdui:IPHint>
+                <mdui:IPHint>212.219.36.0/25</mdui:IPHint>
+                <mdui:IPHint>212.219.74.176/28</mdui:IPHint>
+                <mdui:IPHint>195.194.219.0/25</mdui:IPHint>
+                <mdui:IPHint>212.219.248.0/24</mdui:IPHint>
+                <mdui:IPHint>195.194.187.40/29</mdui:IPHint>
+                <mdui:IPHint>212.219.240.208/28</mdui:IPHint>
+                <mdui:IPHint>195.194.8.0/26</mdui:IPHint>
+                <mdui:IPHint>195.194.8.64/28</mdui:IPHint>
+                <mdui:IPHint>212.219.247.224/28</mdui:IPHint>
+                <mdui:IPHint>194.83.243.0/25</mdui:IPHint>
+                <mdui:IPHint>194.83.172.0/26</mdui:IPHint>
+                <mdui:IPHint>195.195.236.0/26</mdui:IPHint>
+                <mdui:IPHint>194.83.96.0/24</mdui:IPHint>
+                <mdui:IPHint>194.83.172.64/28</mdui:IPHint>
+                <mdui:IPHint>193.63.62.192/27</mdui:IPHint>
+                <mdui:IPHint>193.63.62.224/29</mdui:IPHint>
+                <mdui:IPHint>193.63.62.0/25</mdui:IPHint>
+                <mdui:IPHint>193.63.62.128/26</mdui:IPHint>
+                <mdui:IPHint>212.219.240.200/29</mdui:IPHint>
+                <mdui:IPHint>212.219.113.224/27</mdui:IPHint>
+                <mdui:IPHint>194.80.19.64/26</mdui:IPHint>
+                <mdui:IPHint>194.81.46.148/30</mdui:IPHint>
+                <mdui:IPHint>195.194.111.0/24</mdui:IPHint>
+                <mdui:IPHint>212.219.99.64/27</mdui:IPHint>
+                <mdui:IPHint>194.83.173.192/28</mdui:IPHint>
+                <mdui:IPHint>212.219.247.128/26</mdui:IPHint>
+                <mdui:IPHint>195.195.43.192/27</mdui:IPHint>
+                <mdui:IPHint>193.39.144.0/20</mdui:IPHint>
+                <mdui:IPHint>194.80.23.128/26</mdui:IPHint>
+                <mdui:IPHint>194.83.245.240/28</mdui:IPHint>
+                <mdui:IPHint>212.219.255.0/26</mdui:IPHint>
+                <mdui:IPHint>212.219.255.64/28</mdui:IPHint>
+                <mdui:IPHint>194.82.141.208/28</mdui:IPHint>
+                <mdui:IPHint>194.81.49.0/24</mdui:IPHint>
+                <mdui:IPHint>212.219.247.192/27</mdui:IPHint>
+                <mdui:IPHint>195.194.56.0/24</mdui:IPHint>
+                <mdui:IPHint>195.194.57.0/25</mdui:IPHint>
+                <mdui:IPHint>212.219.249.0/24</mdui:IPHint>
+                <mdui:IPHint>194.83.57.0/26</mdui:IPHint>
+                <mdui:IPHint>212.219.203.0/24</mdui:IPHint>
+                <mdui:IPHint>194.83.240.192/26</mdui:IPHint>
+                <mdui:IPHint>194.80.22.0/25</mdui:IPHint>
+                <mdui:IPHint>212.219.234.120/29</mdui:IPHint>
+                <mdui:IPHint>194.81.222.96/27</mdui:IPHint>
+                <mdui:IPHint>194.83.240.128/27</mdui:IPHint>
+                <mdui:IPHint>194.83.240.160/28</mdui:IPHint>
+                <mdui:IPHint>212.219.99.96/27</mdui:IPHint>
+                <mdui:IPHint>193.60.198.208/28</mdui:IPHint>
+                <mdui:IPHint>212.219.202.0/24</mdui:IPHint>
+                <mdui:IPHint>195.194.160.0/23</mdui:IPHint>
+                <mdui:IPHint>195.194.10.0/25</mdui:IPHint>
+                <mdui:IPHint>193.62.43.208/28</mdui:IPHint>
+                <mdui:IPHint>195.194.8.128/26</mdui:IPHint>
+                <mdui:IPHint>194.81.46.160/27</mdui:IPHint>
+                <mdui:IPHint>212.219.98.64/28</mdui:IPHint>
+                <mdui:IPHint>194.82.255.64/28</mdui:IPHint>
+                <mdui:IPHint>194.82.255.0/26</mdui:IPHint>
+                <mdui:IPHint>212.219.243.40/29</mdui:IPHint>
+                <mdui:IPHint>194.81.124.0/24</mdui:IPHint>
+                <mdui:IPHint>212.219.150.0/24</mdui:IPHint>
+                <mdui:IPHint>212.219.253.0/24</mdui:IPHint>
+                <mdui:IPHint>212.219.252.0/24</mdui:IPHint>
+                <mdui:IPHint>212.219.208.0/24</mdui:IPHint>
+                <mdui:IPHint>193.63.61.0/25</mdui:IPHint>
+                <mdui:IPHint>194.80.19.128/26</mdui:IPHint>
+                <mdui:IPHint>194.80.19.192/27</mdui:IPHint>
+                <mdui:IPHint>212.219.254.0/24</mdui:IPHint>
+                <mdui:IPHint>194.80.22.128/25</mdui:IPHint>
+                <mdui:IPHint>193.63.86.128/26</mdui:IPHint>
+                <mdui:IPHint>212.219.243.8/29</mdui:IPHint>
+                <mdui:IPHint>194.83.173.128/26</mdui:IPHint>
+                <mdui:IPHint>212.219.242.160/28</mdui:IPHint>
+                <mdui:IPHint>195.194.8.192/26</mdui:IPHint>
+                <mdui:IPHint>194.80.224.64/29</mdui:IPHint>
+                <mdui:IPHint>194.83.172.128/28</mdui:IPHint>
+                <mdui:IPHint>195.194.86.240/29</mdui:IPHint>
+                <mdui:IPHint>212.219.118.8/29</mdui:IPHint>
+                <mdui:IPHint>212.219.250.0/23</mdui:IPHint>
+                <mdui:IPHint>195.194.62.128/27</mdui:IPHint>
+                <mdui:IPHint>212.219.247.240/28</mdui:IPHint>
+                <mdui:IPHint>194.80.23.224/27</mdui:IPHint>
+                <mdui:IPHint>212.219.242.192/28</mdui:IPHint>
+                <mdui:IPHint>194.83.173.0/26</mdui:IPHint>
+                <mdui:IPHint>194.83.173.64/26</mdui:IPHint>
+                <mdui:IPHint>194.83.172.224/29</mdui:IPHint>
+                <mdui:IPHint>212.219.57.104/29</mdui:IPHint>
+                <mdui:IPHint>212.219.74.160/29</mdui:IPHint>
+                <mdui:IPHint>194.80.19.0/26</mdui:IPHint>
+                <mdui:IPHint>194.83.172.80/28</mdui:IPHint>
+                <mdui:IPHint>193.63.72.128/27</mdui:IPHint>
+                <mdui:IPHint>193.93.72.160/27</mdui:IPHint>
+                <mdui:IPHint>193.72.192/26</mdui:IPHint><!-- this one is wrong -->
+                <mdui:IPHint>193.63.61.128/25</mdui:IPHint>
+                <mdui:IPHint>194.80.23.0/25</mdui:IPHint>
+            </mdui:DiscoHints>
+        </Extensions>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+            Location="https://idp.glowscotland.org.uk:8443/idp/profile/SAML1/SOAP/ArtifactResolution"
+            index="1"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+            Location="https://idp.glowscotland.org.uk:8443/idp/profile/SAML2/SOAP/ArtifactResolution"
+            index="2"/>
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest"
+            Location="https://idp.glowscotland.org.uk/idp/profile/Shibboleth/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="https://idp.glowscotland.org.uk/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+            Location="https://idp.glowscotland.org.uk/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+            Location="https://idp.glowscotland.org.uk/idp/profile/SAML2/Redirect/SSO"/>
+    </IDPSSODescriptor>
+</EntityDescriptor>

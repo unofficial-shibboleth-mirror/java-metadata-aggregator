@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor ID="uk000981" entityID="https://idp.edina.ac.uk/shibboleth-devel"
+    xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:shibmeta="urn:mace:shibboleth:metadata:1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <IDPSSODescriptor
+        protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        <Extensions>
+            <mdui:DiscoHints xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+                <mdui:IPHint>11.12.13.14</mdui:IPHint> <!-- does not contain a '/' -->
+                <mdui:DomainHint>ucs.ed.ac.uk</mdui:DomainHint>
+                <mdui:GeolocationHint>geo:55.935575,-3.1800687</mdui:GeolocationHint>
+            </mdui:DiscoHints>
+        </Extensions>
+    </IDPSSODescriptor>
+</EntityDescriptor>

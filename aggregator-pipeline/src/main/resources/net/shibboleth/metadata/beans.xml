@@ -195,6 +195,13 @@
         class="net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthorityPopulationStage"/>
 
     <!--
+        net.shibboleth.metadata.dom.saml.mdui
+    -->
+
+    <bean id="mda.IPHintValidationStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.dom.saml.mdui.IPHintValidationStage"/>
+
+    <!--
         net.shibboleth.metadata.pipeline
     -->
 
