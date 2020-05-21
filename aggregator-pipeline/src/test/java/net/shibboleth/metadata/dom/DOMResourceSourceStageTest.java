@@ -31,12 +31,16 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
+import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
-public class DOMResourceSourceStageTest {
+public class DOMResourceSourceStageTest extends BaseTest {
+
+    DOMResourceSourceStageTest() {
+        super(DOMResourceSourceStage.class);
+    }
 
     BasicParserPool parserPool;
     
@@ -85,18 +89,24 @@ public class DOMResourceSourceStageTest {
     }
 
     @Test public void testFailedFetch() throws Exception {
-        Resource mdResource = new UrlResource("http://kslkjf.com/lkjlk3.dlw");
+        final var collection = new ArrayList<Item<Element>>();
+        final var mdResource = new UrlResource("http://kslkjf.com/lkjlk3.dlw");
 
-        DOMResourceSourceStage source = new DOMResourceSourceStage();
+        final var source = new DOMResourceSourceStage();
         source.setId("test");
         source.setDOMResource(mdResource);
         source.setParserPool(parserPool);
+        source.initialize();
 
         try {
-            source.initialize();
+            source.execute(collection);
             Assert.fail();
-        } catch (ComponentInitializationException e) {
-            // expected this
+        } catch (final StageProcessingException e) {
+            final var cause = e.getCause();
+            // System.out.println("Message: " + e.getMessage());
+            // System.out.println("Cause: " + cause);
+            Assert.assertNotNull(cause, "exception had no cause");
+            Assert.assertTrue(cause instanceof IOException, "cause should have been an IOException");
         }
     }
     
@@ -126,5 +136,29 @@ public class DOMResourceSourceStageTest {
         }
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 0);
+    }
+
+    @Test
+    public void mda219() throws Exception {
+        final var stage = new DOMResourceSourceStage();
+        final var resource = getClasspathResource("does-not-exist.xml");
+        final var collection = new ArrayList<Item<Element>>();
+        stage.setId("test");
+        stage.setParserPool(parserPool);
+        stage.setDOMResource(resource);
+        // Pre-MDA-219, this will throw an exception
+        stage.initialize();
+        
+        // Post-MDA-219, we expect a wrapped IOException when we execute the stage.
+        try {
+            stage.execute(collection);
+            Assert.fail("expected exception");
+        } catch (final StageProcessingException e) {
+            final var cause = e.getCause();
+            // System.out.println("Message: " + e.getMessage());
+            // System.out.println("Cause: " + cause);
+            Assert.assertNotNull(cause, "exception had no cause");
+            Assert.assertTrue(cause instanceof IOException, "cause should have been an IOException");
+        }
     }
 }

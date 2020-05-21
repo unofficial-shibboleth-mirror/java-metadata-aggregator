@@ -196,11 +196,6 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
             throw new ComponentInitializationException("Unable to initialize " + getId()
                     + ", either a DomResource must be specified");
         }
-
-        if (!domResource.exists()) {
-            throw new ComponentInitializationException("Unable to initialize " + getId() + ", DOM resource "
-                    + domResource.getDescription() + " does not exist");
-        }
     }
 
 }
