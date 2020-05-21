@@ -253,11 +253,6 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
         }
 
         try {
-            if (!xslResource.exists()) {
-                throw new ComponentInitializationException("Unable to initialize " + getId() + ", XslResource "
-                        + xslResource.getDescription() + " does not exist");
-            }
-
             final TransformerFactory tfactory = TransformerFactory.newInstance();
 
             for (final Entry<String, Object> attribute : transformAttributes.entrySet()) {

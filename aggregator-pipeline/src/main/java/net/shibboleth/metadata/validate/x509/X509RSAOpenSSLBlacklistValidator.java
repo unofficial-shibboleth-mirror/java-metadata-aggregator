@@ -193,11 +193,6 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
                     + ", blacklistResource must not be null");
         }
 
-        if (!blacklistResource.exists()) {
-            throw new ComponentInitializationException("Unable to initialize " + getId() + ", blacklistResource "
-                    + blacklistResource.getDescription() + " does not exist");
-        }
-        
         try (BufferedReader reader =
                 new BufferedReader(new InputStreamReader(blacklistResource.getInputStream()))) {
             while (true) {

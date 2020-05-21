@@ -18,6 +18,7 @@
 
 package net.shibboleth.metadata.validate.x509;
 
+import java.io.IOException;
 import java.security.cert.X509Certificate;
 
 import org.testng.Assert;
@@ -26,6 +27,7 @@ import org.testng.annotations.Test;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.validate.Validator;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest {
     
@@ -158,5 +160,24 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         // do not initialize
         Assert.assertNull(val.getId(), "unset ID should be null");
+    }
+
+    @Test
+    public void mda219() throws Exception {
+        final var val = new X509RSAOpenSSLBlacklistValidator();
+        final var resource = getClasspathResource("does-not-exist.txt");
+        val.setId("test");
+        val.setBlacklistResource(resource);
+        try {
+            val.initialize();
+            Assert.fail("expected exception");
+        } catch (final ComponentInitializationException e) {
+            // After MDA-219, we expect to see a cause which is an IOException.
+            final var cause = e.getCause();
+            // System.out.println("Message: " + e.getMessage());
+            // System.out.println("Cause: " + cause);
+            Assert.assertNotNull(cause, "exception had no cause");
+            Assert.assertTrue(cause instanceof IOException, "cause should have been an IOException");
+        }
     }
 }

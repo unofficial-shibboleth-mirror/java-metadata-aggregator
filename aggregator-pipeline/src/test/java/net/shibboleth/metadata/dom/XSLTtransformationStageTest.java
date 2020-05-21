@@ -36,6 +36,7 @@ import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.springframework.core.io.Resource;
@@ -297,4 +298,24 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         final Element expected = readXMLData("output2.xml");
         assertXMLIdentical(expected, result.unwrap());
     }
+
+    @Test
+    public void mda219() throws Exception {
+        final var resource = getClasspathResource("does-not-exist.txt");
+        final var stage = new XSLTransformationStage();
+        stage.setId("test");
+        stage.setXSLResource(resource);
+        try {
+            stage.initialize();
+            Assert.fail("expected exception");
+        } catch (final ComponentInitializationException e) {
+            // After MDA-219, we expect to see a cause which is an IOException.
+            final var cause = e.getCause();
+            // System.out.println("Message: " + e.getMessage());
+            // System.out.println("Cause: " + cause);
+            Assert.assertNotNull(cause, "exception had no cause");
+            Assert.assertTrue(cause instanceof IOException, "cause should have been an IOException");
+        }
+    }
+
 }
