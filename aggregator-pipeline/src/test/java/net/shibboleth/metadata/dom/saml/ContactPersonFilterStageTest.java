@@ -56,29 +56,29 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
     @Test public void testDesignatedTypes() throws ComponentInitializationException {
         ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
-        Assert.assertEquals(stage.getDesignateTypes().size(), 5);
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.BILLING));
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.OTHER));
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.SUPPORT));
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.TECHNICAL));
+        Assert.assertEquals(stage.getDesignatedTypes().size(), 5);
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.BILLING));
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.OTHER));
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.SUPPORT));
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
         stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE,
                 ContactPersonFilterStage.TECHNICAL, "", "foo", ContactPersonFilterStage.OTHER));
-        Assert.assertEquals(stage.getDesignateTypes().size(), 3);
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.OTHER));
-        Assert.assertTrue(stage.getDesignateTypes().contains(ContactPersonFilterStage.TECHNICAL));
+        Assert.assertEquals(stage.getDesignatedTypes().size(), 3);
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.OTHER));
+        Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
         stage.setDesignatedTypes(Collections.<String>emptyList());
-        Assert.assertEquals(stage.getDesignateTypes().size(), 0);
+        Assert.assertEquals(stage.getDesignatedTypes().size(), 0);
 
         stage.initialize();
         try {
             stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (UnmodifiableComponentException e) {
-            Assert.assertEquals(stage.getDesignateTypes().size(), 0);
+            Assert.assertEquals(stage.getDesignatedTypes().size(), 0);
         }
 
         stage = new ContactPersonFilterStage();
@@ -92,7 +92,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
 
         stage = new ContactPersonFilterStage();
         try {
-            stage.getDesignateTypes().add("foo");
+            stage.getDesignatedTypes().add("foo");
             Assert.fail();
         } catch (UnsupportedOperationException e) {
             // expected this
@@ -178,4 +178,17 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         contactPersons = ElementSupport.getChildElements(wikiDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 0);
     }
+    
+    @Test
+    public void mda243() throws Exception {
+        final var stage = new ContactPersonFilterStage();
+        stage.setId("test");
+        stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
+        stage.initialize();
+        final var types = stage.getDesignatedTypes();
+        Assert.assertEquals(types.size(), 2);
+        Assert.assertTrue(types.contains(ContactPersonFilterStage.ADMINISTRATIVE));
+        Assert.assertFalse(types.contains(ContactPersonFilterStage.BILLING));
+    }
+
 }

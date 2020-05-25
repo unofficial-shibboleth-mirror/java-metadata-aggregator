@@ -92,7 +92,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
      * @return list of designated person types
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<String> getDesignateTypes() {
+    public Collection<String> getDesignatedTypes() {
         return designatedTypes;
     }
 
