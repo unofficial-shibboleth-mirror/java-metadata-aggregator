@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor ID="uk123456" entityID="https://idp5.example.org/idp/shibboleth"
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <IDPSSODescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+        protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        <Extensions>
+            <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+                <mdui:DisplayName xml:lang="en">Example Organization</mdui:DisplayName>
+            </mdui:UIInfo>
+        </Extensions>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+            Location="https://idp5.example.org:8443/idp/profile/SAML1/SOAP/ArtifactResolution"
+            index="1"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+            Location="https://idp5.example.org:8443/idp/profile/SAML2/SOAP/ArtifactResolution"
+            index="2"/>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest"
+            Location="https://idp5.example.org/idp/profile/Shibboleth/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="https://idp5.example.org/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+            Location="https://idp5.example.org/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+            Location="https://idp5.example.org/idp/profile/SAML2/Redirect/SSO"/>
+    </IDPSSODescriptor>
+    <AttributeAuthorityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+        protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+            Location="https://idp5.example.org:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+            Location="https://idp5.example.org:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+    </AttributeAuthorityDescriptor>
+    <Organization xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+        <OrganizationName xml:lang="en">STUDENTS</OrganizationName>
+        <OrganizationDisplayName xml:lang="sv">Second Organization</OrganizationDisplayName>
+        <OrganizationDisplayName xml:lang="en">Second Organization</OrganizationDisplayName>
+        <OrganizationURL xml:lang="en">http://www.bth.se</OrganizationURL>
+    </Organization>
+</md:EntityDescriptor>

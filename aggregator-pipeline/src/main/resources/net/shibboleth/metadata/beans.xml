@@ -147,6 +147,9 @@
     <bean id="mda.RemoveOrganizationStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.saml.RemoveOrganizationStage"/>
 
+    <bean id="mda.SAMLStringElementCheckingStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.dom.saml.SAMLStringElementCheckingStage"/>
+    
     <bean id="mda.SetCacheDurationStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.saml.SetCacheDurationStage"/>
 
