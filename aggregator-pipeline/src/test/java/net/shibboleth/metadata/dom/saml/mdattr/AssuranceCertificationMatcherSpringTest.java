@@ -48,11 +48,10 @@ public class AssuranceCertificationMatcherSpringTest extends AbstractTestNGSprin
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testNoRA() {
-        final Predicate<EntityAttributeContext> matcher =
-                (Predicate<EntityAttributeContext>)applicationContext.getBean("certificationMatcherNoRA", Predicate.class);
-        final Predicate<EntityAttributeContext> oldMatcher =
-                (Predicate<EntityAttributeContext>)applicationContext.getBean("oldMatcherNoRA", Predicate.class);
+        final var matcher = applicationContext.getBean("certificationMatcherNoRA", Predicate.class);
+        final var oldMatcher = applicationContext.getBean("oldMatcherNoRA", Predicate.class);
 
         // all four components match
         test(true, matcher, oldMatcher,
@@ -77,11 +76,10 @@ public class AssuranceCertificationMatcherSpringTest extends AbstractTestNGSprin
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testWithRA() {
-        final Predicate<EntityAttributeContext> matcher =
-                (Predicate<EntityAttributeContext>)applicationContext.getBean("certificationMatcherWithRA", Predicate.class);
-        final Predicate<EntityAttributeContext> oldMatcher =
-                (Predicate<EntityAttributeContext>)applicationContext.getBean("oldMatcherWithRA", Predicate.class);
+        final var matcher = applicationContext.getBean("certificationMatcherWithRA", Predicate.class);
+        final var oldMatcher = applicationContext.getBean("oldMatcherWithRA", Predicate.class);
 
         // all four components match
         test(true, matcher, oldMatcher,

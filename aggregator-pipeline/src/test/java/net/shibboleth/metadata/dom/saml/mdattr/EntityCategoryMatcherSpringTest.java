@@ -43,9 +43,9 @@ public class EntityCategoryMatcherSpringTest extends AbstractTestNGSpringContext
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testNoRA() {
-        final Predicate<EntityAttributeContext> matcher =
-                (Predicate<EntityAttributeContext>)applicationContext.getBean("categoryMatcherNoRA", Predicate.class);
+        final var matcher = applicationContext.getBean("categoryMatcherNoRA", Predicate.class);
         
         // all four components match
         test(true, matcher, new ContextImpl("category", "http://macedir.org/entity-category",
@@ -65,9 +65,9 @@ public class EntityCategoryMatcherSpringTest extends AbstractTestNGSpringContext
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testWithRA() {
-        final Predicate<EntityAttributeContext> matcher =
-                (Predicate<EntityAttributeContext>)applicationContext.getBean("categoryMatcherWithRA", Predicate.class);
+        final var matcher = applicationContext.getBean("categoryMatcherWithRA", Predicate.class);
         
         // all four components match
         test(true, matcher, new ContextImpl("category", "http://macedir.org/entity-category",
