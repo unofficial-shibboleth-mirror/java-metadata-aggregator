@@ -40,7 +40,7 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
     private static final long serialVersionUID = -3907907112463674533L;
 
     /** Unique ID for the Item. */
-    private String id;
+    private final String id;
 
     /**
      * Constructor.
