@@ -172,13 +172,12 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        Collection<Item<T>> selectedItems;
         final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
 
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
             final Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
             final Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
-            selectedItems = collectionFactory.get();
+            final Collection<Item<T>> selectedItems = collectionFactory.get();
 
             for (final Item<T> item : itemCollection) {
                 if (selectionStrategy.test(item)) {
