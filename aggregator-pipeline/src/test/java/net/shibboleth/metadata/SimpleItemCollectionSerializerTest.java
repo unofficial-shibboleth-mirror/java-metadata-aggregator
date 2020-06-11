@@ -40,9 +40,9 @@ public class SimpleItemCollectionSerializerTest {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final var base = new ItemSerializer<String>() {
             @Override
-            public void serialize(Item<String> item, OutputStream output) {
+            public void serialize(Item<String> item, OutputStream out) {
                 try {
-                    output.write(item.unwrap().getBytes());
+                    out.write(item.unwrap().getBytes());
                 } catch (IOException e) {
                     Assert.fail("exception in string serializer", e);
                 }
