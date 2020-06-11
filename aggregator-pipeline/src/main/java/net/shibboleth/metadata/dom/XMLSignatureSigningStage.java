@@ -67,7 +67,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -214,9 +213,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param variant SHA algorithm variant used when computing the signature and digest
      */
     public synchronized void setShaVariant(@Nonnull final ShaVariant variant) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         shaVariant = Constraint.isNotNull(variant, "SHA variant can not be null");
     }
 
@@ -235,9 +232,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param key private key used to sign the content
      */
     public synchronized void setPrivateKey(@Nonnull final PrivateKey key) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         privKey = Constraint.isNotNull(key, "Private key can not be null");
     }
 
@@ -256,9 +251,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param key public key associated with private key used to sign the content
      */
     public synchronized void setPublicKey(@Nullable final PublicKey key) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         publicKey = key;
     }
 
@@ -281,9 +274,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setCertificates(
             @Nonnull @NonnullElements @Unmodifiable final List<X509Certificate> certs) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         certificates = List.copyOf(certs);
     }
 
@@ -304,9 +295,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setCrls(
             @Nonnull @NonnullElements @Unmodifiable final List<X509CRL> revocationLists) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         crls = List.copyOf(revocationLists);
     }
 
@@ -325,9 +314,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param isExclusive whether exclusive canonicalization will be used
      */
     public synchronized void setC14nExclusive(final boolean isExclusive) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         c14nExclusive = isExclusive;
     }
 
@@ -346,9 +333,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param withComments whether comments are canonicalized
      */
     public synchronized void setC14nWithComments(final boolean withComments) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         c14nWithComments = withComments;
     }
 
@@ -369,9 +354,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setInclusivePrefixList(
             @Nonnull @NonnullElements @Unmodifiable final List<String> prefixList) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         inclusivePrefixList = List.copyOf(prefixList);
     }
 
@@ -392,8 +375,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setIdAttributeNames(
             @Nonnull @NonnullElements @Unmodifiable final List<QName> names) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
         Constraint.isNotNull(names, "names property may not be null");
 
         idAttributeNames = List.copyOf(names);
@@ -416,9 +398,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setKeyNames(
             @Nonnull @NonnullElements @Unmodifiable final List<String> names) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         keyNames = List.copyOf(names);
     }
 
@@ -437,9 +417,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param include whether key names are included in the KeyInfo
      */
     public synchronized void setIncludeKeyNames(final boolean include) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         includeKeyNames = include;
     }
 
@@ -458,9 +436,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param included whether key values are included in the KeyInfo
      */
     public synchronized void setIncludeKeyValue(final boolean included) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         includeKeyValue = included;
     }
 
@@ -479,9 +455,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param include whether end-entity certifcate's subject name is included in the KeyInfo
      */
     public synchronized void setIncludeX509SubjectName(final boolean include) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         includeX509SubjectName = include;
     }
 
@@ -500,9 +474,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param include whether X509 certificates are included in the KeyInfo
      */
     public synchronized void setIncludeX509Certificates(final boolean include) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         includeX509Certificates = include;
     }
 
@@ -521,9 +493,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param include whether CRLs are included in the KeyInfo
      */
     public synchronized void setIncludeX509Crls(final boolean include) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         includeX509Crls = include;
     }
 
@@ -542,9 +512,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param include whether the end-entity certificate's issuer and serial number are included in the KeyInfo
      */
     public synchronized void setIncludeX509IssuerSerial(final boolean include) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         includeX509IssuerSerial = include;
     }
 
@@ -563,9 +531,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param debug whether logging of the pre-digest data stream is enabled
      */
     public synchronized void setDebugPreDigest(final boolean debug) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         debugPreDigest = debug;
     }
     
@@ -602,9 +568,7 @@ public class XMLSignatureSigningStage extends AbstractIteratingStage<Element> {
      * @param newValue whether to remove CR characters from generated signatures.
      */
     public void setRemovingCRsFromSignature(final boolean newValue) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         removingCRsFromSignature = newValue;
     }
 

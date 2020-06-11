@@ -42,7 +42,6 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
@@ -92,9 +91,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setSchemaResources(
             @Nullable @NonnullElements @Unmodifiable final List<Resource> resources) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+        throwSetterPreconditionExceptions();
         schemaResources = List.copyOf(resources);
     }
 
@@ -113,9 +110,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * @param isRequired whether Elements are required to be schema valid
      */
     public synchronized void setElementRequiredToBeSchemaValid(final boolean isRequired) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+        throwSetterPreconditionExceptions();
         elementRequiredToBeSchemaValid = isRequired;
     }
 

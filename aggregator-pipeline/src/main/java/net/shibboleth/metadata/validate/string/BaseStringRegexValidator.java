@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import net.shibboleth.metadata.validate.BaseValidator;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A base class for <code>Validator</code>s that match {@link String} values against a regular expression.
@@ -55,9 +54,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
      * @param r the regular expression to set.
      */
     public void setRegex(@Nonnull final String r) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         regex = r;
     }
 

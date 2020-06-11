@@ -33,7 +33,6 @@ import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -75,9 +74,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      */
     public synchronized void setSelectionRequirements(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Class<? extends ItemMetadata>> requirements) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         selectionRequirements = Set.copyOf(requirements);
     }
 
@@ -96,9 +93,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
     public synchronized void setIdentificationStrategy(@Nonnull final ItemIdentificationStrategy strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         identificationStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
     }
 

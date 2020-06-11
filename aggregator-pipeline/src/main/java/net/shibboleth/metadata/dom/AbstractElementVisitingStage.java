@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -55,7 +54,6 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      */
     @Nonnull @NonnullElements @Unmodifiable
     public Collection<QName> getElementNames() {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         return elementNames;
     }
 
@@ -65,8 +63,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * @param names collection of element names to visit.
      */
     public void setElementNames(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> names) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
         Constraint.isNotNull(names, "elementNames may not be null");
         elementNames = Set.copyOf(names);
     }
@@ -79,8 +76,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * @param name {@link QName} for the element to be visited.
      */
     public void setElementName(@Nonnull final QName name) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
         Constraint.isNotNull(name, "elementName may not be null");
         elementNames = Set.of(name);
     }

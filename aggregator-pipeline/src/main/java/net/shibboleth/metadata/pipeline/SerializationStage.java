@@ -27,16 +27,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A stage which writes the given item collection out to a file using a provided
@@ -82,9 +81,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * @param file file to which the item will be written
      */
     public synchronized void setOutputFile(@Nonnull final File file) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         outputFile = Constraint.isNotNull(file, "Output file can not be null");
     }
 
@@ -103,9 +100,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * @param isOverwriting whether an existing output file should be overwritten
      */
     public synchronized void setOverwritingExistingOutputFile(final boolean isOverwriting) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         overwritingExistingOutputFile = isOverwriting;
     }
 
@@ -124,9 +119,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * @param itemSerializer serializer used to write item to the output file
      */
     public synchronized void setSerializer(@Nonnull final ItemCollectionSerializer<T> itemSerializer) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         serializer = Constraint.isNotNull(itemSerializer, "Item collection serializer can not be null");
     }
 

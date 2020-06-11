@@ -32,10 +32,9 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.pipeline.MultiOutputSerializationStage.Destination;
+import net.shibboleth.metadata.pipeline.impl.BaseInitializableComponent;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
-import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -52,7 +51,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * 
  * @param <T> the type of {@link Item} to operate on
  */
-public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializableComponent
+public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableComponent
     implements MultiOutputSerializationStage.OutputStrategy<T> {
     
     /** Class logger. */
@@ -112,9 +111,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
      * @param prefix the name prefix to use
      */
     public void setNamePrefix(@Nonnull final String prefix) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         namePrefix = Constraint.isNotNull(prefix, "name prefix may not be null");
     }
 
@@ -133,9 +130,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
      * @param transformer the name transformer to use
      */
     public void setNameTransformer(@Nonnull final Function<String, String> transformer) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         nameTransformer = Constraint.isNotNull(transformer,
                 "name transformer may not be null");
     }
@@ -155,9 +150,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
      * @param suffix the name suffix to use
      */
     public void setNameSuffix(@Nonnull final String suffix) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         nameSuffix = Constraint.isNotNull(suffix, "name suffix may not be null");
     }
 
@@ -176,9 +169,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
      * @param dir the directory to use
      */
     public void setDirectory(@Nonnull final File dir) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         directory = Constraint.isNotNull(dir, "directory may not be null");
     }
 

@@ -35,7 +35,6 @@ import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -83,9 +82,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
@@ -106,9 +103,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      */
     public synchronized void setMergedPipelines(
             @Nonnull @NonnullElements @Unmodifiable final List<? extends Pipeline<T>> pipelines) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         mergedPipelines = List.copyOf(pipelines);
     }
 
@@ -127,9 +122,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
     public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory may not be null");
     }
 
@@ -149,9 +142,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      *            null
      */
     public synchronized void setCollectionMergeStrategy(@Nonnull final CollectionMergeStrategy strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         mergeStrategy = strategy;
     }
 

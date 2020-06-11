@@ -25,15 +25,14 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A pipeline stage that computes that transforms the collection of {@link Item} via a script.
@@ -78,9 +77,7 @@ public class ScriptletStage<T> extends AbstractStage<T> {
      * @param stageScript the script executed by this stage
      */
     public synchronized void setScript(@Nonnull final EvaluableScript stageScript) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         script = Constraint.isNotNull(stageScript, "Stage script can not be null");
     }
 

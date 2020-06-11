@@ -26,7 +26,6 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A {@link Validator} implementation which encapsulates the functionality of stepping
@@ -50,9 +49,7 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
      * @param newValidators the list of validators to set
      */
     public void setValidators(@Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         validators = List.copyOf(newValidators);
     }
 

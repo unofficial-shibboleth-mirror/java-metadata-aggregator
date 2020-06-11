@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -64,9 +63,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param duration the minimum cache duration
      */
     public synchronized void setMinimumCacheDuration(final Duration duration) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         if (duration.isNegative()) {
             minCacheDuration = Duration.ZERO;
         } else {
@@ -89,9 +86,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param duration maximum cache duration, must be greater than 0
      */
     public synchronized void setMaximumCacheDuration(final Duration duration) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         Constraint.isGreaterThan(0, duration.toMillis(), "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }

@@ -25,7 +25,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.impl.NoOpItemOrderingStrategy;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -56,9 +55,7 @@ public class ItemOrderingStage<T> extends AbstractStage<T> {
      * @param strategy strategy used to order a collection of Items
      */
     public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy<T> strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         orderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 

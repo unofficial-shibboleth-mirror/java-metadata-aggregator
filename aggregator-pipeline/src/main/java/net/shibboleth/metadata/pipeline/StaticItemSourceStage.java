@@ -26,7 +26,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A stage which adds a static collection of Items to a {@link Item} collection.
@@ -57,9 +56,7 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
      */
     public synchronized void setSourceItems(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Item<T>> items) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         source = List.copyOf(items);
     }
 

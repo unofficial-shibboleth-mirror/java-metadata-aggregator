@@ -29,7 +29,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -61,9 +60,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * @param namespace namespace of the element to strip
      */
     public void setElementNamespace(@Nonnull @NotEmpty final String namespace) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         elementNamespace = Constraint.isNotNull(StringSupport.trimOrNull(namespace),
                 "target namespace can not be null or empty");
     }
@@ -83,9 +80,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * @param name the name of the element to strip
      */
     public void setElementName(@Nonnull @NotEmpty final String name) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         elementName = Constraint.isNotNull(StringSupport.trimOrNull(name),
                 "target element name can not be null or empty");
     }

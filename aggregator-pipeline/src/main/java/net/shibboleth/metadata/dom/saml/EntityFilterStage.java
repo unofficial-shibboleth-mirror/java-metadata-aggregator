@@ -33,7 +33,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
@@ -69,9 +68,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      */
     public synchronized void setDesignatedEntities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> ids) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         designatedEntities = Set.copyOf(ids);
     }
 
@@ -90,9 +87,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingEntities(final boolean whitelisting) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         whitelistingEntities = whitelisting;
     }
 
@@ -111,9 +106,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         removingEntitylessEntitiesDescriptor = remove;
     }
 

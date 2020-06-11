@@ -29,7 +29,6 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
@@ -64,9 +63,7 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
      * @param isRequired whether the item is required to have a validUntil attribute
      */
     public synchronized void setRequireValidUntil(final boolean isRequired) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         requireValidUntil = isRequired;
     }
 
@@ -87,8 +84,7 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
      *            than or equal to 0
      */
     public synchronized void setMaxValidityInterval(@Nonnull final Duration interval) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
 
         Constraint.isNotNull(interval, "max validity interval can not be null");
         Constraint.isFalse(interval.isNegative(), "max validity interval can not be negative");

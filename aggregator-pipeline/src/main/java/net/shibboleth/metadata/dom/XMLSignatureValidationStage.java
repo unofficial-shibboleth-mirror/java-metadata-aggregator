@@ -40,7 +40,6 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 
@@ -105,9 +104,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * @param required whether the Element is required to be signed
      */
     public synchronized void setSignatureRequired(final boolean required) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         signatureRequired = required;
     }
 
@@ -126,9 +123,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * @param isRequired whether the signature on a Element element is required to be valid
      */
     public synchronized void setValidSignatureRequired(final boolean isRequired) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         validSignatureRequired = isRequired;
     }
 
@@ -147,9 +142,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * @param key key used to verify the signature
      */
     public synchronized void setVerificationKey(@Nonnull final PublicKey key) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         verificationKey = Constraint.isNotNull(key, "Public key can not be null");
     }
 
@@ -169,9 +162,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * @param certificate certificate containing the key used to verify the signature
      */
     public synchronized void setVerificationCertificate(@Nonnull final Certificate certificate) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         verificationCertificate = Constraint.isNotNull(certificate, "Certificate can not be null");
         verificationKey = verificationCertificate.getPublicKey();
     }
@@ -182,9 +173,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * @param identifiers collection of identifiers to be blacklisted
      */
     public void setBlacklistedDigests(@Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         blacklistedDigests = Set.copyOf(identifiers);
     }
     
@@ -204,9 +193,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      */
     public void setBlacklistedSignatureMethods(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         blacklistedSignatureMethods = Set.copyOf(identifiers);
     }
     
@@ -234,9 +221,7 @@ public class XMLSignatureValidationStage extends AbstractIteratingStage<Element>
      * @param permit whether empty references are permitted
      */
     public synchronized void setPermittingEmptyReferences(final boolean permit) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         permittingEmptyReferences = permit;
     }
 

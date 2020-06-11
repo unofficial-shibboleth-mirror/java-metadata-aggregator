@@ -40,7 +40,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterI
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
@@ -84,9 +83,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * @param expression XPath expression to execute on each {@link DOMElementItem}
      */
     public synchronized void setXPathExpression(@Nonnull @NotEmpty final String expression) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         xpathExpression =
                 Constraint.isNotNull(StringSupport.trimOrNull(expression), "XPath expression can not be null or empty");
     }
@@ -106,9 +103,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * @param context {@link NamespaceContext} to use in interpreting the XPath expression
      */
     public synchronized void setNamespaceContext(@Nullable final NamespaceContext context) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         if (context == null) {
             namespaceContext = new SimpleNamespaceContext();
         } else {

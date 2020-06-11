@@ -38,7 +38,6 @@ import net.shibboleth.metadata.dom.saml.SAMLSupport;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -109,9 +108,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @param name the attributeName to set
      */
     public void setAttributeName(@Nonnull final String name) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         attributeName = Constraint.isNotNull(name, "attributeName must not be null");
     }
 
@@ -131,9 +128,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @param nameFormat the attributeNameFormat to set
      */
     public void setAttributeNameFormat(@Nonnull final String nameFormat) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         attributeNameFormat = Constraint.isNotNull(nameFormat, "attributeNameFormat must not be null");
     }
 
@@ -153,9 +148,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @param value the attributeValue to set
      */
     public void setAttributeValue(@Nonnull final String value) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         attributeValue = Constraint.isNotNull(value, "attributeValue must not be null");
     }
 
@@ -176,9 +169,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @param addFirst <code>true</code> to add as the first child, <code>false</code> as the last
      */
     public void setAddingFirstChild(final boolean addFirst) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         addingFirstChild = addFirst;
     }
 

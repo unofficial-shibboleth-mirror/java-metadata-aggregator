@@ -26,7 +26,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A stage that is composed of other stages. This allows a collection of stages to be grouped together and for that
@@ -59,9 +58,7 @@ public class CompositeStage<T> extends AbstractStage<T> {
      */
     public synchronized void setComposedStages(
             @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         composedStages = List.copyOf(stages);
     }
 

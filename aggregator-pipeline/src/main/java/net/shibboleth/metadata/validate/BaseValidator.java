@@ -22,8 +22,7 @@ import javax.annotation.Nonnull;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -32,7 +31,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * Encapsulates the notion of an identifier for each validator class, and helper
  * methods for constructing status metadata.
  */
-public abstract class BaseValidator extends AbstractIdentifiableInitializableComponent {
+public abstract class BaseValidator extends BaseIdentifiableInitializableComponent {
 
     /**
      * Message format string.
@@ -61,9 +60,7 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
      * @param newMessage the new message format string
      */
     public void setMessage(@Nonnull final String newMessage) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         message = Constraint.isNotNull(newMessage, "message format string may not be null");
     }
 

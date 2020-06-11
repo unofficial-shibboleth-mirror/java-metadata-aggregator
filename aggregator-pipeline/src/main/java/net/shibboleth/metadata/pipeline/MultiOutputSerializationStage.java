@@ -28,7 +28,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -111,9 +110,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * @param strategy output strategy function determining where an item will be written
      */
     public synchronized void setOutputStrategy(@Nonnull final OutputStrategy<T> strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         outputStrategy = Constraint.isNotNull(strategy, "Output strategy can not be null");
     }
 
@@ -132,9 +129,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * @param itemSerializer serializer used to write item to the output file
      */
     public synchronized void setSerializer(@Nonnull final ItemSerializer<T> itemSerializer) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         serializer = Constraint.isNotNull(itemSerializer, "Item serializer can not be null");
     }
 

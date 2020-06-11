@@ -35,7 +35,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
@@ -96,9 +95,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param roles list of designated entity roles
      */
     public synchronized void setDesignatedRoles(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> roles) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         designatedRoles = Set.copyOf(roles);
     }
 
@@ -117,9 +114,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingRoles(final boolean whitelisting) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         whitelistingRoles = whitelisting;
     }
 
@@ -138,9 +133,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param remove whether EntityDescriptor elements without roles (after filtering) should be removed altogether
      */
     public synchronized void setRemoveRolelessEntities(final boolean remove) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         removingRolelessEntities = remove;
     }
 
@@ -159,9 +152,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         removingEntitylessEntitiesDescriptor = remove;
     }
 

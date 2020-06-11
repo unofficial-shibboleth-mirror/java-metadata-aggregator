@@ -23,7 +23,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -53,9 +52,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
      * @param ns namespace URI as a string
      */
     public void setNamespace(@Nonnull @NotEmpty final String ns) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         namespace = Constraint.isNotNull(StringSupport.trimOrNull(ns),
                 "target namespace can not be null or empty");
     }

@@ -35,14 +35,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.commons.codec.binary.Hex;
+import org.springframework.core.io.Resource;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import org.apache.commons.codec.binary.Hex;
-import org.springframework.core.io.Resource;
 
 /**
  * Validator class to check RSA moduli in X.509 certificates against a OpenSSL-format
@@ -81,9 +80,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
      * @param resource resource that provides the blacklist
      */
     public synchronized void setBlacklistResource(@Nonnull final Resource resource) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         blacklistResource = Constraint.isNotNull(resource, "blacklist resource can not be null");
     }
     
@@ -159,7 +156,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
     @Override
     public void doValidate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) throws StageProcessingException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         final PublicKey key = cert.getPublicKey();
         if ("RSA".equals(key.getAlgorithm())) {
             final RSAPublicKey rsaKey = (RSAPublicKey) key;

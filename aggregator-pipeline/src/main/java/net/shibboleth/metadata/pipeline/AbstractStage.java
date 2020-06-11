@@ -25,10 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -37,7 +36,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @param <T> type of item this stage operates upon
  */
 @ThreadSafe
-public abstract class AbstractStage<T> extends AbstractIdentifiableInitializableComponent implements Stage<T> {
+public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComponent implements Stage<T> {
 
     /**
      * The {@link Predicate} applied to the supplied item collection to determine whether the stage will be executed.
@@ -54,9 +53,7 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
      * whether the stage will be executed
      */
     public void setCollectionPredicate(@Nonnull final Predicate<Collection<Item<T>>> pred) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         collectionPredicate = Constraint.isNotNull(pred, "collectionPredicate may not be null");
     }
     
@@ -71,7 +68,7 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
     public Predicate<Collection<Item<T>>> getCollectionPredicate() {
         return collectionPredicate;
     }
-    
+
     /**
      * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
      * the {@link ComponentInfo} to all the resultant Item elements and then sets its completion time.
@@ -80,8 +77,7 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
      */
     @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
 
         final ComponentInfo compInfo = new ComponentInfo(this);
 

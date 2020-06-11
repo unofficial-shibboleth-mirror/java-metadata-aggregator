@@ -25,12 +25,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
 import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A very simple implementation of {@link Pipeline}.
@@ -38,7 +37,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
  * @param <T> the type of item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponent
+public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
         implements Pipeline<T> {
 
     /** Stages for this pipeline. */
@@ -57,9 +56,7 @@ public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponen
      */
     public synchronized void setStages(
             @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         pipelineStages = List.copyOf(stages);
     }
 

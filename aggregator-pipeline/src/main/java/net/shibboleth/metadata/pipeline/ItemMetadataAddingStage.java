@@ -27,7 +27,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -59,8 +58,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
      */
     public void setAdditionalItemMetadata(
             @Nonnull @NonnullElements @Unmodifiable final Collection<ItemMetadata> metadata) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
 
         Constraint.isNotNull(metadata, "additional metadata collection must not be null");
         additionalItemMetadata = List.copyOf(metadata);

@@ -26,7 +26,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.AbstractDOMTraversalStage;
 import net.shibboleth.metadata.dom.DOMTraversalContext;
 import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.net.IPRange;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -54,9 +53,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
      * @param check whether to check for network addresses only
      */
     public void setCheckingNetworks(final boolean check) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         this.checkingNetworks = check;
     }
 

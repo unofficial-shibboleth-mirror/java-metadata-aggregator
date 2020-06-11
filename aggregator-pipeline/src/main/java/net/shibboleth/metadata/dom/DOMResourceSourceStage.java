@@ -25,20 +25,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.w3c.dom.Element;
 
 /**
  * A pipeline stage which reads an XML document from an {@link Resource}, parses the document, and places the resultant
@@ -83,9 +82,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * @param resource resource from which the XML document will be fetched
      */
     public synchronized void setDOMResource(@Nonnull final Resource resource) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         domResource = Constraint.isNotNull(resource, "DOM resource can not be null");
     }
 
@@ -104,9 +101,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
     public synchronized void setParserPool(@Nonnull final ParserPool pool) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         parserPool = Constraint.isNotNull(pool, "Parser pool can not be null");
     }
 
@@ -125,9 +120,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * @param causesFailure whether an error reading and parsing the XML file causes this stage to fail
      */
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         errorCausesSourceFailure = causesFailure;
     }
 

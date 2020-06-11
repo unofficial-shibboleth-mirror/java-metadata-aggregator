@@ -34,7 +34,6 @@ import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -103,8 +102,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setDesignatedTypes(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> types) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
 
         final Set<String> checkedTypes = new HashSet<>();
         for (final String type : types) {
@@ -134,9 +132,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingTypes(final boolean whitelisting) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         whitelistingTypes = whitelisting;
     }
 

@@ -31,7 +31,6 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
@@ -68,9 +67,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @param duration minimum amount of time a descriptor may be valid
      */
     public synchronized void setMinimumValidityDuration(@Nonnull final Duration duration) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         if (duration.isNegative()) {
             minValidityDuration = Duration.ZERO;
         } else {
@@ -93,9 +90,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @param duration maximum amount of time a descriptor may be valid, must be greater than 0
      */
     public synchronized void setMaximumValidityDuration(@Nonnull final Duration duration) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         Constraint.isGreaterThan(0, duration.toMillis(), "Maximum validity duration must be greater than 0");
         maxValidityDuration = duration;
     }

@@ -37,18 +37,17 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.dom.saml.mdattr.MDAttrSupport;
 import net.shibboleth.metadata.dom.saml.mdui.MDUISupport;
+import net.shibboleth.metadata.pipeline.impl.BaseInitializableComponent;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * A collection serializer that generates an equivalent of the Shibboleth SP's discovery
  * feed output from a collection of entity descriptors.
  */
-public class DiscoFeedCollectionSerializer extends AbstractInitializableComponent
+public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
     implements ItemCollectionSerializer<Element> {
 
     /** Configured JSON generator factory. */
@@ -276,8 +275,7 @@ public class DiscoFeedCollectionSerializer extends AbstractInitializableComponen
     @Override
     public void serializeCollection(@Nonnull @NonnullElements final Collection<Item<Element>> items,
             @Nonnull final OutputStream output) throws IOException {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         final JsonGenerator gen = factory.createGenerator(output);
         gen.writeStartArray();
             for (final Item<Element> item : items) {

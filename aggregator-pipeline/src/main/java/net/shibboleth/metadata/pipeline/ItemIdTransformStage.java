@@ -29,7 +29,6 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A pipeline stage that, taking each {@link ItemId} associated with an {@link Item}, transforms its
@@ -62,9 +61,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
      */
     public synchronized void setIdTransformers(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Function<String, String>> transformers) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+        throwSetterPreconditionExceptions();
         idTransformers = List.copyOf(transformers);
     }
 

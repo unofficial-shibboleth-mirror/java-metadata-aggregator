@@ -36,7 +36,6 @@ import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -213,9 +212,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      */
     public void setRules(
             @Nonnull @NonnullElements @Unmodifiable final List<Predicate<EntityAttributeContext>> newRules) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         rules = List.copyOf(Constraint.isNotNull(newRules, "rules property may not be null"));
     }
     
@@ -236,9 +233,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      *                 <code>false</code> to blacklist
      */
     public void setWhitelisting(final boolean newValue) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+        throwSetterPreconditionExceptions();
         whitelisting = newValue;
     }
     
@@ -258,9 +253,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * @param newValue whether to remove recorded entity attributes
      */
     public void setRecordingRemovals(final boolean newValue) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         recordingRemovals = newValue;
     }
 

@@ -34,7 +34,6 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -73,9 +72,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @param isRequired whether a descriptor is required to have registration information
      */
     public synchronized void setRequiringRegistrationInformation(final boolean isRequired) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         requiringRegistrationInformation = isRequired;
     }
 
@@ -96,9 +93,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      */
     public synchronized void setDesignatedRegistrationAuthorities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> authorities) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         designatedAuthorities = Set.copyOf(authorities);
     }
 
@@ -118,9 +113,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      *            otherwise
      */
     public synchronized void setWhitelistingRegistrationAuthorities(final boolean whitelisting) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         whitelistingAuthorities = whitelisting;
     }
 
@@ -139,9 +132,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         removingEntitylessEntitiesDescriptor = remove;
     }
 

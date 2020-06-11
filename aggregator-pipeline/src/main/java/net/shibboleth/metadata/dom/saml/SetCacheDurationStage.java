@@ -29,7 +29,6 @@ import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
@@ -63,8 +62,7 @@ public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param duration cache duration
      */
     public synchronized void setCacheDuration(@Nonnull final Duration duration) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
 
         Constraint.isNotNull(duration, "cache duration cannot be null");
         Constraint.isFalse(duration.isZero(), "cache duration cannot be zero");

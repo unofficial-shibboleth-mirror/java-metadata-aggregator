@@ -34,6 +34,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
@@ -43,14 +48,8 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.w3c.dom.Element;
 
 /**
  * An abstract stage which applies an XSL transformation to each element in the {@link DOMElementItem} collection.
@@ -107,9 +106,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * @param resource resource that provides the XSL document
      */
     public synchronized void setXSLResource(@Nonnull final Resource resource) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         xslResource = Constraint.isNotNull(resource, "XSL resource can not be null");
     }
 
@@ -130,9 +127,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      */
     public synchronized void setTransformAttributes(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> attributes) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         transformAttributes = Map.copyOf(attributes);
     }
 
@@ -153,9 +148,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      */
     public synchronized void setTransformFeatures(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Boolean> features) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         transformFeatures = Map.copyOf(features);
     }
 
@@ -176,9 +169,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      */
     public synchronized void setTransformParameters(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> parameters) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         transformParameters = Map.copyOf(parameters);
     }
 
@@ -197,9 +188,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * @param resolver the {@link URIResolver} to use, or <code>null</code>
      */
     public synchronized void setURIResolver(@Nullable final URIResolver resolver) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         uriResolver = resolver;
     }
 

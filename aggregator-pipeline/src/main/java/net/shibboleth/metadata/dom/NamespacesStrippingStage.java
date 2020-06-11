@@ -25,7 +25,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 
 /**
  * A stage which removes all evidence of a given collection of XML namespaces from each metadata item.
@@ -71,9 +70,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * @param nss collection of namespaces
      */
     public void setNamespaces(@Nonnull @NonnullElements @Unmodifiable final Collection<String> nss) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         namespaces = Set.copyOf(nss);
     }
 
@@ -92,9 +89,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * @param wl <code>true</code> for whitelisting, <code>false</code> for blacklisting
      */
     public void setWhitelisting(final boolean wl) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         whitelisting = wl;
     }
     

@@ -38,7 +38,6 @@ import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.pipeline.impl.NoOpItemOrderingStrategy;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
@@ -88,9 +87,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param isError whether attempting to turn an empty item collection should be treated as processing error
      */
     public synchronized void setNoChildrenAProcessingError(final boolean isError) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         noChildrenAProcessingError = isError;
     }
 
@@ -109,9 +106,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param strategy strategy used to order a collection of Items
      */
     public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy<Element> strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         orderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 
@@ -130,9 +125,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param name Name used for the generated descriptor
      */
     public synchronized void setDescriptorName(@Nullable final String name) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         descriptorName = StringSupport.trimOrNull(name);
     }
 

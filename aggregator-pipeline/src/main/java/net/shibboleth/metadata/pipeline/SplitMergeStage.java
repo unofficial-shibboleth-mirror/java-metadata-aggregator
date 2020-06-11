@@ -29,17 +29,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
@@ -102,9 +101,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
@@ -123,9 +120,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
     public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
 
@@ -144,9 +139,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param strategy strategy used to split the given item collection, never null
      */
     public synchronized void setSelectionStrategy(@Nonnull final Predicate<Item<T>> strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         selectionStrategy = Constraint.isNotNull(strategy, "Item selection strategy can not be null");
     }
 
@@ -165,9 +158,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param pipeline pipeline that receives the selected items
      */
     public synchronized void setSelectedItemPipeline(@Nullable final Pipeline<T> pipeline) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         selectedItemPipeline = pipeline;
     }
 
@@ -186,9 +177,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param pipeline pipeline that receives the non-selected items
      */
     public synchronized void setNonselectedItemPipeline(@Nullable final Pipeline<T> pipeline) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         nonselectedItemPipeline = pipeline;
     }
 
@@ -208,9 +197,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      *            null
      */
     public synchronized void setCollectionMergeStrategy(@Nonnull final CollectionMergeStrategy strategy) {
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         mergeStrategy = Constraint.isNotNull(strategy, "Collection merge strategy can not be null");
     }
 
