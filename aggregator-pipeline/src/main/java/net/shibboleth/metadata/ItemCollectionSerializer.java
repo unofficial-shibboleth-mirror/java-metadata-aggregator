@@ -31,6 +31,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * The caller is responsible for managing (opening, closing, etc.) the output stream.
  * 
  * @param <T> type of data contained in each item
+ *
+ * @since 0.9.0
  */
 public interface ItemCollectionSerializer<T> {
 

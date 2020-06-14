@@ -52,6 +52,8 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * 
  * The stage can be operated in a whitelisting mode (the default) or in a blacklisting mode
  * by setting the <code>whitelisting</code> property to <code>false</code>.
+ *
+ * @since 0.9.0
  */
 public class EntityAttributeFilteringStage extends AbstractIteratingStage<Element> {
 

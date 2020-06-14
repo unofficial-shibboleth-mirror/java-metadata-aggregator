@@ -33,6 +33,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * 
  * The individual {@link Predicate}s operate over {@link CharSequence}
  * rather than {@link String} for generality.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {

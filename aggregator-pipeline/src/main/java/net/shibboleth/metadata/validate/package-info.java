@@ -17,5 +17,7 @@
 
 /**
  * Classes for validation of specific object types.
+ *
+ * @since 0.9.0
  */
 package net.shibboleth.metadata.validate;

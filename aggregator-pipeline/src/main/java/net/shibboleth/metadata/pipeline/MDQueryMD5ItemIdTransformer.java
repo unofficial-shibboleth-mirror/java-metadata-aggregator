@@ -26,7 +26,11 @@ import org.bouncycastle.crypto.digests.MD5Digest;
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
 
-/** Transforms a string into another string that is the MD5 hash of the original string prepended with "{md5}". */
+/**
+ * Transforms a string into another string that is the MD5 hash of the original string prepended with "{md5}".
+ *
+ * @since 0.9.0
+ */
 @ThreadSafe
 public class MDQueryMD5ItemIdTransformer implements Function<String, String> {
 

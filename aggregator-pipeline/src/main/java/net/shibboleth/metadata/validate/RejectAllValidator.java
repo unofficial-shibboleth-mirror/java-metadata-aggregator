@@ -30,6 +30,8 @@ import net.shibboleth.metadata.Item;
  * The message defaults to a simple rejection message including the object's string value.
  *
  * @param <V> type of the object to be validated
+ *
+ * @since 0.10.0
  */
 public class RejectAllValidator<V> extends BaseValidator implements Validator<V> {
 

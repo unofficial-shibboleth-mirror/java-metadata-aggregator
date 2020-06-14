@@ -25,6 +25,8 @@ import org.w3c.dom.Node;
 /**
  * Provides a variation of the Visitor pattern for performing operations on
  * DOM nodes which are part of {@link Element} items.
+ *
+ * @since 0.9.0
  */
 public interface NodeVisitor {
 

@@ -42,6 +42,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A stage which adds entity attribute values to entity definitions.
+ *
+ * @since 0.10.0
  */
 public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> {
 

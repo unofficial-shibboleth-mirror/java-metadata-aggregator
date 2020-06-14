@@ -36,6 +36,8 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  * to indicate that one of the called validators returned that value.
  *
  * @param <V> type of the object to be validated
+ *
+ * @since 0.10.0
  */
 public class ValidatorSequence<V> extends BaseValidator implements Validator<V> {
 

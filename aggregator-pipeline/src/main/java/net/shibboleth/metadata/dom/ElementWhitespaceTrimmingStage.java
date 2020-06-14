@@ -24,6 +24,8 @@ import org.w3c.dom.Element;
 /**
  * Stage to trim leading and trailing whitespace from the text content of named elements
  * within a {@link net.shibboleth.metadata.dom.DOMElementItem}.
+ *
+ * @since 0.9.0
  */
 public class ElementWhitespaceTrimmingStage extends AbstractElementVisitingStage {
 

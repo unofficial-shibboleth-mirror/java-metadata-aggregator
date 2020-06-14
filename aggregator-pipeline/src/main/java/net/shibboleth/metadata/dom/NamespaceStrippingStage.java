@@ -28,6 +28,8 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
  * A stage which removes all evidence of a given XML namespace from each metadata item.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {

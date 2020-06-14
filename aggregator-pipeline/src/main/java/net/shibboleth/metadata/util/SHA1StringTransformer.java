@@ -27,6 +27,8 @@ import org.cryptacular.util.HashUtil;
 /**
  * A {@link Function} that transforms a {@link String} into a hex-encoded representation of
  * the SHA-1 digest of the string.
+ *
+ * @since 0.9.2
  */
 public class SHA1StringTransformer implements Function<String, String> {
 

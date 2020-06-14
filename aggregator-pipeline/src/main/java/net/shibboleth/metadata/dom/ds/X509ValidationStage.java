@@ -41,6 +41,8 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  * Stage to apply a collection of validators to each X.509 certificate in items.
  * 
  * Each X.509 certificate is processed only once per item, so that duplicate status messages are suppressed.
+ *
+ * @since 0.9.0
  */ 
 public class X509ValidationStage extends AbstractDOMValidationStage<X509Certificate, X509ValidationStage.Context> {
 

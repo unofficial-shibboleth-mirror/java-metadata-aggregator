@@ -29,6 +29,8 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
  * Interface for a validator to be applied to an object in the context of a given {@link Item}.
  * 
  * @param <V> type of the object to be validated
+ *
+ * @since 0.9.0
  */
 public interface Validator<V> extends DestructableComponent, IdentifiableComponent,
     InitializableComponent {

@@ -21,7 +21,11 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.namespace.QName;
 
-/** Support class for dealing with the XML DSIG specification. */
+/**
+ * Support class for dealing with the XML DSIG specification.
+ *
+ * @since 0.9.0
+ */
 @ThreadSafe
 public final class XMLDSIGSupport {
 

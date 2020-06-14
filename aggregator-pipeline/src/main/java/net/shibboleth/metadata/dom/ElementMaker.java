@@ -29,6 +29,8 @@ import org.w3c.dom.Element;
 
 /**
  * Basic maker class for {@link Element}s for use with the {@link Container} system.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class ElementMaker implements Function<Container, Element> {

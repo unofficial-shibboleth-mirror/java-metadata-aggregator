@@ -28,6 +28,8 @@ import net.shibboleth.metadata.Item;
 /**
  * {@link Node} visitor which trims leading and trailing whitespace from the
  * visited node's text content.
+ *
+ * @since 0.9.0
  */
 class WhitespaceTrimmingVisitor implements NodeVisitor, ElementVisitor, AttrVisitor {
 

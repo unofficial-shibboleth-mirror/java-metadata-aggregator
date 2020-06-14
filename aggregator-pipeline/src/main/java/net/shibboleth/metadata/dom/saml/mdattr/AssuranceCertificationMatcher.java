@@ -23,6 +23,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An entity attribute matcher which matches a given assurance certification value.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class AssuranceCertificationMatcher extends AbstractExactValueMatcher {

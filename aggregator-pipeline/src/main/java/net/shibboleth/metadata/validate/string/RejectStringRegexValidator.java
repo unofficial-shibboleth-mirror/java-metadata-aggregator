@@ -29,6 +29,8 @@ import net.shibboleth.metadata.validate.Validator;
  *
  * This validator returns {@link net.shibboleth.metadata.validate.Validator.Action#DONE}
  * if the entire value is matched by the regular expression, thus terminating any validator sequence.
+ *
+ * @since 0.10.0
  */
 public class RejectStringRegexValidator extends BaseStringRegexValidator implements Validator<String> {
 

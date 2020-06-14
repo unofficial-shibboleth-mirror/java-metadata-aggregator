@@ -23,6 +23,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An entity attribute matcher which matches a given entity category.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class EntityCategoryMatcher extends AbstractExactValueMatcher {

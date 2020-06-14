@@ -37,6 +37,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * 
  * This NIST recommendation is for at least 65537 (2**16+1) but it's not obvious where
  * this came from so doesn't seem worth insisting on by default.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class X509RSAExponentValidator extends AbstractX509Validator {

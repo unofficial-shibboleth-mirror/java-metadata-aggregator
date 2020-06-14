@@ -36,6 +36,8 @@ import org.w3c.dom.Node;
  * A wrapper for a DOM {@link Element} allowing its use as a container for either
  * a simple text value or for other {@link Element}s. In the latter case, white-space
  * formatting is handled automatically for nested containers.
+ *
+ * @since 0.10.0
  */
 public class Container {
 

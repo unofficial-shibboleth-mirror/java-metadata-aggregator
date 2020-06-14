@@ -17,5 +17,7 @@
 
 /**
  * Non-API classes for the pipeline package.
+ *
+ * @since 0.10.0
  */
 package net.shibboleth.metadata.pipeline.impl;

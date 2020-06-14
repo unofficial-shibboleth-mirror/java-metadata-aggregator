@@ -40,6 +40,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  * those is present.  The extra identifier is omitted if it is present in a
  * specified blacklist, and it can be mapped to a simpler value for display if
  * desired.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemIdItemIdentificationStrategy {

@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
 /**
  * A Stage which checks the text content of the named elements to verify that
  * they meet the constraints of SAML string values.
+ *
+ * @since 0.10.0
  */
 public class SAMLStringElementCheckingStage extends AbstractElementVisitingStage {
 

@@ -39,6 +39,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  * Note that because the collection is specified as <code>@NonnullElements</code>, this stage can not
  * be used in blacklisting mode to remove elements in the default namespace. It will always remove
  * elements in the default namespace if used in the whitelisting mode.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {

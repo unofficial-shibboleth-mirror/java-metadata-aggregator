@@ -25,6 +25,8 @@ import java.util.function.Predicate;
  * in the supplied collection is at least the configured minimum value.
  * 
  * @param <T> type of item element in the collection
+ *
+ * @since 0.9.0
  */
 public class AtLeastCollectionPredicate<T> implements Predicate<Collection<T>> {
 

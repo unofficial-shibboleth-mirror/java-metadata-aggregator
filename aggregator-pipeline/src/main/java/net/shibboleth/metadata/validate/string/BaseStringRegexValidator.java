@@ -27,6 +27,8 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 
 /**
  * A base class for <code>Validator</code>s that match {@link String} values against a regular expression.
+ *
+ * @since 0.10.0
  */
 public abstract class BaseStringRegexValidator extends BaseValidator {
 

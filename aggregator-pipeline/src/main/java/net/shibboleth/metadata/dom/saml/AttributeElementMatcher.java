@@ -28,6 +28,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * Match {@link java.util.function.Predicate} for SAML <code>Attribute</code> elements with specific
  * <code>Name</code> and <code>NameFormat</code> attributes,
  * for use with the {@link net.shibboleth.metadata.dom.Container} system.
+ *
+ * @since 0.10.0
  */
 public class AttributeElementMatcher extends ElementMatcher {
 

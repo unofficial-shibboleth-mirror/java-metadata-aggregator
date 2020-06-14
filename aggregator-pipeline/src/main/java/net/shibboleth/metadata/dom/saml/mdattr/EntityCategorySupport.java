@@ -21,7 +21,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Helper class for dealing with entity categories.
- * 
+ *
+ * @since 0.9.0
+ *
  * @see <a href="https://datatracker.ietf.org/doc/draft-young-entity-category/">
  * The Entity Category SAML Attribute Types</a>
  */

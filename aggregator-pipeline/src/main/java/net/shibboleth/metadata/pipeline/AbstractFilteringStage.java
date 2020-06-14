@@ -31,6 +31,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * then optionally remove the item being processed.
  * 
  * @param <T> type of metadata this stage operates upon
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public abstract class AbstractFilteringStage<T> extends AbstractStage<T> {

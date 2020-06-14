@@ -33,6 +33,8 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  *
  * @param <V> type of the object to be validated
  * @param <C> the context to carry through the traversal
+ *
+ * @since 0.9.0
  */
 public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContext>
     extends AbstractDOMTraversalStage<C> {

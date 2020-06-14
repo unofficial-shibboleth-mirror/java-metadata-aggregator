@@ -30,6 +30,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * 
  * Encapsulates the notion of an identifier for each validator class, and helper
  * methods for constructing status metadata.
+ *
+ * @since 0.9.0
  */
 public abstract class BaseValidator extends BaseIdentifiableInitializableComponent {
 
@@ -40,6 +42,8 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      * as an argument.
      *
      * Defaults to <code>"value rejected: '%s'"</code>.
+     *
+     * @since 0.10.0
      */
     @Nonnull
     private String message = "value rejected: '%s'";
@@ -48,6 +52,8 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      * Returns the message format string.
      *
      * @return the message format string
+     *
+     * @since 0.10.0
      */
     @Nonnull
     public String getMessage() {
@@ -58,6 +64,8 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      * Set the message format string.
      * 
      * @param newMessage the new message format string
+     *
+     * @since 0.10.0
      */
     public void setMessage(@Nonnull final String newMessage) {
         throwSetterPreconditionExceptions();
@@ -131,6 +139,8 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      * @param extra extra value to include in the status metadata
      * @param item {@link Item} to add the status metadata to
      * @param stageId component identifier for the calling stage
+     *
+     * @since 0.10.0
      */
     protected void addErrorMessage(@Nonnull final Object extra, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {

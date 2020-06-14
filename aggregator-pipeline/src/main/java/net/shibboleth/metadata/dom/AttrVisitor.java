@@ -25,6 +25,8 @@ import org.w3c.dom.Element;
 /**
  * Provides a variation of the Visitor pattern for performing operations on
  * DOM attributes which are part of {@link Element} items.
+ *
+ * @since 0.9.0
  */
 public interface AttrVisitor {
 

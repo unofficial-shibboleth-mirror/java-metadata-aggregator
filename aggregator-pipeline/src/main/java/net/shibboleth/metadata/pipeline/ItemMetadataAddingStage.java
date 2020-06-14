@@ -33,6 +33,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * A pipeline stage that adds a collection of {@link ItemMetadata} objects to each {@link Item}'s item metadata.
  * 
  * @param <T> type of {@link Item} this stage operates upon
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {

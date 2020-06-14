@@ -35,6 +35,8 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  * This stage is specifically intended to detect metadata which would trigger the SSPCPP-684
  * issue in the Shibboleth SP.
  * 
+ * @since 0.9.1
+ *
  * @see <a href="https://issues.shibboleth.net/jira/browse/SSPCPP-684">SSPCPP-684</a>
  */
 public class CRDetectionStage extends AbstractSAMLTraversalStage<CRDetectionStage.Context> {

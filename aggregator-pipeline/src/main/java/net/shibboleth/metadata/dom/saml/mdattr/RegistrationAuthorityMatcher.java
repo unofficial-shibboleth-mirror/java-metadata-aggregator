@@ -30,6 +30,8 @@ import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.Ent
  * 
  * It can match against a specific registration authority, or against the absence of
  * one.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class RegistrationAuthorityMatcher implements Predicate<EntityAttributeContext> {

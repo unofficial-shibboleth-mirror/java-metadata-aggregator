@@ -27,6 +27,8 @@ import net.shibboleth.metadata.validate.Validator;
  *
  * This validator returns {@link net.shibboleth.metadata.validate.Validator.Action#DONE}
  * if the value is matched, thus terminating any validator sequence.
+ *
+ * @since 0.10.0
  */
 public class AcceptStringValueValidator extends BaseStringValueValidator implements Validator<String> {
 

@@ -29,6 +29,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * Base class for {@link Stage} implementations that iterate over each {@link Item} in a collection and do something.
  * 
  * @param <T> type of metadata this stage operates upon
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public abstract class AbstractIteratingStage<T> extends AbstractStage<T> {

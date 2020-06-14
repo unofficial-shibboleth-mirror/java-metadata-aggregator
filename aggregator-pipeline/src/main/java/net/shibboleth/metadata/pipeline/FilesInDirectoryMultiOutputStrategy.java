@@ -50,6 +50,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * </ul>
  * 
  * @param <T> the type of {@link Item} to operate on
+ *
+ * @since 0.9.2
  */
 public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableComponent
     implements MultiOutputSerializationStage.OutputStrategy<T> {

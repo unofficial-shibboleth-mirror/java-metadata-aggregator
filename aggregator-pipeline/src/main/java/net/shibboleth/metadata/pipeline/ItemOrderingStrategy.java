@@ -30,6 +30,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  * A strategy that defines how to order a {@link net.shibboleth.metadata.Item} collection.
  *
  * @param <T> type of item to be handled
+ *
+ * @since 0.10.0
  */
 public interface ItemOrderingStrategy<T> {
 

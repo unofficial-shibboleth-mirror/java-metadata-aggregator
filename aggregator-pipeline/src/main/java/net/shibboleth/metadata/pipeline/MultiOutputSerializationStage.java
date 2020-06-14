@@ -44,6 +44,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * </ul>
  * 
  * @param <T> type of items upon which this stage operates
+ *
+ * @since 0.9.2
  */
 @ThreadSafe
 public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> {

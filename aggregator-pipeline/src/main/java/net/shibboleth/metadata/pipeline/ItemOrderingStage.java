@@ -32,6 +32,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * according to a supplied strategy.
  * 
  * @param <T> type of the items to be ordered
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class ItemOrderingStage<T> extends AbstractStage<T> {

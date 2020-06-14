@@ -25,7 +25,11 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
 
-/** Transforms a string into another string that is the SHA1 hash of the original string prepended with "{sha1}". */
+/**
+ * Transforms a string into another string that is the SHA1 hash of the original string prepended with "{sha1}".
+ *
+ * @since 0.9.0
+ */
 @ThreadSafe
 public class MDQuerySHA1ItemIdTransformer implements Function<String, String> {
 

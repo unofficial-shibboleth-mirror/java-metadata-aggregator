@@ -27,6 +27,8 @@ import net.shibboleth.metadata.Item;
  * to terminate any validator sequence.
  *
  * @param <V> type of the object to be validated
+ *
+ * @since 0.10.0
  */
 public class AcceptAllValidator<V> extends BaseValidator implements Validator<V> {
 

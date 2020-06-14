@@ -29,6 +29,8 @@ import com.google.common.net.UrlEscapers;
  * 
  * Note that this is emphatically <i>not</i> the same as {@link java.net.URLEncoder},
  * which is intended for the query parameter use case.
+ *
+ * @since 0.9.2
  */
 public class PathSegmentStringTransformer implements Function<String, String> {
 

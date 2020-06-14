@@ -29,7 +29,11 @@ import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;
 import net.shibboleth.metadata.dom.ElementMatcher;
 
-/** Helper class for dealing with MDAttr metadata. */
+/**
+ * Helper class for dealing with MDAttr metadata.
+ *
+ * @since 0.9.0
+ */
 @ThreadSafe
 public final class MDAttrSupport {
 
@@ -42,11 +46,19 @@ public final class MDAttrSupport {
     /** mdattr:EntityAttributes element. */
     public static final QName ENTITY_ATTRIBUTES_NAME = new QName(MDATTR_NS, "EntityAttributes", MDATTR_PREFIX);
 
-    /** Matcher for the <code>EntityAttributes</code> element, for use with the {@link Container} system. */
+    /**
+     * Matcher for the <code>EntityAttributes</code> element, for use with the {@link Container} system.
+     *
+     * @since 0.10.0
+     */
     public static final Predicate<Element> ENTITY_ATTRIBUTES_MATCHER =
             new ElementMatcher(ENTITY_ATTRIBUTES_NAME);
 
-    /** Maker for the <code>EntityAttributes</code> element, for use with the {@link Container} system. */
+    /**
+     * Maker for the <code>EntityAttributes</code> element, for use with the {@link Container} system.
+     *
+     * @since 0.10.0
+     */
     public static final Function<Container, Element> ENTITY_ATTRIBUTES_MAKER =
             new ElementMaker(ENTITY_ATTRIBUTES_NAME);
 

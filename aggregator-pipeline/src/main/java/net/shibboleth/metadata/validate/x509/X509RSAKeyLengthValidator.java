@@ -35,6 +35,8 @@ import net.shibboleth.metadata.Item;
  * 
  * During the transition to 2048-bit keys, it may be appropriate to set the warning
  * boundary to 2048 bits and the error boundary to 1024 bits.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class X509RSAKeyLengthValidator extends AbstractX509Validator {

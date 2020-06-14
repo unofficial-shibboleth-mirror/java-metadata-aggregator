@@ -17,6 +17,8 @@
 
 /**
  * Validation classes for X.509 certificate objects.
+ *
+ * @since 0.9.0
  */
 
 package net.shibboleth.metadata.validate.x509;

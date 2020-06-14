@@ -31,6 +31,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  * An ordering strategy that simply returns the collection in whatever order it was already in.
  *
  * @param <T> type of item to be handled
+ *
+ * @since 0.10.0
  */
 public class NoOpItemOrderingStrategy<T> implements ItemOrderingStrategy<T> {
 

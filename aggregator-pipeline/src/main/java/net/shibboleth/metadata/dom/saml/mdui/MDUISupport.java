@@ -48,7 +48,11 @@ public final class MDUISupport {
     /** {@link QName} representing an <code>mdui:PrivacyStatementURL</code>. */
     public static final QName PRIVACYSTATEMENTURL_NAME = new QName(MDUI_NS, "PrivacyStatementURL");
 
-    /** {@link QName} representing an <code>mdui:IPHint</code>. */
+    /**
+     * {@link QName} representing an <code>mdui:IPHint</code>.
+     *
+     * @since 0.10.0
+     */
     public static final QName IPHINT_NAME = new QName(MDUI_NS, "IPHint");
 
     /** Constructor. */

@@ -35,6 +35,8 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * If the basic identifier is <code>null</code>, a configured default is used.
  * 
  * If the extra identifier is <code>null</code>, only the basic identifier is used.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public abstract class AbstractCompositeItemIdentificationStrategy implements ItemIdentificationStrategy {

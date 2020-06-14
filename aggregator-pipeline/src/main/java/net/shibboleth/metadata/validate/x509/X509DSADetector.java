@@ -44,6 +44,8 @@ import net.shibboleth.metadata.validate.Validator;
  * <p>The {@link #action} property may be set to
  * {@link net.shibboleth.metadata.validate.Validator.Action#CONTINUE} if there is a need to
  * perform additional validation on a DSA certificate.</p>
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class X509DSADetector extends BaseValidator implements Validator<X509Certificate> {

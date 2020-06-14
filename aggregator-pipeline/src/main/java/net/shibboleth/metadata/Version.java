@@ -19,7 +19,11 @@ package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
 
-/** Class for getting and printing the version of the metadata pipeline. */
+/**
+ * Class for getting and printing the version of the metadata pipeline.
+ *
+ * @since 0.5
+ */
 public final class Version {
 
     /** Metadata pipeline version. */

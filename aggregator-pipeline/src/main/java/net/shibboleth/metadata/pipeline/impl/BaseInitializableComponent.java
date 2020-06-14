@@ -27,6 +27,8 @@ import net.shibboleth.utilities.java.support.component.UnmodifiableComponentExce
 /**
  * Base class extending {@link AbstractInitializableComponent} with helper methods
  * assisting with lifecycle management.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class BaseInitializableComponent extends AbstractInitializableComponent {

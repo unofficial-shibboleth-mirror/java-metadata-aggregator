@@ -27,6 +27,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * An abstract entity attribute matcher implementation that matches an exact
  * combination of value, name and name format. Optionally, a registration
  * authority value may also be matched against.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public abstract class AbstractExactValueMatcher extends AbstractEntityAttributeMatcher {

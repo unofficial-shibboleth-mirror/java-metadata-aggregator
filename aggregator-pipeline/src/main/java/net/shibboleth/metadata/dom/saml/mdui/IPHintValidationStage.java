@@ -30,7 +30,9 @@ import net.shibboleth.utilities.java.support.net.IPRange;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
- * A stage which validates mdui:IPHint elements.
+ * A stage which validates <code>mdui:IPHint</code> elements.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversalContext> {

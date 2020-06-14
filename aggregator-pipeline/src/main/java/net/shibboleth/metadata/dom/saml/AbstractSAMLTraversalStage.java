@@ -40,6 +40,8 @@ import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
  * method is called to perform any post-processing required.
  *
  * @param <C> the context to carry through the traversal
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public abstract class AbstractSAMLTraversalStage <C extends DOMTraversalContext>

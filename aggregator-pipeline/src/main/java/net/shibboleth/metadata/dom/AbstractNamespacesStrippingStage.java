@@ -46,6 +46,8 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * or retained as determined by the {@link #removingNamespace} function.
  * 
  * Attributes without an explicit namespace prefix will never be removed.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public abstract class AbstractNamespacesStrippingStage extends AbstractIteratingStage<Element> {

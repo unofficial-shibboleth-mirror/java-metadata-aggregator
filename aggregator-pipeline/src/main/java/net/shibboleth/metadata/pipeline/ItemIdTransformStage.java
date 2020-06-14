@@ -36,6 +36,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  * result of the transform) with the element.
  * 
  * @param <T> type of {@link Item} this stage operates upon
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {

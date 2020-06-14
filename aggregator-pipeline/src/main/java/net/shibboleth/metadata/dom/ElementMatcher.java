@@ -30,6 +30,8 @@ import org.w3c.dom.Element;
 
 /**
  * Basic matcher class for {@link Element}s for use with the {@link Container} system.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class ElementMatcher implements Predicate<Element> {

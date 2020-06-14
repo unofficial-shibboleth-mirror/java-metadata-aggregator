@@ -52,6 +52,8 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * is set. In this case, the stage still ignores any elements not in the specified
  * namespace, but elements within that namespace will be removed if their local names
  * do <i>not</i> appear in the collection of names.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsStrippingStage.Context> {

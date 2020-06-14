@@ -17,5 +17,7 @@
 
 /**
  * Aggregator classes for the entity attributes specification.
+ *
+ * @since 0.9.0
  */
 package net.shibboleth.metadata.dom.saml.mdattr;

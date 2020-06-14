@@ -31,6 +31,8 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 /**
  * A {@link FileFilter} implementation that selects files on the basis of a regular expression match against the file
  * name.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class RegexFileFilter implements FileFilter {

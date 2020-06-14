@@ -31,7 +31,11 @@ import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;
 import net.shibboleth.metadata.dom.ElementMatcher;
 
-/** Helper class for dealing with SAML documents. */
+/**
+ * Helper class for dealing with SAML documents.
+ *
+ * @since 0.9.0
+ */
 @ThreadSafe
 public final class SAMLSupport {
 
@@ -50,11 +54,19 @@ public final class SAMLSupport {
     /** saml:AttributeValue element. */
     public static final QName ATTRIBUTE_VALUE_NAME = new QName(SAML_NS, "AttributeValue", SAML_PREFIX);
 
-    /** Matcher for the <code>Extensions</code> element, for use with the {@link Container} system. */
+    /**
+     * Matcher for the <code>Extensions</code> element, for use with the {@link Container} system.
+     *
+     * @since 0.10.0
+     */
     public static final Predicate<Element> EXTENSIONS_MATCHER =
             new ElementMatcher(SAMLMetadataSupport.EXTENSIONS_NAME);
 
-    /** Maker for the <code>Extensions</code> element, for use with the {@link Container} system. */
+    /**
+     * Maker for the <code>Extensions</code> element, for use with the {@link Container} system.
+     *
+     * @since 0.10.0
+     */
     public static final Function<Container, Element> EXTENSIONS_MAKER =
             new ElementMaker(SAMLMetadataSupport.EXTENSIONS_NAME);
 

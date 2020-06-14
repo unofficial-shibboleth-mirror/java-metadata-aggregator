@@ -28,6 +28,8 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 /**
  * Base class extending {@link AbstractIdentifiableInitializableComponent} with helper methods
  * assisting with lifecycle management.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class BaseIdentifiableInitializableComponent extends AbstractIdentifiableInitializableComponent {

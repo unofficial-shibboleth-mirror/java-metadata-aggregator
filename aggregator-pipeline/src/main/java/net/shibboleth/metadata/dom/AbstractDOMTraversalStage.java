@@ -45,6 +45,8 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * method is called to perform any post-processing required.
  *
  * @param <C> the context to carry through the traversal
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>

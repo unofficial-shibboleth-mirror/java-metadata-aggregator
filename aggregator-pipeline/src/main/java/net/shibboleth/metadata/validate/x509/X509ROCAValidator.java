@@ -31,6 +31,8 @@ import net.shibboleth.metadata.Item;
  * Validator class to check that X.509 certificate public keys are not
  * affected by the Return of Coppersmith Attack (ROCA, CVE-2017-15361).
  *
+ * @since 0.10.0
+ *
  * @see <a href="https://crocs.fi.muni.cz/public/papers/rsa_ccs17">ROCA paper</a>
  */
 @ThreadSafe

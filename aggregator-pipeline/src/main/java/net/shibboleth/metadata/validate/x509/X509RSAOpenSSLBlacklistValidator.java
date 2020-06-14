@@ -47,6 +47,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * Validator class to check RSA moduli in X.509 certificates against a OpenSSL-format
  * blacklist. Appropriate blacklists are available as part of the Debian 7.x
  * openssl-blacklist and openssl-blacklist-extra packages.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {

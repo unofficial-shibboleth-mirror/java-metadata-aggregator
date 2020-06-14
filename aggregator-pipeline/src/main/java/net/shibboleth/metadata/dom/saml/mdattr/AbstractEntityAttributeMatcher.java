@@ -34,6 +34,8 @@ import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.Ent
  * Where an implementation wishes to ignore a component (most commonly,
  * {@link EntityAttributeContext#getRegistrationAuthority}) it can simply return <code>true</code>
  * in that template method.
+ *
+ * @since 0.9.0
  */
 @ThreadSafe
 public abstract class AbstractEntityAttributeMatcher implements Predicate<EntityAttributeContext> {

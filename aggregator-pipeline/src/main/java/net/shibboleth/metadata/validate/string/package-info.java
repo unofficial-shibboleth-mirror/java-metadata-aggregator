@@ -17,5 +17,7 @@
 
 /**
  * Validation classes for {@link java.lang.String} values.
+ *
+ * @since 0.10.0
  */
 package net.shibboleth.metadata.validate.string;

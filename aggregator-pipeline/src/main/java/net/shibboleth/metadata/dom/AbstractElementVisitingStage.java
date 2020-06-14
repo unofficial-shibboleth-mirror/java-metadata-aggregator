@@ -33,6 +33,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 /**
  * Abstract parent class for stages which visit {@link Element}s named by a
  * collection of {@link QName}s.
+ *
+ * @since 0.9.0
  */
 public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalStage<DOMTraversalContext> {
 

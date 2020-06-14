@@ -15,5 +15,9 @@
  * limitations under the License.
  */
 
-/** Support classes for XML DSIG.*/
+/**
+ * Support classes for XML DSIG.
+ *
+ * @since 0.9.0
+ */
 package net.shibboleth.metadata.dom.ds;

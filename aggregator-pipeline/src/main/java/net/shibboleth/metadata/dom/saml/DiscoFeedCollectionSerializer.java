@@ -46,6 +46,8 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 /**
  * A collection serializer that generates an equivalent of the Shibboleth SP's discovery
  * feed output from a collection of entity descriptors.
+ *
+ * @since 0.10.0
  */
 public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
     implements ItemCollectionSerializer<Element> {

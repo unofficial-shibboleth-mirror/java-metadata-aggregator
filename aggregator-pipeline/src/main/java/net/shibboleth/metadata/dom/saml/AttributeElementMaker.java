@@ -29,6 +29,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 /**
  * A class for constructing SAML <code>Attribute</code> elements
  * for use with the {@link Container} system.
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public class AttributeElementMaker extends ElementMaker {

@@ -31,6 +31,8 @@ import net.shibboleth.metadata.validate.Validator;
  *
  * X.509 certificate issues are almost always independent, so simplify the validator interface
  * by delegation.
+ *
+ * @since 0.9.0
  */
 public abstract class AbstractX509Validator extends BaseValidator implements Validator<X509Certificate> {
 
