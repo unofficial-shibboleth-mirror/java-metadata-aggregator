@@ -30,9 +30,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 /** Some basic information related to a component's processing of an {@link net.shibboleth.metadata.Item}. */
 public class ComponentInfo implements ItemMetadata {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -2181091708008092869L;
-
     /** ID of the component that operated on the element. */
     private String componentId;
 

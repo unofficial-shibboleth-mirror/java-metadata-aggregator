@@ -24,9 +24,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 /** A type of {@link StatusMetadata} that indicates something is definitely wrong with the Item. */
 public class ErrorStatus extends StatusMetadata {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -559355929721764600L;
-
     /**
      * Constructor.
      * 

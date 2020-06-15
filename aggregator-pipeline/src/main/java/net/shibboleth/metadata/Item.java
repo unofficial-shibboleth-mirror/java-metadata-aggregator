@@ -17,8 +17,6 @@
 
 package net.shibboleth.metadata;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +27,7 @@ import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
  * 
  * @param <T> type of metadata element
  */
-public interface Item<T> extends Serializable {
+public interface Item<T> {
 
     /**
      * Gets the wrapped item data.

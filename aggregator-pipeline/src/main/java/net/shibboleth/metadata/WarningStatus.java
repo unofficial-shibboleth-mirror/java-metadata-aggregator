@@ -30,9 +30,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
  */
 public class WarningStatus extends StatusMetadata {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -586972544551282634L;
-
     /**
      * Constructor.
      * 

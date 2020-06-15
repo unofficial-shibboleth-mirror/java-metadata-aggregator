@@ -28,9 +28,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 @ThreadSafe
 public class ItemTag implements ItemMetadata {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 4727990464411083511L;
-
     /** Item tag. */
     private final String tag;
 

@@ -26,9 +26,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 /** A {@link ItemMetadata} implementation that carries status information about an {@link Item}. */
 public class StatusMetadata implements ItemMetadata {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 9058387763020864155L;
-
     /** The component that generated this status information. */
     private final String component;
 

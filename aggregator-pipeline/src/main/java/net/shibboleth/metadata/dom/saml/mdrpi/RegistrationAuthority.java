@@ -34,11 +34,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 @ThreadSafe
 public class RegistrationAuthority implements ItemMetadata {
 
-    /**
-     * Serial version UID for the class.
-     */
-    private static final long serialVersionUID = -4485180950229424894L;
-
     /** Registration authority URI. */
     private final String registrationAuthority;
 

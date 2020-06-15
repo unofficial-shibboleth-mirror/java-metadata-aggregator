@@ -31,9 +31,6 @@ import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 @ThreadSafe
 public abstract class AbstractItem<T> implements Item<T> {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -3694943988855243697L;
-
     /** The actual data held by the item. */
     private T data;
 

@@ -36,9 +36,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 @ThreadSafe
 public class ItemId implements ItemMetadata, Comparable<ItemId> {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -3907907112463674533L;
-
     /** Unique ID for the Item. */
     private final String id;
 

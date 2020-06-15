@@ -27,9 +27,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
  */
 public class InfoStatus extends StatusMetadata {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 4418261627233729537L;
-
     /**
      * Constructor.
      * 

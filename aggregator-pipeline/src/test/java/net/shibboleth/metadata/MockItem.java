@@ -25,9 +25,6 @@ import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 /** A mock implementation of {@link Item}. */
 public class MockItem extends AbstractItem<String> {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 0L;
-
     /**
      * Constructor.
      * 

@@ -246,8 +246,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
     private static class TestInfo implements ItemMetadata {
 
-        /** Serial version UIDs. */
-        private static final long serialVersionUID = -4133926323393787487L;
     }
 
     @Test

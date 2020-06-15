@@ -17,8 +17,6 @@
 
 package net.shibboleth.metadata;
 
-import java.io.Serializable;
-
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -28,6 +26,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * reference the same {@link ItemMetadata} objects as the original.
  */
 @ThreadSafe
-public interface ItemMetadata extends Serializable {
+public interface ItemMetadata {
 
 }

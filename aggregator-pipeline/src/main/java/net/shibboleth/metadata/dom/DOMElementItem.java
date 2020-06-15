@@ -39,9 +39,6 @@ import org.w3c.dom.Element;
 @ThreadSafe
 public class DOMElementItem extends AbstractItem<Element> {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -5122481126094725529L;
-
     /**
      * Constructor. The document element of the given document becomes the {@link Element} value for this item.
      * 
