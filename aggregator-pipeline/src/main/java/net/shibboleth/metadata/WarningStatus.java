@@ -18,6 +18,7 @@
 package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 
@@ -28,6 +29,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
  * {@link net.shibboleth.metadata.pipeline.Stage} thinks something about the Item may be wrong but does not have enough
  * information to verify it.
  */
+@Immutable
 public class WarningStatus extends StatusMetadata {
 
     /**

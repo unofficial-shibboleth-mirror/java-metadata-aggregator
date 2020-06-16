@@ -18,34 +18,34 @@
 package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** A {@link ItemMetadata} that associates a tag with a given {@link Item}. */
-@ThreadSafe
+@Immutable
 public class ItemTag implements ItemMetadata {
 
     /** Item tag. */
-    private final String tag;
+    @Nonnull @NotEmpty private final String tag;
 
     /**
      * Constructor.
      * 
-     * @param itemTag a tag for a metadata element
+     * @param itemTag a tag for an item, must not be either null or empty
      */
     public ItemTag(@Nonnull @NotEmpty final String itemTag) {
         tag = Constraint.isNotNull(StringSupport.trimOrNull(itemTag), "Tag may not be null or empty");
     }
 
     /**
-     * Gets the tag for the metadata element.
+     * Gets the tag for the item.
      * 
-     * @return tag for the metadata element, never null
+     * @return tag for the item, never null or empty
      */
-    @Nonnull public String getTag() {
+    @Nonnull @NotEmpty public String getTag() {
         return tag;
     }
 }

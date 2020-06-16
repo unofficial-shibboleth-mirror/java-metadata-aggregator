@@ -18,7 +18,7 @@
 package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -31,16 +31,16 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * Although the value is formally a URI, we represent it as a String for now
  * to prevent running into trouble if people use malformed values.
  */
-@ThreadSafe
+@Immutable
 public class RegistrationAuthority implements ItemMetadata {
 
     /** Registration authority URI. */
-    private final String registrationAuthority;
+    @Nonnull @NotEmpty private final String registrationAuthority;
 
     /**
      * Constructor.
      * 
-     * @param authority The registration authority for the entity, never null
+     * @param authority The registration authority for the item, never null or empty
      */
     public RegistrationAuthority(@Nonnull @NotEmpty final String authority) {
         registrationAuthority = Constraint.isNotNull(StringSupport.trimOrNull(authority),
@@ -50,9 +50,9 @@ public class RegistrationAuthority implements ItemMetadata {
     /**
      * Gets the registration authority value.
      * 
-     * @return unique identifier for the data carried by the Item
+     * @return unique The registration authority for the item, never null or empty
      */
-    @Nonnull public String getRegistrationAuthority() {
+    @Nonnull @NotEmpty public String getRegistrationAuthority() {
         return registrationAuthority;
     }
 

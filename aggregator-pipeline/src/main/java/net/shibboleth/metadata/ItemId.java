@@ -20,7 +20,7 @@ package net.shibboleth.metadata;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -33,16 +33,16 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * have the same {@link ItemId} as any other {@link net.shibboleth.metadata.Item} in a given
  * context.
  */
-@ThreadSafe
+@Immutable
 public class ItemId implements ItemMetadata, Comparable<ItemId> {
 
     /** Unique ID for the Item. */
-    private final String id;
+    @Nonnull @NotEmpty private final String id;
 
     /**
      * Constructor.
      * 
-     * @param itemId a unique identifier for the entity, never null
+     * @param itemId a unique identifier for the entity, never null or empty
      */
     public ItemId(@Nonnull @NotEmpty final String itemId) {
         id = Constraint.isNotNull(StringSupport.trimOrNull(itemId), "Item ID may not be null or empty");
@@ -53,17 +53,17 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
      * 
      * @return unique identifier for the data carried by the Item
      */
-    @Nonnull public String getId() {
+    @Nonnull @NotEmpty public String getId() {
         return id;
     }
 
-    /** {@inheritDoc} */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return id.hashCode();
     }
 
-    /** {@inheritDoc} */
-    @Override public boolean equals(final Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -78,8 +78,8 @@ public class ItemId implements ItemMetadata, Comparable<ItemId> {
         return Objects.equals(id, other.id);
     }
 
-    /** {@inheritDoc} */
-    @Override public int compareTo(final ItemId o) {
+    @Override
+    public int compareTo(final ItemId o) {
         return id.compareTo(o.id);
     }
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.concurrent.Immutable;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
@@ -244,6 +245,7 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
     }
 
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
+    @Immutable
     private static class TestInfo implements ItemMetadata {
 
     }

@@ -21,42 +21,42 @@ import java.time.Instant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Some basic information related to a component's processing of an {@link net.shibboleth.metadata.Item}. */
+@Immutable
 public class ComponentInfo implements ItemMetadata {
 
     /** ID of the component that operated on the element. */
-    private String componentId;
+    private final String componentId;
 
     /** Gets the type of the component that operated on the element. */
-    private Class<?> componentType;
+    private final Class<?> componentType;
 
     /** Instant when the component operation started. */
-    private Instant startInstant;
+    private final Instant startInstant;
 
     /** Instant when the component operation completed. */
-    private Instant completeInstant;
-
-    /** Constructor. */
-    public ComponentInfo() {
-
-    }
+    private final Instant completeInstant;
 
     /**
-     * Constructor. Sets the ID and component type from the given component. Sets the start instant to now.
-     * 
-     * @param component component which this info describes
+     * Constructor.
+     *
+     * @param cId ID of the component performing the processing
+     * @param cType type of the component performing the processing
+     * @param start time at which the component started processing
+     * @param complete time at which the component completed processing
+     *
+     * @since 0.10.0
      */
-    public ComponentInfo(@Nonnull final IdentifiedComponent component) {
-        Constraint.isNotNull(component, "Component can not be null");
-        componentId = component.getId();
-        componentType = component.getClass();
-        startInstant = Instant.now();
+    public ComponentInfo(@Nonnull final String cId, @Nonnull final Class<?> cType,
+            @Nonnull final Instant start, @Nonnull final Instant complete) {
+        componentId = cId;
+        componentType = cType;
+        startInstant = start;
+        completeInstant = complete;
     }
 
     /**
@@ -69,30 +69,12 @@ public class ComponentInfo implements ItemMetadata {
     }
 
     /**
-     * Sets the ID of the component that operated on the element.
-     * 
-     * @param id ID of the component that operated on the element
-     */
-    public void setComponentId(@Nullable final String id) {
-        componentId = StringSupport.trimOrNull(id);
-    }
-
-    /**
      * Gets the type of the component that operated on the element.
      * 
      * @return type of the component that operated on the element
      */
     @Nullable public Class<?> getComponentType() {
         return componentType;
-    }
-
-    /**
-     * Sets the type of the component that operated on the element.
-     * 
-     * @param type type of the component that operated on the element
-     */
-    public void setComponentType(@Nullable final Class<?> type) {
-        componentType = type;
     }
 
     /**
@@ -105,15 +87,6 @@ public class ComponentInfo implements ItemMetadata {
     }
 
     /**
-     * Sets the instant when the component operation started.
-     * 
-     * @param instant instant when the component operation started
-     */
-    public void setStartInstant(@Nullable final Instant instant) {
-        startInstant = instant;
-    }
-
-    /**
      * Gets the instant when the component operation completed.
      * 
      * @return instant when the component operation completed
@@ -122,17 +95,4 @@ public class ComponentInfo implements ItemMetadata {
         return completeInstant;
     }
 
-    /** Sets the complete instant of the component to now. */
-    public void setCompleteInstant() {
-        completeInstant = Instant.now();
-    }
-
-    /**
-     * Sets the instant when the component operation completed.
-     * 
-     * @param instant when the component operation completed
-     */
-    public void setCompleteInstant(@Nullable final Instant instant) {
-        completeInstant = instant;
-    }
 }

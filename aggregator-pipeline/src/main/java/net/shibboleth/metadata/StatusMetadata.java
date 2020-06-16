@@ -18,19 +18,21 @@
 package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** A {@link ItemMetadata} implementation that carries status information about an {@link Item}. */
+@Immutable
 public class StatusMetadata implements ItemMetadata {
 
     /** The component that generated this status information. */
-    private final String component;
+    @Nonnull @NotEmpty private final String component;
 
     /** The message associated with this status. */
-    private final String message;
+    @Nonnull @NotEmpty private final String message;
 
     /**
      * Constructor.
@@ -48,18 +50,18 @@ public class StatusMetadata implements ItemMetadata {
     /**
      * Gets the ID of the component that generated the status message.
      * 
-     * @return ID of the component that generated the status message, never null
+     * @return ID of the component that generated the status message, never null or empty
      */
-    @Nonnull public String getComponentId() {
+    @Nonnull @NotEmpty public String getComponentId() {
         return component;
     }
 
     /**
      * Gets the status message.
      * 
-     * @return the status message, never null
+     * @return the status message, never null or empty
      */
-    @Nonnull public String getStatusMessage() {
+    @Nonnull @NotEmpty public String getStatusMessage() {
         return message;
     }
 }

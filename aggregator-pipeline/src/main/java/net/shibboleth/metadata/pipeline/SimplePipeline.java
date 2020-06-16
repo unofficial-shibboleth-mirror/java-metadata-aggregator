@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +42,7 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
         implements Pipeline<T> {
 
     /** Stages for this pipeline. */
+    @Nonnull @NonnullElements
     private List<Stage<T>> pipelineStages = Collections.emptyList();
 
     @Override
@@ -60,28 +62,29 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
         pipelineStages = List.copyOf(stages);
     }
 
-    /** {@inheritDoc} */
-    @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws PipelineProcessingException {
-        final ComponentInfo compInfo = new ComponentInfo(this);
+
+        final var start = Instant.now();
 
         for (final Stage<T> stage : pipelineStages) {
             stage.execute(itemCollection);
         }
 
-        compInfo.setCompleteInstant();
-        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(compInfo));
+        final var componentInfo = new ComponentInfo(getId(), getClass(), start, Instant.now());
+        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(componentInfo));
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         pipelineStages = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         for (final Stage<T> stage : pipelineStages) {

@@ -18,6 +18,7 @@
 package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 
@@ -25,6 +26,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
  * A type of {@link StatusMetadata} that carries informational messages. These messages should never be used to carry
  * status messages that would indicate an error or failing of the Item in some way.
  */
+@Immutable
 public class InfoStatus extends StatusMetadata {
 
     /**

@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.concurrent.Immutable;
+
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
@@ -255,6 +257,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
     }
 
     /** Simple marker object to test correct passage of {@link ItemMetadata} through pipeline stages. */
+    @Immutable
     private static class TestInfo implements ItemMetadata {
 
     }

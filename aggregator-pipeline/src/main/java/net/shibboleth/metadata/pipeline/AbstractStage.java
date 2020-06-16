@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -69,24 +70,19 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
         return collectionPredicate;
     }
 
-    /**
-     * Creates an {@link ComponentInfo}, delegates actual work on the collection to {@link #doExecute(Collection)}, adds
-     * the {@link ComponentInfo} to all the resultant Item elements and then sets its completion time.
-     * 
-     * {@inheritDoc}
-     */
-    @Override public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         throwComponentStateExceptions();
 
-        final ComponentInfo compInfo = new ComponentInfo(this);
+        final var start = Instant.now();
 
         if (collectionPredicate.test(itemCollection)) {
             doExecute(itemCollection);
         }
 
-        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(compInfo));
-        compInfo.setCompleteInstant();
+        final var componentInfo = new ComponentInfo(getId(), getClass(), start, Instant.now());
+        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(componentInfo));
     }
 
     /**
