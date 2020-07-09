@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /**
@@ -56,8 +57,8 @@ public abstract class AbstractItem<T> implements Item<T> {
         data = newData;
     }
 
-    /** {@inheritDoc} */
-    @Override @Nonnull public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
+    @Override
+    @Nonnull @NonnullElements public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
         return metadata;
     }
 }

@@ -20,6 +20,7 @@ package net.shibboleth.metadata;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /**
@@ -41,7 +42,7 @@ public interface Item<T> {
      * 
      * @return metadata attached to this Item
      */
-    @Nonnull ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
+    @Nonnull @NonnullElements ClassToInstanceMultiMap<ItemMetadata> getItemMetadata();
 
     /**
      * Performs a copy of this Item. All member fields, except {@link ItemMetadata}, should be deep cloned.
