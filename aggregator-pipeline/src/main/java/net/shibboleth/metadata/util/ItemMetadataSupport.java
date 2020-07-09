@@ -70,28 +70,4 @@ public final class ItemMetadataSupport {
         }
     }
 
-    /**
-     * Adds one or more {@link ItemMetadata} to the given collection if the collection is an instance of
-     * {@link ItemCollectionWithMetadata}.
-     * 
-     * @param itemCollection collection to which the metadata may be added
-     * @param itemMetadatas the metadata which may be added to the collection
-     * @param <T> type of item in the collections
-     */
-    public static <T> void addToCollection(@Nullable final Collection<Item<T>> itemCollection,
-            @Nullable @NullableElements final Iterable<? extends ItemMetadata> itemMetadatas) {
-        if (itemCollection == null || !(itemCollection instanceof ItemCollectionWithMetadata)) {
-            return;
-        }
-        if (itemMetadatas == null) {
-            return;
-        }
-
-        final ItemCollectionWithMetadata<T> collection = (ItemCollectionWithMetadata<T>) itemCollection;
-        for (final ItemMetadata metadata : itemMetadatas) {
-            if (metadata != null) {
-                collection.getCollectionMetadata().put(metadata);
-            }
-        }
-    }
 }
