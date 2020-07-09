@@ -19,7 +19,7 @@ package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
@@ -29,7 +29,7 @@ import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
  * 
  * @param <T> type of data contained in the item
  */
-@ThreadSafe
+@NotThreadSafe
 public abstract class AbstractItem<T> implements Item<T> {
 
     /** The actual data held by the item. */
@@ -53,7 +53,7 @@ public abstract class AbstractItem<T> implements Item<T> {
      * 
      * @param newData the data
      */
-    protected synchronized void setData(@Nullable final T newData) {
+    protected void setData(@Nullable final T newData) {
         data = newData;
     }
 

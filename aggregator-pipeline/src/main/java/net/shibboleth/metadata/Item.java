@@ -23,11 +23,51 @@ import javax.annotation.Nullable;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
+// Checkstyle: LineLength OFF
 /**
  * A wrapper around a piece of information processed by pipeline stages.
  * 
- * @param <T> type of metadata element
+ * <p>
+ * Implementations of {@code Item} are <strong>not</strong> expected to be thread-safe.
+ * </p>
+ * 
+ * <p>
+ * In multi-threaded applications, use of {@code Item} objects should be
+ * confined to a single thread at a time. When responsibility for an {@code Item}
+ * passes from one thread to another, actions in the sending and receiving threads
+ * must be synchronized such that the last use of the {@code Item} in the sending
+ * thread <em>happens-before</em> the first use of the {@code Item} in the receiving
+ * thread. The same must be true in reverse if responsibility for the {@code Item}
+ * is later transferred back to the original thread.
+ * </p>
+ * 
+ * <p>
+ * Many constructs in the Java API, such as {@link java.util.concurrent.ExecutorService},
+ * provide such <em>happens-before</em> guarantees. Similarly, classes within the MDA
+ * framework such as {@link net.shibboleth.metadata.pipeline.PipelineDemultiplexerStage}
+ * provide the same guarantees and can be used without concern for synchronization.
+ * </p>
+ * 
+ * <p>
+ * If you pass {@code Item}s between threads in some other way, however, you <strong>must</strong>
+ * make sure that no data races can occur.
+ * </p>
+ * 
+ * <p>
+ * Note that if you call {@link Item#copy} to duplicate an item, the copy is entirely independent
+ * of the original except that they will share any attached immutable {@link ItemMetadata} objects.
+ * The two {@code Item} objects can then be used without additional synchronization, except for
+ * that involved in publishing the copy to the thread in which it will be used: a <em>happens-before</em>
+ * relationship is still required to guarantee that the receiving thread sees a consistent state
+ * for the object transferred.
+ * </p>
+ * 
+ * @see <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/package-summary.html#MemoryVisibility"
+ * >Memory Consistency Properties; <code>java.util.concurrent</code> package documentation</a>
+ * 
+ * @param <T> type of item data
  */
+// Checkstyle: LineLength ON
 public interface Item<T> {
 
     /**

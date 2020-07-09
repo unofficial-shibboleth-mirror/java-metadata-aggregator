@@ -19,7 +19,10 @@ package net.shibboleth.metadata;
 
 import java.util.Objects;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 /** A mock implementation of {@link Item}. */
+@NotThreadSafe
 public class MockItem extends AbstractItem<String> {
 
     /**
@@ -38,13 +41,13 @@ public class MockItem extends AbstractItem<String> {
         return clone;
     }
 
-    /** {@inheritDoc} */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return unwrap().hashCode();
     }
 
-    /** {@inheritDoc} */
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }

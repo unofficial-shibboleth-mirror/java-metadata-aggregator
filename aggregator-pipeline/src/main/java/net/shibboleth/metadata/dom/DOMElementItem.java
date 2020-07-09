@@ -18,7 +18,7 @@
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -35,7 +35,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * The {@link Element} wrapped by this {@link Item} is always the document element of the document that owns the
  * {@link Element}.
  */
-@ThreadSafe
+@NotThreadSafe
 public class DOMElementItem extends AbstractItem<Element> {
 
     /**
