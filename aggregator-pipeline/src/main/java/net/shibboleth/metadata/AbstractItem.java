@@ -33,7 +33,7 @@ import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 public abstract class AbstractItem<T> implements Item<T> {
 
     /** The actual data held by the item. */
-    private T data;
+    @Nullable private T data;
 
     /** Additional processing information associated with this Item. */
     private final ClassToInstanceMultiMap<ItemMetadata> metadata;
