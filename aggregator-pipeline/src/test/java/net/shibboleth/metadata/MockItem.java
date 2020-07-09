@@ -19,8 +19,6 @@ package net.shibboleth.metadata;
 
 import java.util.Objects;
 
-import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
-
 /** A mock implementation of {@link Item}. */
 public class MockItem extends AbstractItem<String> {
 
@@ -31,21 +29,6 @@ public class MockItem extends AbstractItem<String> {
      */
     public MockItem(String str) {
         setData(str);
-    }
-
-    /** {@inheritDoc} */
-    @Override public void setData(String data) {
-        super.setData(data);
-    }
-
-    /**
-     * Sets the metadata for this Item.
-     * 
-     * @param info metadata for this Item
-     */
-    public void setMetadataInfo(ClassToInstanceMultiMap<ItemMetadata> info) {
-        getItemMetadata().clear();
-        getItemMetadata().putAll(info);
     }
 
     @Override
