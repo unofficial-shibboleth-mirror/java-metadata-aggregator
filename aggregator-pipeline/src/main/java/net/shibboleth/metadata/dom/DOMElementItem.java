@@ -20,15 +20,14 @@ package net.shibboleth.metadata.dom;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.metadata.AbstractItem;
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.util.ItemMetadataSupport;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import net.shibboleth.metadata.AbstractItem;
+import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * A {@link Item} whose data is a DOM, version 3, {@link Element}.
@@ -76,10 +75,10 @@ public class DOMElementItem extends AbstractItem<Element> {
         setData(newDocumentRoot);
     }
 
-    /** {@inheritDoc} */
-    @Override public Item<Element> copy() {
+    @Override
+    public Item<Element> copy() {
         final DOMElementItem clone = new DOMElementItem(unwrap());
-        ItemMetadataSupport.addAll(clone, getItemMetadata().values());
+        clone.getItemMetadata().putAll(getItemMetadata());
         return clone;
     }
 }

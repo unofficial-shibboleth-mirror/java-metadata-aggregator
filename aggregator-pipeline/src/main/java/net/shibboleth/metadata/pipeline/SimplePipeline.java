@@ -27,7 +27,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
-import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -73,7 +72,9 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
         }
 
         final var componentInfo = new ComponentInfo(getId(), getClass(), start, Instant.now());
-        ItemMetadataSupport.addToAll(itemCollection, Collections.singleton(componentInfo));
+        for (final var item : itemCollection) {
+            item.getItemMetadata().put(componentInfo);
+        }
     }
 
     @Override

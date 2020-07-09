@@ -29,13 +29,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Element;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
-import org.w3c.dom.Element;
 
 /**
  * A pipeline stage which transforms each item in the {@link DOMElementItem} collection via an XSL transform. Each of
@@ -47,8 +46,8 @@ import org.w3c.dom.Element;
 @ThreadSafe
 public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStage {
 
-    /** {@inheritDoc} */
-    @Override protected void executeTransformer(@Nonnull final Transformer transformer,
+    @Override
+    protected void executeTransformer(@Nonnull final Transformer transformer,
             @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 
@@ -68,7 +67,7 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
                 final List<Element> transformedElements = ElementSupport.getChildElements(result.getNode());
                 for (final Element transformedElement : transformedElements) {
                     final DOMElementItem newItem = new DOMElementItem(transformedElement);
-                    ItemMetadataSupport.addAll(newItem, domItem.getItemMetadata().values());
+                    newItem.getItemMetadata().putAll(domItem.getItemMetadata());
                     newItems.add(newItem);
                 }
             }

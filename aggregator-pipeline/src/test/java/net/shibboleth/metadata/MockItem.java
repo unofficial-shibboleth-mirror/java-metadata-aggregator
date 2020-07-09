@@ -19,7 +19,6 @@ package net.shibboleth.metadata;
 
 import java.util.Objects;
 
-import net.shibboleth.metadata.util.ItemMetadataSupport;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /** A mock implementation of {@link Item}. */
@@ -49,10 +48,10 @@ public class MockItem extends AbstractItem<String> {
         getItemMetadata().putAll(info);
     }
 
-    /** {@inheritDoc} */
-    @Override public Item<String> copy() {
-        MockItem clone = new MockItem(new String(unwrap()));
-        ItemMetadataSupport.addAll(clone, getItemMetadata().values());
+    @Override
+    public Item<String> copy() {
+        final MockItem clone = new MockItem(new String(unwrap()));
+        clone.getItemMetadata().putAll(getItemMetadata());
         return clone;
     }
 
