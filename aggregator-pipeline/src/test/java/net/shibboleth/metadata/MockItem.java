@@ -31,7 +31,7 @@ public class MockItem extends AbstractItem<String> {
      * @param str data held by this item
      */
     public MockItem(String str) {
-        setData(str);
+        super(str);
     }
 
     @Override

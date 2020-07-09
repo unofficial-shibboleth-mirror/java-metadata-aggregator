@@ -18,11 +18,11 @@
 package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * Base implementation of an {@link Item}.
@@ -33,32 +33,29 @@ import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 public abstract class AbstractItem<T> implements Item<T> {
 
     /** The actual data held by the item. */
-    @Nullable private T data;
+    @Nonnull private final T data;
 
-    /** Additional processing information associated with this Item. */
-    private final ClassToInstanceMultiMap<ItemMetadata> metadata;
-
-    /** Constructor. */
-    protected AbstractItem() {
-        metadata = new ClassToInstanceMultiMap<>(true);
-    }
-
-    /** {@inheritDoc} */
-    @Override @Nullable public T unwrap() {
-        return data;
-    }
+    /** Additional processing information associated with this {@code Item}. */
+    @Nonnull @NonnullElements private final ClassToInstanceMultiMap<ItemMetadata> metadata;
 
     /**
-     * Sets the data wrapped by this Item.
-     * 
-     * @param newData the data
+     * Constructor.
+     *
+     * @param newData data to wrap in the {@code Item}
      */
-    protected void setData(@Nullable final T newData) {
+    protected AbstractItem(@Nonnull final T newData) {
+        Constraint.isNotNull(newData, "data to wrap can not be null");
+        metadata = new ClassToInstanceMultiMap<>(true);
         data = newData;
     }
 
     @Override
-    @Nonnull @NonnullElements public ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
+    @Nonnull public final T unwrap() {
+        return data;
+    }
+
+    @Override
+    @Nonnull @NonnullElements public final ClassToInstanceMultiMap<ItemMetadata> getItemMetadata() {
         return metadata;
     }
 }

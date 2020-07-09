@@ -39,32 +39,66 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class DOMElementItem extends AbstractItem<Element> {
 
     /**
-     * Constructor. The document element of the given document becomes the {@link Element} value for this item.
+     * Constructor.
+     * 
+     * <p>
+     * The document element of the given document becomes the {@link Element} value for this item.
+     * </p>
      * 
      * @param document document whose document element becomes the value for this Item; may not be null and must have a
      *            document element
      */
     public DOMElementItem(@Nonnull final Document document) {
-        super();
-
-        Constraint.isNotNull(document, "DOM Document can not be null");
-
-        final Element docElement = document.getDocumentElement();
-        Constraint.isNotNull(docElement, "DOM Document Element may not be null");
-
-        setData(document.getDocumentElement());
+        super(processDocument(document));
     }
 
     /**
-     * Constructor. A new {@link Document} is created and the given {@link Element} is deep-imported in to the new
-     * document via {@link Document#importNode(org.w3c.dom.Node, boolean)}, and the resultant {@link Element} is set as
+     * Constructor.
+     * 
+     * <p>
+     * A new {@link Document} is created and the given {@link Element} is deep-imported in to the new
+     * document via {@link Document#importNode(org.w3c.dom.Node, boolean)}. The resulting {@link Element} is set as
      * the new document's root.
+     * </p>
      * 
      * @param element element that is copied to become the value of this Item
      */
     public DOMElementItem(@Nonnull final Element element) {
-        super();
+        super(processElement(element));
+    }
 
+    /**
+     * Process a {@link Document} for wrapping by an {@code Item}.
+     *
+     * <p>
+     * The {@code Item} simply wraps the {@link Document}'s document element.
+     * </p>
+     *
+     * @param document {@link Document} to wrap
+     * @return processed element
+     */
+    @Nonnull private static Element processDocument(@Nonnull final Document document) {
+        Constraint.isNotNull(document, "DOM Document can not be null");
+        
+        final Element docElement = document.getDocumentElement();
+        Constraint.isNotNull(docElement, "DOM Document Element may not be null");
+
+        return docElement;
+    }
+
+    /**
+     * Process an {@link Element} for wrapping by an {@code Item}.
+     *
+     * <p>
+     * A new {@link Document} is created and the given {@link Element} is deep-imported in to the new
+     * document via {@link Document#importNode(org.w3c.dom.Node, boolean)}. The resulting {@link Element} is set as
+     * the new document's root.
+     * </p>
+     *
+     * @param element {@link Element} to process
+     * @return processed element
+     */
+    @Nonnull private static Element processElement(@Nonnull final Element element) {
         Constraint.isNotNull(element, "DOM Document Element may not be null");
 
         final DOMImplementation domImpl = element.getOwnerDocument().getImplementation();
@@ -72,7 +106,7 @@ public class DOMElementItem extends AbstractItem<Element> {
         final Element newDocumentRoot = (Element) newDocument.importNode(element, true);
         ElementSupport.setDocumentElement(newDocument, newDocumentRoot);
 
-        setData(newDocumentRoot);
+        return newDocumentRoot;
     }
 
     @Override
