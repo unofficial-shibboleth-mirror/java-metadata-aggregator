@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
@@ -47,10 +48,11 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
     /**
      * {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be selected.
      */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<Class<? extends ItemMetadata>> selectionRequirements = Set.of();
 
     /** Strategy used to generate item identifiers for logging purposes. */
+    @Nonnull @GuardedBy("this")
     private ItemIdentificationStrategy identificationStrategy = new FirstItemIdItemIdentificationStrategy();
 
     /**
@@ -61,7 +63,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      *         selected, never null nor containing null elements
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<Class<? extends ItemMetadata>> getSelectionRequirements() {
+    public final synchronized Collection<Class<? extends ItemMetadata>> getSelectionRequirements() {
         return selectionRequirements;
     }
 
@@ -83,7 +85,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      * 
      * @return strategy used to generate {@link Item} identifiers for logging purposes
      */
-    @Nonnull public ItemIdentificationStrategy getItemIdentificationStrategy() {
+    @Nonnull public final synchronized ItemIdentificationStrategy getItemIdentificationStrategy() {
         return identificationStrategy;
     }
 
@@ -107,7 +109,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
             final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
                     new HashMap<>();
 
-            for (final Class<? extends ItemMetadata> infoClass : selectionRequirements) {
+            for (final Class<? extends ItemMetadata> infoClass : getSelectionRequirements()) {
                 if (item.getItemMetadata().containsKey(infoClass)) {
                     matchingMetadata.put(infoClass, item.getItemMetadata().get(infoClass));
                 }
@@ -136,12 +138,11 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      * 
      * @throws StageProcessingException thrown if there is a problem processing the item
      */
-    protected abstract
-            void
-            doExecute(
-                    @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
-                    @Nonnull final Item<T> matchingItem,
-                    @Nonnull @NonnullElements
-                    final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+    protected abstract void doExecute(
+            @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+            @Nonnull final Item<T> matchingItem,
+            @Nonnull @NonnullElements
+            final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException;
+
 }

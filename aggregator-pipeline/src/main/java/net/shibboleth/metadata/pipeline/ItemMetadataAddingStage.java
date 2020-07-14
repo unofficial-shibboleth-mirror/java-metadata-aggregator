@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -40,7 +41,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
 
     /** {@link ItemMetadata} objects to add to each {@link Item}'s item metadata. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<ItemMetadata> additionalItemMetadata = List.of();
 
     /**
@@ -49,7 +50,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
      * @return the {@link ItemMetadata} being added to each {@link Item}'s item metadata
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<ItemMetadata> getAdditionalItemMetadata() {
+    public final synchronized Collection<ItemMetadata> getAdditionalItemMetadata() {
         return additionalItemMetadata;
     }
 
@@ -58,7 +59,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
      * 
      * @param metadata the {@link ItemMetadata} to be added to each {@link Item}'s item metadata
      */
-    public void setAdditionalItemMetadata(
+    public synchronized void setAdditionalItemMetadata(
             @Nonnull @NonnullElements @Unmodifiable final Collection<ItemMetadata> metadata) {
         throwSetterPreconditionExceptions();
 
@@ -68,6 +69,6 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
 
     @Override
     protected void doExecute(@Nonnull final Item<T> item) throws StageProcessingException {
-        item.getItemMetadata().putAll(additionalItemMetadata);
+        item.getItemMetadata().putAll(getAdditionalItemMetadata());
     }
 }

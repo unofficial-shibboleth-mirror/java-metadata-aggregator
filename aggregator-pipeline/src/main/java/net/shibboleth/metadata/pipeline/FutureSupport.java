@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public final class FutureSupport {
      *
      * @param <T> type of "future" object to return
      */
+    @Immutable
     private static class FutureNow<T> implements Future<T> {
     
         /**
@@ -130,10 +132,9 @@ public final class FutureSupport {
             if (e.getCause() instanceof StageProcessingException) {
                 // UN-wrap our own exceptions so as to propagate them
                 throw (StageProcessingException) e.getCause();
-            } else {
-                // Wrap other exceptions
-                throw new StageProcessingException("ExecutionException during processing", e);
             }
+            // Wrap other exceptions
+            throw new StageProcessingException("ExecutionException during processing", e);
         } catch (final InterruptedException e) {
             LOG.debug("Execution service was interrupted", e);
             throw new StageProcessingException("Execution service was interrupted", e);

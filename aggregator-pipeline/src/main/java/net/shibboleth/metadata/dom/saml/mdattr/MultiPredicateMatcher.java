@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -40,19 +41,19 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
 
     /** {@link Predicate} to use to match the context's attribute value. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private Predicate<CharSequence> valuePredicate = x -> true;
     
     /** {@link Predicate} to use to match the context's attribute name. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private Predicate<CharSequence> namePredicate = x -> true;
     
     /** {@link Predicate} to use to match the context's attribute name format. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private Predicate<CharSequence> nameFormatPredicate = x -> true;
     
     /** {@link Predicate} to use to match the context's registration authority. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private Predicate<CharSequence> registrationAuthorityPredicate = x -> true;
     
     /**
@@ -61,7 +62,7 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * @return the {@link Predicate} being used to match the context's attribute value
      */
     @Nonnull
-    public Predicate<CharSequence> getValuePredicate() {
+    public final synchronized Predicate<CharSequence> getValuePredicate() {
         return valuePredicate;
     }
     
@@ -70,7 +71,7 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * 
      * @param predicate new {@link Predicate} to use to match the context's attribute value
      */
-    public void setValuePredicate(@Nonnull final Predicate<CharSequence> predicate) {
+    public synchronized void setValuePredicate(@Nonnull final Predicate<CharSequence> predicate) {
         valuePredicate = Constraint.isNotNull(predicate, "value predicate may not be null");
     }
     
@@ -80,7 +81,7 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * @return the {@link Predicate} being used to match the context's attribute name
      */
     @Nonnull
-    public Predicate<CharSequence> getNamePredicate() {
+    public final synchronized Predicate<CharSequence> getNamePredicate() {
         return namePredicate;
     }
     
@@ -89,7 +90,7 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * 
      * @param predicate new {@link Predicate} to use to match the context's attribute name
      */
-    public void setNamePredicate(@Nonnull final Predicate<CharSequence> predicate) {
+    public synchronized void setNamePredicate(@Nonnull final Predicate<CharSequence> predicate) {
         namePredicate = Constraint.isNotNull(predicate, "name predicate may not be null");
     }
     
@@ -99,7 +100,7 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * @return the {@link Predicate} being used to match the context's attribute name format
      */
     @Nonnull
-    public Predicate<CharSequence> getNameFormatPredicate() {
+    public final synchronized Predicate<CharSequence> getNameFormatPredicate() {
         return nameFormatPredicate;
     }
     
@@ -108,7 +109,7 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * 
      * @param predicate new {@link Predicate} to use to match the context's attribute name format
      */
-    public void setNameFormatPredicate(@Nonnull final Predicate<CharSequence> predicate) {
+    public synchronized void setNameFormatPredicate(@Nonnull final Predicate<CharSequence> predicate) {
         nameFormatPredicate = Constraint.isNotNull(predicate, "name format predicate may not be null");
     }
     
@@ -118,8 +119,8 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * @return the {@link Predicate} being used to match the context's registration authority
      */
     @Nonnull
-    public Predicate<CharSequence> getRegistrationAuthorityPredicate() {
-        return valuePredicate;
+    public final synchronized Predicate<CharSequence> getRegistrationAuthorityPredicate() {
+        return registrationAuthorityPredicate;
     }
     
     /**
@@ -127,29 +128,29 @@ public class MultiPredicateMatcher extends AbstractEntityAttributeMatcher {
      * 
      * @param predicate new {@link Predicate} to use to match the context's registration authority
      */
-    public void setRegistrationAuthorityPredicate(@Nonnull final Predicate<CharSequence> predicate) {
+    public synchronized void setRegistrationAuthorityPredicate(@Nonnull final Predicate<CharSequence> predicate) {
         registrationAuthorityPredicate = Constraint.isNotNull(predicate,
                 "registration authority predicate may not be null");
     }
     
     @Override
     protected boolean matchAttributeValue(@Nonnull final String inputValue) {
-        return valuePredicate.test(inputValue);
+        return getValuePredicate().test(inputValue);
     }
 
     @Override
     protected boolean matchAttributeName(@Nonnull final String inputName) {
-         return namePredicate.test(inputName);
+         return getNamePredicate().test(inputName);
     }
 
     @Override
     protected boolean matchAttributeNameFormat(@Nonnull final String inputNameFormat) {
-        return nameFormatPredicate.test(inputNameFormat);
+        return getNameFormatPredicate().test(inputNameFormat);
     }
 
     @Override
     protected boolean matchRegistrationAuthority(@Nullable final String inputRegistrationAuthority) {
-        return registrationAuthorityPredicate.test(inputRegistrationAuthority);
+        return getRegistrationAuthorityPredicate().test(inputRegistrationAuthority);
     }
 
 }

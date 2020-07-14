@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
@@ -49,13 +50,13 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
     /**
      * Set of registration authorities to be ignored.
      */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<String> ignoredRegistrationAuthorities = Set.of();
     
     /**
      * Replacement display names for registration authorities.
      */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Map<String, String> registrationAuthorityDisplayNames = Map.of();
     
     /**
@@ -64,7 +65,7 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * @return {@link Set} of registration authority names.
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<String> getIgnoredRegistrationAuthorities() {
+    public final synchronized Collection<String> getIgnoredRegistrationAuthorities() {
         return ignoredRegistrationAuthorities;
     }
 
@@ -73,7 +74,7 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * 
      * @param registrars {@link Set} of registration authority names to ignore.
      */
-    public void setIgnoredRegistrationAuthorities(
+    public synchronized void setIgnoredRegistrationAuthorities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> registrars) {
         ignoredRegistrationAuthorities = Set.copyOf(registrars);
     }
@@ -84,7 +85,7 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * @return {@link Map} of display names for authorities.
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Map<String, String> getRegistrationAuthorityDisplayNames() {
+    public final synchronized Map<String, String> getRegistrationAuthorityDisplayNames() {
         return registrationAuthorityDisplayNames;
     }
 
@@ -93,7 +94,7 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * 
      * @param names {@link Map} of display names for registration authorities.
      */
-    public void setRegistrationAuthorityDisplayNames(
+    public synchronized void setRegistrationAuthorityDisplayNames(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, String> names) {
         registrationAuthorityDisplayNames = Map.copyOf(names);
     }
@@ -117,17 +118,16 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
         final String regAuth = regAuths.get(0).getRegistrationAuthority();
         
         // nothing to return if it's an ignored authority
-        if (ignoredRegistrationAuthorities.contains(regAuth)) {
+        if (getIgnoredRegistrationAuthorities().contains(regAuth)) {
             return null;
         }
         
         // handle mapping it to a simpler form if that's available
-        final String displayName = registrationAuthorityDisplayNames.get(regAuth);
+        final String displayName = getRegistrationAuthorityDisplayNames().get(regAuth);
         if (displayName != null) {
             return displayName;
-        } else {
-            return regAuth;
         }
+        return regAuth;
     }
 
 }

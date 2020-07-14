@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -36,7 +37,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 public class StaticItemSourceStage<T> extends AbstractStage<T> {
 
     /** Collection of static Items added to each Item collection by {@link #execute(Collection)}. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Item<T>> source = List.of();
 
     /**
@@ -45,7 +46,7 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
      * @return collection of static Items added to the Item collection by this stage
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<Item<T>> getSourceItems() {
+    public final synchronized Collection<Item<T>> getSourceItems() {
         return source;
     }
 

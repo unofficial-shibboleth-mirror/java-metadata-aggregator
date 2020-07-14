@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -28,11 +29,16 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 
 /**
  * A strategy that defines how to order a {@link net.shibboleth.metadata.Item} collection.
+ * 
+ * <p>
+ * All implementations of this interface <strong>must</strong> be thread-safe.
+ * </p>
  *
  * @param <T> type of item to be handled
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public interface ItemOrderingStrategy<T> {
 
     /**

@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
@@ -34,6 +35,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  *
  * @since 0.10.0
  */
+@Immutable
 public class NoOpItemOrderingStrategy<T> implements ItemOrderingStrategy<T> {
 
     @Override

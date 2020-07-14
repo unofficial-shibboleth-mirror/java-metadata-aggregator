@@ -19,7 +19,7 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -30,17 +30,17 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.9.0
  */
-@ThreadSafe
+@Immutable
 public abstract class AbstractExactValueMatcher extends AbstractEntityAttributeMatcher {
 
     /** The attribute value to match. */
-    private final String value;
+    @Nonnull private final String value;
 
     /** The attribute <code>Name</code> to match. */
-    private final String name;
+    @Nonnull private final String name;
     
     /** The attribute <code>NameFormat</code> to match. */
-    private final String nameFormat;
+    @Nonnull private final String nameFormat;
     
     /** Registration authority to match against, or <code>null</code>. */
     @Nullable
@@ -84,9 +84,8 @@ public abstract class AbstractExactValueMatcher extends AbstractEntityAttributeM
         if (registrationAuthority == null) {
             // ignore the context's registration authority value
             return true;
-        } else {
-            return registrationAuthority.equals(inputRegistrationAuthority);
         }
+        return registrationAuthority.equals(inputRegistrationAuthority);
     }
 
 }

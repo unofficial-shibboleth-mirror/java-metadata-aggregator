@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -34,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @param <T> type of the items processed by the pipeline
  */
+@Immutable
 public class PipelineCallable<T> implements Callable<Collection<Item<T>>> {
 
     /** Class logger. */

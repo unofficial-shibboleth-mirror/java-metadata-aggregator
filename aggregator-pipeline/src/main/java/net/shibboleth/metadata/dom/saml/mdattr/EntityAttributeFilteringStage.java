@@ -22,6 +22,9 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +58,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public class EntityAttributeFilteringStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
@@ -106,6 +110,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
     /**
      * A simple immutable implementation of {@link EntityAttributeContext}.
      */
+    @Immutable
     static class ContextImpl implements EntityAttributeContext {
 
         /** The attribute's value. */
@@ -198,21 +203,21 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * This amounts to an implicit ORing of the individual rules, with early
      * termination.
      */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Predicate<EntityAttributeContext>> rules = List.of();
 
     /** Mode of operation: whitelisting or blacklisting. Default: whitelisting. */
-    private boolean whitelisting = true;
+    @GuardedBy("this") private boolean whitelisting = true;
 
     /** Whether we add status metadata to the item when entity attributes are removed. Default: no. */
-    private boolean recordingRemovals;
+    @GuardedBy("this") private boolean recordingRemovals;
 
     /**
      * Sets the {@link List} of rules to be used to match attribute values.
      * 
      * @param newRules new {@link List} of rules
      */
-    public void setRules(
+    public synchronized void setRules(
             @Nonnull @NonnullElements @Unmodifiable final List<Predicate<EntityAttributeContext>> newRules) {
         throwSetterPreconditionExceptions();
         rules = List.copyOf(Constraint.isNotNull(newRules, "rules property may not be null"));
@@ -224,7 +229,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * @return the {@link List} of rules
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Predicate<EntityAttributeContext>> getRules() {
+    public final synchronized List<Predicate<EntityAttributeContext>> getRules() {
         return rules;
     }
     
@@ -234,7 +239,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * @param newValue <code>true</code> to whitelist (default),
      *                 <code>false</code> to blacklist
      */
-    public void setWhitelisting(final boolean newValue) {
+    public synchronized void setWhitelisting(final boolean newValue) {
         throwSetterPreconditionExceptions();
         whitelisting = newValue;
     }
@@ -245,7 +250,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * @return <code>true</code> if whitelisting (default),
      *         <code>false</code> if blacklisting
      */
-    public boolean isWhitelisting() {
+    public final synchronized boolean isWhitelisting() {
         return whitelisting;
     }
 
@@ -254,7 +259,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      *
      * @param newValue whether to remove recorded entity attributes
      */
-    public void setRecordingRemovals(final boolean newValue) {
+    public synchronized void setRecordingRemovals(final boolean newValue) {
         throwSetterPreconditionExceptions();
         recordingRemovals = newValue;
     }
@@ -265,7 +270,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * @return <code>true</code> if recording,
      *         <code>false</code> if not (default)
      */
-    public boolean isRecordingRemovals() {
+    public synchronized boolean isRecordingRemovals() {
         return recordingRemovals;
     }
 
@@ -277,7 +282,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      *  otherwise <code>false</code>
      */
     private boolean applyRules(final EntityAttributeContext ctx) {
-        for (final Predicate<EntityAttributeContext> rule : rules) {
+        for (final Predicate<EntityAttributeContext> rule : getRules()) {
             if (rule.test(ctx)) {
                 return true;
             }
@@ -295,9 +300,8 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
         final List<RegistrationAuthority> regAuthList = item.getItemMetadata().get(RegistrationAuthority.class);
         if (regAuthList.isEmpty()) {
             return null;
-        } else {
-            return regAuthList.get(0).getRegistrationAuthority();
         }
+        return regAuthList.get(0).getRegistrationAuthority();
     }
     
     /**
@@ -328,9 +332,9 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
                     new ContextImpl(attributeValue, attributeName,
                             attributeNameFormat, registrationAuthority);            
             final boolean matched = applyRules(ctx);
-            if (matched ^ whitelisting) {
+            if (matched ^ isWhitelisting()) {
                 log.debug("removing {}", ctx);
-                if (recordingRemovals) {
+                if (isRecordingRemovals()) {
                     item.getItemMetadata().put(new WarningStatus(getId(),
                             "removing '" + ctx.getName() + "' = '" + ctx.getValue() + "'"));
                 }

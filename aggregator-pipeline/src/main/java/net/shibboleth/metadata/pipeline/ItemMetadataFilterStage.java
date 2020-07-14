@@ -45,8 +45,8 @@ public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionSta
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ItemMetadataFilterStage.class);
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
             final Item<T> matchingItem,
             final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws StageProcessingException {

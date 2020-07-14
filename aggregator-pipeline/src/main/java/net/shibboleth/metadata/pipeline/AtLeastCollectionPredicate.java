@@ -20,6 +20,9 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * A {@link Predicate} which returns <code>true</code> if and only if the number of elements
  * in the supplied collection is at least the configured minimum value.
@@ -28,12 +31,13 @@ import java.util.function.Predicate;
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public class AtLeastCollectionPredicate<T> implements Predicate<Collection<T>> {
 
     /**
      * Minimum element count which will satisfy the condition. Default value: 0.
      */
-    private int minimum;
+    @GuardedBy("this") private int minimum;
 
     /**
      * Returns the minimum number of elements which will result in a <code>true</code>
@@ -42,7 +46,7 @@ public class AtLeastCollectionPredicate<T> implements Predicate<Collection<T>> {
      * @return the minimum number of elements which will result in a <code>true</code>
      * result.
      */
-    public int getMinimum() {
+    public final synchronized int getMinimum() {
         return minimum;
     }
     
@@ -53,13 +57,13 @@ public class AtLeastCollectionPredicate<T> implements Predicate<Collection<T>> {
      * @param min minimum number of elements which will result in a <code>true</code>
      * result.
      */
-    public void setMinimum(final int min) {
+    public synchronized void setMinimum(final int min) {
         minimum = min;
     }
     
     @Override
     public boolean test(final Collection<T> input) {
-        return input.size() >= minimum;
+        return input.size() >= getMinimum();
     }
 
 }

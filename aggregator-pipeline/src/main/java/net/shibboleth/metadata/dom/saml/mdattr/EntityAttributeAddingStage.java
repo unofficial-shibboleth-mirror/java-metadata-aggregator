@@ -17,11 +17,13 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +37,8 @@ import net.shibboleth.metadata.dom.saml.AttributeValueElementMaker;
 import net.shibboleth.metadata.dom.saml.AttributeValueElementMatcher;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.dom.saml.SAMLSupport;
-import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
+import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -45,7 +47,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.10.0
  */
-public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> {
+@ThreadSafe
+public class EntityAttributeAddingStage extends AbstractStage<Element> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntityAttributeAddingStage.class);
@@ -55,7 +58,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * The default value is for an entity attribute specifying an entity category.
      */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private String attributeName = EntityCategorySupport.EC_CATEGORY_ATTR_NAME;
 
     /**
@@ -63,11 +66,11 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * The default value is suitable for most entity attributes.
      */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private String attributeNameFormat = EntityCategorySupport.EC_ATTR_NAME_FORMAT;
 
     /** The value of the attribute to be added. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private String attributeValue;
 
     /**
@@ -76,23 +79,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * Default: <code>false</code> (add as last child).
      */
-    private boolean addingFirstChild;
-
-    /** {@link Predicate} used to match existing Attribute elements. */
-    @NonnullAfterInit
-    private Predicate<Element> attributeMatcher;
-
-    /** {@link Function} used to create new Attribute elements. */
-    @NonnullAfterInit
-    private Function<Container, Element> attributeMaker;
-
-    /** {@link Predicate} used to match existing AttributeValue elements. */
-    @NonnullAfterInit
-    private Predicate<Element> attributeValueMatcher;
-
-    /** {@link Function} used to create new AttributeValue elements. */
-    @NonnullAfterInit
-    private Function<Container, Element> attributeValueMaker;
+    @GuardedBy("this") private boolean addingFirstChild;
 
     /**
      * Returns the attribute name.
@@ -100,7 +87,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @return the attributeName
      */
     @Nonnull
-    public String getAttributeName() {
+    public final synchronized String getAttributeName() {
         return attributeName;
     }
 
@@ -109,7 +96,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * @param name the attributeName to set
      */
-    public void setAttributeName(@Nonnull final String name) {
+    public synchronized void setAttributeName(@Nonnull final String name) {
         throwSetterPreconditionExceptions();
         attributeName = Constraint.isNotNull(name, "attributeName must not be null");
     }
@@ -120,7 +107,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @return the attributeNameFormat
      */
     @Nonnull
-    public String getAttributeNameFormat() {
+    public final synchronized String getAttributeNameFormat() {
         return attributeNameFormat;
     }
 
@@ -129,7 +116,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * @param nameFormat the attributeNameFormat to set
      */
-    public void setAttributeNameFormat(@Nonnull final String nameFormat) {
+    public synchronized void setAttributeNameFormat(@Nonnull final String nameFormat) {
         throwSetterPreconditionExceptions();
         attributeNameFormat = Constraint.isNotNull(nameFormat, "attributeNameFormat must not be null");
     }
@@ -140,7 +127,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * @return the attributeValue
      */
     @Nonnull
-    public String getAttributeValue() {
+    public final synchronized String getAttributeValue() {
         return attributeValue;
     }
 
@@ -149,7 +136,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * @param value the attributeValue to set
      */
-    public void setAttributeValue(@Nonnull final String value) {
+    public synchronized void setAttributeValue(@Nonnull final String value) {
         throwSetterPreconditionExceptions();
         attributeValue = Constraint.isNotNull(value, "attributeValue must not be null");
     }
@@ -160,7 +147,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * @return <code>true</code> if adding as the first child, <code>false</code> if the last
      */
-    public boolean isAddingFirstChild() {
+    public final synchronized boolean isAddingFirstChild() {
         return addingFirstChild;
     }
 
@@ -170,7 +157,7 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * 
      * @param addFirst <code>true</code> to add as the first child, <code>false</code> as the last
      */
-    public void setAddingFirstChild(final boolean addFirst) {
+    public synchronized void setAddingFirstChild(final boolean addFirst) {
         throwSetterPreconditionExceptions();
         addingFirstChild = addFirst;
     }
@@ -180,11 +167,13 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
      * Attribute container elements.
      * 
      * @param attributes {@link List} of Attribute {@link Container}s
+     * @param matcher 
      * @return true iff the value appears somewhere in the list of containers
      */
-    private boolean attributeValuePresent(@Nonnull final List<Container> attributes) {
+    private boolean attributeValuePresent(@Nonnull final List<Container> attributes,
+            @Nonnull final Predicate<Element> matcher) {
         for (final Container attribute : attributes) {
-            if (attribute.findChild(attributeValueMatcher) != null) {
+            if (attribute.findChild(matcher) != null) {
                 return true;
             }
         }
@@ -192,37 +181,49 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
     }
 
     @Override
-    protected void doExecute(@Nonnull final Item<Element> item) {
-        final Element entity = item.unwrap();
-        if (SAMLMetadataSupport.isEntityDescriptor(entity)) {
-            // Start from the entity
-            final Container entityContainer = new Container(entity);
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
+        final var name = getAttributeName();
+        final var format = getAttributeNameFormat();
+        final var attributeMatcher = new AttributeElementMatcher(name, format);
+        final var attributeMaker = new AttributeElementMaker(name, format);
 
-            // Dig down to <Extensions>
-            final Container extensionsContainer =
-                    entityContainer.locateChild(SAMLSupport.EXTENSIONS_MATCHER,
-                            SAMLSupport.EXTENSIONS_MAKER, Container.FIRST_CHILD);
+        final var value = getAttributeValue();
+        final var attributeValueMatcher = new AttributeValueElementMatcher(value);
+        final var attributeValueMaker = new AttributeValueElementMaker(value);
 
-            // Dig down to <EntityAttributes>
-            final Container attributesContainer =
-                    extensionsContainer.locateChild(MDAttrSupport.ENTITY_ATTRIBUTES_MATCHER,
-                            MDAttrSupport.ENTITY_ATTRIBUTES_MAKER,
-                            addingFirstChild ? Container.FIRST_CHILD : Container.LAST_CHILD);
-
-            // Collect all matching <Attribute> containers
-            final List<Container> attributes =
-                    attributesContainer.findChildren(attributeMatcher);
-
-            // If any of the existing attribute values match our value, we're done
-            if (attributeValuePresent(attributes)) {
-                log.debug("attribute value '{}' already present", attributeValue);
-                return;
+        for (final var item : itemCollection) {
+            final Element entity = item.unwrap();
+    
+            if (SAMLMetadataSupport.isEntityDescriptor(entity)) {
+                // Start from the entity
+                final Container entityContainer = new Container(entity);
+    
+                // Dig down to <Extensions>
+                final Container extensionsContainer =
+                        entityContainer.locateChild(SAMLSupport.EXTENSIONS_MATCHER,
+                                SAMLSupport.EXTENSIONS_MAKER, Container.FIRST_CHILD);
+    
+                // Dig down to <EntityAttributes>
+                final Container attributesContainer =
+                        extensionsContainer.locateChild(MDAttrSupport.ENTITY_ATTRIBUTES_MATCHER,
+                                MDAttrSupport.ENTITY_ATTRIBUTES_MAKER,
+                                isAddingFirstChild() ? Container.FIRST_CHILD : Container.LAST_CHILD);
+    
+                // Collect all matching <Attribute> containers
+                final List<Container> attributes =
+                        attributesContainer.findChildren(attributeMatcher);
+    
+                // If any of the existing attribute values match our value, we're done
+                if (attributeValuePresent(attributes, attributeValueMatcher)) {
+                    log.debug("attribute value '{}' already present", attributeValue);
+                    return;
+                }
+    
+                // If not already present, re-locate an <Attribute> and add it in there.
+                final Container attribute =
+                        attributesContainer.locateChild(attributeMatcher, attributeMaker, Container.LAST_CHILD);
+                attribute.addChild(attributeValueMaker, Container.LAST_CHILD);
             }
-
-            // If not already present, re-locate an <Attribute> and add it in there.
-            final Container attribute =
-                    attributesContainer.locateChild(attributeMatcher, attributeMaker, Container.LAST_CHILD);
-            attribute.addChild(attributeValueMaker, Container.LAST_CHILD);
         }
     }
 
@@ -234,19 +235,6 @@ public class EntityAttributeAddingStage extends AbstractIteratingStage<Element> 
             throw new ComponentInitializationException("attributeValue property must be supplied");
         }
 
-        attributeMatcher = new AttributeElementMatcher(attributeName, attributeNameFormat);
-        attributeMaker = new AttributeElementMaker(attributeName, attributeNameFormat);
-        attributeValueMatcher = new AttributeValueElementMatcher(attributeValue);
-        attributeValueMaker = new AttributeValueElementMaker(attributeValue);
-    }
-
-    @Override
-    protected void doDestroy() {
-        attributeMatcher = null;
-        attributeMaker = null;
-        attributeValueMatcher = null;
-        attributeValueMaker = null;
-        super.doDestroy();
     }
 
 }

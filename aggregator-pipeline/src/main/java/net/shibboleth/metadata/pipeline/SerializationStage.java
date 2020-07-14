@@ -25,6 +25,7 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -57,13 +58,14 @@ public class SerializationStage<T> extends AbstractStage<T> {
     private final Logger log = LoggerFactory.getLogger(SerializationStage.class);
 
     /** File to which the item will be written. */
-    @NonnullAfterInit
+    @NonnullAfterInit @GuardedBy("this")
     private File outputFile;
 
     /** Whether an existing output file should be overwritten. Default value: <code>true</code> */
-    private boolean overwritingExistingOutputFile = true;
+    @GuardedBy("this") private boolean overwritingExistingOutputFile = true;
 
     /** Serializer used to write the collection to the output stream. */
+    @NonnullAfterInit @GuardedBy("this")
     private ItemCollectionSerializer<T> serializer;
 
     /**
@@ -71,7 +73,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * 
      * @return file to which the item will be written
      */
-    @NonnullAfterInit public File getOutputFile() {
+    @NonnullAfterInit public final synchronized File getOutputFile() {
         return outputFile;
     }
 
@@ -90,7 +92,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * 
      * @return whether an existing output file should be overwritten
      */
-    public boolean isOverwritingExistingOutputFile() {
+    public final synchronized boolean isOverwritingExistingOutputFile() {
         return overwritingExistingOutputFile;
     }
 
@@ -109,7 +111,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * 
      * @return serializer used to write item to the output file
      */
-    @Nullable public ItemCollectionSerializer<T> getSerializer() {
+    @Nullable public final synchronized ItemCollectionSerializer<T> getSerializer() {
         return serializer;
     }
 
@@ -123,26 +125,27 @@ public class SerializationStage<T> extends AbstractStage<T> {
         serializer = Constraint.isNotNull(itemSerializer, "Item collection serializer can not be null");
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        try (OutputStream stream = new FileOutputStream(outputFile)) {
-            serializer.serializeCollection(itemCollection, stream);
+        try (OutputStream stream = new FileOutputStream(getOutputFile())) {
+            getSerializer().serializeCollection(itemCollection, stream);
         } catch (final IOException e) {
-            throw new StageProcessingException("Error writing to output file " + outputFile.getAbsolutePath(), e);
+            throw new StageProcessingException("Error writing to output file " +
+                    getOutputFile().getAbsolutePath(), e);
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         outputFile = null;
         serializer = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (outputFile == null) {

@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom.saml.mdui;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -38,14 +39,14 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversalContext> {
 
     /** Whether to check that the CIDR notation describes a network. Defaults to true. */
-    private boolean checkingNetworks = true;
+    @GuardedBy("this") private boolean checkingNetworks = true;
     
     /**
      * Gets whether the stage is checking for network addresses only.
      * 
      * @return whether the stage is checking for network addresses only
      */
-    public boolean isCheckingNetworks() {
+    public final synchronized boolean isCheckingNetworks() {
         return checkingNetworks;
     }
 
@@ -54,7 +55,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
      * 
      * @param check whether to check for network addresses only
      */
-    public void setCheckingNetworks(final boolean check) {
+    public synchronized void setCheckingNetworks(final boolean check) {
         throwSetterPreconditionExceptions();
         this.checkingNetworks = check;
     }
@@ -71,7 +72,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
         final String hint = ipHint.getTextContent();
         try {
             final IPRange range = IPRange.parseCIDRBlock(hint);
-            if (checkingNetworks) {
+            if (isCheckingNetworks()) {
                 if (range.getHostAddress() != null) {
                     addError(context.getItem(), ipHint, "invalid IPHint '" + hint +
                             "': CIDR notation represents a host, not a network");

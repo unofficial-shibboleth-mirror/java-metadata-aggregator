@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -37,7 +38,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 public class CompositeStage<T> extends AbstractStage<T> {
 
     /** Stages which compose this stage. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Stage<T>> composedStages = List.of();
 
 
@@ -47,7 +48,7 @@ public class CompositeStage<T> extends AbstractStage<T> {
      * @return list the stages that compose this stage, never null nor containing null elements
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Stage<T>> getComposedStages() {
+    public final synchronized List<Stage<T>> getComposedStages() {
         return composedStages;
     }
 
@@ -65,7 +66,7 @@ public class CompositeStage<T> extends AbstractStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        for (final Stage<T> stage : composedStages) {
+        for (final Stage<T> stage : getComposedStages()) {
             stage.execute(itemCollection);
         }
     }

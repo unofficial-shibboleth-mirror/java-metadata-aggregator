@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -43,7 +44,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
 
     /** Transformers used on IDs. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Function<String, String>> idTransformers = List.of();
 
     /**
@@ -52,7 +53,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
      * @return transforms used to produce the transformed entity IDs, never null
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<Function<String, String>> getIdTransformers() {
+    public final synchronized Collection<Function<String, String>> getIdTransformers() {
         return idTransformers;
     }
 
@@ -73,7 +74,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
 
         final List<ItemId> transformedIds = new ArrayList<>();
         for (final ItemId id : ids) {
-            for (final Function<String, String> idTransform : idTransformers) {
+            for (final Function<String, String> idTransform : getIdTransformers()) {
                 final String transformedId = idTransform.apply(id.getId());
                 transformedIds.add(new ItemId(transformedId));
             }

@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 
@@ -37,7 +37,7 @@ import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.Ent
  *
  * @since 0.9.0
  */
-@ThreadSafe
+@Immutable
 public abstract class AbstractEntityAttributeMatcher implements Predicate<EntityAttributeContext> {
 
     /**

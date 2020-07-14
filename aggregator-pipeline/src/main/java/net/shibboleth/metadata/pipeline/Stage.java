@@ -31,8 +31,10 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
 /**
  * A stage in a {@link Pipeline} that operates upon a collection {@link Item} in a particular manner.
  * 
+ * <p>
  * Stages must be thread safe and reusable.
- * 
+ * </p>
+ *
  * @param <T> type of metadata upon which the stage operates
  */
 @ThreadSafe

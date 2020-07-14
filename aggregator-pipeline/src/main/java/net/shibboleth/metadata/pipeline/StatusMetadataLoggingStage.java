@@ -46,12 +46,12 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(StatusMetadataLoggingStage.class);
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(
-                    @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
-                    @Nonnull final Item<T> matchingItem,
-                    @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>,
-                        List<? extends ItemMetadata>> matchingMetadata)
+    @Override
+    protected void doExecute(
+            @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+            @Nonnull final Item<T> matchingItem,
+            @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>,
+            List<? extends ItemMetadata>> matchingMetadata)
                     throws StageProcessingException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);

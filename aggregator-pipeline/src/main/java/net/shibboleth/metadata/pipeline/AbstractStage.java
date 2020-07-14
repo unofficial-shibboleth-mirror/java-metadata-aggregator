@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -41,7 +42,7 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
      * The {@link Predicate} applied to the supplied item collection to determine whether the stage will be executed.
      * Default value: always <code>true</code>.
      */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private Predicate<Collection<Item<T>>> collectionPredicate = x -> true;
     
     /**
@@ -51,7 +52,7 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
      * @param pred the {@link Predicate} applied to the supplied item collection to determine
      * whether the stage will be executed
      */
-    public void setCollectionPredicate(@Nonnull final Predicate<Collection<Item<T>>> pred) {
+    public synchronized void setCollectionPredicate(@Nonnull final Predicate<Collection<Item<T>>> pred) {
         throwSetterPreconditionExceptions();
         collectionPredicate = Constraint.isNotNull(pred, "collectionPredicate may not be null");
     }
@@ -64,7 +65,7 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
      * the stage will be executed.
      */
     @Nonnull
-    public Predicate<Collection<Item<T>>> getCollectionPredicate() {
+    public final synchronized Predicate<Collection<Item<T>>> getCollectionPredicate() {
         return collectionPredicate;
     }
 
@@ -75,7 +76,7 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
 
         final var start = Instant.now();
 
-        if (collectionPredicate.test(itemCollection)) {
+        if (getCollectionPredicate().test(itemCollection)) {
             doExecute(itemCollection);
         }
 

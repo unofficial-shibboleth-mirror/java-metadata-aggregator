@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -45,24 +46,24 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
     private final Logger log = LoggerFactory.getLogger(EntityRegistrationAuthorityFilterStage.class);
 
     /** Whether a descriptor is required to have registration information. Default value: false */
-    private boolean requiringRegistrationInformation;
+    @GuardedBy("this") private boolean requiringRegistrationInformation;
 
     /** Registrars which are white/black listed depending on the value of {@link #whitelistingAuthorities}. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<String> designatedAuthorities = Set.of();
 
     /** Whether {@link #designatedAuthorities} should be considered a whitelist or a blacklist. Default value: false */
-    private boolean whitelistingAuthorities;
+    @GuardedBy("this") private boolean whitelistingAuthorities;
 
     /** Whether EntitiesDescriptor that do not contain EntityDescriptors should be removed. Default value: true */
-    private boolean removingEntitylessEntitiesDescriptor = true;
+    @GuardedBy("this") private boolean removingEntitylessEntitiesDescriptor = true;
 
     /**
      * Gets whether a descriptor is required to have registration information.
      * 
      * @return whether a descriptor is required to have registration information
      */
-    public boolean isRequiringRegistrationInformation() {
+    public final synchronized boolean isRequiringRegistrationInformation() {
         return requiringRegistrationInformation;
     }
 
@@ -82,7 +83,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @return list of designated registration authority, never null
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<String> getDesignatedRegistrationAuthorities() {
+    public final synchronized Collection<String> getDesignatedRegistrationAuthorities() {
         return designatedAuthorities;
     }
 
@@ -102,7 +103,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * 
      * @return true if the designated registration authority should be considered a whitelist, false otherwise
      */
-    public boolean isWhitelistingRegistrationAuthorities() {
+    public final synchronized boolean isWhitelistingRegistrationAuthorities() {
         return whitelistingAuthorities;
     }
 
@@ -122,7 +123,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * 
      * @return whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
-    public boolean isRemovingEntitylessEntitiesDescriptor() {
+    public final synchronized boolean isRemovingEntitylessEntitiesDescriptor() {
         return removingEntitylessEntitiesDescriptor;
     }
 
@@ -134,13 +135,6 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
         throwSetterPreconditionExceptions();
         removingEntitylessEntitiesDescriptor = remove;
-    }
-
-    @Override
-    protected void doDestroy() {
-        designatedAuthorities = null;
-
-        super.doDestroy();
     }
 
     @Override
@@ -198,8 +192,8 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
             }
         }
 
-        if (removingEntitylessEntitiesDescriptor && childEntitiesDescriptors.isEmpty()
-                && childEntityDescriptors.isEmpty()) {
+        if (childEntitiesDescriptors.isEmpty() && childEntityDescriptors.isEmpty() &&
+                isRemovingEntitylessEntitiesDescriptor()) {
             return true;
         }
 
@@ -223,15 +217,14 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
         final Element registrationInfoElement =
                 SAMLMetadataSupport.getDescriptorExtension(descriptor, MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
         if (registrationInfoElement == null) {
-            if (requiringRegistrationInformation) {
+            if (isRequiringRegistrationInformation()) {
                 log.debug(
                         "{} pipeline stage removing Item because it did not have " +
                                 "required registration information extension",
                         getId());
                 return true;
-            } else {
-                return false;
             }
+            return false;
         }
 
         final String registrationAuthority =
@@ -244,13 +237,15 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
             return true;
         }
 
-        if (whitelistingAuthorities && !designatedAuthorities.contains(registrationAuthority)) {
+        if (isWhitelistingRegistrationAuthorities() &&
+                !getDesignatedRegistrationAuthorities().contains(registrationAuthority)) {
             log.debug("{} pipeline stage removing Item because its registration authority was not on the whitelist",
                     getId());
             return true;
         }
 
-        if (!whitelistingAuthorities && designatedAuthorities.contains(registrationAuthority)) {
+        if (!isWhitelistingRegistrationAuthorities() &&
+                getDesignatedRegistrationAuthorities().contains(registrationAuthority)) {
             log.debug("{} pipeline stage removing Item because its registration authority was on the blacklist",
                     getId());
             return true;
@@ -258,4 +253,12 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
 
         return false;
     }
+
+    @Override
+    protected void doDestroy() {
+        designatedAuthorities = null;
+
+        super.doDestroy();
+    }
+
 }

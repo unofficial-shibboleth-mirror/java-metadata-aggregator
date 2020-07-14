@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 
@@ -33,7 +33,7 @@ import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.Ent
  *
  * @since 0.9.0
  */
-@ThreadSafe
+@Immutable
 public class RegistrationAuthorityMatcher implements Predicate<EntityAttributeContext> {
     
     /** Registration authority to match against. */
@@ -54,9 +54,8 @@ public class RegistrationAuthorityMatcher implements Predicate<EntityAttributeCo
         if (registrationAuthority == null) {
             // match entities *without* a registration authority
             return null == input.getRegistrationAuthority();
-        } else {
-            return registrationAuthority.equals(input.getRegistrationAuthority());
         }
+        return registrationAuthority.equals(input.getRegistrationAuthority());
     }
 
 }

@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -61,6 +62,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
+    @Nonnull @GuardedBy("this")
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /**
@@ -68,13 +70,14 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      *
      * Default: <code>true</code>.
      */
-    private boolean waitingForPipelines = true;
+    @GuardedBy("this") private boolean waitingForPipelines = true;
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
+    @Nonnull @GuardedBy("this")
     private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = List.of();
 
     /**
@@ -82,7 +85,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * 
      * @return executor service used to run the selected and non-selected item pipelines
      */
-    @Nonnull public ExecutorService getExecutorService() {
+    @Nonnull public final synchronized ExecutorService getExecutorService() {
         return executorService;
     }
 
@@ -101,7 +104,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * 
      * @return whether this child waits for all the invoked pipelines to complete before proceeding
      */
-    public boolean isWaitingForPipelines() {
+    public final synchronized boolean isWaitingForPipelines() {
         return waitingForPipelines;
     }
 
@@ -120,7 +123,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    @Nonnull public Supplier<Collection<Item<T>>> getCollectionFactory() {
+    @Nonnull public final synchronized Supplier<Collection<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -139,7 +142,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * 
      * @return pipeline and item selection strategies used to demultiplex item collections within this stage
      */
-    @Nonnull @NonnullElements @Unmodifiable public List<Pair<Pipeline<T>, Predicate<Item<T>>>>
+    @Nonnull @NonnullElements @Unmodifiable public final synchronized List<Pair<Pipeline<T>, Predicate<Item<T>>>>
             getPipelineAndSelectionStrategies() {
         return pipelineAndStrategies;
     }
@@ -166,10 +169,10 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
             throws StageProcessingException {
         final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
 
-        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
+        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : getPipelineAndSelectionStrategies()) {
             final Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
             final Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
-            final Collection<Item<T>> selectedItems = collectionFactory.get();
+            final Collection<Item<T>> selectedItems = getCollectionFactory().get();
 
             for (final Item<T> item : itemCollection) {
                 if (selectionStrategy.test(item)) {
@@ -179,7 +182,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
                 }
             }
 
-            pipelineFutures.add(executorService.submit(new PipelineCallable<>(pipeline, selectedItems)));
+            pipelineFutures.add(getExecutorService().submit(new PipelineCallable<>(pipeline, selectedItems)));
         }
 
         if (isWaitingForPipelines()) {

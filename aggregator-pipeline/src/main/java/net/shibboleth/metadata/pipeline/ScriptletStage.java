@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -60,6 +62,7 @@ public class ScriptletStage<T> extends AbstractStage<T> {
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
 
     /** Script executed by this stage. */
+    @NonnullAfterInit @GuardedBy("this")
     private EvaluableScript script;
 
     /**
@@ -67,7 +70,7 @@ public class ScriptletStage<T> extends AbstractStage<T> {
      * 
      * @return the script executed by this stage
      */
-    @Nullable public EvaluableScript getScript() {
+    @Nullable public final synchronized EvaluableScript getScript() {
         return script;
     }
 
@@ -81,14 +84,14 @@ public class ScriptletStage<T> extends AbstractStage<T> {
         script = Constraint.isNotNull(stageScript, "Stage script can not be null");
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
         final SimpleScriptContext context = new SimpleScriptContext();
         context.setAttribute(ITEMS, itemCollection, SimpleScriptContext.ENGINE_SCOPE);
 
         try {
-            script.eval(context);
+            getScript().eval(context);
         } catch (final ScriptException e) {
             final String errMsg = getId() + " pipeline stage unable to execute script";
             log.error(errMsg, e);
@@ -96,8 +99,8 @@ public class ScriptletStage<T> extends AbstractStage<T> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (script == null) {

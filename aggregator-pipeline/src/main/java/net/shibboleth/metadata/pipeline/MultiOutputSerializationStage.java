@@ -23,10 +23,12 @@ import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemSerializer;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -92,9 +94,11 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
     }
 
     /** Strategy used to determine where to serialize the item. */
+    @NonnullAfterInit @GuardedBy("this")
     private OutputStrategy<T> outputStrategy;
 
     /** Serializer used to write the collection to the output stream. */
+    @NonnullAfterInit @GuardedBy("this")
     private ItemSerializer<T> serializer;
 
     /**
@@ -102,7 +106,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * 
      * @return the output strategy function
      */
-    @Nullable public OutputStrategy<T> getOutputStrategy() {
+    @Nullable public final synchronized OutputStrategy<T> getOutputStrategy() {
         return outputStrategy;
     }
 
@@ -121,7 +125,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * 
      * @return serializer used to write item to the output file
      */
-    @Nullable public ItemSerializer<T> getSerializer() {
+    @Nullable public final synchronized ItemSerializer<T> getSerializer() {
         return serializer;
     }
 
@@ -138,9 +142,9 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
     @Override
     protected void doExecute(@Nonnull final Item<T> item)
             throws StageProcessingException {
-        try (final Destination destination = outputStrategy.getDestination(item);
+        try (final Destination destination = getOutputStrategy().getDestination(item);
                 final OutputStream stream = destination.getOutputStream()) {
-            serializer.serialize(item, stream);
+            getSerializer().serialize(item, stream);
         } catch (final IOException e) {
             throw new StageProcessingException("Error writing to output location", e);
         }

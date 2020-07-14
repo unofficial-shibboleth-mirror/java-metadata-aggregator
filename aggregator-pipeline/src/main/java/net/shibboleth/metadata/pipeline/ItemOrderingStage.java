@@ -20,6 +20,7 @@ package net.shibboleth.metadata.pipeline;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -39,7 +40,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class ItemOrderingStage<T> extends AbstractStage<T> {
 
     /** Strategy used to order a collection of Items. The default strategy performs no ordering. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private ItemOrderingStrategy<T> orderingStrategy = new NoOpItemOrderingStrategy<>();
 
     /**
@@ -47,7 +48,7 @@ public class ItemOrderingStage<T> extends AbstractStage<T> {
      * 
      * @return strategy used to order a collection of Items
      */
-    @Nonnull public ItemOrderingStrategy<T> getItemOrderingStrategy() {
+    @Nonnull public final synchronized ItemOrderingStrategy<T> getItemOrderingStrategy() {
         return orderingStrategy;
     }
 
@@ -64,7 +65,7 @@ public class ItemOrderingStage<T> extends AbstractStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        final var orderedItems = orderingStrategy.order(itemCollection);
+        final var orderedItems = getItemOrderingStrategy().order(itemCollection);
         itemCollection.clear();
         itemCollection.addAll(orderedItems);
     }

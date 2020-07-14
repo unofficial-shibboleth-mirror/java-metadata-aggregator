@@ -19,14 +19,14 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * An entity attribute matcher which matches a given assurance certification value.
  *
  * @since 0.10.0
  */
-@ThreadSafe
+@Immutable
 public class AssuranceCertificationMatcher extends AbstractExactValueMatcher {
 
     /** Attribute Name value for assurance certifications. */

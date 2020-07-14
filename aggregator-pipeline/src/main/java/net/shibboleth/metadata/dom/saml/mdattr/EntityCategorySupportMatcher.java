@@ -19,14 +19,14 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * An entity attribute matcher which matches a given entity support category.
  *
  * @since 0.9.0
  */
-@ThreadSafe
+@Immutable
 public class EntityCategorySupportMatcher extends AbstractExactValueMatcher {
     
     /**

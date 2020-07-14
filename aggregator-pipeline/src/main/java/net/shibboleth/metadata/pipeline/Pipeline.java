@@ -35,11 +35,15 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
  * first stage is responsible for populating the collection with an initial set of Items which subsequent stages further
  * modify.
  * 
+ * <p>
  * Each pipeline must be initialized, via the {@link #initialize()} method, before use. After a pipeline has been
  * initialized it may never be re-initialized. A pipeline is not considered initialized until all of its {@link Stage},
  * have been initialized.
+ * </p>
  * 
+ * <p>
  * Pipelines are reusable and threadsafe.
+ * </p>
  * 
  * @param <T> type of item which is processed by this pipeline
  */

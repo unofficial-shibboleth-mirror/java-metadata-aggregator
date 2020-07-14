@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -69,21 +70,27 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     private final Logger log = LoggerFactory.getLogger(SplitMergeStage.class);
 
     /** Service used to execute the selected and/or non-selected item pipelines. */
+    @Nonnull @GuardedBy("this")
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
+    @Nonnull @GuardedBy("this")
     private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** Strategy used to split the given item collection. */
+    @Nonnull @GuardedBy("this")
     private Predicate<Item<T>> selectionStrategy = x -> false;
 
     /** Pipeline that receives the selected items. */
+    @Nullable @GuardedBy("this")
     private Pipeline<T> selectedItemPipeline;
 
     /** Pipeline that receives the non-selected items. */
+    @Nullable @GuardedBy("this")
     private Pipeline<T> nonselectedItemPipeline;
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
+    @Nonnull @GuardedBy("this")
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /**
@@ -91,7 +98,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return executor service used to run the selected and non-selected item pipelines
      */
-    @Nonnull public ExecutorService getExecutorService() {
+    @Nonnull public final synchronized ExecutorService getExecutorService() {
         return executorService;
     }
 
@@ -110,7 +117,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    @Nonnull public Supplier<Collection<Item<T>>> getCollectionFactory() {
+    @Nonnull public final synchronized Supplier<Collection<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -129,7 +136,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return strategy used to split the given item collection
      */
-    @Nonnull public Predicate<Item<T>> getSelectionStrategy() {
+    @Nonnull public final synchronized Predicate<Item<T>> getSelectionStrategy() {
         return selectionStrategy;
     }
 
@@ -148,7 +155,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return pipeline that receives the selected items
      */
-    @Nullable public Pipeline<T> getSelectedItemPipeline() {
+    @Nullable public final synchronized Pipeline<T> getSelectedItemPipeline() {
         return selectedItemPipeline;
     }
 
@@ -167,7 +174,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return pipeline that receives the non-selected items
      */
-    @Nullable public Pipeline<T> getNonselectedItemPipeline() {
+    @Nullable public final synchronized Pipeline<T> getNonselectedItemPipeline() {
         return nonselectedItemPipeline;
     }
 
@@ -186,7 +193,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return strategy used to merge all the joined pipeline results in to the final Item collection, never null
      */
-    @Nonnull public CollectionMergeStrategy getCollectionMergeStrategy() {
+    @Nonnull public final synchronized CollectionMergeStrategy getCollectionMergeStrategy() {
         return mergeStrategy;
     }
 
@@ -201,27 +208,25 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
         mergeStrategy = Constraint.isNotNull(strategy, "Collection merge strategy can not be null");
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
             throws StageProcessingException {
-        final Collection<Item<T>> selectedItems = collectionFactory.get();
-        final Collection<Item<T>> nonselectedItems = collectionFactory.get();
+        final Collection<Item<T>> selectedItems = getCollectionFactory().get();
+        final Collection<Item<T>> nonselectedItems = getCollectionFactory().get();
 
+        final var strategy = getSelectionStrategy();
         for (final Item<T> item : itemCollection) {
-            if (item == null) {
-                continue;
-            }
-
-            if (selectionStrategy.test(item)) {
+            if (strategy.test(item)) {
                 selectedItems.add(item);
             } else {
                 nonselectedItems.add(item);
             }
         }
 
-        final Future<Collection<Item<T>>> selectedItemFuture = executePipeline(selectedItemPipeline, selectedItems);
+        final Future<Collection<Item<T>>> selectedItemFuture =
+                executePipeline(getSelectedItemPipeline(), selectedItems);
         final Future<Collection<Item<T>>> nonselectedItemFuture =
-                executePipeline(nonselectedItemPipeline, nonselectedItems);
+                executePipeline(getNonselectedItemPipeline(), nonselectedItems);
 
         final ArrayList<Collection<Item<T>>> pipelineResults = new ArrayList<>();
         
@@ -230,7 +235,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
         pipelineResults.add(FutureSupport.futureItems(nonselectedItemFuture));
 
         itemCollection.clear();
-        mergeStrategy.mergeCollection(itemCollection, pipelineResults);
+        getCollectionMergeStrategy().mergeCollection(itemCollection, pipelineResults);
     }
 
     /**
@@ -253,11 +258,11 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
         }
 
         final PipelineCallable<T> callable = new PipelineCallable<>(pipeline, items);
-        return executorService.submit(callable);
+        return getExecutorService().submit(callable);
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         executorService = null;
         collectionFactory = null;
         selectionStrategy = null;
@@ -268,8 +273,8 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (selectedItemPipeline == null && nonselectedItemPipeline == null) {
