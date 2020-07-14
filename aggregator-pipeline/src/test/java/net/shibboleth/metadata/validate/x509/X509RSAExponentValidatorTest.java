@@ -18,11 +18,13 @@
 
 package net.shibboleth.metadata.validate.x509;
 
+import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.validate.Validator;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -93,4 +95,51 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
         // do not initialize
         Assert.assertNull(val.getId(), "unset ID should be null");
     }
+    
+    public void testErrorBoundaryLongZero() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setErrorBoundary(0L);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testErrorBoundaryLongNegative() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setErrorBoundary(-1L);
+    }
+
+    @Test
+    public void testWarningBoundaryLongZero() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setWarningBoundary(0L);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testWarningBoundaryLongNegative() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setWarningBoundary(-1L);
+    }
+
+    public void testErrorBoundaryBigZero() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setErrorBoundary(BigInteger.ZERO);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testErrorBoundaryBigNegative() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setErrorBoundary(BigInteger.valueOf(-1));
+    }
+
+    @Test
+    public void testWarningBoundaryBigZero() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setWarningBoundary(BigInteger.ZERO);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testWarningBoundaryBigNegative() throws Exception {
+        final var stage = new X509RSAExponentValidator();
+        stage.setWarningBoundary(BigInteger.valueOf(-1));
+    }
+
 }

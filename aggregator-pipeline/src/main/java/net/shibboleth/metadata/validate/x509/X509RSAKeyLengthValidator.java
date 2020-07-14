@@ -22,6 +22,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -42,17 +43,17 @@ import net.shibboleth.metadata.Item;
 public class X509RSAKeyLengthValidator extends AbstractX509Validator {
 
     /** The RSA key length below which an error should result. Default: 2048. */
-    private int errorBoundary = 2048;
+    @GuardedBy("this") private int errorBoundary = 2048;
     
     /** The RSA key length below which a warning should result. Default: 0 (disabled). */
-    private int warningBoundary;
+    @GuardedBy("this") private int warningBoundary;
 
     /**
      * Get the RSA key length below which an error will result.
      * 
      * @return the RSA key length below which an error will result.
      */
-    public int getErrorBoundary() {
+    public final synchronized int getErrorBoundary() {
         return errorBoundary;
     }
     
@@ -61,7 +62,7 @@ public class X509RSAKeyLengthValidator extends AbstractX509Validator {
      * 
      * @param length the RSA key length below which an error should result
      */
-    public void setErrorBoundary(final int length) {
+    public synchronized void setErrorBoundary(final int length) {
         errorBoundary = length;
     }
     
@@ -70,7 +71,7 @@ public class X509RSAKeyLengthValidator extends AbstractX509Validator {
      * 
      * @return the RSA key length below which a warning will result.
      */
-    public int getWarningBoundary() {
+    public final synchronized int getWarningBoundary() {
         return warningBoundary;
     }
     
@@ -79,11 +80,10 @@ public class X509RSAKeyLengthValidator extends AbstractX509Validator {
      * 
      * @param length the RSA key length below which a warning should result
      */
-    public void setWarningBoundary(final int length) {
+    public synchronized void setWarningBoundary(final int length) {
         warningBoundary = length;
     }
     
-    /** {@inheritDoc} */
     @Override
     public void doValidate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
@@ -91,10 +91,10 @@ public class X509RSAKeyLengthValidator extends AbstractX509Validator {
         if ("RSA".equals(key.getAlgorithm())) {
             final RSAPublicKey rsaKey = (RSAPublicKey) key;
             final int keyLen = rsaKey.getModulus().bitLength();
-            if (keyLen < errorBoundary) {
+            if (keyLen < getErrorBoundary()) {
                 addError("RSA key length of " + keyLen + " bits is less than required " + errorBoundary,
                         item, stageId);
-            } else if (keyLen < warningBoundary) {
+            } else if (keyLen < getWarningBoundary()) {
                 addWarning("RSA key length of " + keyLen + " bits is less than recommended " + warningBoundary,
                         item, stageId);
             }

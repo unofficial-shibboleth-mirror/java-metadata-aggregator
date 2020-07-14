@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.apache.commons.codec.binary.Hex;
@@ -40,6 +40,7 @@ import org.springframework.core.io.Resource;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -54,17 +55,19 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
     
     /** Sequence of bytes put on the front of the string to be hashed. */
-    private final byte[] openSSLprefix = {
+    private static final byte[] OPEN_SSL_PREFIX = {
             'M', 'o', 'd', 'u', 'l', 'u', 's', '=',
     };
     
     /** Resource that provides the blacklist. */
+    @NonnullAfterInit @GuardedBy("this")
     private Resource blacklistResource;
     
     /** Restrict checking to a given key size. Default: no restriction (0). */
-    private int keySize;
+    @GuardedBy("this") private int keySize;
 
     /** Set of digest values blacklisted by this validator. */
+    @Nonnull @GuardedBy("this")
     private final Set<String> blacklistedValues = new HashSet<>();
 
     /**
@@ -72,7 +75,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
      * 
      * @return resource that provides the blacklist
      */
-    @Nullable public Resource getBlacklistResource() {
+    @NonnullAfterInit public final synchronized Resource getBlacklistResource() {
         return blacklistResource;
     }
 
@@ -91,7 +94,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
      * 
      * @param size restricted key size, or 0 for no restriction
      */
-    public void setKeySize(final int size) {
+    public synchronized void setKeySize(final int size) {
         keySize = size;
     }
     
@@ -100,7 +103,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
      * 
      * @return restricted key size for this blacklist, or 0 if no restriction
      */
-    public int getKeySize() {
+    public final synchronized int getKeySize() {
         return keySize;
     }
 
@@ -128,7 +131,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
             // Now construct the thing we want to hash
             final ByteArrayOutputStream bb = new ByteArrayOutputStream();
             try {
-                bb.write(openSSLprefix);
+                bb.write(OPEN_SSL_PREFIX);
                 for (final char c : encodedModulus) {
                     bb.write((byte) c);
                 }
@@ -154,18 +157,26 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
         }
     }
     
-    /** {@inheritDoc} */
     @Override
     public void doValidate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) throws StageProcessingException {
         throwComponentStateExceptions();
         final PublicKey key = cert.getPublicKey();
+
         if ("RSA".equals(key.getAlgorithm())) {
             final RSAPublicKey rsaKey = (RSAPublicKey) key;
             final BigInteger modulus = rsaKey.getModulus();
-            if (keySize == 0 || keySize == modulus.bitLength()) {
+
+            final Set<String> values;
+            final int keySz;
+            synchronized (this) {
+                values = blacklistedValues;
+                keySz = keySize;
+            }
+
+            if (keySz == 0 || keySz == modulus.bitLength()) {
                 final String value = openSSLDigest(modulus);
-                if (blacklistedValues.contains(value)) {
+                if (values.contains(value)) {
                     addError("RSA modulus included in key blacklist (" + value + ")",
                             item, stageId);
                 }
@@ -173,7 +184,6 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void doDestroy() {
         blacklistResource = null;
@@ -182,7 +192,6 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();

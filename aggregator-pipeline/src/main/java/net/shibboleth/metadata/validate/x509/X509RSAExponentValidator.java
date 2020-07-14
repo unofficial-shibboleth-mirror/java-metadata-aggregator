@@ -23,6 +23,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -44,9 +45,11 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class X509RSAExponentValidator extends AbstractX509Validator {
 
     /** The RSA public exponent value below which an error should result. Default: 5. */
+    @Nonnull @GuardedBy("this")
     private BigInteger errorBoundary = BigInteger.valueOf(5);
     
     /** The RSA public exponent value below which a warning should result. Default: 0 (disabled). */
+    @Nonnull @GuardedBy("this")
     private BigInteger warningBoundary = BigInteger.ZERO;
 
     /**
@@ -54,8 +57,8 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * 
      * @return the RSA public exponent below which an error will result.
      */
-    public long getErrorBoundary() {
-        return errorBoundary.longValue();
+    public final synchronized BigInteger getErrorBoundary() {
+        return errorBoundary;
     }
     
     /**
@@ -63,9 +66,18 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * 
      * @param length the RSA public exponent below which an error should result
      */
+    public synchronized void setErrorBoundary(@Nonnull final BigInteger length) {
+        Constraint.isGreaterThanOrEqual(0, length.compareTo(BigInteger.ZERO), "boundary value must not be negative");
+        errorBoundary = length;
+    }
+
+    /**
+     * Set the RSA public exponent below which an error should result.
+     * 
+     * @param length the RSA public exponent below which an error should result
+     */
     public void setErrorBoundary(final long length) {
-        Constraint.isGreaterThanOrEqual(0, length, "boundary value must not be negative");
-        errorBoundary = BigInteger.valueOf(length);
+        setErrorBoundary(BigInteger.valueOf(length));
     }
     
     /**
@@ -73,8 +85,8 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * 
      * @return the RSA public exponent below which a warning will result.
      */
-    public long getWarningBoundary() {
-        return warningBoundary.longValue();
+    public final synchronized BigInteger getWarningBoundary() {
+        return warningBoundary;
     }
     
     /**
@@ -82,9 +94,18 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * 
      * @param length the RSA public exponent below which a warning should result
      */
-    public void setWarningBoundary(final long length) {
-        Constraint.isGreaterThanOrEqual(0, length, "boundary value must not be negative");
-        warningBoundary = BigInteger.valueOf(length);
+    public synchronized void setWarningBoundary(@Nonnull final BigInteger length) {
+        Constraint.isGreaterThanOrEqual(0, length.compareTo(BigInteger.ZERO), "boundary value must not be negative");
+        warningBoundary = length;
+    }
+
+    /**
+     * Set the RSA public exponent below which a warning should result.
+     * 
+     * @param length the RSA public exponent below which a warning should result
+     */
+    public synchronized void setWarningBoundary(final long length) {
+        setWarningBoundary(BigInteger.valueOf(length));
     }
     
     @Override
@@ -96,10 +117,10 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
             final BigInteger exponent = rsaKey.getPublicExponent();
             if (!exponent.testBit(0)) {
                 addError("RSA public exponent of " + exponent + " must be odd", item, stageId);
-            } else if (exponent.compareTo(errorBoundary) < 0) {
+            } else if (exponent.compareTo(getErrorBoundary()) < 0) {
                 addError("RSA public exponent of " + exponent + " is less than required " + errorBoundary,
                         item, stageId);
-            } else if (exponent.compareTo(warningBoundary) < 0) {
+            } else if (exponent.compareTo(getWarningBoundary()) < 0) {
                 addWarning("RSA public exponent of " + exponent + " is less than recommended " + warningBoundary,
                         item, stageId);
             }

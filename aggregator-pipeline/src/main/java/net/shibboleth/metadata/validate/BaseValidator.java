@@ -18,6 +18,8 @@
 package net.shibboleth.metadata.validate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
@@ -33,6 +35,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public abstract class BaseValidator extends BaseIdentifiableInitializableComponent {
 
     /**
@@ -45,7 +48,7 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      *
      * @since 0.10.0
      */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private String message = "value rejected: '%s'";
 
     /**
@@ -56,7 +59,7 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      * @since 0.10.0
      */
     @Nonnull
-    public String getMessage() {
+    public final synchronized String getMessage() {
         return message;
     }
 

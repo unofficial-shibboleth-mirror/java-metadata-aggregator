@@ -20,6 +20,7 @@ package net.shibboleth.metadata.validate.string;
 import java.util.regex.Matcher;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.validate.Validator;
@@ -32,6 +33,7 @@ import net.shibboleth.metadata.validate.Validator;
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public class AcceptStringRegexValidator extends BaseStringRegexValidator implements Validator<String> {
 
     @Override
@@ -39,9 +41,8 @@ public class AcceptStringRegexValidator extends BaseStringRegexValidator impleme
         final Matcher matcher = getPattern().matcher(e);
         if (matcher.matches()) {
             return Action.DONE;
-        } else {
-            return Action.CONTINUE;
         }
+        return Action.CONTINUE;
     }
 
 }

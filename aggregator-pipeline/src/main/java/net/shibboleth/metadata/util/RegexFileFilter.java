@@ -22,7 +22,7 @@ import java.io.FileFilter;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -34,7 +34,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  *
  * @since 0.10.0
  */
-@ThreadSafe
+@Immutable
 public class RegexFileFilter implements FileFilter {
 
     /**

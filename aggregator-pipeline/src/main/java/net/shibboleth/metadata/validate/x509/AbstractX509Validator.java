@@ -20,6 +20,7 @@ package net.shibboleth.metadata.validate.x509;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -34,6 +35,7 @@ import net.shibboleth.metadata.validate.Validator;
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public abstract class AbstractX509Validator extends BaseValidator implements Validator<X509Certificate> {
 
     /**

@@ -20,6 +20,8 @@ package net.shibboleth.metadata.validate.string;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.validate.BaseValidator;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
@@ -30,14 +32,15 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public abstract class BaseStringRegexValidator extends BaseValidator {
 
     /** Regular expression to be accepted by this validator. */
-    @NonnullAfterInit
+    @NonnullAfterInit @GuardedBy("this")
     private String regex;
 
     /** Compiled regular expression to use in match operations. */
-    @NonnullAfterInit
+    @NonnullAfterInit @GuardedBy("this")
     private Pattern pattern;
 
     /**
@@ -46,7 +49,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
      * @return Returns the regular expression.
      */
     @NonnullAfterInit
-    public String getRegex() {
+    public final synchronized String getRegex() {
         return regex;
     }
 
@@ -55,7 +58,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
      *
      * @param r the regular expression to set.
      */
-    public void setRegex(@Nonnull final String r) {
+    public synchronized void setRegex(@Nonnull final String r) {
         throwSetterPreconditionExceptions();
         regex = r;
     }
@@ -65,7 +68,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
      *
      * @return the compiled {@link Pattern}
      */
-    protected Pattern getPattern() {
+    protected final synchronized Pattern getPattern() {
         return pattern;
     }
 
@@ -77,7 +80,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
             throw new ComponentInitializationException("regular expression to be matched can not be null");
         }
 
-        pattern = Pattern.compile(regex);
+        pattern = Pattern.compile(getRegex());
     }
 
 }

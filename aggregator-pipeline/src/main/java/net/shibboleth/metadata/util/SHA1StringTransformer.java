@@ -20,6 +20,7 @@ package net.shibboleth.metadata.util;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
@@ -30,6 +31,7 @@ import org.cryptacular.util.HashUtil;
  *
  * @since 0.9.2
  */
+@Immutable
 public class SHA1StringTransformer implements Function<String, String> {
 
     @Override

@@ -18,6 +18,8 @@
 package net.shibboleth.metadata.validate.string;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.validate.BaseValidator;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
@@ -28,17 +30,18 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public abstract class BaseStringValueValidator extends BaseValidator {
 
     /** Value to be accepted by this validator. */
-    @NonnullAfterInit private String value;
+    @NonnullAfterInit @GuardedBy("this") private String value;
 
     /**
      * Returns the value.
      *
      * @return Returns the value.
      */
-    @NonnullAfterInit public String getValue() {
+    @NonnullAfterInit public final synchronized String getValue() {
         return value;
     }
 
@@ -47,11 +50,12 @@ public abstract class BaseStringValueValidator extends BaseValidator {
      *
      * @param v the value to set.
      */
-    public void setValue(@Nonnull final String v) {
+    public synchronized void setValue(@Nonnull final String v) {
         value = v;
     }
 
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (getValue() == null) {

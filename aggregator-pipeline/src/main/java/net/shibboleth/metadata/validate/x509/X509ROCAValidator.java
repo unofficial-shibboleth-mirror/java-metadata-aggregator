@@ -23,6 +23,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -44,6 +45,7 @@ public class X509ROCAValidator extends AbstractX509Validator {
      * @see <a href="https://github.com/crocs-muni/roca/blob/master/java/BrokenKey.java">original source code
      *  (dual MIT and Apache 2 licensed)</a>
      */
+    @Immutable
     private static class BrokenKey {
 
         // Checkstyle: JavadocVariable|JavadocMethod|ConstantName OFF

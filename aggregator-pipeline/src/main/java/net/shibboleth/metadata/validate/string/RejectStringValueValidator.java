@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.validate.string;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.validate.Validator;
@@ -30,6 +31,7 @@ import net.shibboleth.metadata.validate.Validator;
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public class RejectStringValueValidator extends BaseStringValueValidator implements Validator<String> {
 
     @Override
@@ -37,9 +39,8 @@ public class RejectStringValueValidator extends BaseStringValueValidator impleme
         if (e.equals(getValue())) {
             addErrorMessage(e, item, stageId);
             return Action.DONE;
-        } else {
-            return Action.CONTINUE;
         }
+        return Action.CONTINUE;
     }
 
 }
