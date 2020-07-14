@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
@@ -31,6 +32,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * 
  * @param <T> type of data contained in each item
  */
+@Immutable
 public class SimpleItemCollectionSerializer<T> implements ItemCollectionSerializer<T> {
 
     /** The {@link ItemSerializer} to use on each {@link Item} in turn. */

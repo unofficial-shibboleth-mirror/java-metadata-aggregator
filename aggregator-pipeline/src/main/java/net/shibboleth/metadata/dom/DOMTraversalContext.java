@@ -26,9 +26,17 @@ import net.shibboleth.metadata.Item;
 /**
  * The context for a particular DOM traversal.
  *
+ * <p>
  * Implementations may add additional fields and methods to the definition
  * of a {@link DOMTraversalContext}, and may define {@link #end()} to perform
  * operations at the end of the traversal.
+ * </p>
+ * 
+ * <p>
+ * Note that classes implementing this interface will normally be used only by the
+ * thread in which they are created, so implementations are not required to
+ * be thread-safe.
+ * </p>
  */
 public interface DOMTraversalContext {
 

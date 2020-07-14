@@ -23,12 +23,13 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
@@ -58,22 +59,63 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 @ThreadSafe
 public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsStrippingStage.Context> {
 
-    /** Context class for this kind of traversal. */
-    protected static class Context extends SimpleDOMTraversalContext {
+    /**
+     * Context class for this kind of traversal.
+     * 
+     * <p>
+     * An instance of this class is passed around during the traversal.
+     * To reduce the number of synchronizations, it includes a copy of
+     * each of the guarded state variables from the stage class instance.
+     * </p>
+     */
+    protected static final class Context extends SimpleDOMTraversalContext {
 
         /**
          * List of {@link Element}s to be removed from the document at the
          * end of the traversal.
          */
-        private List<Element> elements = new ArrayList<>();
+        @Nonnull @NonnullElements
+        private final List<Element> elements = new ArrayList<>();
+
+        /** Namespace of the elements to strip. */
+        @Nonnull @NotEmpty
+        private final String elementNamespace;
+
+        /** Names of the elements to strip. */
+        @Nonnull @NonnullElements @Unmodifiable
+        private final Collection<String> elementNames;
+
+        /** Whether we are operating in a whitelisting mode (<code>false</code> by default). */
+        private final boolean whitelisting;
 
         /**
          * Constructor.
          *
          * @param contextItem the {@link Item} we are traversing
+         * @param namespace 
+         * @param names 
+         * @param wl 
          */
-        public Context(@Nonnull final Item<Element> contextItem) {
+        public Context(@Nonnull final Item<Element> contextItem,
+                @Nonnull @NotEmpty final String namespace,
+                @Nonnull @NonnullElements @Unmodifiable final Collection<String> names,
+                final boolean wl) {
             super(contextItem);
+            elementNamespace = namespace;
+            elementNames = names;
+            whitelisting = wl;
+        }
+
+        protected final String getElementNamespace() {
+            return elementNamespace;
+        }
+
+        protected final Collection<String> getElementNames() {
+            return elementNames;
+        }
+        
+        protected final boolean isWhitelisting() {
+            return whitelisting;
         }
 
         /**
@@ -94,10 +136,11 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     }
 
     /** Namespace of the elements to strip. */
+    @NonnullAfterInit @NotEmpty @GuardedBy("this")
     private String elementNamespace;
 
     /** Names of the elements to strip. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<String> elementNames = Set.of();
 
     /** Whether we are operating in a whitelisting mode (<code>false</code> by default). */
@@ -108,7 +151,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * 
      * @return namespace of the elements to strip
      */
-    @Nullable public String getElementNamespace() {
+    @NonnullAfterInit @NotEmpty public final synchronized String getElementNamespace() {
         return elementNamespace;
     }
 
@@ -129,7 +172,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * @return the names of the elements to strip
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<String> getElementNames() {
+    public final synchronized Collection<String> getElementNames() {
         return elementNames;
     }
 
@@ -138,7 +181,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * 
      * @param names the names of the elements to strip
      */
-    public void setElementNames(
+    public synchronized void setElementNames(
             @Nonnull @NonnullElements @Unmodifiable @NotEmpty final Collection<String> names) {
         throwSetterPreconditionExceptions();
         elementNames = Set.copyOf(names);
@@ -165,14 +208,14 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     }
 
     @Override
-    protected boolean applicable(@Nonnull final Element element) {
+    protected boolean applicable(@Nonnull final Element element, @Nonnull final Context context) {
         // ignore all elements not in the given namespace
-        if (!elementNamespace.equals(element.getNamespaceURI())) {
+        if (!context.getElementNamespace().equals(element.getNamespaceURI())) {
             return false;
         }
 
         // Whitelisting reverses the meaning of presence in the list
-        return whitelisting ^ elementNames.contains(element.getLocalName());
+        return context.isWhitelisting() ^ context.getElementNames().contains(element.getLocalName());
     }
 
     @Override
@@ -198,8 +241,8 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     }
 
     @Override
-    protected Context buildContext(@Nonnull final Item<Element> item) {
-        return new Context(item);
+    protected synchronized Context buildContext(@Nonnull final Item<Element> item) {
+        return new Context(item, getElementNamespace(), getElementNames(), isWhitelisting());
     }
 
 }

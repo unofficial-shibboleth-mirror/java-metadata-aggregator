@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Attr;
@@ -43,9 +44,11 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
 
     /** The minimum cache duration. Default value: <code>0</code> */
+    @Nonnull @GuardedBy("this")
     private Duration minCacheDuration = Duration.ZERO;
 
     /** The maximum cache duration. Default value: {@value java.lang.Long#MAX_VALUE} */
+    @Nonnull @GuardedBy("this")
     private Duration maxCacheDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
@@ -53,7 +56,8 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * 
      * @return minimum cache duration, always 0 or greater
      */
-    public Duration getMinimumCacheDuration() {
+    @Nonnull
+    public final synchronized Duration getMinimumCacheDuration() {
         return minCacheDuration;
     }
 
@@ -76,7 +80,8 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * 
      * @return maximum cache duration, always greater than 0
      */
-    public Duration getMaximumCacheDuration() {
+    @Nonnull
+    public final synchronized Duration getMaximumCacheDuration() {
         return maxCacheDuration;
     }
 
@@ -106,6 +111,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
+    @Nullable
     protected Duration getShortestCacheDuration(@Nonnull final Element descriptor) {
         Duration shortestCacheDuration = null;
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
@@ -162,12 +168,12 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
             return;
         }
 
-        if (cacheDuration.compareTo(minCacheDuration) < 0) {
+        if (cacheDuration.compareTo(getMinimumCacheDuration()) < 0) {
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
-                    minCacheDuration);
-        } else if (cacheDuration.compareTo(maxCacheDuration) > 0) {
+                    getMinimumCacheDuration());
+        } else if (cacheDuration.compareTo(getMaximumCacheDuration()) > 0) {
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
-                    maxCacheDuration);
+                    getMaximumCacheDuration());
         } else {
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                     cacheDuration);

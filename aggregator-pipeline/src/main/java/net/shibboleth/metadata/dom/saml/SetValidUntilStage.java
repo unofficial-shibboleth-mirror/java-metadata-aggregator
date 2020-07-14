@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -46,14 +47,15 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 public class SetValidUntilStage extends AbstractIteratingStage<Element> {
 
     /** Amount of time the descriptors will be valid. */
-    @NonnullAfterInit private Duration validityDuration;
+    @NonnullAfterInit @GuardedBy("this") private Duration validityDuration;
 
     /**
      * Gets the amount of time the descriptors will be valid.
      * 
      * @return amount of time the descriptors will be valid
      */
-    public Duration getValidityDuration() {
+    @NonnullAfterInit
+    public final synchronized Duration getValidityDuration() {
         return validityDuration;
     }
 
@@ -78,7 +80,7 @@ public class SetValidUntilStage extends AbstractIteratingStage<Element> {
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
-                    Instant.now().plus(validityDuration));
+                    Instant.now().plus(getValidityDuration()));
         }
     }
 

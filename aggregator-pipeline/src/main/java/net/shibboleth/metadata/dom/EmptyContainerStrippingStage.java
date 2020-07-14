@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -27,6 +28,7 @@ import org.w3c.dom.NodeList;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -40,9 +42,11 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element> {
 
     /** Namespace of the element to strip. */
+    @NonnullAfterInit @NotEmpty @GuardedBy("this")
     private String elementNamespace;
 
     /** Name of the element to strip. */
+    @NonnullAfterInit @NotEmpty @GuardedBy("this")
     private String elementName;
 
     /**
@@ -50,7 +54,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * 
      * @return namespace of the element to strip
      */
-    @Nullable public String getElementNamespace() {
+    @Nullable public final synchronized String getElementNamespace() {
         return elementNamespace;
     }
 
@@ -59,7 +63,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * 
      * @param namespace namespace of the element to strip
      */
-    public void setElementNamespace(@Nonnull @NotEmpty final String namespace) {
+    public synchronized void setElementNamespace(@Nonnull @NotEmpty final String namespace) {
         throwSetterPreconditionExceptions();
         elementNamespace = Constraint.isNotNull(StringSupport.trimOrNull(namespace),
                 "target namespace can not be null or empty");
@@ -70,7 +74,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * 
      * @return the name of the element to strip
      */
-    @Nullable public String getElementName() {
+    @Nullable public final synchronized String getElementName() {
         return elementName;
     }
 
@@ -79,7 +83,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * 
      * @param name the name of the element to strip
      */
-    public void setElementName(@Nonnull @NotEmpty final String name) {
+    public synchronized void setElementName(@Nonnull @NotEmpty final String name) {
         throwSetterPreconditionExceptions();
         elementName = Constraint.isNotNull(StringSupport.trimOrNull(name),
                 "target element name can not be null or empty");
@@ -102,7 +106,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
         final Element element = item.unwrap();
 
         // List all the relevant elements in this document in document order
-        final NodeList extensionList = element.getElementsByTagNameNS(elementNamespace, elementName);
+        final NodeList extensionList = element.getElementsByTagNameNS(getElementNamespace(), getElementName());
 
         // Process in reverse order so that, for example, Extensions inside Extensions are
         // handled correctly.
@@ -114,16 +118,16 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         elementNamespace = null;
         elementName = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (elementNamespace == null) {
             throw new ComponentInitializationException("target namespace can not be null or empty");

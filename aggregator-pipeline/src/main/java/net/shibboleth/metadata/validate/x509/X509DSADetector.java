@@ -108,9 +108,8 @@ public class X509DSADetector extends BaseValidator implements Validator<X509Cert
         if ("DSA".equals(key.getAlgorithm())) {
             addStatus(error, "certificate contains a DSA key", item, stageId);
             return action;
-        } else {
-            return Action.CONTINUE;
         }
+        return Action.CONTINUE;
     }
 
 }

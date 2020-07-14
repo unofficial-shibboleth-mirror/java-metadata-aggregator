@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.validate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.Item;
 
@@ -33,6 +34,7 @@ import net.shibboleth.metadata.Item;
  *
  * @since 0.10.0
  */
+@Immutable
 public class RejectAllValidator<V> extends BaseValidator implements Validator<V> {
 
     @Override

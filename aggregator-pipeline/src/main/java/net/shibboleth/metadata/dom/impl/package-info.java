@@ -15,34 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom;
-
-import net.shibboleth.metadata.Item;
-
-import javax.annotation.concurrent.ThreadSafe;
-
-import org.w3c.dom.Element;
-
 /**
- * Provides a variation of the Visitor pattern for performing operations on
- * DOM elements which are part of {@link Element} items.
- *
- * <p>
- * All implementations of this interface <strong>must</strong> be thread-safe.
- * </p>
- *
- * @since 0.9.0
+ * Implementation classes related to processing DOM based metadata.
  */
-@ThreadSafe
-public interface ElementVisitor {
-
-    /**
-     * Called on each {@link Element} visited as part of the processing
-     * of an {@link Element} item.
-     * 
-     * @param visited the {@link Element} being visited.
-     * @param item the {@link Item} which is the context for the visit.
-     */
-    void visitElement(Element visited, Item<Element> item);
-    
-}
+package net.shibboleth.metadata.dom.impl;

@@ -86,9 +86,8 @@ public final class SAMLSupport {
         final Attr attr = attribute.getAttributeNode("NameFormat");
         if (attr == null) {
             return ATTRNAME_FORMAT_UNSPECIFIED;
-        } else {
-            return attr.getValue();
         }
+        return attr.getValue();
     }
 
 }

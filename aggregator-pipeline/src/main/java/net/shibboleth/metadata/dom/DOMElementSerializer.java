@@ -55,9 +55,6 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
     @Override
     public void serialize(@Nonnull final Item<Element> item, @Nonnull final OutputStream output)
         throws IOException {
-        if (item == null) {
-            return;
-        }
 
         final Element documentRoot = item.unwrap();
 

@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.crypto.dsig.XMLSignature;
 
 import org.w3c.dom.Element;
@@ -33,6 +35,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.AbstractDOMValidationStage;
 import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
 import net.shibboleth.utilities.java.support.codec.DecodingException;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -44,6 +47,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  *
  * @since 0.9.0
  */ 
+@ThreadSafe
 public class X509ValidationStage extends AbstractDOMValidationStage<X509Certificate, X509ValidationStage.Context> {
 
     /** Context class for this kind of traversal. */
@@ -91,6 +95,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     }
 
     /** Certificate factory to use to convert to X.509 certificates. */
+    @NonnullAfterInit @GuardedBy("this")
     private CertificateFactory factory;
 
     @Override
@@ -99,7 +104,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     }
 
     @Override
-    protected boolean applicable(@Nonnull final Element e) {
+    protected boolean applicable(@Nonnull final Element e, @Nonnull final Context context) {
         return XMLSignature.XMLNS.equals(e.getNamespaceURI()) &&
                 "X509Certificate".equals(e.getLocalName());
     }
@@ -110,8 +115,12 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
         final String text = element.getTextContent();        
         try {
             final byte[] data = Base64Support.decode(text);
-            final X509Certificate cert =
-                    (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(data));
+
+            final X509Certificate cert;
+            synchronized (this) {
+                    cert = (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(data));
+            }
+
             // only process each certificate once per item
             if (!context.haveSeen(cert)) {
                 context.add(cert);

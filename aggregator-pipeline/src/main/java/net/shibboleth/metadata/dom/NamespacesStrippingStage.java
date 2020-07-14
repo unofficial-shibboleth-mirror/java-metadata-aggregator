@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -48,12 +50,13 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
     /**
      * XML namespaces to whitelist or blacklist.
      */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<String> namespaces = Set.of();
 
     /**
      * Whether we are whitelisting or blacklisting (default: blacklisting).
      */
+    @GuardedBy("this")
     private boolean whitelisting;
 
     /**
@@ -62,7 +65,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * @return collection of namespaces being removed
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<String> getNamespaces() {
+    public final synchronized Collection<String> getNamespaces() {
         return namespaces;
     }
     
@@ -71,7 +74,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @param nss collection of namespaces
      */
-    public void setNamespaces(@Nonnull @NonnullElements @Unmodifiable final Collection<String> nss) {
+    public synchronized void setNamespaces(@Nonnull @NonnullElements @Unmodifiable final Collection<String> nss) {
         throwSetterPreconditionExceptions();
         namespaces = Set.copyOf(nss);
     }
@@ -81,7 +84,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @return <code>true</code> for whitelisting, <code>false</code> for blacklisting (the default)
      */
-    public boolean isWhitelisting() {
+    public final synchronized boolean isWhitelisting() {
         return whitelisting;
     }
 
@@ -90,20 +93,20 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @param wl <code>true</code> for whitelisting, <code>false</code> for blacklisting
      */
-    public void setWhitelisting(final boolean wl) {
+    public synchronized void setWhitelisting(final boolean wl) {
         throwSetterPreconditionExceptions();
         whitelisting = wl;
     }
     
     @Override
-    protected boolean removingNamespace(final String namespace) {
+    protected boolean removingNamespace(@Nullable final String namespace) {
         // Handle ineligible null element, for the default namespace case
         if (namespace == null) {
-            return whitelisting;
+            return isWhitelisting();
         }
         
         // Handle normal namespaces
-        return whitelisting ^ namespaces.contains(namespace);
+        return isWhitelisting() ^ getNamespaces().contains(namespace);
     }
 
     @Override

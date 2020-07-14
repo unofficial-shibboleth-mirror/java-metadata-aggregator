@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -59,29 +61,35 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
     private final Logger log = LoggerFactory.getLogger(DOMFilesystemSourceStage.class);
 
     /** Pool of DOM parsers used to parse the XML file in to a DOM. */
+    @NonnullAfterInit @GuardedBy("this")
     private ParserPool parserPool;
 
     /** The file path to the DOM material provided by this source. May be a file or a directory. */
+    @NonnullAfterInit @GuardedBy("this")
     private File sourceFile;
 
     /**
      * Filter used to determine if a file should be included. This is only used if the {@link #sourceFile} is a
      * directory.
      */
+    @Nullable @GuardedBy("this")
     private FileFilter sourceFileFilter;
 
     /**
      * Whether or not directories are recursed if the given input file is a directory. Default value: <code>false</code>
      */
+    @GuardedBy("this")
     private boolean recurseDirectories;
 
     /** Whether the lack of source files is treated as an error. Default value: <code>false</code> */
+    @GuardedBy("this")
     private boolean noSourceFilesAnError;
 
     /**
      * Whether an error parsing one source file causes this entire {@link net.shibboleth.metadata.pipeline.Stage} to
      * fail, or just excludes the material from the offending source file. Default value: <code>true</code>
      */
+    @GuardedBy("this")
     private boolean errorCausesSourceFailure = true;
 
     /**
@@ -89,7 +97,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return pool of DOM parsers used to parse the XML file in to a DOM
      */
-    @Nullable public ParserPool getParserPool() {
+    @Nullable public final synchronized ParserPool getParserPool() {
         return parserPool;
     }
 
@@ -108,7 +116,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return path to the DOM material provided by this source
      */
-    @Nullable public File getSource() {
+    @Nullable public final synchronized File getSource() {
         return sourceFile;
     }
 
@@ -128,7 +136,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return filter used to determine if a file, in a directory, should be treated as a source file, may be null
      */
-    @Nullable public FileFilter getSourceFileFilter() {
+    @Nullable public final synchronized FileFilter getSourceFileFilter() {
         return sourceFileFilter;
     }
 
@@ -147,7 +155,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return whether directories will be recursively searched for XML input files
      */
-    public boolean getRecurseDirectories() {
+    public final synchronized boolean getRecurseDirectories() {
         return recurseDirectories;
     }
 
@@ -166,7 +174,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return whether the lack of source files is considered an error
      */
-    public boolean isNoSourceFilesAnError() {
+    public final synchronized boolean isNoSourceFilesAnError() {
         return noSourceFilesAnError;
     }
 
@@ -185,7 +193,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return whether an error parsing a single file causes the source to fail
      */
-    public boolean getErrorCausesSourceFailure() {
+    public final synchronized boolean getErrorCausesSourceFailure() {
         return errorCausesSourceFailure;
     }
 
@@ -199,28 +207,28 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         errorCausesSourceFailure = causesFailure;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<>();
-        if (sourceFile.isFile()) {
-            sourceFiles.add(sourceFile);
+
+        final var sFile = getSource();
+        if (sFile.isFile()) {
+            sourceFiles.add(sFile);
         } else {
-            getSourceFiles(sourceFile, sourceFiles);
+            getSourceFiles(sFile, sourceFiles);
         }
 
         if (sourceFiles.isEmpty()) {
-            if (!noSourceFilesAnError) {
-                log.warn("stage {}: no input XML files in source path {}", getId(), sourceFile.getPath());
+            if (!isNoSourceFilesAnError()) {
+                log.warn("stage {}: no input XML files in source path {}", getId(), sFile.getPath());
                 return;
-            } else {
-                throw new StageProcessingException("stage " + getId() + ": no source file was available for parsing");
             }
+            throw new StageProcessingException("stage " + getId() + ": no source file was available for parsing");
         }
 
-        DOMElementItem dme;
         for (final File source : sourceFiles) {
-            dme = processSourceFile(source);
+            final var dme = processSourceFile(source);
             if (dme != null) {
                 itemCollection.add(dme);
             }
@@ -235,10 +243,12 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param input the source input file, never null
      * @param collector the collector of XML input files
      */
-    protected void
-            getSourceFiles(@Nonnull final File input, @Nonnull @NonnullElements @Live final List<File> collector) {
+    protected void getSourceFiles(@Nonnull final File input,
+            @Nonnull @NonnullElements @Live final List<File> collector) {
+
         if (input.isFile()) {
-            if (sourceFileFilter == null || sourceFileFilter.accept(input)) {
+            final var filter = getSourceFileFilter();
+            if (filter == null || filter.accept(input)) {
                 collector.add(input);
             }
             return;
@@ -247,8 +257,9 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         // file must be a directory
         final File[] files = input.listFiles();
         if (files != null) {
+            final var recursing = getRecurseDirectories();
             for (final File file : files) {
-                if (file.isFile() || (file.isDirectory() && recurseDirectories)) {
+                if (file.isFile() || (file.isDirectory() && recursing)) {
                     getSourceFiles(file, collector);
                 }
             }
@@ -272,17 +283,16 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         try {
             log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
             xmlIn = new FileInputStream(source);
-            final Document doc = parserPool.parse(xmlIn);
+            final Document doc = getParserPool().parse(xmlIn);
             return new DOMElementItem(doc);
         } catch (final Exception e) {
-            if (errorCausesSourceFailure) {
+            if (getErrorCausesSourceFailure()) {
                 throw new StageProcessingException(getId() + " pipeline source unable to parse XML input file "
                         + source.getPath(), e);
-            } else {
-                log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
-                        getId(), source.getPath(), e,});
-                return null;
             }
+            log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
+                    getId(), source.getPath(), e,});
+            return null;
         } finally {
             try {
                 xmlIn.close();
@@ -292,8 +302,8 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         parserPool = null;
         sourceFile = null;
         sourceFileFilter = null;
@@ -301,8 +311,8 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (parserPool == null) {

@@ -21,10 +21,18 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
-/** Strategy used to merge the results of each child pipeline in to the collection of Items given to this stage. */
+/**
+ * Strategy used to merge the results of each child pipeline in to the collection of Items given to this stage.
+ * 
+ * <p>
+ * All implementations of this interface <strong>must</strong> be thread-safe.
+ * </p>
+ */
+@ThreadSafe
 public interface CollectionMergeStrategy {
 
     /**
@@ -34,6 +42,6 @@ public interface CollectionMergeStrategy {
      * @param sources collections of Items to be merged in to the target, never null not containing any null elements
      * @param <T> type of data contained in the items
      */
-    <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
-            @Nonnull @NonnullElements final List<Collection<Item<T>>> sources);
+    <T> void mergeCollection(@Nonnull @NonnullElements Collection<Item<T>> target,
+            @Nonnull @NonnullElements List<Collection<Item<T>>> sources);
 }

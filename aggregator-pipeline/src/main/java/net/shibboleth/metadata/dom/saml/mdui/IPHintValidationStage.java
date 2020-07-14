@@ -60,7 +60,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
     }
 
     @Override
-    protected boolean applicable(final Element element) {
+    protected boolean applicable(@Nonnull final Element element, @Nonnull final DOMTraversalContext context) {
         return ElementSupport.isElementNamed(element, MDUISupport.IPHINT_NAME);
     }
 

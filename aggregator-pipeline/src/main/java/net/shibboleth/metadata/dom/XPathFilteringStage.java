@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
@@ -62,10 +63,11 @@ public class XPathFilteringStage extends AbstractStage<Element> {
     private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);
 
     /** The XPath expression to execute on each {@link DOMElementItem}. */
+    @NonnullAfterInit @NotEmpty @GuardedBy("this")
     private String xpathExpression;
 
     /** The {@link NamespaceContext} to use in interpreting the XPath expression. */
-    @Nonnull
+    @Nonnull @GuardedBy("this")
     private NamespaceContext namespaceContext = new SimpleNamespaceContext();
 
     /**
@@ -73,7 +75,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * 
      * @return XPath expression to execute on each {@link DOMElementItem}
      */
-    @NonnullAfterInit @NotEmpty public String getXPathExpression() {
+    @NonnullAfterInit @NotEmpty public final synchronized String getXPathExpression() {
         return xpathExpression;
     }
 
@@ -93,7 +95,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * 
      * @return {@link NamespaceContext} to use in interpreting the XPath expression
      */
-    @Nonnull public NamespaceContext getNamespaceContext() {
+    @Nonnull public final synchronized NamespaceContext getNamespaceContext() {
         return namespaceContext;
     }
 
@@ -116,11 +118,11 @@ public class XPathFilteringStage extends AbstractStage<Element> {
             throws StageProcessingException {
         final XPathFactory factory = XPathFactory.newInstance();
         final XPath xpath = factory.newXPath();
-        xpath.setNamespaceContext(namespaceContext);
+        xpath.setNamespaceContext(getNamespaceContext());
 
         final XPathExpression compiledExpression;
         try {
-            compiledExpression = xpath.compile(xpathExpression);
+            compiledExpression = xpath.compile(getXPathExpression());
         } catch (final XPathExpressionException e) {
             // This should never occur, as we attempted the same operation at initialization time.
             throw new StageProcessingException("error compiling XPath expression", e);

@@ -20,19 +20,19 @@ package net.shibboleth.metadata.dom;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
 import org.w3c.dom.Element;
+
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * Basic maker class for {@link Element}s for use with the {@link Container} system.
  *
  * @since 0.10.0
  */
-@ThreadSafe
+@Immutable
 public class ElementMaker implements Function<Container, Element> {
 
     /** Qualified name for the {@link Element} to be created. */

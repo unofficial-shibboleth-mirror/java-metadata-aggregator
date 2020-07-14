@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
@@ -36,18 +38,12 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalStage<DOMTraversalContext> {
 
     /** Collection of element names for those elements we will be visiting. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<QName> elementNames = Set.of();
-
-    @Override
-    protected void doDestroy() {
-        elementNames = null;
-
-        super.doDestroy();
-    }
 
     /**
      * Gets the collection of element names to visit.
@@ -55,7 +51,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * @return collection of element names to visit.
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<QName> getElementNames() {
+    public final synchronized Collection<QName> getElementNames() {
         return elementNames;
     }
 
@@ -64,7 +60,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * 
      * @param names collection of element names to visit.
      */
-    public void setElementNames(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> names) {
+    public synchronized void setElementNames(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> names) {
         throwSetterPreconditionExceptions();
         Constraint.isNotNull(names, "elementNames may not be null");
         elementNames = Set.copyOf(names);
@@ -77,16 +73,16 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * 
      * @param name {@link QName} for the element to be visited.
      */
-    public void setElementName(@Nonnull final QName name) {
+    public synchronized void setElementName(@Nonnull final QName name) {
         throwSetterPreconditionExceptions();
         Constraint.isNotNull(name, "elementName may not be null");
         elementNames = Set.of(name);
     }
     
     @Override
-    protected boolean applicable(@Nonnull final Element e) {
+    protected boolean applicable(@Nonnull final Element e, @Nonnull final DOMTraversalContext context) {
         final QName q = new QName(e.getNamespaceURI(), e.getLocalName());
-        return elementNames.contains(q);
+        return getElementNames().contains(q);
     }
 
     @Override
@@ -94,4 +90,10 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
         return new SimpleDOMTraversalContext(item);
     }
 
+    @Override
+    protected void doDestroy() {
+        elementNames = null;
+
+        super.doDestroy();
+    }
 }

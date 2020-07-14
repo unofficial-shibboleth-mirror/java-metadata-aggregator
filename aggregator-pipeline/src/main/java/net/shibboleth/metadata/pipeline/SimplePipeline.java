@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
@@ -41,12 +42,12 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
         implements Pipeline<T> {
 
     /** Stages for this pipeline. */
-    @Nonnull @NonnullElements
+    @Nonnull @NonnullElements @GuardedBy("this")
     private List<Stage<T>> pipelineStages = Collections.emptyList();
 
     @Override
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Stage<T>> getStages() {
+    public final synchronized List<Stage<T>> getStages() {
         return pipelineStages;
     }
 

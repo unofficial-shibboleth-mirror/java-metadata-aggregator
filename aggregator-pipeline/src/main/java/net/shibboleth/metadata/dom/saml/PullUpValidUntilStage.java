@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Attr;
@@ -44,12 +45,14 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
 
     /** The minimum amount of time a descriptor may be valid. Default value: 0 */
+    @Nonnull @GuardedBy("this")
     private Duration minValidityDuration = Duration.ZERO;
 
     /**
      * The maximum amount of time a descriptor may be valid. Default value:
      * {@value java.lang.Long#MAX_VALUE}
      */
+    @Nonnull @GuardedBy("this")
     private Duration maxValidityDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
@@ -57,7 +60,8 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * 
      * @return minimum amount of time a descriptor may be valid, always 0 or greater
      */
-    public Duration getMinimumValidityDuration() {
+    @Nonnull
+    public final synchronized Duration getMinimumValidityDuration() {
         return minValidityDuration;
     }
 
@@ -80,7 +84,8 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * 
      * @return maximum maximum amount of time a descriptor may be valid, always greater than 0
      */
-    public Duration getMaximumValidityDuration() {
+    @Nonnull
+    public final synchronized Duration getMaximumValidityDuration() {
         return maxValidityDuration;
     }
 
@@ -110,6 +115,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
+    @Nullable
     protected Instant getNearestValidUntil(@Nonnull final Element descriptor) {
         Instant nearestValidUntil = null;
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
@@ -164,8 +170,8 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
         }
 
         final Instant now = Instant.now();
-        final Instant minValidUntil = now.plus(minValidityDuration);
-        final Instant maxValidUntil = now.plus(maxValidityDuration);
+        final Instant minValidUntil = now.plus(getMinimumValidityDuration());
+        final Instant maxValidUntil = now.plus(getMaximumValidityDuration());
 
         final Instant boundedValidUntil;
         if (validUntil.isBefore(minValidUntil)) {

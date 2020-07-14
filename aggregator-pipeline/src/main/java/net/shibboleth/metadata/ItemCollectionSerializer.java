@@ -28,8 +28,14 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 /**
  * Item collection serializers convert a {@link Collection} of {@link Item}s into an octet stream.
  * 
+ * <p>
  * The caller is responsible for managing (opening, closing, etc.) the output stream.
+ * </p>
  * 
+ * <p>
+ * All implementations of this interface <strong>must</strong> be thread-safe.
+ * </p>
+ *
  * @param <T> type of data contained in each item
  *
  * @since 0.9.0

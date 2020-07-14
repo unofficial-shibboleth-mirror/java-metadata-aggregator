@@ -25,9 +25,15 @@ import javax.annotation.Nonnull;
 /**
  * Item serializers convert an {@link Item} into an octet stream.
  * 
+ * <p>
  * The caller is responsible for managing (opening, closing, etc.) the output stream
  * and orchestrating the serialization of collections of {@link Item}s.
+ * </p>
  * 
+ * <p>
+ * All implementations of this interface <strong>must</strong> be thread-safe.
+ * </p>
+ *
  * @param <T> type of data contained in the item
  */
 public interface ItemSerializer<T> {

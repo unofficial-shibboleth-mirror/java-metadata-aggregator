@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Attr;
@@ -32,15 +33,17 @@ import net.shibboleth.utilities.java.support.security.impl.Type4UUIDIdentifierGe
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 
 /** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
+@ThreadSafe
 public class GenerateIdStage extends AbstractIteratingStage<Element> {
 
     /** QName of the ID attribute added to the descriptor. */
     public static final QName ID_ATTRIB = new QName("ID");
 
     /** Strategy used to generate identifiers. */
+    @Nonnull
     private final IdentifierGenerationStrategy idGenerator;
 
-    /** Constructor. Initialized the {@link #idGenerator} to a {@link Type4UUIDIdentifierGenerationStrategy}. */
+    /** Constructor. Initialize the {@link #idGenerator} to a {@link Type4UUIDIdentifierGenerationStrategy}. */
     public GenerateIdStage() {
         idGenerator = new Type4UUIDIdentifierGenerationStrategy();
     }
@@ -67,6 +70,7 @@ public class GenerateIdStage extends AbstractIteratingStage<Element> {
             element.setAttributeNode(idAttribute);
         }
 
+        // Don't need to synchronize; field initialized by constructor
         idAttribute.setValue(idGenerator.generateIdentifier());
     }
 }

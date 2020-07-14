@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.AbstractElementVisitingStage;
 import net.shibboleth.metadata.dom.DOMTraversalContext;
@@ -35,6 +36,7 @@ import org.w3c.dom.Node;
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public class SAMLStringElementCheckingStage extends AbstractElementVisitingStage {
 
     /** Regular expression matching a string which contains no non-whitespace characters. */

@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml;
 import java.time.Duration;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -45,14 +46,15 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
 
     /** Cache duration that will be set on each metadata element. */
-    @NonnullAfterInit private Duration cacheDuration;
+    @NonnullAfterInit @GuardedBy("this") private Duration cacheDuration;
 
     /**
      * Gets the cache duration that will be set on each metadata element.
      * 
      * @return cache duration
      */
-    public Duration getCacheDuration() {
+    @NonnullAfterInit
+    public final synchronized Duration getCacheDuration() {
         return cacheDuration;
     }
 
@@ -77,7 +79,7 @@ public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
-                    cacheDuration);
+                    getCacheDuration());
         }
     }
 

@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -31,19 +32,19 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * the same {@link ItemId} as source item. If the source item does not contain a {@link ItemId} it is always added to
  * the target collection.
  */
+@ThreadSafe
 public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy {
 
-    /** {@inheritDoc} */
-    @Override public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
+    @Override
+    public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
             @Nonnull @NonnullElements final List<Collection<Item<T>>> sources) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");
         
-        List<ItemId> itemIds;
         final HashSet<ItemId> presentItemIds = new HashSet<>();
 
         for (final Item<T> item : target) {
-            itemIds = item.getItemMetadata().get(ItemId.class);
+            final var itemIds = item.getItemMetadata().get(ItemId.class);
             if (itemIds != null) {
                 presentItemIds.addAll(itemIds);
             }
@@ -67,16 +68,14 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
     private <T> void merge(@Nonnull @NonnullElements final HashSet<ItemId> presentItemIds,
             @Nonnull @NonnullElements final Collection<Item<T>> target,
             @Nonnull @NonnullElements final Collection<Item<T>> sourceItems) {
-        boolean itemAlreadyPresent;
-        List<ItemId> itemIds;
         for (final Item<T> sourceItem : sourceItems) {
-            itemIds = sourceItem.getItemMetadata().get(ItemId.class);
+            final var itemIds = sourceItem.getItemMetadata().get(ItemId.class);
             if (itemIds == null || itemIds.isEmpty()) {
                 target.add(sourceItem);
                 continue;
             }
 
-            itemAlreadyPresent = false;
+            var itemAlreadyPresent = false;
             for (final ItemId itemId : itemIds) {
                 if (presentItemIds.contains(itemId)) {
                     itemAlreadyPresent = true;

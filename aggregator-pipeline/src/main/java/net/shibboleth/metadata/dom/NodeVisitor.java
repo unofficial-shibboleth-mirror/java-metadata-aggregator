@@ -19,6 +19,9 @@ package net.shibboleth.metadata.dom;
 
 import net.shibboleth.metadata.Item;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -26,8 +29,13 @@ import org.w3c.dom.Node;
  * Provides a variation of the Visitor pattern for performing operations on
  * DOM nodes which are part of {@link Element} items.
  *
+ * <p>
+ * All implementations of this interface <strong>must</strong> be thread-safe.
+ * </p>
+ *
  * @since 0.9.0
  */
+@ThreadSafe
 public interface NodeVisitor {
 
     /**
@@ -37,6 +45,6 @@ public interface NodeVisitor {
      * @param visited the {@link Node} being visited.
      * @param item the {@link Item} which is the context for the visit.
      */
-    void visitNode(Node visited, Item<Element> item);
-    
+    void visitNode(@Nonnull Node visited, @Nonnull Item<Element> item);
+
 }

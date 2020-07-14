@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom;
+package net.shibboleth.metadata.dom.impl;
 
 import java.security.PublicKey;
 import java.util.Collections;
@@ -53,13 +53,17 @@ import org.w3c.dom.Node;
 /**
  * A class that encapsulates the various stages in validation of XML signatures as methods.
  * 
+ * <p>
  * Failures, and the reason for the failure, are represented by exceptions.
+ * </p>
  * 
+ * <p>
  * This code largely derives from XmlSecTool V1.2, with the abrupt program termination
  * method of reporting issues replaced by throwing an exception. The intention is
  * that this code might be reintegrated with XmlSecTool in a later release.
+ * </p>
  */
-final class XMLSignatureValidator {
+public final class XMLSignatureValidator {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(XMLSignatureValidator.class);
@@ -84,7 +88,7 @@ final class XMLSignatureValidator {
      *  @param blacklistSignatureMethods set of blacklisted signature method URIs, or <code>null</code>
      *  @param emptyRefPermitted true if empty references are permitted
      */
-    XMLSignatureValidator(@Nonnull final PublicKey key, @Nullable final Set<String> blacklistDigests,
+    public XMLSignatureValidator(@Nonnull final PublicKey key, @Nullable final Set<String> blacklistDigests,
             @Nullable final Set<String> blacklistSignatureMethods,
             final boolean emptyRefPermitted) {
         Constraint.isNotNull(key, "public key can not be null");
@@ -246,7 +250,6 @@ final class XMLSignatureValidator {
             final String alg = ref.getMessageDigestAlgorithm().getAlgorithmURI();
             log.debug("blacklist checking digest {}", alg);
             if (blacklistedDigests.contains(alg)) {
-                log.error("Digest algorithm {} is blacklisted", alg);
                 throw new ValidationException("Digest algorithm " + alg + " is blacklisted");
             }
         } catch (final XMLSignatureException e) {

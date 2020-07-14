@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
@@ -39,6 +40,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -65,13 +67,15 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
     private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
 
     /** Collection of schema resources. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Resource> schemaResources = List.of();
 
     /** Whether Elements are required to be schema valid. Default value: <code>true</code> */
+    @GuardedBy("this")
     private boolean elementRequiredToBeSchemaValid = true;
 
-    /** Schema used to validate Elements. */
+    /** Schema used to validate Elements. Built during initialization. */
+    @NonnullAfterInit @GuardedBy("this")
     private Schema validationSchema;
 
     /**
@@ -80,7 +84,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * @return unmodifiable list of schema resources against which Elements are validated
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Resource> getSchemaResources() {
+    public final synchronized List<Resource> getSchemaResources() {
         return schemaResources;
     }
 
@@ -100,7 +104,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * 
      * @return whether Elements are required to be schema valid
      */
-    public boolean isElementRequiredToBeSchemaValid() {
+    public final synchronized boolean isElementRequiredToBeSchemaValid() {
         return elementRequiredToBeSchemaValid;
     }
 
@@ -114,18 +118,27 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
         elementRequiredToBeSchemaValid = isRequired;
     }
 
+    /**
+     * Returns the shared validation schema built during initialization.
+     *
+     * @return the shared validation schema
+     */
+    private synchronized Schema getValidationSchema() {
+        return validationSchema;
+    }
+
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
-        final Validator validator = validationSchema.newValidator();
+        final Validator validator = getValidationSchema().newValidator();
         try {
             validator.validate(new DOMSource(item.unwrap()));
         } catch (final Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug("DOM Element was not valid:\n{}", SerializeSupport.prettyPrintXML(item.unwrap()), e);
             }
-            if (elementRequiredToBeSchemaValid) {
+            if (isElementRequiredToBeSchemaValid()) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
             } else {
                 item.getItemMetadata().put(new WarningStatus(getId(), e.getMessage()));
@@ -133,16 +146,16 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         schemaResources = null;
         validationSchema = null;
         
         super.doDestroy();
     }
     
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (schemaResources.isEmpty()) {

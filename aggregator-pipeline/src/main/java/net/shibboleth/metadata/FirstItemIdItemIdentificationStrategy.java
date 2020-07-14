@@ -21,11 +21,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Strategy that returns the first {@link ItemId} associated with an {@link Item} or, if no {@link ItemId} is
  * associated with the item, a generic identifier is returned.
  */
+@Immutable
 public class FirstItemIdItemIdentificationStrategy extends AbstractCompositeItemIdentificationStrategy {
 
     @Override
@@ -33,9 +35,8 @@ public class FirstItemIdItemIdentificationStrategy extends AbstractCompositeItem
         final List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
         if (!itemIds.isEmpty()) {
             return itemIds.get(0).getId();
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override

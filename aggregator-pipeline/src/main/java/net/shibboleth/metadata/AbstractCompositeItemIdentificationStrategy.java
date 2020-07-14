@@ -19,6 +19,7 @@ package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -42,6 +43,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 public abstract class AbstractCompositeItemIdentificationStrategy implements ItemIdentificationStrategy {
 
     /** Identifier to use if an {@link Item} does not have an {@link ItemId}. Default value: "unidentified" */
+    @Nonnull @NotEmpty @GuardedBy("this")
     private String noItemIdIdentifier = "unidentified";
 
     /**
@@ -49,7 +51,7 @@ public abstract class AbstractCompositeItemIdentificationStrategy implements Ite
      * 
      * @return identifier to use if an {@link Item} does not have an {@link ItemId}
      */
-    public String getNoItemIdIdentifier() {
+    @Nonnull @NotEmpty public final synchronized String getNoItemIdIdentifier() {
         return noItemIdIdentifier;
     }
 
@@ -58,7 +60,7 @@ public abstract class AbstractCompositeItemIdentificationStrategy implements Ite
      * 
      * @param identifier identifier to use if an {@link Item} does not have an {@link ItemId}
      */
-    public void setNoItemIdIdentifier(@Nonnull @NotEmpty final String identifier) {
+    public synchronized void setNoItemIdIdentifier(@Nonnull @NotEmpty final String identifier) {
         noItemIdIdentifier =
                 Constraint.isNotNull(StringSupport.trimOrNull(identifier), "Identifier can not be null or empty");
     }

@@ -24,6 +24,8 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Templates;
@@ -45,6 +47,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -67,17 +70,28 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     private final Logger log = LoggerFactory.getLogger(AbstractXSLProcessingStage.class);
 
     /** Resource that provides the XSL document. */
+    @NonnullAfterInit @GuardedBy("this")
     private Resource xslResource;
 
-    /** XSL template used to transform Elements. */
+    /**
+     * XSL template used to transform <code>Element</code>s.
+     * 
+     * <p>
+     * A single shared <code>Templates</code> object is constructed from the
+     * <code>xslResource</code>, <code>transformAttributes</code>,
+     * <code>transformFeatures</code> and any <code>uriResolver</code>
+     * during initialisation of the stage.
+     * </p>
+     */
+    @NonnullAfterInit @GuardedBy("this")
     private Templates xslTemplate;
 
     /** Attributes set on the {@link Transformer} used by this stage. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Map<String, Object> transformAttributes = Map.of();
 
     /** Features set on the {@link Transformer} used by this stage. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Map<String, Boolean> transformFeatures = Map.of();
 
     /**
@@ -85,18 +99,19 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * If not set, an empty collection.
      */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Map<String, Object> transformParameters = Map.of();
 
     /** {@link URIResolver} to use in the transformer. Default value: <code>null</code>. */
-    @Nullable private URIResolver uriResolver;
+    @Nullable @GuardedBy("this")
+    private URIResolver uriResolver;
 
     /**
      * Gets the resource that provides the XSL document.
      * 
      * @return resource that provides the XSL document
      */
-    @Nullable public Resource getXSLResource() {
+    @Nullable public final synchronized Resource getXSLResource() {
         return xslResource;
     }
 
@@ -111,12 +126,21 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     }
 
     /**
+     * Get the shared templates object.
+     *
+     * @return the shared templates object
+     */
+    @NonnullAfterInit private synchronized Templates getXSLTemplate() {
+        return xslTemplate;
+    }
+
+    /**
      * Gets the unmodifiable collection of attributes used by the XSLT transformer.
      * 
      * @return unmodifiable collection of attributes used by the XSLT transformer, never null nor containing null keys
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Map<String, Object> getTransformAttributes() {
+    public final synchronized Map<String, Object> getTransformAttributes() {
         return transformAttributes;
     }
 
@@ -137,7 +161,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * @return unmodifiable collection of features used by the XSLT transformer, never null nor containing null keys
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Map<String, Boolean> getTransformFeatures() {
+    public final synchronized Map<String, Boolean> getTransformFeatures() {
         return transformFeatures;
     }
 
@@ -158,7 +182,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * @return parameters used by the XSLT transformer, never null nor containing null keys
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Map<String, Object> getTransformParameters() {
+    public final synchronized Map<String, Object> getTransformParameters() {
         return transformParameters;
     }
 
@@ -178,7 +202,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * 
      * @return the {@link URIResolver}, or <code>null</code>
      */
-    @Nullable public URIResolver getURIResolver() {
+    @Nullable public final synchronized URIResolver getURIResolver() {
         return uriResolver;
     }
 
@@ -192,12 +216,24 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
         uriResolver = resolver;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         try {
-            final Transformer transformer = xslTemplate.newTransformer();
-            for (final Map.Entry<String, Object> entry : transformParameters.entrySet()) {
+            /*
+             * Construct a per-execution Transformer from the shared template.
+             * Although a single Transformer (with parameters) could in principle be
+             * used sequentially by multiple executions, Transformers are not thread-safe
+             * and sharing one across threads would require locking against that instance
+             * for the whole duration of doExecute, or pooling.
+             * 
+             * What we're doing here allows executions to overlap, at the cost of building
+             * a Transformer for each execution.
+             */
+            final Transformer transformer = getXSLTemplate().newTransformer();
+
+            // Set each of the transform's parameters
+            for (final Map.Entry<String, Object> entry : getTransformParameters().entrySet()) {
                 transformer.setParameter(entry.getKey(), entry.getValue());
             }
 
@@ -232,8 +268,8 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (xslResource == null) {
@@ -241,6 +277,11 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
                     + ", XslResource must not be null");
         }
 
+        /*
+         * Construct the shared (thread-safe) Templates instance. Note that because
+         * doInitialize() is called with the stage's monitor held, we can refer to
+         * fields directly and do not need to use getters.
+         */
         try {
             final TransformerFactory tfactory = TransformerFactory.newInstance();
 
@@ -290,6 +331,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      *
      * <p>This listener works well in conjunction with &lt;xsl:message&gt;.</p>
      */
+    @Immutable
     public class StatusInfoAppendingErrorListener implements ErrorListener {
 
         /** Prefix used by messages that result in an {@link ErrorStatus}. */
@@ -302,7 +344,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
         public static final String INFO_PREFIX = "[INFO]";
 
         /** Item to which the status info will be appended. */
-        private Item<?> item;
+        private final Item<?> item;
 
         /**
          * Constructor.
@@ -313,18 +355,18 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
             item = receivingItem;
         }
 
-        /** {@inheritDoc} */
-        @Override public void error(@Nonnull final TransformerException e) throws TransformerException {
+        @Override
+        public void error(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
-        /** {@inheritDoc} */
-        @Override public void fatalError(@Nonnull final TransformerException e) throws TransformerException {
+        @Override
+        public void fatalError(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
-        /** {@inheritDoc} */
-        @Override public void warning(@Nonnull final TransformerException e) throws TransformerException {
+        @Override
+        public void warning(@Nonnull final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 

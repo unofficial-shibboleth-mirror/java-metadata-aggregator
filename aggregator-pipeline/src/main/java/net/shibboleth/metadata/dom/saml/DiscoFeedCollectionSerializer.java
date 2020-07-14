@@ -26,9 +26,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
-import javax.json.stream.JsonGeneratorFactory;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
@@ -38,9 +38,7 @@ import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.dom.saml.mdattr.MDAttrSupport;
 import net.shibboleth.metadata.dom.saml.mdui.MDUISupport;
 import net.shibboleth.metadata.pipeline.impl.BaseInitializableComponent;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
@@ -52,12 +50,8 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
     implements ItemCollectionSerializer<Element> {
 
-    /** Configured JSON generator factory. */
-    @NonnullAfterInit
-    private JsonGeneratorFactory factory;
-
     /** Whether to pretty-print the resulting JSON. Default: <code>false</code> */
-    private boolean prettyPrinting;
+    @GuardedBy("this") private boolean prettyPrinting;
 
     /**
      * Whether to include legacy display names if none are found in the
@@ -65,17 +59,17 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
      * 
      * Default: <code>false</code>
      */
-    private boolean includingLegacyDisplayNames;
+    @GuardedBy("this") private boolean includingLegacyDisplayNames;
     
     /** Whether to include entity attributes. Default: <code>false</code> */
-    private boolean includingEntityAttributes;
+    @GuardedBy("this") private boolean includingEntityAttributes;
 
     /**
      * Returns whether output is being pretty-printed.
      * 
      * @return whether output is being pretty-printed
      */
-    public boolean isPrettyPrinting() {
+    public final synchronized boolean isPrettyPrinting() {
         return prettyPrinting;
     }
 
@@ -84,7 +78,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
      * 
      * @param pretty whether to pretty-print the output
      */
-    public void setPrettyPrinting(final boolean pretty) {
+    public synchronized void setPrettyPrinting(final boolean pretty) {
         prettyPrinting = pretty;
     }
 
@@ -93,7 +87,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
      * 
      * @return whether output includes legacy display names
      */
-    public boolean isIncludingLegacyDisplayNames() {
+    public final synchronized boolean isIncludingLegacyDisplayNames() {
         return includingLegacyDisplayNames;
     }
 
@@ -102,7 +96,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
      * 
      * @param includeLegacyDisplayNames whether to include legacy display names
      */
-    public void setIncludingLegacyDisplayNames(final boolean includeLegacyDisplayNames) {
+    public synchronized void setIncludingLegacyDisplayNames(final boolean includeLegacyDisplayNames) {
         includingLegacyDisplayNames = includeLegacyDisplayNames;
     }
 
@@ -111,7 +105,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
      * 
      * @return whether output includes entity attributes
      */
-    public boolean isIncludingEntityAttributes() {
+    public final synchronized boolean isIncludingEntityAttributes() {
         return includingEntityAttributes;
     }
 
@@ -120,7 +114,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
      * 
      * @param includeEntityAttributes whether to include entity attributes.
      */
-    public void setIncludingEntityAttributes(final boolean includeEntityAttributes) {
+    public synchronized void setIncludingEntityAttributes(final boolean includeEntityAttributes) {
         includingEntityAttributes = includeEntityAttributes;
     }
 
@@ -262,7 +256,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
         }
         
         // Attempt to find display names elsewhere
-        if (includingLegacyDisplayNames) {
+        if (isIncludingLegacyDisplayNames()) {
             final var org = ElementSupport.getFirstChildElement(entity, SAMLMetadataSupport.ORGANIZATION_NAME);
             if (org != null) {
                 final var displayNames =
@@ -278,6 +272,11 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
     public void serializeCollection(@Nonnull @NonnullElements final Collection<Item<Element>> items,
             @Nonnull final OutputStream output) throws IOException {
         throwComponentStateExceptions();
+        final Map<String, String> generatorConfig = new HashMap<>();
+        if (isPrettyPrinting()) {
+            generatorConfig.put(JsonGenerator.PRETTY_PRINTING, "true");
+        }
+        final var factory = Json.createGeneratorFactory(generatorConfig);
         final JsonGenerator gen = factory.createGenerator(output);
         gen.writeStartArray();
             for (final Item<Element> item : items) {
@@ -298,7 +297,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
                                         MDUISupport.PRIVACYSTATEMENTURL_NAME, "PrivacyStatementURLs");
                                 writeLogos(gen, uiInfo);
                             }
-                            if (includingEntityAttributes) {
+                            if (isIncludingEntityAttributes()) {
                                 writeEntityAttributes(gen, entity);
                             }
                         gen.writeEnd();
@@ -307,22 +306,6 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
             }
         gen.writeEnd();
         gen.close();
-    }
-
-    @Override
-    protected void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-        final Map<String, String> generatorConfig = new HashMap<>();
-        if (prettyPrinting) {
-            generatorConfig.put(JsonGenerator.PRETTY_PRINTING, "true");
-        }
-        factory = Json.createGeneratorFactory(generatorConfig);
-    }
-
-    @Override
-    protected void doDestroy() {
-        factory = null;
-        super.doDestroy();
     }
 
 }

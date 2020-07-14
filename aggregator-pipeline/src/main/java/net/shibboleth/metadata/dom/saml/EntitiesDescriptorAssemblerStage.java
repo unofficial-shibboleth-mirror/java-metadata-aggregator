@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
@@ -52,7 +53,7 @@ import net.shibboleth.utilities.java.support.xml.NamespaceSupport;
 public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
-    public static final QName NAME_ATTRIB_NAME = new QName("Name");
+    private static final QName NAME_ATTRIB_NAME = new QName("Name");
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorAssemblerStage.class);
@@ -61,13 +62,14 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * Whether attempting to turn an empty item collection, which would result in a schema-invalid childless
      * EntitiesDescriptor, should be treated as processing error. Default value: <code>false</code>
      */
-    private boolean noChildrenAProcessingError;
+    @GuardedBy("this") private boolean noChildrenAProcessingError;
 
     /** Strategy used to order a collection of Items. The default strategy performs no ordering. */
-    @Nonnull
-    private ItemOrderingStrategy<Element> orderingStrategy = new NoOpItemOrderingStrategy<>();
+    @Nonnull @GuardedBy("this")
+    private ItemOrderingStrategy<Element> itemOrderingStrategy = new NoOpItemOrderingStrategy<>();
 
     /** Name to use for the EntitiesDescriptor. */
+    @Nullable @GuardedBy("this")
     private String descriptorName;
 
     /**
@@ -76,7 +78,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * 
      * @return whether attempting to turn an empty item collection should be treated as processing error
      */
-    public boolean isNoChildrenAProcessingError() {
+    public final synchronized boolean isNoChildrenAProcessingError() {
         return noChildrenAProcessingError;
     }
 
@@ -96,8 +98,8 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * 
      * @return strategy used to order a collection of Items
      */
-    @Nonnull public ItemOrderingStrategy<Element> getItemOrderingStrategy() {
-        return orderingStrategy;
+    @Nonnull public final synchronized ItemOrderingStrategy<Element> getItemOrderingStrategy() {
+        return itemOrderingStrategy;
     }
 
     /**
@@ -107,7 +109,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      */
     public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy<Element> strategy) {
         throwSetterPreconditionExceptions();
-        orderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
+        itemOrderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 
     /**
@@ -115,7 +117,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * 
      * @return Name used for the generated descriptor, may be null
      */
-    @Nullable public String getDescriptorName() {
+    @Nullable public final synchronized String getDescriptorName() {
         return descriptorName;
     }
 
@@ -129,16 +131,15 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         descriptorName = StringSupport.trimOrNull(name);
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
         if (itemCollection.isEmpty()) {
-            if (noChildrenAProcessingError) {
+            if (isNoChildrenAProcessingError()) {
                 throw new StageProcessingException("Unable to assemble EntitiesDescriptor from an empty collection");
-            } else {
-                log.debug("Unable to assemble EntitiesDescriptor from an empty collection");
-                return;
             }
+            log.debug("Unable to assemble EntitiesDescriptor from an empty collection");
+            return;
         }
 
         final DOMImplementation domImpl =
@@ -156,7 +157,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         // Put a newline between the start and end tags
         ElementSupport.appendTextContent(entitiesDescriptor, "\n");
 
-        final List<Item<Element>> orderedItems = orderingStrategy.order(itemCollection);
+        final List<Item<Element>> orderedItems = getItemOrderingStrategy().order(itemCollection);
         Element descriptor;
         for (final Item<Element> item : orderedItems) {
             descriptor = item.unwrap();
@@ -181,14 +182,15 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param entitiesDescriptor the entity descriptor to which the
      */
     protected void addDescriptorName(@Nonnull final Element entitiesDescriptor) {
-        if (descriptorName != null) {
-            AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, descriptorName);
+        final var name = getDescriptorName();
+        if (name != null) {
+            AttributeSupport.appendAttribute(entitiesDescriptor, NAME_ATTRIB_NAME, name);
         }
     }
 
     @Override
     protected void doDestroy() {
-        orderingStrategy = null;
+        itemOrderingStrategy = null;
         descriptorName = null;
 
         super.doDestroy();

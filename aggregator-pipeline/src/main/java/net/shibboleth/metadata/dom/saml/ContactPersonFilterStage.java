@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -71,19 +72,19 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
     /** 'other' person type constant. */
     public static final String OTHER = "other";
 
+    /** Allowed contact person types. */
+    @Nonnull @NonnullElements @Unmodifiable
+    private static final Set<String> ALLOWED_TYPES = Set.of(TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING, OTHER);
+
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
-    /** Allowed contact person types. */
-    @Nonnull @NonnullElements @Unmodifiable
-    private final Set<String> allowedTypes = Set.of(TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING, OTHER);
-
     /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
-    @Nonnull @NonnullElements @Unmodifiable
-    private Set<String> designatedTypes = Set.copyOf(allowedTypes);
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
+    private Set<String> designatedTypes = Set.copyOf(ALLOWED_TYPES);
 
     /** Whether {@link #designatedTypes} should be considered a whitelist. Default value: true */
-    private boolean whitelistingTypes = true;
+    @GuardedBy("this") private boolean whitelistingTypes = true;
 
     /**
      * Gets the list of designated person types.
@@ -91,7 +92,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
      * @return list of designated person types
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public Collection<String> getDesignatedTypes() {
+    public final synchronized Collection<String> getDesignatedTypes() {
         return designatedTypes;
     }
 
@@ -106,7 +107,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
 
         final Set<String> checkedTypes = new HashSet<>();
         for (final String type : types) {
-            if (allowedTypes.contains(type)) {
+            if (ALLOWED_TYPES.contains(type)) {
                 checkedTypes.add(type);
             } else {
                 log.debug("Stage {}: {} is not an allowed contact person type and so has been ignored", getId(),
@@ -122,7 +123,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
      * 
      * @return true if the designated roles should be considered a whitelist, false otherwise
      */
-    public boolean isWhitelistingTypes() {
+    public final synchronized boolean isWhitelistingTypes() {
         return whitelistingTypes;
     }
 
@@ -205,18 +206,18 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
             return false;
         }
 
-        if (!allowedTypes.contains(type)) {
+        if (!ALLOWED_TYPES.contains(type)) {
             log.debug("The following ContactPerson contained an invalid contactType, it will be removed:\n{}",
                     SerializeSupport.prettyPrintXML(contactPerson));
             return false;
         }
 
-        if (isWhitelistingTypes() && designatedTypes.contains(type)) {
+        if (isWhitelistingTypes() && getDesignatedTypes().contains(type)) {
             // if we're whitelisting types and the person's type appears in the designated type list, keep them
             return true;
         }
 
-        if (!isWhitelistingTypes() && !designatedTypes.contains(type)) {
+        if (!isWhitelistingTypes() && !getDesignatedTypes().contains(type)) {
             // if we're blacklisting types and the person's type does not appear in the designated type list, keep them
             return true;
         }

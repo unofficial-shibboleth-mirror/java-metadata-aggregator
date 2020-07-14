@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -31,6 +32,7 @@ import net.shibboleth.metadata.Item;
  *
  * @since 0.9.0
  */
+@Immutable
 class WhitespaceTrimmingVisitor implements NodeVisitor, ElementVisitor, AttrVisitor {
 
     @Override

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.XMLConstants;
 
@@ -61,11 +62,11 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractIterating
      * @param namespace potentially stripped namespace
      * @return <code>true</code> if this namespace should be stripped
      */
-    protected abstract boolean removingNamespace(final String namespace);
+    protected abstract boolean removingNamespace(@Nullable final String namespace);
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) {
-        final Element element = Constraint.isNotNull(item, "Item can not be null").unwrap();
+        final Element element = item.unwrap();
     
         /*
          * We can't, by definition, remove the document element from a {@link DOMElementItem},

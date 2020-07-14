@@ -84,9 +84,8 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
         final String id = getId();
         if (id == null) {
             return stageId;
-        } else {
-            return stageId + "/" + getId();
         }
+        return stageId + "/" + getId();
     }
 
     /**

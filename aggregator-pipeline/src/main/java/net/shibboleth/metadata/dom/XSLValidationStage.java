@@ -42,8 +42,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 @ThreadSafe
 public class XSLValidationStage extends AbstractXSLProcessingStage {
 
-    /** {@inheritDoc} */
-    @Override protected void executeTransformer(@Nonnull final Transformer transformer,
+    @Override
+    protected void executeTransformer(@Nonnull final Transformer transformer,
             @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
             TransformerConfigurationException {
 

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -43,21 +44,22 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
     private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);
 
     /** Entities which are white/black listed depending on the value of {@link #whitelistingEntities}. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private Set<String> designatedEntities = Set.of();
 
     /** Whether {@link #designatedEntities} should be considered a whitelist or a blacklist. Default value: false */
-    private boolean whitelistingEntities;
+    @GuardedBy("this") private boolean whitelistingEntities;
 
     /** Whether EntitiesDescriptor that do not contain EntityDescriptors should be removed. Default value: true */
-    private boolean removingEntitylessEntitiesDescriptor = true;
+    @GuardedBy("this") private boolean removingEntitylessEntitiesDescriptor = true;
 
     /**
      * Gets the list of designated entity IDs.
      * 
      * @return list of designated entity IDs, never null
      */
-    @Nonnull @NonnullElements @Unmodifiable public Collection<String> getDesignatedEntities() {
+    @Nonnull @NonnullElements @Unmodifiable
+    public final synchronized Collection<String> getDesignatedEntities() {
         return designatedEntities;
     }
 
@@ -77,7 +79,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * 
      * @return true if the designated entities should be considered a whitelist, false otherwise
      */
-    public boolean isWhitelistingEntities() {
+    public final synchronized boolean isWhitelistingEntities() {
         return whitelistingEntities;
     }
 
@@ -96,7 +98,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * 
      * @return whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
-    public boolean isRemovingEntitylessEntitiesDescriptor() {
+    public final synchronized boolean isRemovingEntitylessEntitiesDescriptor() {
         return removingEntitylessEntitiesDescriptor;
     }
 
@@ -108,13 +110,6 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
         throwSetterPreconditionExceptions();
         removingEntitylessEntitiesDescriptor = remove;
-    }
-
-    @Override
-    protected void doDestroy() {
-        designatedEntities = null;
-
-        super.doDestroy();
     }
 
     @Override
@@ -169,8 +164,8 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
             }
         }
 
-        if (removingEntitylessEntitiesDescriptor && childEntitiesDescriptors.isEmpty()
-                && childEntityDescriptors.isEmpty()) {
+        if (childEntitiesDescriptors.isEmpty() && childEntityDescriptors.isEmpty()
+                && isRemovingEntitylessEntitiesDescriptor()) {
             return true;
         }
 
@@ -188,13 +183,13 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
         // if we're whitelisting entities and this entity isn't in the list, kick it out
-        if (isWhitelistingEntities() && !designatedEntities.contains(entityId)) {
+        if (isWhitelistingEntities() && !getDesignatedEntities().contains(entityId)) {
             log.debug("{} pipeline stage removing entity {} because it wasn't on the whitelist", getId(), entityId);
             return true;
         }
 
         // if we're backlisting entities and this entity is in the list, kick it out
-        if (!isWhitelistingEntities() && designatedEntities.contains(entityId)) {
+        if (!isWhitelistingEntities() && getDesignatedEntities().contains(entityId)) {
             log.debug("{} pipeline stage removing entity {} because it was on the blacklist", getId(), entityId);
             return true;
         }
@@ -202,4 +197,12 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
         // entity has been filtered and made it through, don't kick it out
         return false;
     }
+
+    @Override
+    protected void doDestroy() {
+        designatedEntities = null;
+
+        super.doDestroy();
+    }
+
 }

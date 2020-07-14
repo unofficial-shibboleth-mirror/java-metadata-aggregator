@@ -18,7 +18,7 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Element;
 
@@ -30,7 +30,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * A class for constructing SAML <code>AttributeValue</code> elements
  * for use with the {@link Container} system.
  */
-@ThreadSafe
+@Immutable
 public class AttributeValueElementMaker extends ElementMaker {
 
     /** Value for the attribute. */

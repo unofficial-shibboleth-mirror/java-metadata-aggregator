@@ -65,10 +65,12 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
      * Indicates whether the visitor should be applied to a particular {@link Element}.
      * 
      * @param element {@link Element} to which we may wish to apply the visitor
+     * @param context {@link DOMTraversalContext} implementation being used to manage the traversal
      * 
      * @return <code>true</code> if the visitor should be applied to this {@link Element}.
      */
-    protected abstract boolean applicable(@Nonnull final Element element);
+    protected abstract boolean applicable(@Nonnull final Element element,
+            @Nonnull final C context);
 
     /**
      * Visit a particular {@link Element}.
@@ -96,7 +98,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
         for (final Element child : children) {
             traverse(child, context);
         }
-        if (applicable(element)) {
+        if (applicable(element, context)) {
             visit(element, context);
         }
     }

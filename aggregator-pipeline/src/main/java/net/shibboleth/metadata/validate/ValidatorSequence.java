@@ -20,6 +20,8 @@ package net.shibboleth.metadata.validate;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -39,10 +41,11 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  *
  * @since 0.10.0
  */
+@ThreadSafe
 public class ValidatorSequence<V> extends BaseValidator implements Validator<V> {
 
     /** The list of validators to apply. */
-    @Nonnull @NonnullElements @Unmodifiable
+    @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Validator<V>> validators = List.of();
 
     /**
@@ -50,7 +53,8 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
      * 
      * @param newValidators the list of validators to set
      */
-    public void setValidators(@Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
+    public synchronized void setValidators(
+            @Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
         throwSetterPreconditionExceptions();
         validators = List.copyOf(newValidators);
     }
@@ -61,14 +65,14 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
      * @return list of validators
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Validator<V>> getValidators() {
+    public final synchronized List<Validator<V>> getValidators() {
         return validators;
     }
 
     @Override
     public Action validate(@Nonnull final V value, @Nonnull final Item<?> item, @Nonnull final String stageId)
             throws StageProcessingException {
-        for (final Validator<V> validator: validators) {
+        for (final Validator<V> validator: getValidators()) {
             final Action action = validator.validate(value, item, stageId);
             if (action == Action.DONE) {
                 return action;
@@ -87,7 +91,7 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        for (final Validator<V> validator : validators) {
+        for (final Validator<V> validator : getValidators()) {
             if (!validator.isInitialized()) {
                 validator.initialize();
             }

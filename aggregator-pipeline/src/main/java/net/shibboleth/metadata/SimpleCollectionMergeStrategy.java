@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -29,10 +30,11 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * A {@link CollectionMergeStrategy} that adds the Item from each source, in order, by means of the
  * {@link Collection#addAll(Collection)} method on the target.
  */
+@Immutable
 public class SimpleCollectionMergeStrategy implements CollectionMergeStrategy {
 
-    /** {@inheritDoc} */
-    @Override public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
+    @Override
+    public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
             @Nonnull @NonnullElements final List<Collection<Item<T>>> sources) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");

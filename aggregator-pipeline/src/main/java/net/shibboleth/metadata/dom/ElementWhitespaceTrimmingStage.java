@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
 
@@ -27,6 +28,7 @@ import org.w3c.dom.Element;
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public class ElementWhitespaceTrimmingStage extends AbstractElementVisitingStage {
 
     /** Visitor to apply to each visited element. */

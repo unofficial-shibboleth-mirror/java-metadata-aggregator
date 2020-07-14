@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
@@ -50,10 +51,8 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
      * {@link XPathExpression} objects are reusable but are not thread-safe, so access to the compiled expression must
      * be protected.
      */
+    @Nonnull @GuardedBy("this")
     private final XPathExpression compiledExpression;
-
-    /** The {@link NamespaceContext} to use in interpreting the XPath expression. */
-    private final NamespaceContext namespaceContext;
 
     /**
      * Constructor.
@@ -64,6 +63,7 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
      */
     public XPathItemSelectionStrategy(@Nonnull @NotEmpty final String expression,
             @Nonnull final NamespaceContext context) throws XPathExpressionException {
+        final NamespaceContext namespaceContext;
         if (context == null) {
             namespaceContext = new SimpleNamespaceContext();
         } else {

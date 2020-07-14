@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.validate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
@@ -27,11 +28,16 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
 
 /**
  * Interface for a validator to be applied to an object in the context of a given {@link Item}.
- * 
+ *
+ * <p>
+ * {@code Validator}s <strong>must</strong> be thread-safe.
+ * </p>
+ *
  * @param <V> type of the object to be validated
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public interface Validator<V> extends DestructableComponent, IdentifiableComponent,
     InitializableComponent {
     
@@ -64,7 +70,7 @@ public interface Validator<V> extends DestructableComponent, IdentifiableCompone
      * @return an indication of whether to process additional validators
      * @throws StageProcessingException if an error occurs during validation
      */
-    Action validate(@Nonnull V e, @Nonnull Item<?> item, @Nonnull String stageId)
+    @Nonnull Action validate(@Nonnull V e, @Nonnull Item<?> item, @Nonnull String stageId)
         throws StageProcessingException;
     
 }

@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.validate.Validator;
@@ -36,12 +37,21 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  *
  * @since 0.9.0
  */
+@ThreadSafe
 public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContext>
     extends AbstractDOMTraversalStage<C> {
 
-    /** The validator sequence to apply. */
+    /**
+     * The validator sequence to apply.
+     *
+     * <p>
+     * Thread safety: as a <code>final</code> field, access to <code>validators</code>
+     * does not need to be synchronised for thread safety. The referenced object
+     * is itself thread-safe.
+     * </p>
+     */
     @Nonnull @NonnullElements @Unmodifiable
-    private ValidatorSequence<V> validators = new ValidatorSequence<>();
+    private final ValidatorSequence<V> validators = new ValidatorSequence<>();
 
     /**
      * Set the list of validators to apply to each item.
@@ -58,7 +68,7 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
      * @return list of validators
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Validator<V>> getValidators() {
+    public final List<Validator<V>> getValidators() {
         return validators.getValidators();
     }
 
@@ -76,8 +86,11 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
     
     @Override
     protected void doDestroy() {
+        /*
+         * We can not discard the reference to the validators object,
+         * but we can destroy it.
+         */
         validators.destroy();
-        validators = null;
         super.doDestroy();
     }
 

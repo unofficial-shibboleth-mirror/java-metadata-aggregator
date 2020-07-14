@@ -57,9 +57,9 @@ public class SAMLStringElementCheckingStageTest extends BaseDOMTest {
         final Item<Element> outItem = items.get(0);
         Assert.assertSame(outItem, item);
         final List<ErrorStatus> errors = item.getItemMetadata().get(ErrorStatus.class);
-        for (final ErrorStatus error : errors) {
-            System.out.println(error.getComponentId() + ": " + error.getStatusMessage());
-        }
+        //for (final ErrorStatus error : errors) {
+        //    System.out.println(error.getComponentId() + ": " + error.getStatusMessage());
+        //}
         Assert.assertEquals(errors.size(), 3);
     }
 }

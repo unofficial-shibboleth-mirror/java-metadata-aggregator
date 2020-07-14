@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Element;
 
@@ -31,6 +32,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.10.0
  */
+@Immutable
 public class AttributeElementMatcher extends ElementMatcher {
 
     /** <code>NameFormat</code> attribute value to match. */

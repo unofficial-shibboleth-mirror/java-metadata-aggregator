@@ -41,7 +41,7 @@ public class SimpleDOMTraversalContext implements DOMTraversalContext {
     }
 
     @Override
-    public Item<Element> getItem() {
+    public final Item<Element> getItem() {
         return item;
     }
 

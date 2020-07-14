@@ -21,19 +21,19 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
 import org.w3c.dom.Element;
+
+import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
  * Basic matcher class for {@link Element}s for use with the {@link Container} system.
  *
  * @since 0.10.0
  */
-@ThreadSafe
+@Immutable
 public class ElementMatcher implements Predicate<Element> {
 
     /** Element {@link QName} to match. */

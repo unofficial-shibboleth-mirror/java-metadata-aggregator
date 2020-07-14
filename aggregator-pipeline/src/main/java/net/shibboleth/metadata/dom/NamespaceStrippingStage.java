@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -37,6 +38,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
     /**
      * XML namespace to remove.
      */
+    @Nonnull @NotEmpty @GuardedBy("this")
     private String namespace;
 
     /**
@@ -44,7 +46,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @return namespace URI
      */
-    @Nullable public String getNamespace() {
+    @Nullable public final synchronized String getNamespace() {
         return namespace;
     }
 
@@ -53,7 +55,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @param ns namespace URI as a string
      */
-    public void setNamespace(@Nonnull @NotEmpty final String ns) {
+    public synchronized void setNamespace(@Nonnull @NotEmpty final String ns) {
         throwSetterPreconditionExceptions();
         namespace = Constraint.isNotNull(StringSupport.trimOrNull(ns),
                 "target namespace can not be null or empty");
@@ -61,7 +63,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
 
     @Override
     protected boolean removingNamespace(final String ns) {
-        return namespace.equals(ns);
+        return getNamespace().equals(ns);
     }
 
     @Override

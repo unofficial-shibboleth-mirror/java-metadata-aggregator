@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -40,20 +41,20 @@ import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
 
     /** Whether the item is required to have a validUntil attribute. Default value: <code>true</code> */
-    private boolean requireValidUntil = true;
+    @GuardedBy("this") private boolean requireValidUntil = true;
 
     /**
      * Interval from now within which the validUntil date must fall. A value of 0 indicates that no
      * maximum interval is checked. Default value: 1 week
      */
-    @Nonnull private Duration maxValidityInterval = Duration.ofDays(7);
+    @Nonnull @GuardedBy("this") private Duration maxValidityInterval = Duration.ofDays(7);
 
     /**
      * Gets whether the item is required to have a validUntil attribute.
      * 
      * @return whether the item is required to have a validUntil attribute
      */
-    public boolean isRequireValidUntil() {
+    public final synchronized boolean isRequireValidUntil() {
         return requireValidUntil;
     }
 
@@ -72,7 +73,8 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
      * 
      * @return Interval from now within which the validUntil date must fall
      */
-    public Duration getMaxValidityInterval() {
+    @Nonnull
+    public final synchronized Duration getMaxValidityInterval() {
         return maxValidityInterval;
     }
 
@@ -104,7 +106,7 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
                 AttributeSupport.getDateTimeAttribute(AttributeSupport.getAttribute(element,
                         SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
         if (validUntil == null) {
-            if (requireValidUntil) {
+            if (isRequireValidUntil()) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
             }
         } else {
@@ -113,8 +115,8 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item has a validUntil prior to the current time"));
             }
 
-            if (!maxValidityInterval.isZero()) {
-                final var upperBound = lowerBound.plus(maxValidityInterval);
+            if (!getMaxValidityInterval().isZero()) {
+                final var upperBound = lowerBound.plus(getMaxValidityInterval());
                 if (validUntil.isAfter(upperBound)) {
                     item.getItemMetadata().put(
                             new ErrorStatus(getId(), "Item has validUntil larger than the maximum validity interval"));

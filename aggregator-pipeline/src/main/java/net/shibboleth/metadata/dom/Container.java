@@ -55,7 +55,7 @@ public class Container {
          * @param child child {@link Element} to add
          * @return a new child {@link Container} representing the child {@link Element}
          */
-        @Nonnull Container addChild(@Nonnull final Container parent, @Nonnull final Element child);
+        @Nonnull Container addChild(@Nonnull Container parent, @Nonnull Element child);
     }
 
     /**

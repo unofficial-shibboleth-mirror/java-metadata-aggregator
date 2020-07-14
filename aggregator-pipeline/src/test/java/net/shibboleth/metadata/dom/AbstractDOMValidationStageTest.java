@@ -40,7 +40,7 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
     private static class StringValidationStage extends AbstractDOMValidationStage<String, DOMTraversalContext> {
 
         @Override
-        protected boolean applicable(Element element) {
+        protected boolean applicable(Element element, DOMTraversalContext context) {
             return "checkedElement".equals(element.getLocalName());
         }
 

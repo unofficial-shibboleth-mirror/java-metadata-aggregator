@@ -22,12 +22,14 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Implementation {@link Supplier} that produces {@link ArrayList} instances.
  * 
  * @param <T> the type of items the produced collection will contain
  */
+@Immutable
 public class SimpleItemCollectionFactory<T> implements Supplier<Collection<Item<T>>> {
 
     @Override

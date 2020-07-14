@@ -18,8 +18,16 @@
 package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
-/** Strategy for determining a displayable identifier for a given {@link Item}. */
+/**
+ * Strategy for determining a displayable identifier for a given {@link Item}.
+ * 
+ * <p>
+ * All implementations of this interface <strong>must</strong> be thread-safe.
+ * </p>
+ */
+@ThreadSafe
 public interface ItemIdentificationStrategy {
 
     /**
@@ -27,8 +35,8 @@ public interface ItemIdentificationStrategy {
      * 
      * @param item the item
      * 
-     * @return the identifier, never null
+     * @return the identifier, never <code>null</code>
      */
-    String getItemIdentifier(@Nonnull final Item<?> item);
+    @Nonnull String getItemIdentifier(@Nonnull Item<?> item);
 
 }

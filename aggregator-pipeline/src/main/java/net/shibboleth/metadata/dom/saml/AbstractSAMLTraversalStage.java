@@ -77,11 +77,10 @@ public abstract class AbstractSAMLTraversalStage <C extends DOMTraversalContext>
             final Attr id = entity.getAttributeNode("ID");
             if (id != null) {
                 return id.getTextContent() + ": ";
-            } else {
-                final Attr entityID = entity.getAttributeNode("entityID");
-                if (entityID != null) {
-                    return entityID.getTextContent() + ": ";
-                }
+            }
+            final Attr entityID = entity.getAttributeNode("entityID");
+            if (entityID != null) {
+                return entityID.getTextContent() + ": ";
             }
         }
         return "";

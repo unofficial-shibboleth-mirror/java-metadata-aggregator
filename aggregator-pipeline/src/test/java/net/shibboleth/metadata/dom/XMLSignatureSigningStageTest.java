@@ -96,7 +96,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
         PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
-        X509Certificate signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+        X509Certificate signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
         certs.add(signingCert);
@@ -133,7 +133,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
         final PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
-        final X509Certificate signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+        final X509Certificate signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
         certs.add(signingCert);
@@ -188,7 +188,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     public void setRemovingCRsFromSignature() throws Exception {
         PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
-        X509Certificate signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+        X509Certificate signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
         certs.add(signingCert);
@@ -264,7 +264,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         final var md = getInput("input.xml");
         final var stage = new XMLSignatureSigningStage();
         
-        final var signingCert = (X509Certificate) CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+        final var signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final var certs = List.of(signingCert);
 
@@ -308,7 +308,13 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         // If we didn't have a public key or a certificate, we don't expect to see a KeyInfo at all.
         Assert.assertNull(keyInfo);
     }
-    
+
+    @Test
+    public final void testDefaultHash() {
+        final var stage = new XMLSignatureSigningStage();
+        Assert.assertEquals(stage.getShaVariant(), XMLSignatureSigningStage.ShaVariant.SHA256);
+    }
+
     private boolean hasChildNamed(@Nonnull final Element element, @Nonnull final QName name) {
         return !ElementSupport.getChildElements(element, name).isEmpty();
     }

@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -39,6 +40,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
  *
  * @see <a href="https://issues.shibboleth.net/jira/browse/SSPCPP-684">SSPCPP-684</a>
  */
+@ThreadSafe
 public class CRDetectionStage extends AbstractSAMLTraversalStage<CRDetectionStage.Context> {
 
     /** Context class for this kind of traversal. */
@@ -78,7 +80,7 @@ public class CRDetectionStage extends AbstractSAMLTraversalStage<CRDetectionStag
     private static final char CR = '\r';
     
     @Override
-    protected boolean applicable(final Element element) {
+    protected boolean applicable(@Nonnull final Element element, @Nonnull final Context context) {
         // all Elements are applicable
         return true;
     }

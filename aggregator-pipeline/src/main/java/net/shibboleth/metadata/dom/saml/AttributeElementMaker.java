@@ -18,7 +18,7 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Element;
 
@@ -32,7 +32,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.10.0
  */
-@ThreadSafe
+@Immutable
 public class AttributeElementMaker extends ElementMaker {
 
     /** Value for the <code>Name</code> XML attribute. */

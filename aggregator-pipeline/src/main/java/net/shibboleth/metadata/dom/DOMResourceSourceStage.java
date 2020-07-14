@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -56,15 +58,18 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
     private final Logger log = LoggerFactory.getLogger(DOMResourceSourceStage.class);
 
     /** Resource used to fetch remote XML document. */
+    @NonnullAfterInit @GuardedBy("this")
     private Resource domResource;
 
     /** Pool of parsers used to parse incoming DOM. */
+    @NonnullAfterInit @GuardedBy("this")
     private ParserPool parserPool;
 
     /**
      * Whether an error parsing one source file causes this entire {@link net.shibboleth.metadata.pipeline.Stage} to
      * fail, or just excludes the material from the offending source file. Default value: <code>true</code>
      */
+    @GuardedBy("this")
     private boolean errorCausesSourceFailure = true;
 
     /**
@@ -72,7 +77,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * 
      * @return resource from which the XML document will be fetched
      */
-    @Nullable public Resource getDOMResource() {
+    @Nullable public final synchronized Resource getDOMResource() {
         return domResource;
     }
 
@@ -91,7 +96,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * 
      * @return pool of DOM parsers used to parse the XML file in to a DOM
      */
-    @Nullable public ParserPool getParserPool() {
+    @Nullable public final synchronized ParserPool getParserPool() {
         return parserPool;
     }
 
@@ -110,7 +115,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * 
      * @return whether an error reading and parsing the XML file causes this stage to fail
      */
-    public boolean getErrorCausesSourceFailure() {
+    public final synchronized boolean getErrorCausesSourceFailure() {
         return errorCausesSourceFailure;
     }
 
@@ -124,22 +129,23 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
         errorCausesSourceFailure = causesFailure;
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    @Override
+    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
             throws StageProcessingException {
 
-        log.debug("Attempting to fetch XML document from '{}'", domResource.getDescription());
+        final var resource = getDOMResource();
 
-        try (InputStream ins = domResource.getInputStream()) {
-            populateItemCollection(itemCollection, ins);
+        log.debug("Attempting to fetch XML document from '{}'", resource.getDescription());
+
+        try (InputStream ins = resource.getInputStream()) {
+            populateItemCollection(itemCollection, ins, resource);
         } catch (final IOException e) {
-            if (errorCausesSourceFailure) {
+            if (getErrorCausesSourceFailure()) {
                 throw new StageProcessingException("Error retrieving XML document from " +
-                        domResource.getDescription(), e);
-            } else {
-                log.warn("stage {}: unable to read in XML file", getId());
-                log.debug("stage {}: HTTP resource exception", getId(), e);
+                        resource.getDescription(), e);
             }
+            log.warn("stage {}: unable to read in XML file", getId());
+            log.debug("stage {}: HTTP resource exception", getId(), e);
         }
     }
 
@@ -149,35 +155,35 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * 
      * @param itemCollection collection to which the read in and parsed document element is added
      * @param data XML input file
+     * @param resource the resource to read from
      * 
      * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
     protected void populateItemCollection(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
-            final InputStream data) throws StageProcessingException {
+            @Nonnull final InputStream data, @Nonnull final Resource resource) throws StageProcessingException {
         try {
-            log.debug("Parsing XML document retrieved from '{}'", domResource.getDescription());
-            itemCollection.add(new DOMElementItem(parserPool.parse(data)));
+            log.debug("Parsing XML document retrieved from '{}'", resource.getDescription());
+            itemCollection.add(new DOMElementItem(getParserPool().parse(data)));
         } catch (final XMLParserException e) {
-            if (errorCausesSourceFailure) {
+            if (getErrorCausesSourceFailure()) {
                 throw new StageProcessingException(getId() + " unable to parse returned XML document " +
-                        domResource.getDescription(), e);
-            } else {
-                log.warn("stage {}: unable to parse XML document", getId());
-                log.debug("stage {}: parsing exception", getId(), e);
+                        resource.getDescription(), e);
             }
+            log.warn("stage {}: unable to parse XML document", getId());
+            log.debug("stage {}: parsing exception", getId(), e);
         }
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doDestroy() {
+    @Override
+    protected void doDestroy() {
         domResource = null;
         parserPool = null;
 
         super.doDestroy();
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (parserPool == null) {
