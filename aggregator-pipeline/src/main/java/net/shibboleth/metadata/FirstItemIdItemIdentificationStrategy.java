@@ -26,12 +26,14 @@ import javax.annotation.concurrent.Immutable;
 /**
  * Strategy that returns the first {@link ItemId} associated with an {@link Item} or, if no {@link ItemId} is
  * associated with the item, a generic identifier is returned.
+ *
+ * @param <T> type of {@link Item} to be identified
  */
 @Immutable
-public class FirstItemIdItemIdentificationStrategy extends AbstractCompositeItemIdentificationStrategy {
+public class FirstItemIdItemIdentificationStrategy<T> extends AbstractCompositeItemIdentificationStrategy<T> {
 
     @Override
-    @Nullable protected String getBasicIdentifier(@Nonnull final Item<?> item) {
+    @Nullable protected String getBasicIdentifier(@Nonnull final Item<T> item) {
         final List<ItemId> itemIds = item.getItemMetadata().get(ItemId.class);
         if (!itemIds.isEmpty()) {
             return itemIds.get(0).getId();
@@ -40,7 +42,7 @@ public class FirstItemIdItemIdentificationStrategy extends AbstractCompositeItem
     }
 
     @Override
-    @Nullable protected String getExtraIdentifier(@Nonnull final Item<?> item) {
+    @Nullable protected String getExtraIdentifier(@Nonnull final Item<T> item) {
         return null;
     }
 

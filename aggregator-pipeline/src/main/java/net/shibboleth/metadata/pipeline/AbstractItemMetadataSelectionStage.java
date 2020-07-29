@@ -53,7 +53,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
 
     /** Strategy used to generate item identifiers for logging purposes. */
     @Nonnull @GuardedBy("this")
-    private ItemIdentificationStrategy identificationStrategy = new FirstItemIdItemIdentificationStrategy();
+    private ItemIdentificationStrategy<T> identificationStrategy = new FirstItemIdItemIdentificationStrategy<>();
 
     /**
      * Gets the {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be
@@ -85,7 +85,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      * 
      * @return strategy used to generate {@link Item} identifiers for logging purposes
      */
-    @Nonnull public final synchronized ItemIdentificationStrategy getItemIdentificationStrategy() {
+    @Nonnull public final synchronized ItemIdentificationStrategy<T> getItemIdentificationStrategy() {
         return identificationStrategy;
     }
 
@@ -94,7 +94,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      * 
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
-    public synchronized void setIdentificationStrategy(@Nonnull final ItemIdentificationStrategy strategy) {
+    public synchronized void setIdentificationStrategy(@Nonnull final ItemIdentificationStrategy<T> strategy) {
         throwSetterPreconditionExceptions();
         identificationStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
     }

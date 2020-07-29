@@ -21,14 +21,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Strategy for determining a displayable identifier for a given {@link Item}.
+ * Strategy for determining a human-readable identifier for a given {@link Item}.
  * 
  * <p>
  * All implementations of this interface <strong>must</strong> be thread-safe.
  * </p>
+ *
+ * @param <T> type of {@link Item} to be identified
  */
 @ThreadSafe
-public interface ItemIdentificationStrategy {
+public interface ItemIdentificationStrategy<T> {
 
     /**
      * Gets an identifier for the item.
@@ -37,6 +39,6 @@ public interface ItemIdentificationStrategy {
      * 
      * @return the identifier, never <code>null</code>
      */
-    @Nonnull String getItemIdentifier(@Nonnull Item<?> item);
+    @Nonnull String getItemIdentifier(@Nonnull Item<T> item);
 
 }

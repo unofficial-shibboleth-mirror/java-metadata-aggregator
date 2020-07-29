@@ -32,15 +32,15 @@ import net.shibboleth.metadata.MockItem;
 
 public class RegistrationAuthorityItemIdentificationStrategyTest {
 
-    private RegistrationAuthorityItemIdentificationStrategy makeStrat() {
-        final RegistrationAuthorityItemIdentificationStrategy strat = new RegistrationAuthorityItemIdentificationStrategy();
+    private RegistrationAuthorityItemIdentificationStrategy<String> makeStrat() {
+        final var strat = new RegistrationAuthorityItemIdentificationStrategy<String>();
         strat.setNoItemIdIdentifier("mu");
         return strat;
     }
     
     @Test
     public void base_unidentified() {
-        final RegistrationAuthorityItemIdentificationStrategy strat = new RegistrationAuthorityItemIdentificationStrategy();
+        final var strat = new RegistrationAuthorityItemIdentificationStrategy<String>();
         Assert.assertEquals(strat.getNoItemIdIdentifier(), "unidentified");
         final Item<String> item = new MockItem("item");
         final String res = strat.getItemIdentifier(item);
@@ -49,7 +49,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
     
     @Test
     public void base_setNoItemIdIdentifier() {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         strat.setNoItemIdIdentifier("mu2");
         Assert.assertEquals(strat.getNoItemIdIdentifier(), "mu2");
         final Item<String> item = new MockItem("item");
@@ -59,7 +59,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
     
     @Test
     public void base_oneIdentifier() {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         final Item<String> item = new MockItem("item");
         item.getItemMetadata().put(new ItemId("id"));
         final String res = strat.getItemIdentifier(item);
@@ -68,7 +68,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
 
     @Test
     public void base_twoIdentifiers() {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         final Item<String> item = new MockItem("item");
         item.getItemMetadata().put(new ItemId("first"));
         item.getItemMetadata().put(new ItemId("second"));
@@ -78,7 +78,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
 
     @Test
     public void getItemIdentifier() {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         
         final Item<String> item2 = new MockItem("item 2");
         Assert.assertEquals(strat.getItemIdentifier(item2), "mu");
@@ -88,7 +88,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
     
     @Test
     public void withRegistrationAuthority() throws Exception {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         final Item<String> item = new MockItem("present");
         item.getItemMetadata().put(new ItemId("uk002232"));
         item.getItemMetadata().put(new RegistrationAuthority("http://ukfederation.org.uk"));
@@ -97,7 +97,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
 
     @Test
     public void ignoredAuthority() throws Exception {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         final Item<String> item = new MockItem("present");
         item.getItemMetadata().put(new ItemId("uk002232"));
         item.getItemMetadata().put(new RegistrationAuthority("http://ukfederation.org.uk"));
@@ -111,7 +111,7 @@ public class RegistrationAuthorityItemIdentificationStrategyTest {
     
     @Test
     public void mappedAuthority() throws Exception {
-        final RegistrationAuthorityItemIdentificationStrategy strat = makeStrat();
+        final var strat = makeStrat();
         final Map<String, String> nameMap = new HashMap<>();
         nameMap.put("http://ukfederation.org.uk", "UKf");
         strat.setRegistrationAuthorityDisplayNames(nameMap);

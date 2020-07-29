@@ -37,10 +37,12 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * 
  * If the extra identifier is <code>null</code>, only the basic identifier is used.
  *
+ * @param <T> type of {@link Item} to be identified
+ *
  * @since 0.9.0
  */
 @ThreadSafe
-public abstract class AbstractCompositeItemIdentificationStrategy implements ItemIdentificationStrategy {
+public abstract class AbstractCompositeItemIdentificationStrategy<T> implements ItemIdentificationStrategy<T> {
 
     /** Identifier to use if an {@link Item} does not have an {@link ItemId}. Default value: "unidentified" */
     @Nonnull @NotEmpty @GuardedBy("this")
@@ -71,7 +73,7 @@ public abstract class AbstractCompositeItemIdentificationStrategy implements Ite
      * @param item {@link Item} to extract a basic identifier from
      * @return a basic identifier for the {@link Item}, or <code>null</code>
      */
-    @Nullable abstract String getBasicIdentifier(@Nonnull final Item<?> item);
+    @Nullable abstract String getBasicIdentifier(@Nonnull final Item<T> item);
     
     /**
      * Get an extra identifier for the {@link Item}.
@@ -79,10 +81,10 @@ public abstract class AbstractCompositeItemIdentificationStrategy implements Ite
      * @param item {@link Item} to extract an extra identifier from
      * @return an extra identifier for the {@link Item}, or <code>null</code>
      */
-    @Nullable abstract String getExtraIdentifier(@Nonnull final Item<?> item);
+    @Nullable abstract String getExtraIdentifier(@Nonnull final Item<T> item);
 
     @Override
-    @Nonnull public String getItemIdentifier(@Nonnull final Item<?> item) {
+    @Nonnull public String getItemIdentifier(@Nonnull final Item<T> item) {
         Constraint.isNotNull(item, "Item can not equal null");
 
         final StringBuilder res = new StringBuilder();

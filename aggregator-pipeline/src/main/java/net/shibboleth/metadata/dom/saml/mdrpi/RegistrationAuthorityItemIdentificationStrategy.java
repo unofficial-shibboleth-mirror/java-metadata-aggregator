@@ -42,10 +42,12 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
  * specified blacklist, and it can be mapped to a simpler value for display if
  * desired.
  *
+ * @param <T> type of {@link Item} to be identified
+ *
  * @since 0.9.0
  */
 @ThreadSafe
-public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemIdItemIdentificationStrategy {
+public class RegistrationAuthorityItemIdentificationStrategy<T> extends FirstItemIdItemIdentificationStrategy<T> {
 
     /**
      * Set of registration authorities to be ignored.
@@ -107,7 +109,7 @@ public class RegistrationAuthorityItemIdentificationStrategy extends FirstItemId
      * @return registration authority name, or <code>null</code>.
      */
     @Override
-    @Nullable protected String getExtraIdentifier(@Nonnull final Item<?> item) {
+    @Nullable protected String getExtraIdentifier(@Nonnull final Item<T> item) {
         final List<RegistrationAuthority> regAuths = item.getItemMetadata().get(RegistrationAuthority.class);
         
         // nothing to return if there isn't a registration authority

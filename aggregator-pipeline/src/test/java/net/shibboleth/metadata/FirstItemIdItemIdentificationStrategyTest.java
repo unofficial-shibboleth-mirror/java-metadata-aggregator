@@ -25,7 +25,7 @@ public class FirstItemIdItemIdentificationStrategyTest {
 
     @Test
     public void unidentified() {
-        final FirstItemIdItemIdentificationStrategy strat = new FirstItemIdItemIdentificationStrategy();
+        final var strat = new FirstItemIdItemIdentificationStrategy<String>();
         Assert.assertEquals(strat.getNoItemIdIdentifier(), "unidentified");
         final Item<String> item = new MockItem("item");
         final String res = strat.getItemIdentifier(item);
@@ -34,7 +34,7 @@ public class FirstItemIdItemIdentificationStrategyTest {
     
     @Test
     public void setNoItemIdIdentifier() {
-        final FirstItemIdItemIdentificationStrategy strat = new FirstItemIdItemIdentificationStrategy();
+        final var strat = new FirstItemIdItemIdentificationStrategy<String>();
         strat.setNoItemIdIdentifier("mu");
         Assert.assertEquals(strat.getNoItemIdIdentifier(), "mu");
         final Item<String> item = new MockItem("item");
@@ -44,7 +44,7 @@ public class FirstItemIdItemIdentificationStrategyTest {
     
     @Test
     public void oneIdentifier() {
-        final FirstItemIdItemIdentificationStrategy strat = new FirstItemIdItemIdentificationStrategy();
+        final var strat = new FirstItemIdItemIdentificationStrategy<String>();
         final Item<String> item = new MockItem("item");
         item.getItemMetadata().put(new ItemId("id"));
         final String res = strat.getItemIdentifier(item);
@@ -53,7 +53,7 @@ public class FirstItemIdItemIdentificationStrategyTest {
 
     @Test
     public void twoIdentifiers() {
-        final FirstItemIdItemIdentificationStrategy strat = new FirstItemIdItemIdentificationStrategy();
+        final var strat = new FirstItemIdItemIdentificationStrategy<String>();
         final Item<String> item = new MockItem("item");
         item.getItemMetadata().put(new ItemId("first"));
         item.getItemMetadata().put(new ItemId("second"));
