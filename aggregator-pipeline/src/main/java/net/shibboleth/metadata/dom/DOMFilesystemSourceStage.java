@@ -20,7 +20,6 @@ package net.shibboleth.metadata.dom;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -277,11 +276,8 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      *             {@link #errorCausesSourceFailure} is true
      */
     @Nonnull protected DOMElementItem processSourceFile(@Nonnull final File source) throws StageProcessingException {
-        FileInputStream xmlIn = null;
-
-        try {
-            log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
-            xmlIn = new FileInputStream(source);
+        log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
+        try (FileInputStream xmlIn = new FileInputStream(source)) {
             final Document doc = getParserPool().parse(xmlIn);
             return new DOMElementItem(doc);
         } catch (final Exception e) {
@@ -292,12 +288,6 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
             log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
                     getId(), source.getPath(), e,});
             return null;
-        } finally {
-            try {
-                xmlIn.close();
-            } catch (final IOException e) {
-                throw new StageProcessingException("Exception closing input stream", e);
-            }
         }
     }
 
