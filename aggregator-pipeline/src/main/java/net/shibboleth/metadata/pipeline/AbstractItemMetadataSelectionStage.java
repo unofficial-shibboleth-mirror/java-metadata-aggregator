@@ -100,10 +100,10 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
     }
 
     @Override
-    protected void doExecute(final Collection<Item<T>> itemCollection) throws StageProcessingException {
+    protected void doExecute(final List<Item<T>> items) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
-        // to the itemCollection and thus would cause issues if we were iterating over it directly
-        final ArrayList<Item<T>> collectionCopy = new ArrayList<>(itemCollection);
+        // to the item collection and thus would cause issues if we were iterating over it directly
+        final var collectionCopy = new ArrayList<>(items);
 
         for (final Item<T> item : collectionCopy) {
             final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
@@ -116,7 +116,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
             }
 
             if (!matchingMetadata.isEmpty()) {
-                doExecute(itemCollection, item, matchingMetadata);
+                doExecute(items, item, matchingMetadata);
             }
         }
     }
@@ -132,14 +132,14 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
     /**
      * Performs the stage's logic on the given item that contained metadata of the given type.
      * 
-     * @param itemCollection current item collection
+     * @param items current item collection
      * @param matchingItem matching item
      * @param matchingMetadata all the {@link ItemMetadata} instances that match a selection criteria
      * 
      * @throws StageProcessingException thrown if there is a problem processing the item
      */
     protected abstract void doExecute(
-            @Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+            @Nonnull @NonnullElements final List<Item<T>> items,
             @Nonnull final Item<T> matchingItem,
             @Nonnull @NonnullElements
             final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)

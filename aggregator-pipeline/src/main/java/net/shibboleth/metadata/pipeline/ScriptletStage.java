@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,10 +85,10 @@ public class ScriptletStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         final SimpleScriptContext context = new SimpleScriptContext();
-        context.setAttribute(ITEMS, itemCollection, SimpleScriptContext.ENGINE_SCOPE);
+        context.setAttribute(ITEMS, items, SimpleScriptContext.ENGINE_SCOPE);
 
         try {
             getScript().eval(context);

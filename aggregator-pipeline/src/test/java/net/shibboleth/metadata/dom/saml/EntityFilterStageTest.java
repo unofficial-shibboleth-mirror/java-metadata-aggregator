@@ -19,18 +19,17 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.w3c.dom.Element;
 
 /** Unit test for {@link EntityFilterStage}. */
 public class EntityFilterStageTest extends BaseDOMTest {
@@ -52,7 +51,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(true);
         stage.initialize();
 
-        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
+        final var metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 1);
@@ -70,7 +69,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(false);
         stage.initialize();
 
-        Collection<Item<Element>> metadataCollection = buildMetadataCollection();
+        final var metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
 
         Assert.assertEquals(metadataCollection.size(), 2);
@@ -181,7 +180,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
      * 
      * @throws Exception if something bad happens
      */
-    private Collection<Item<Element>> buildMetadataCollection() throws Exception {
+    private List<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =

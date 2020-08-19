@@ -79,12 +79,12 @@ public class CRDetectionStageTest extends BaseDOMTest {
     }
 
     private List<ErrorStatus> execute(final Item<Element> item) throws Exception {
-        final List<Item<Element>> itemCollection = new ArrayList<>();
-        itemCollection.add(item);
+        final List<Item<Element>> items = new ArrayList<>();
+        items.add(item);
         final CRDetectionStage stage = new CRDetectionStage();
         stage.setId("test");
         stage.initialize();
-        stage.execute(itemCollection);
+        stage.execute(items);
         final List<WarningStatus> warnings = item.getItemMetadata().get(WarningStatus.class);
         Assert.assertTrue(warnings.isEmpty());
         final List<InfoStatus> infos = item.getItemMetadata().get(InfoStatus.class);

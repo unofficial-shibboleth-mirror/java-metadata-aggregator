@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -181,7 +180,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items) {
         final var name = getAttributeName();
         final var format = getAttributeNameFormat();
         final var attributeMatcher = new AttributeElementMatcher(name, format);
@@ -191,7 +190,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
         final var attributeValueMatcher = new AttributeValueElementMatcher(value);
         final var attributeValueMaker = new AttributeValueElementMaker(value);
 
-        for (final var item : itemCollection) {
+        for (final var item : items) {
             final Element entity = item.unwrap();
     
             if (SAMLMetadataSupport.isEntityDescriptor(entity)) {

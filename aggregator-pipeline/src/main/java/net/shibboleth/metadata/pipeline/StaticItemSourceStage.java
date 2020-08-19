@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -36,7 +35,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 @ThreadSafe
 public class StaticItemSourceStage<T> extends AbstractStage<T> {
 
-    /** Collection of static Items added to each Item collection by {@link #execute(Collection)}. */
+    /** Collection of static Items added to each Item collection by {@link #execute(List)}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Item<T>> source = List.of();
 
@@ -46,7 +45,7 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
      * @return collection of static Items added to the Item collection by this stage
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public final synchronized Collection<Item<T>> getSourceItems() {
+    public final synchronized List<Item<T>> getSourceItems() {
         return source;
     }
 
@@ -56,18 +55,16 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
      * @param items collection of Items added to the Item collection by this stage
      */
     public synchronized void setSourceItems(
-            @Nonnull @NonnullElements @Unmodifiable final Collection<Item<T>> items) {
+            @Nonnull @NonnullElements @Unmodifiable final List<Item<T>> items) {
         throwSetterPreconditionExceptions();
         source = List.copyOf(items);
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         for (final Item<T> item : getSourceItems()) {
-            if (item != null) {
-                itemCollection.add(item.copy());
-            }
+            items.add(item.copy());
         }
     }
 

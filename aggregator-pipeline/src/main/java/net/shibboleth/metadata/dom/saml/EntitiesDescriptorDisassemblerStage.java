@@ -18,11 +18,14 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
@@ -30,10 +33,6 @@ import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 /**
  * A pipeline stage that replaces any SAML EntitiesDescriptor found in the Item collection with the EntityDescriptor
@@ -46,19 +45,19 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> 
     private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items) {
         // make a copy of the input collection and clear it so that we can iterate over
         // the copy and add to the provided collection
-        final ArrayList<Item<Element>> items = new ArrayList<>(itemCollection);
-        itemCollection.clear();
+        final ArrayList<Item<Element>> newItems = new ArrayList<>(items);
+        items.clear();
 
         Element element;
-        for (final Item<Element> item : items) {
+        for (final Item<Element> item : newItems) {
             element = item.unwrap();
             if (SAMLMetadataSupport.isEntitiesDescriptor(element)) {
-                processEntitiesDescriptor(itemCollection, element);
+                processEntitiesDescriptor(items, element);
             } else if (SAMLMetadataSupport.isEntityDescriptor(element)) {
-                processEntityDescriptor(itemCollection, element);
+                processEntityDescriptor(items, element);
             } else {
                 log.debug("{} pipeline stage: DOM Element {} not supported, ignoring it", getId(),
                         QNameSupport.getNodeQName(element));
@@ -70,19 +69,19 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> 
      * Processes an EntitiesDescriptor element. All child EntityDescriptor elements are processed and
      * EntitiesDescriptors are run back through this method.
      * 
-     * @param itemCollection collection to which EntityDescriptor metadata elements are added
+     * @param items collection to which EntityDescriptor metadata elements are added
      * @param entitiesDescriptor the EntitiesDescriptor to break down
      */
-    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
+    protected void processEntitiesDescriptor(@Nonnull @NonnullElements final List<Item<Element>> items,
             @Nonnull final Element entitiesDescriptor) {
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (final Element child : children) {
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
-                processEntitiesDescriptor(itemCollection, child);
+                processEntitiesDescriptor(items, child);
             }
             if (SAMLMetadataSupport.isEntityDescriptor(child)) {
-                processEntityDescriptor(itemCollection, child);
+                processEntityDescriptor(items, child);
             }
         }
     }
@@ -91,12 +90,12 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> 
      * Processes an EntityDescriptor element. Creates a {@link DOMElementItem} element and adds it to the item
      * collections.
      * 
-     * @param itemCollection collection to which metadata is added
+     * @param items collection to which metadata is added
      * @param entityDescriptor entity descriptor to add to the item collection
      */
-    protected void processEntityDescriptor(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
+    protected void processEntityDescriptor(@Nonnull @NonnullElements final List<Item<Element>> items,
             @Nonnull final Element entityDescriptor) {
         final DOMElementItem item = new DOMElementItem(entityDescriptor);
-        itemCollection.add(item);
+        items.add(item);
     }
 }

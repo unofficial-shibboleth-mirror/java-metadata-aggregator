@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata.cli;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class MDA137Stage<T> extends AbstractStage<T> {
     private final Logger log = LoggerFactory.getLogger(MDA137Stage.class);
 
     @Override
-    protected void doExecute(Collection<Item<T>> itemCollection) throws StageProcessingException {
+    protected void doExecute(List<Item<T>> items) throws StageProcessingException {
         // Do absolutely nothing
     }
 

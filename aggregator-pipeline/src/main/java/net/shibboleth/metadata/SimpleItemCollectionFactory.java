@@ -18,7 +18,7 @@
 package net.shibboleth.metadata;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -30,10 +30,10 @@ import javax.annotation.concurrent.Immutable;
  * @param <T> the type of items the produced collection will contain
  */
 @Immutable
-public class SimpleItemCollectionFactory<T> implements Supplier<Collection<Item<T>>> {
+public class SimpleItemCollectionFactory<T> implements Supplier<List<Item<T>>> {
 
     @Override
-    @Nonnull public Collection<Item<T>> get() {
+    @Nonnull public List<Item<T>> get() {
         return new ArrayList<>();
     }
 

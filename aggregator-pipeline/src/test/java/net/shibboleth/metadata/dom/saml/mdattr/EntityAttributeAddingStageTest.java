@@ -68,7 +68,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
      */
     @Test
     public void addNoExtensions() throws Exception {
-        final List<Item<Element>> itemCollection = makeItems("noExtensions.xml");
+        final List<Item<Element>> items = makeItems("noExtensions.xml");
         final List<Stage<Element>> stages = new ArrayList<>();
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
         stages.add(makeStage("another"));
@@ -76,8 +76,8 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
         stages.add(makeStage("another"));
         final Pipeline<Element> pipeline = makePipeline(stages);
-        pipeline.execute(itemCollection);
-        final Element result = itemCollection.get(0).unwrap();
+        pipeline.execute(items);
+        final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("added1.xml");
         assertXMLIdentical(expected, result);
     }
@@ -87,7 +87,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
      */
     @Test
     public void addToExtensions() throws Exception {
-        final List<Item<Element>> itemCollection = makeItems("extensions.xml");
+        final List<Item<Element>> items = makeItems("extensions.xml");
         final List<Stage<Element>> stages = new ArrayList<>();
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
         stages.add(makeStage("http://example.org/category2"));
@@ -95,8 +95,8 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1", "http://macedir.org/entity-category-support"));
         stages.add(makeStage("anotherValue", "anotherAttributeName", "anotherNameFormat"));
         final Pipeline<Element> pipeline = makePipeline(stages);
-        pipeline.execute(itemCollection);
-        final Element result = itemCollection.get(0).unwrap();
+        pipeline.execute(items);
+        final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("added2.xml");
         assertXMLIdentical(expected, result);
     }
@@ -106,7 +106,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
      */
     @Test
     public void addToExtensionsFirst() throws Exception {
-        final List<Item<Element>> itemCollection = makeItems("extensions.xml");
+        final List<Item<Element>> items = makeItems("extensions.xml");
         final List<Stage<Element>> stages = new ArrayList<>();
         final EntityAttributeAddingStage stage = new EntityAttributeAddingStage();
         stage.setId("test");
@@ -119,8 +119,8 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1", "http://macedir.org/entity-category-support"));
         stages.add(makeStage("anotherValue", "anotherAttributeName", "anotherNameFormat"));
         final Pipeline<Element> pipeline = makePipeline(stages);
-        pipeline.execute(itemCollection);
-        final Element result = itemCollection.get(0).unwrap();
+        pipeline.execute(items);
+        final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("added3.xml");
         assertXMLIdentical(expected, result);
     }
@@ -130,7 +130,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
      */
     @Test
     public void addDuplicates() throws Exception {
-        final List<Item<Element>> itemCollection = makeItems("added2.xml");
+        final List<Item<Element>> items = makeItems("added2.xml");
         final List<Stage<Element>> stages = new ArrayList<>();
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
         stages.add(makeStage("http://example.org/category2"));
@@ -138,8 +138,8 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1", "http://macedir.org/entity-category-support"));
         stages.add(makeStage("anotherValue", "anotherAttributeName", "anotherNameFormat"));
         final Pipeline<Element> pipeline = makePipeline(stages);
-        pipeline.execute(itemCollection);
-        final Element result = itemCollection.get(0).unwrap();
+        pipeline.execute(items);
+        final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("added2.xml");
         assertXMLIdentical(expected, result);
     }
@@ -149,7 +149,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
      */
     @Test
     public void addToExisting() throws Exception {
-        final List<Item<Element>> itemCollection = makeItems("some.xml");
+        final List<Item<Element>> items = makeItems("some.xml");
         final List<Stage<Element>> stages = new ArrayList<>();
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1"));
         stages.add(makeStage("http://example.org/category2"));
@@ -157,8 +157,8 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         stages.add(makeStage("http://www.geant.net/uri/dataprotection-code-of-conduct/v1", "http://macedir.org/entity-category-support"));
         stages.add(makeStage("anotherValue", "anotherAttributeName", "anotherNameFormat"));
         final Pipeline<Element> pipeline = makePipeline(stages);
-        pipeline.execute(itemCollection);
-        final Element result = itemCollection.get(0).unwrap();
+        pipeline.execute(items);
+        final Element result = items.get(0).unwrap();
         final Element expected = readXMLData("added2.xml");
         assertXMLIdentical(expected, result);
     }

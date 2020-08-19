@@ -19,7 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -130,7 +130,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items)
             throws StageProcessingException {
 
         final var resource = getDOMResource();
@@ -138,7 +138,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
         log.debug("Attempting to fetch XML document from '{}'", resource.getDescription());
 
         try (InputStream ins = resource.getInputStream()) {
-            populateItemCollection(itemCollection, ins, resource);
+            populateItemCollection(items, ins, resource);
         } catch (final IOException e) {
             if (getErrorCausesSourceFailure()) {
                 throw new StageProcessingException("Error retrieving XML document from " +
@@ -153,17 +153,17 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * Builds an {@link DOMElementItem} collection from a new XML document. Also caches DOM Element in its parsed form
      * for later use.
      * 
-     * @param itemCollection collection to which the read in and parsed document element is added
+     * @param items collection to which the read in and parsed document element is added
      * @param data XML input file
      * @param resource the resource to read from
      * 
      * @throws StageProcessingException thrown if there is a problem reading and parsing the response
      */
-    protected void populateItemCollection(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection,
+    protected void populateItemCollection(@Nonnull @NonnullElements final List<Item<Element>> items,
             @Nonnull final InputStream data, @Nonnull final Resource resource) throws StageProcessingException {
         try {
             log.debug("Parsing XML document retrieved from '{}'", resource.getDescription());
-            itemCollection.add(new DOMElementItem(getParserPool().parse(data)));
+            items.add(new DOMElementItem(getParserPool().parse(data)));
         } catch (final XMLParserException e) {
             if (getErrorCausesSourceFailure()) {
                 throw new StageProcessingException(getId() + " unable to parse returned XML document " +

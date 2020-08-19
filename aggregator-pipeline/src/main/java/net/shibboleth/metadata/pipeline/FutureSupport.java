@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -118,11 +118,11 @@ public final class FutureSupport {
      * 
      * @throws StageProcessingException unless resolution is successful
      */
-    @Nonnull public static <T> Collection<Item<T>> futureItems(
-            @Nonnull final Future<Collection<Item<T>>> future) throws StageProcessingException {
+    @Nonnull public static <T> List<Item<T>> futureItems(
+            @Nonnull final Future<List<Item<T>>> future) throws StageProcessingException {
         assert future != null;
         try {
-            final Collection<Item<T>> value = future.get();
+            final List<Item<T>> value = future.get();
             if (value == null) {
                 throw new StageProcessingException("null returned from future value");
             }

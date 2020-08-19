@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -217,7 +218,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items)
             throws StageProcessingException {
         try {
             /*
@@ -237,7 +238,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
                 transformer.setParameter(entry.getKey(), entry.getValue());
             }
 
-            executeTransformer(transformer, itemCollection);
+            executeTransformer(transformer, items);
         } catch (final TransformerConfigurationException e) {
             throw new RuntimeException("XSL transformation engine misconfigured", e);
         }
@@ -247,13 +248,13 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * Executes the XSLT transform on the given collection of Items.
      * 
      * @param transformer The transform to be applied to each Item. Already has all {@link #transformParameters} set.
-     * @param itemCollection the Items to which the transform should be applied
+     * @param items the Items to which the transform should be applied
      * 
      * @throws StageProcessingException thrown if there is a problem applying the transform to Items
      * @throws TransformerConfigurationException thrown if there is a problem with the Transform itself
      */
     protected abstract void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<Item<Element>> items) throws StageProcessingException,
             TransformerConfigurationException;
 
     @Override

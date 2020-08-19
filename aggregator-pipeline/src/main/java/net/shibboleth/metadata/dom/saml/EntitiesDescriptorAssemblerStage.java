@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -132,9 +131,9 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items)
             throws StageProcessingException {
-        if (itemCollection.isEmpty()) {
+        if (items.isEmpty()) {
             if (isNoChildrenAProcessingError()) {
                 throw new StageProcessingException("Unable to assemble EntitiesDescriptor from an empty collection");
             }
@@ -143,7 +142,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         }
 
         final DOMImplementation domImpl =
-                itemCollection.iterator().next().unwrap().getOwnerDocument().getImplementation();
+                items.iterator().next().unwrap().getOwnerDocument().getImplementation();
         final Document entitiesDescriptorDocument = domImpl.createDocument(null, null, null);
 
         final Element entitiesDescriptor =
@@ -157,7 +156,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         // Put a newline between the start and end tags
         ElementSupport.appendTextContent(entitiesDescriptor, "\n");
 
-        final List<Item<Element>> orderedItems = getItemOrderingStrategy().order(itemCollection);
+        final List<Item<Element>> orderedItems = getItemOrderingStrategy().order(items);
         Element descriptor;
         for (final Item<Element> item : orderedItems) {
             descriptor = item.unwrap();
@@ -171,8 +170,8 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         }
 
         final Item<Element> item = new DOMElementItem(entitiesDescriptorDocument);
-        itemCollection.clear();
-        itemCollection.add(item);
+        items.clear();
+        items.add(item);
     }
 
     /**

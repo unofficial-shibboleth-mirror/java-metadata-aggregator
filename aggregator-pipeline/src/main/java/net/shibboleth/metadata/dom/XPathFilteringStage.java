@@ -17,8 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -114,7 +114,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
     }
 
     @Override
-    public void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> metadataCollection)
+    public void doExecute(@Nonnull @NonnullElements final List<Item<Element>> metadataCollection)
             throws StageProcessingException {
         final XPathFactory factory = XPathFactory.newInstance();
         final XPath xpath = factory.newXPath();

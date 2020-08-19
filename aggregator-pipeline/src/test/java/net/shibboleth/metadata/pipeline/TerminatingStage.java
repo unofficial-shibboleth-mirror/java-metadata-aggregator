@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
+import java.util.List;
 
 import net.shibboleth.metadata.Item;
 
@@ -33,8 +33,8 @@ class TerminatingStage<T> extends AbstractStage<T> {
         setId("TerminatingStage");
     }
 
-    /** {@inheritDoc} */
-    @Override protected void doExecute(Collection<Item<T>> itemCollection) throws StageProcessingException {
+    @Override
+    protected void doExecute(List<Item<T>> items) throws StageProcessingException {
         throw new TerminationException("from TerminatingStage");
     }
 }

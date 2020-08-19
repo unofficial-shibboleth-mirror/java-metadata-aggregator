@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -74,7 +73,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
     @Nonnull @GuardedBy("this")
-    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
+    private Supplier<List<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
@@ -123,7 +122,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    @Nonnull public final synchronized Supplier<Collection<Item<T>>> getCollectionFactory() {
+    @Nonnull public final synchronized Supplier<List<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -132,7 +131,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<List<Item<T>>> factory) {
         throwSetterPreconditionExceptions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
@@ -165,16 +164,16 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final ArrayList<Future<Collection<Item<T>>>> pipelineFutures = new ArrayList<>();
+        final ArrayList<Future<List<Item<T>>>> pipelineFutures = new ArrayList<>();
 
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : getPipelineAndSelectionStrategies()) {
             final Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
             final Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
-            final Collection<Item<T>> selectedItems = getCollectionFactory().get();
+            final List<Item<T>> selectedItems = getCollectionFactory().get();
 
-            for (final Item<T> item : itemCollection) {
+            for (final Item<T> item : items) {
                 if (selectionStrategy.test(item)) {
 //                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
 //                    selectedItems.add(copied);
@@ -186,7 +185,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
         }
 
         if (isWaitingForPipelines()) {
-            for (final Future<Collection<Item<T>>> pipelineFuture : pipelineFutures) {
+            for (final Future<List<Item<T>>> pipelineFuture : pipelineFutures) {
                 FutureSupport.futureItems(pipelineFuture);
             }
         }

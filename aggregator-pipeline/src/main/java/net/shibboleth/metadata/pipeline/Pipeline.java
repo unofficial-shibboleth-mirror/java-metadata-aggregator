@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -62,10 +61,10 @@ public interface Pipeline<T> extends DestructableComponent, IdentifiedComponent,
     /**
      * Executes each registered {@link Stage} in turn.
      * 
-     * @param itemCollection the collection that will hold the Item as it passes from stage to stage
+     * @param items the collection that will hold the {@link Item}s as they pass from stage to stage
      * 
      * @throws PipelineProcessingException thrown if there is a problem processing the pipeline
      */
-    void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    void execute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws PipelineProcessingException;
 }

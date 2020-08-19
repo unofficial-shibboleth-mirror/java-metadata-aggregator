@@ -19,6 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
@@ -70,18 +71,18 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
     }
 
     @Override
-    public void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    public void execute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         throwComponentStateExceptions();
 
         final var start = Instant.now();
 
-        if (getCollectionPredicate().test(itemCollection)) {
-            doExecute(itemCollection);
+        if (getCollectionPredicate().test(items)) {
+            doExecute(items);
         }
 
         final var componentInfo = new ComponentInfo(getId(), getClass(), start, Instant.now());
-        for (final var item : itemCollection) {
+        for (final var item : items) {
             item.getItemMetadata().put(componentInfo);
         }
     }
@@ -93,11 +94,11 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
      * The stage is guaranteed to be have been initialized and not destroyed when this is invoked.
      * </p>
      * 
-     * @param itemCollection collection to be processed
+     * @param items collection to be processed
      * 
      * @throws StageProcessingException thrown if there is an unrecoverable problem when processing the stage
      */
-    protected abstract void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected abstract void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException;
 
 }

@@ -130,12 +130,12 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage.setId("foo");
         stage.initialize();
 
-        final ArrayList<Item<Element>> itemCollection = new ArrayList<>();
-        itemCollection.add(new DOMElementItem(entitiesDescriptor));
+        final ArrayList<Item<Element>> items = new ArrayList<>();
+        items.add(new DOMElementItem(entitiesDescriptor));
 
-        stage.execute(itemCollection);
+        stage.execute(items);
 
-        Element filteredEntitiesDescriptor = itemCollection.get(0).unwrap();
+        Element filteredEntitiesDescriptor = items.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(filteredEntitiesDescriptor);
         
         Element idpDescriptor = entityDescriptors.get(0);
@@ -158,12 +158,12 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingTypes(false);
         stage.initialize();
 
-        final ArrayList<Item<Element>> itemCollection = new ArrayList<>();
-        itemCollection.add(new DOMElementItem(entitiesDescriptor));
+        final ArrayList<Item<Element>> items = new ArrayList<>();
+        items.add(new DOMElementItem(entitiesDescriptor));
 
-        stage.execute(itemCollection);
+        stage.execute(items);
 
-        Element filteredEntitiesDescriptor = itemCollection.get(0).unwrap();
+        Element filteredEntitiesDescriptor = items.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(filteredEntitiesDescriptor);
         
         Element idpDescriptor = entityDescriptors.get(0);

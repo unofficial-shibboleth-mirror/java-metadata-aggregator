@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -36,8 +35,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy {
 
     @Override
-    public <T> void mergeCollection(@Nonnull @NonnullElements final Collection<Item<T>> target,
-            @Nonnull @NonnullElements final List<Collection<Item<T>>> sources) {
+    public <T> void merge(@Nonnull @NonnullElements final List<Item<T>> target,
+            @Nonnull @NonnullElements final List<List<Item<T>>> sources) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(sources, "Source collections can not be null or empty");
         
@@ -50,7 +49,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
             }
         }
 
-        for (final Collection<Item<T>> source : sources) {
+        for (final List<Item<T>> source : sources) {
             merge(presentItemIds, target, source);
         }
     }
@@ -66,8 +65,8 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
      * @param <T> type of data contained in the items
      */
     private <T> void merge(@Nonnull @NonnullElements final HashSet<ItemId> presentItemIds,
-            @Nonnull @NonnullElements final Collection<Item<T>> target,
-            @Nonnull @NonnullElements final Collection<Item<T>> sourceItems) {
+            @Nonnull @NonnullElements final List<Item<T>> target,
+            @Nonnull @NonnullElements final List<Item<T>> sourceItems) {
         for (final Item<T> sourceItem : sourceItems) {
             final var itemIds = sourceItem.getItemMetadata().get(ItemId.class);
             if (itemIds == null || itemIds.isEmpty()) {

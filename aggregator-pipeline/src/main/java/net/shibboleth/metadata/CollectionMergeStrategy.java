@@ -17,20 +17,24 @@
 
 package net.shibboleth.metadata;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.metadata.pipeline.PipelineMergeStage;
+import net.shibboleth.metadata.pipeline.SplitMergeStage;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
- * Strategy used to merge the results of each child pipeline in to the collection of Items given to this stage.
+ * Strategy used to merge the a number of source item collections into a target item collection.
  * 
  * <p>
  * All implementations of this interface <strong>must</strong> be thread-safe.
  * </p>
+ * 
+ * @see PipelineMergeStage
+ * @see SplitMergeStage
  */
 @ThreadSafe
 public interface CollectionMergeStrategy {
@@ -42,6 +46,6 @@ public interface CollectionMergeStrategy {
      * @param sources collections of Items to be merged in to the target, never null not containing any null elements
      * @param <T> type of data contained in the items
      */
-    <T> void mergeCollection(@Nonnull @NonnullElements Collection<Item<T>> target,
-            @Nonnull @NonnullElements List<Collection<Item<T>>> sources);
+    <T> void merge(@Nonnull @NonnullElements List<Item<T>> target,
+            @Nonnull @NonnullElements List<List<Item<T>>> sources);
 }

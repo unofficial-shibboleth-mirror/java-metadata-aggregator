@@ -21,7 +21,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -513,10 +512,10 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items)
             throws StageProcessingException {
         final var signer = new XMLSignatureSigner(this, log);
-        for (final Item<Element> item : itemCollection) {
+        for (final Item<Element> item : items) {
             signer.sign(item);
         }
     }

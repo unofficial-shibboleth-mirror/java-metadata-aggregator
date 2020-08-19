@@ -44,11 +44,11 @@ public class XSLValidationStage extends AbstractXSLProcessingStage {
 
     @Override
     protected void executeTransformer(@Nonnull final Transformer transformer,
-            @Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) throws StageProcessingException,
+            @Nonnull @NonnullElements final Collection<Item<Element>> items) throws StageProcessingException,
             TransformerConfigurationException {
 
         try {
-            for (final Item<Element> domItem : itemCollection) {
+            for (final Item<Element> domItem : items) {
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 transformer.transform(new DOMSource(domItem.unwrap().getOwnerDocument()), new DOMResult());
             }

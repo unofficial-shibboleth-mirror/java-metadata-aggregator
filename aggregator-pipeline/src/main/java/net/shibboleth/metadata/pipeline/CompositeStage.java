@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -64,10 +63,10 @@ public class CompositeStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         for (final Stage<T> stage : getComposedStages()) {
-            stage.execute(itemCollection);
+            stage.execute(items);
         }
     }
 

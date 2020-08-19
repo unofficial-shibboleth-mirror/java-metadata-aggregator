@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  * {@link Element}-based {@link Item}.
  * 
  * When used as an {@link ItemCollectionSerializer}, just serializes the first {@link Item} in the collection.
- * This will result in well-formed XML, but other items in the collection will simply be ignored.
+ * This will result in well-formed XML, but any other items in the collection will simply be ignored.
  */
 @ThreadSafe
 public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollectionSerializer<Element> {

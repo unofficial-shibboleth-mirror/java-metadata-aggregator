@@ -17,8 +17,8 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -47,9 +47,9 @@ public abstract class AbstractFilteringStage<T> extends AbstractStage<T> {
      * {@inheritDoc}
      */
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final Iterator<Item<T>> itemIterator = itemCollection.iterator();
+        final Iterator<Item<T>> itemIterator = items.iterator();
 
         while (itemIterator.hasNext()) {
             final Item<T> item = itemIterator.next();

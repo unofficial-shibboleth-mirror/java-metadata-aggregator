@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,10 +126,10 @@ public class SerializationStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         try (OutputStream stream = new FileOutputStream(getOutputFile())) {
-            getSerializer().serializeCollection(itemCollection, stream);
+            getSerializer().serializeCollection(items, stream);
         } catch (final IOException e) {
             throw new StageProcessingException("Error writing to output file " +
                     getOutputFile().getAbsolutePath(), e);

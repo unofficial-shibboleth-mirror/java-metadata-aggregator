@@ -17,18 +17,18 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link Callable} that executes a {@link Pipeline} and returns the given item collection.
@@ -36,35 +36,35 @@ import org.slf4j.LoggerFactory;
  * @param <T> type of the items processed by the pipeline
  */
 @Immutable
-public class PipelineCallable<T> implements Callable<Collection<Item<T>>> {
+public class PipelineCallable<T> implements Callable<List<Item<T>>> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(PipelineCallable.class);
 
     /** The pipeline to be executed, never null. */
-    private Pipeline<T> pipeline;
+    private final Pipeline<T> thePipeline;
 
     /** The collection of items upon which the pipeline will operate. */
-    private Collection<Item<T>> itemCollection;
+    private final List<Item<T>> theItems;
 
     /**
      * Constructor.
      * 
-     * @param invokedPipeline the pipeline that will be invoked; must be initialized; can not be null
+     * @param pipeline the pipeline that will be invoked; must be initialized; can not be null
      * @param items the collection of items upon which the pipeline will operate, can not be null
      */
-    public PipelineCallable(@Nonnull final Pipeline<T> invokedPipeline,
-            @Nonnull @NonnullElements final Collection<Item<T>> items) {
-        pipeline = Constraint.isNotNull(invokedPipeline, "To-be-invoked pipeline can not be null");
-        Constraint.isTrue(invokedPipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
+    public PipelineCallable(@Nonnull final Pipeline<T> pipeline,
+            @Nonnull @NonnullElements final List<Item<T>> items) {
+        thePipeline = Constraint.isNotNull(pipeline, "To-be-invoked pipeline can not be null");
+        Constraint.isTrue(pipeline.isInitialized(), "To-be-invoked pipeline must be initialized");
 
-        itemCollection = Constraint.isNotNull(items, "Item collection can not be null");
+        theItems = Constraint.isNotNull(items, "Item collection can not be null");
     }
 
-    @Override @Nonnull @NonnullElements public Collection<Item<T>> call() throws PipelineProcessingException {
-        log.debug("Executing pipeline {} on an item collection containing {} items", pipeline.getId(),
-                itemCollection.size());
-        pipeline.execute(itemCollection);
-        return itemCollection;
+    @Override @Nonnull @NonnullElements public List<Item<T>> call() throws PipelineProcessingException {
+        log.debug("Executing pipeline {} on an item collection containing {} items", thePipeline.getId(),
+                theItems.size());
+        thePipeline.execute(theItems);
+        return theItems;
     }
 }

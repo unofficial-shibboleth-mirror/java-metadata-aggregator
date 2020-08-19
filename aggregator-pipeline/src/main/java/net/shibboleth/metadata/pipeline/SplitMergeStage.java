@@ -18,7 +18,7 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -75,7 +75,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
     @Nonnull @GuardedBy("this")
-    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
+    private Supplier<List<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** Strategy used to split the given item collection. */
     @Nonnull @GuardedBy("this")
@@ -117,7 +117,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return factory used to create the Item collection that is then given to the pipelines
      */
-    @Nonnull public final synchronized Supplier<Collection<Item<T>>> getCollectionFactory() {
+    @Nonnull public final synchronized Supplier<List<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -126,7 +126,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
-    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<List<Item<T>>> factory) {
         throwSetterPreconditionExceptions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
@@ -209,13 +209,13 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final Collection<Item<T>> selectedItems = getCollectionFactory().get();
-        final Collection<Item<T>> nonselectedItems = getCollectionFactory().get();
+        final List<Item<T>> selectedItems = getCollectionFactory().get();
+        final List<Item<T>> nonselectedItems = getCollectionFactory().get();
 
         final var strategy = getSelectionStrategy();
-        for (final Item<T> item : itemCollection) {
+        for (final Item<T> item : items) {
             if (strategy.test(item)) {
                 selectedItems.add(item);
             } else {
@@ -223,19 +223,19 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
             }
         }
 
-        final Future<Collection<Item<T>>> selectedItemFuture =
+        final Future<List<Item<T>>> selectedItemFuture =
                 executePipeline(getSelectedItemPipeline(), selectedItems);
-        final Future<Collection<Item<T>>> nonselectedItemFuture =
+        final Future<List<Item<T>>> nonselectedItemFuture =
                 executePipeline(getNonselectedItemPipeline(), nonselectedItems);
 
-        final ArrayList<Collection<Item<T>>> pipelineResults = new ArrayList<>();
+        final List<List<Item<T>>> pipelineResults = new ArrayList<>();
         
         // resolve results from the pipelines
         pipelineResults.add(FutureSupport.futureItems(selectedItemFuture));
         pipelineResults.add(FutureSupport.futureItems(nonselectedItemFuture));
 
-        itemCollection.clear();
-        getCollectionMergeStrategy().mergeCollection(itemCollection, pipelineResults);
+        items.clear();
+        getCollectionMergeStrategy().merge(items, pipelineResults);
     }
 
     /**
@@ -246,8 +246,8 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * 
      * @return the token representing the background execution of the pipeline
      */
-    @Nonnull protected Future<Collection<Item<T>>> executePipeline(final Pipeline<T> pipeline,
-            final Collection<Item<T>> items) {
+    @Nonnull protected Future<List<Item<T>>> executePipeline(final Pipeline<T> pipeline,
+            final List<Item<T>> items) {
 
         /*
          * If no pipeline has been specified, just return the collection unchanged via

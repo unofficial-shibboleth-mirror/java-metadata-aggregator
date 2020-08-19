@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline.impl;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -40,7 +39,7 @@ public class NoOpItemOrderingStrategy<T> implements ItemOrderingStrategy<T> {
 
     @Override
     @Nonnull @NonnullElements @Unmodifiable
-    public List<Item<T>> order(@Nonnull @NonnullElements @Unmodifiable final Collection<Item<T>> items) {
+    public List<Item<T>> order(@Nonnull @NonnullElements @Unmodifiable final List<Item<T>> items) {
         return List.copyOf(items);
     }
 

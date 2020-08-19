@@ -18,16 +18,15 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import net.shibboleth.metadata.ErrorStatus;
-import net.shibboleth.metadata.Item;
 
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
+
+import net.shibboleth.metadata.ErrorStatus;
+import net.shibboleth.metadata.Item;
 
 public class XMLSchemaValidationStageTest extends BaseDOMTest {
 
@@ -40,7 +39,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
     public void testValidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
 
-        Collection<Item<Element>> mdCol = buildMetdataCollection("valid.xml");
+        List<Item<Element>> mdCol = buildMetdataCollection("valid.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertFalse(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
@@ -49,7 +48,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
     @Test
     public void testInvalidXml() throws Exception {
         XMLSchemaValidationStage stage = buildStage();
-        Collection<Item<Element>> mdCol = buildMetdataCollection("invalid.xml");
+        List<Item<Element>> mdCol = buildMetdataCollection("invalid.xml");
         stage.execute(mdCol);
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertTrue(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
@@ -67,7 +66,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
         return stage;
     }
 
-    protected Collection<Item<Element>> buildMetdataCollection(String xmlPath) throws Exception {
+    protected List<Item<Element>> buildMetdataCollection(String xmlPath) throws Exception {
         final Element element = readXMLData(xmlPath);
         final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(element));

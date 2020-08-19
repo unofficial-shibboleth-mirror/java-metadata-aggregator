@@ -19,7 +19,6 @@ package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setDesignatedRegistrationAuthorities(Collections.singletonList("urn:example.org:authority2"));
         stage.initialize();
 
-        Collection<Item<Element>> mdCollection = buildMetadataCollection();
+        final var mdCollection = buildMetadataCollection();
         Assert.assertEquals(mdCollection.size(), 3);
 
         stage.execute(mdCollection);
@@ -75,7 +74,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setDesignatedRegistrationAuthorities(Collections.singletonList("urn:example.org:authority2"));
         stage.initialize();
 
-        Collection<Item<Element>> mdCollection = buildMetadataCollection();
+        final var mdCollection = buildMetadataCollection();
         Assert.assertEquals(mdCollection.size(), 3);
 
         stage.execute(mdCollection);
@@ -161,7 +160,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
      * 
      * @throws Exception if something bad happens
      */
-    private Collection<Item<Element>> buildMetadataCollection() throws Exception {
+    private List<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =

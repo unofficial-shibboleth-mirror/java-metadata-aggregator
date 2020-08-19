@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -44,10 +44,10 @@ public interface Stage<T> extends DestructableComponent, IdentifiedComponent,
     /**
      * Transforms the given input data.
      * 
-     * @param itemCollection the data to be transformed
+     * @param items the data to be transformed
      * 
      * @throws StageProcessingException thrown if there is a problem running this stage on the given input
      */
-    void execute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    void execute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException;
 }

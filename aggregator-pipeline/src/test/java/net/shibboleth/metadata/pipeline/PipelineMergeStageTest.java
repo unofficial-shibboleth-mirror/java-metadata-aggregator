@@ -125,10 +125,7 @@ public class PipelineMergeStageTest {
         MockItem item6 = new MockItem("item6");
         source1.add(item6);
 
-        final List<Collection<Item<String>>> sources = new ArrayList<>();
-        sources.add(source1);
-        
-        strategy.mergeCollection(target, sources);
+        strategy.merge(target, List.of(source1));
         Assert.assertTrue(target.contains(item1));
         Assert.assertTrue(target.contains(item2));
         Assert.assertTrue(target.contains(item3));
@@ -172,11 +169,7 @@ public class PipelineMergeStageTest {
         item9.getItemMetadata().put(new ItemId("itemA"));
         source2.add(item9);
 
-        final List<Collection<Item<String>>> sources = new ArrayList<>();
-        sources.add(source1);
-        sources.add(source2);
-        
-        strategy.mergeCollection(target, sources);
+        strategy.merge(target, List.of(source1, source2));
         Assert.assertTrue(target.contains(item1));
         Assert.assertTrue(target.contains(item2));
         Assert.assertTrue(target.contains(item3));

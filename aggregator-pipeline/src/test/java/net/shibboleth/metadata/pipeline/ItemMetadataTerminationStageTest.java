@@ -19,6 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
@@ -35,7 +36,7 @@ import org.testng.annotations.Test;
 public class ItemMetadataTerminationStageTest {
 
     /** Unmodifiable, prototype, collection of metadata elements. */
-    private Collection<Item<String>> metadataCollectionPrototype;
+    private List<Item<String>> metadataCollectionPrototype;
 
     /** Metadata element which contains no {@link net.shibboleth.metadata.StatusMetadata} items. */
     private Item<String> md1;
@@ -77,7 +78,7 @@ public class ItemMetadataTerminationStageTest {
      */
     @Test
     public void testNoSelectionRequirements() throws Exception {
-        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final List<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         ItemMetadataTerminationStage<String> stage = new ItemMetadataTerminationStage<>();
         stage.setId("test");
@@ -102,7 +103,7 @@ public class ItemMetadataTerminationStageTest {
      */
     @Test
     public void testSingleSelectionRequirement() throws Exception {
-        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final List<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(ErrorStatus.class);
@@ -126,7 +127,7 @@ public class ItemMetadataTerminationStageTest {
      */
     @Test
     public void testMultiSelectionRequirement() throws Exception {
-        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final List<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(InfoStatus.class);

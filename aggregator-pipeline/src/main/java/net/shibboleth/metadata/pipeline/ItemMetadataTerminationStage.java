@@ -17,19 +17,18 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link Stage} that terminates pipeline processing if an {@link Item} has a specific type of {@link ItemMetadata}
@@ -44,7 +43,7 @@ public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelecti
     private final Logger log = LoggerFactory.getLogger(ItemMetadataTerminationStage.class);
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection,
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items,
             final Item<T> matchingItem,
             final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
             throws TerminationException {

@@ -19,6 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
@@ -77,7 +78,7 @@ public class ItemMetadataFilterStageTest {
      */
     @Test
     public void testNoFilterRequirements() throws Exception {
-        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final var metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         ItemMetadataFilterStage<String> stage = new ItemMetadataFilterStage<>();
         stage.setId("test");
@@ -98,7 +99,7 @@ public class ItemMetadataFilterStageTest {
      */
     @Test
     public void testSingleFilterRequirement() throws Exception {
-        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final List<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(ErrorStatus.class);
@@ -123,7 +124,7 @@ public class ItemMetadataFilterStageTest {
      */
     @Test
     public void testMultiFilterRequirement() throws Exception {
-        final Collection<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
+        final List<Item<String>> metadataCollection = new ArrayList<>(metadataCollectionPrototype);
 
         Collection<Class<? extends ItemMetadata>> filterRequirements = new ArrayList<>();
         filterRequirements.add(InfoStatus.class);

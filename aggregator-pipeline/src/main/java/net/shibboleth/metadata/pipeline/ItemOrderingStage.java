@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
@@ -63,11 +63,11 @@ public class ItemOrderingStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final var orderedItems = getItemOrderingStrategy().order(itemCollection);
-        itemCollection.clear();
-        itemCollection.addAll(orderedItems);
+        final var orderedItems = getItemOrderingStrategy().order(items);
+        items.clear();
+        items.addAll(orderedItems);
     }
 
     @Override

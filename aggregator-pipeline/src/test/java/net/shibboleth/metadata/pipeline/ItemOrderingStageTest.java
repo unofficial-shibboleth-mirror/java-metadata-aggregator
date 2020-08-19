@@ -2,7 +2,6 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class ItemOrderingStageTest {
     private class ReversalOrderingStrategy<T> implements ItemOrderingStrategy<T> {
 
         @Override
-        public List<Item<T>> order(Collection<Item<T>> items) throws StageProcessingException {
+        public List<Item<T>> order(List<Item<T>> items) throws StageProcessingException {
             final var collection = new ArrayList<Item<T>>();
             collection.addAll(items);
             Collections.reverse(collection);

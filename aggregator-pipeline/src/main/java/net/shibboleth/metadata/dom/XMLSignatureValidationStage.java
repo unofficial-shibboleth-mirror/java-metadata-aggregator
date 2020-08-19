@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -281,13 +282,13 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection) {
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items) {
         // Create a single non-thread-safe validator
         final var validator = new XMLSignatureValidator(getVerificationKey(),
                 getBlacklistedDigests(), getBlacklistedSignatureMethods(), isPermittingEmptyReferences());
 
         // Use it to validate each item in turn
-        for (@Nonnull final var item : itemCollection) {
+        for (@Nonnull final var item : items) {
             validateItem(item, validator);
         }
     }

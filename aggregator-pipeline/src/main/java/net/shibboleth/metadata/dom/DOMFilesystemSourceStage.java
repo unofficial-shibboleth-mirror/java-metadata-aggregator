@@ -22,7 +22,6 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -208,7 +207,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<Element>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items)
             throws StageProcessingException {
         final ArrayList<File> sourceFiles = new ArrayList<>();
 
@@ -230,7 +229,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         for (final File source : sourceFiles) {
             final var dme = processSourceFile(source);
             if (dme != null) {
-                itemCollection.add(dme);
+                items.add(dme);
             }
         }
     }

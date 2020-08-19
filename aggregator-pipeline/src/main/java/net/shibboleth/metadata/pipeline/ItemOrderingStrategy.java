@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -52,7 +51,7 @@ public interface ItemOrderingStrategy<T> {
      *      because they do not meet required pre-conditions
      */
     @Nonnull @NonnullElements @Unmodifiable
-    List<Item<T>> order(@Nonnull @NonnullElements @Unmodifiable final Collection<Item<T>> items)
+    List<Item<T>> order(@Nonnull @NonnullElements @Unmodifiable final List<Item<T>> items)
         throws StageProcessingException;
 
 }

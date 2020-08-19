@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,10 +38,10 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
- * This {@link Stage} allows the merging of multiple pipeline outputs into a single {@link Collection} that can then be
+ * This {@link Stage} allows the merging of multiple pipeline outputs into a single {@link List} that can then be
  * used as the input source for another pipeline.
  * 
- * This source works producing a {@link Collection} by means of the registered {@link Supplier} . Then each of its
+ * This source works producing a {@link List} by means of the registered {@link Supplier} . Then each of its
  * registered {@link Pipeline} is invoked in turn (no ordering is guaranteed and pipelines may execute concurrently).
  * After each pipeline has completed the results are merged in to the Item collection given to this stage by means of
  * the an {@link CollectionMergeStrategy}.
@@ -61,7 +60,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * {@link SimpleItemCollectionFactory}.
      */
     @Nonnull @GuardedBy("this")
-    private Supplier<Collection<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
+    private Supplier<List<Item<T>>> collectionFactory = new SimpleItemCollectionFactory<>();
 
     /** Strategy used to merge all the joined pipeline results in to the final Item collection. */
     @Nonnull @GuardedBy("this")
@@ -116,7 +115,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * 
      * @return factory used to create the {@link Item} collection produced by this source
      */
-    @Nonnull public final synchronized Supplier<Collection<Item<T>>> getCollectionFactory() {
+    @Nonnull public final synchronized Supplier<List<Item<T>>> getCollectionFactory() {
         return collectionFactory;
     }
 
@@ -125,7 +124,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * 
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
-    public synchronized void setCollectionFactory(@Nonnull final Supplier<Collection<Item<T>>> factory) {
+    public synchronized void setCollectionFactory(@Nonnull final Supplier<List<Item<T>>> factory) {
         throwSetterPreconditionExceptions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory may not be null");
     }
@@ -151,21 +150,21 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(@Nonnull @NonnullElements final Collection<Item<T>> itemCollection)
+    protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final ArrayList<Future<Collection<Item<T>>>> pipelineResultFutures = new ArrayList<>();
+        final ArrayList<Future<List<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
         for (final Pipeline<T> pipeline : getMergedPipelines()) {
             pipelineResultFutures.add(getExecutorService().submit(
                     new PipelineCallable<>(pipeline, getCollectionFactory().get())));
         }
 
-        final ArrayList<Collection<Item<T>>> pipelineResults = new ArrayList<>();
-        for (final Future<Collection<Item<T>>> future : pipelineResultFutures) {
+        final ArrayList<List<Item<T>>> pipelineResults = new ArrayList<>();
+        for (final Future<List<Item<T>>> future : pipelineResultFutures) {
             pipelineResults.add(FutureSupport.futureItems(future));
         }
 
-        getCollectionMergeStrategy().mergeCollection(itemCollection, pipelineResults);
+        getCollectionMergeStrategy().merge(items, pipelineResults);
     }
 
     @Override
