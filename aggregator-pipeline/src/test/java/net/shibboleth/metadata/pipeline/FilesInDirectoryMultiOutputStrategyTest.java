@@ -66,11 +66,10 @@ public class FilesInDirectoryMultiOutputStrategyTest {
         
         final Item<String> item = new MockItem("mocked");
         item.getItemMetadata().put(new ItemId("abc"));
-        final MultiOutputSerializationStage.Destination dest = strategy.getDestination(item);
-        final OutputStream os = dest.getOutputStream();
-        os.write('a');
-        os.close();
-        dest.close();
+        try (MultiOutputSerializationStage.Destination dest = strategy.getDestination(item);
+                OutputStream os = dest.getOutputStream()) {
+            os.write('a');
+        }
         
         checkOneFile(tempDir, "preabcabc.txt");
         wipeDirectory(tempDir);
@@ -87,11 +86,10 @@ public class FilesInDirectoryMultiOutputStrategyTest {
         
         final Item<String> item = new MockItem("mocked");
         item.getItemMetadata().put(new ItemId("abc"));
-        final MultiOutputSerializationStage.Destination dest = strategy.getDestination(item);
-        final OutputStream os = dest.getOutputStream();
-        os.write('a');
-        os.close();
-        dest.close();
+        try (MultiOutputSerializationStage.Destination dest = strategy.getDestination(item);
+                OutputStream os = dest.getOutputStream()) {
+            os.write('a');
+        }
         
         checkOneFile(tempDir, "abc");
         wipeDirectory(tempDir);
