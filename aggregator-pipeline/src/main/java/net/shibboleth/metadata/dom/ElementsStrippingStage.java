@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -68,6 +69,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * each of the guarded state variables from the stage class instance.
      * </p>
      */
+    @Immutable
     protected static final class Context extends SimpleDOMTraversalContext {
 
         /**
@@ -92,9 +94,9 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
          * Constructor.
          *
          * @param contextItem the {@link Item} we are traversing
-         * @param namespace 
-         * @param names 
-         * @param wl 
+         * @param namespace XML namespace for each of the elements to handle
+         * @param names collection of element names within the namespace
+         * @param wl whether the named elements should be removed (false) or preserved (true)
          */
         public Context(@Nonnull final Item<Element> contextItem,
                 @Nonnull @NotEmpty final String namespace,

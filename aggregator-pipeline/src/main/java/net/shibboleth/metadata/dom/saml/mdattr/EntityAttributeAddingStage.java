@@ -166,7 +166,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * Attribute container elements.
      * 
      * @param attributes {@link List} of Attribute {@link Container}s
-     * @param matcher 
+     * @param matcher {@link Predicate} that matches the {@link Element} we are looking for
      * @return true iff the value appears somewhere in the list of containers
      */
     private boolean attributeValuePresent(@Nonnull final List<Container> attributes,
