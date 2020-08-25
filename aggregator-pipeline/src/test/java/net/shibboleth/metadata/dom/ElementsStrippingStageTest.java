@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -121,5 +122,22 @@ public class ElementsStrippingStageTest extends BaseDOMTest {
 
         final Element out = readXMLData("out-multi-w.xml");
         assertXMLIdentical(out, item.unwrap());
+    }
+    
+    @Test(expectedExceptions = {ComponentInitializationException.class})
+    public void testNoNamespace() throws Exception {
+        final var stage = new ElementsStrippingStage();
+        stage.setId("test");
+        //stage.setElementNamespace("foo");
+        stage.initialize();
+    }
+    
+    @Test
+    public void testDestroy() throws Exception {
+        final var stage = new ElementsStrippingStage();
+        stage.setId("test");
+        stage.setElementNamespace("foo");
+        stage.initialize();
+        stage.destroy();
     }
 }

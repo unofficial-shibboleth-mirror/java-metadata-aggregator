@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -50,4 +51,31 @@ public class ElementStrippingStageTest extends BaseDOMTest {
         final Element out = readXMLData("out.xml");
         assertXMLIdentical(out, item.unwrap());
     }
+    
+    @Test(expectedExceptions = {ComponentInitializationException.class})
+    public void testNoElementName() throws ComponentInitializationException {
+        final var stage = new ElementStrippingStage();
+        stage.setId("test");
+        stage.setElementNamespace("foo");
+        stage.initialize();
+    }
+
+    @Test(expectedExceptions = {ComponentInitializationException.class})
+    public void testNoElementNamespace() throws ComponentInitializationException {
+        final var stage = new ElementStrippingStage();
+        stage.setId("test");
+        stage.setElementName("bar");
+        stage.initialize();
+    }
+
+    @Test
+    public void testDestroy() throws ComponentInitializationException {
+        final var stage = new ElementStrippingStage();
+        stage.setId("test");
+        stage.setElementNamespace("foo");
+        stage.setElementName("bar");
+        stage.initialize();
+        stage.destroy();
+    }
+
 }

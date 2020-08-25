@@ -111,4 +111,12 @@ public class NamespacesStrippingStageTest extends BaseDOMTest {
         final Element out = readXMLData("2-wl.xml");
         assertXMLIdentical(out, item.unwrap());
     }
+
+    @Test
+    public void testDestroy() throws Exception {
+        final var stage = new NamespacesStrippingStage();
+        stage.setId("test");
+        stage.initialize();
+        stage.destroy();
+    }
 }
