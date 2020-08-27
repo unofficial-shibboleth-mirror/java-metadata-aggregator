@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.script.ScriptContext;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
@@ -32,8 +33,10 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 
 /**
@@ -55,15 +58,39 @@ import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 @ThreadSafe
 public class ScriptletStage<T> extends AbstractStage<T> {
 
-    /** Name of the scriptlet attribute, {@value} , containing the Item collection to be transformed. */
-    public static final String ITEMS = "items";
-
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
+
+    /**
+     * Name of the scriptlet attribute containing the {@link Item} collection to be transformed.
+     *
+     * <p>Defaults to <code>items</code>.</p>
+     */
+    @GuardedBy("this") @Nonnull @NotEmpty private String variableName = "items";
 
     /** Script executed by this stage. */
     @NonnullAfterInit @GuardedBy("this")
     private EvaluableScript script;
+
+    /**
+     * Gets the variable name to contain the list of items.
+     * 
+     * @return the variable name
+     */
+    public final synchronized String getVariableName() {
+        return variableName;
+    }
+    
+    /**
+     * Sets the variable name to contain the list of items.
+     *
+     * @param name the variable name
+     */
+    public final synchronized void setVariableName(@Nonnull @NotEmpty final String name) {
+        throwSetterPreconditionExceptions();
+        variableName = Constraint.isNotNull(StringSupport.trimOrNull(name),
+                "variable name may not be null or empty");
+    }
 
     /**
      * Gets the script executed by this stage.
@@ -88,14 +115,12 @@ public class ScriptletStage<T> extends AbstractStage<T> {
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         final SimpleScriptContext context = new SimpleScriptContext();
-        context.setAttribute(ITEMS, items, SimpleScriptContext.ENGINE_SCOPE);
+        context.setAttribute(getVariableName(), items, ScriptContext.ENGINE_SCOPE);
 
         try {
             getScript().eval(context);
         } catch (final ScriptException e) {
-            final String errMsg = getId() + " pipeline stage unable to execute script";
-            log.error(errMsg, e);
-            throw new StageProcessingException(errMsg, e);
+            throw new StageProcessingException("unable to execute script", e);
         }
     }
 
