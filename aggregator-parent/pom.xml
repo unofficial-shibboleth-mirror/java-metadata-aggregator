@@ -194,6 +194,9 @@
                                     <excludes>
                                         <exclude>joda-time:joda-time</exclude>
                                     </excludes>
+                                    <includes>
+                                        <exclude>joda-time:joda-time:*:jar:test</exclude>
+                                    </includes>
                                 </bannedDependencies>
                             </rules>
                             <fail>true</fail>
