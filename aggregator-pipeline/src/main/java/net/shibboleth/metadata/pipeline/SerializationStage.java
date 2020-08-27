@@ -137,14 +137,6 @@ public class SerializationStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doDestroy() {
-        outputFile = null;
-        serializer = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
@@ -184,4 +176,13 @@ public class SerializationStage<T> extends AbstractStage<T> {
         }
 
     }
+
+    @Override
+    protected void doDestroy() {
+        outputFile = null;
+        serializer = null;
+
+        super.doDestroy();
+    }
+
 }
