@@ -1,0 +1,11 @@
+[
+{
+ "entityID": "https://idp.example.com/idp/shibboleth",
+ "DisplayNames": [
+  {
+  "value": "The Example Organization",
+  "lang": "en"
+  }
+ ]
+}
+]

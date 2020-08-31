@@ -46,7 +46,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
             try (var reader = Json.createReader(in)) {
                 return reader.readArray();
             }
-        }        
+        }
     }
 
     private void checkEntity(@Nonnull final JsonObject entity) {
@@ -212,6 +212,52 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
         Assert.assertEquals(attrs.getJsonObject(2).getString("name"), "something");
         Assert.assertEquals(attrs.getJsonObject(2).getJsonArray("values").size(), 1);
         Assert.assertEquals(attrs.getJsonObject(2).getJsonArray("values").getString(0), "whatever");
+    }
+
+    // Test a case where we include only an IdP entity
+    @Test
+    public void testOnlyIdP() throws Exception {
+        final var ser = new DiscoFeedCollectionSerializer();
+        ser.initialize();
+        final String output;
+        try (final var out = new ByteArrayOutputStream()) {
+            ser.serializeCollection(List.of(readDOMItem("noidp.xml")), out);
+            output = out.toString();
+        }
+        Assert.assertEquals(output, "[]");
+    }
+
+    // Test output for a non-entity
+    @Test
+    public void testNonEntity() throws Exception {
+        final var ser = new DiscoFeedCollectionSerializer();
+        ser.initialize();
+        final String output;
+        try (final var out = new ByteArrayOutputStream()) {
+            ser.serializeCollection(List.of(readDOMItem("nonentity.xml")), out);
+            output = out.toString();
+        }
+        Assert.assertEquals(output, "[]");
+    }
+
+    // Test an entity with no UIInfo container
+    @Test
+    public void testNoUIInfo() throws Exception {
+        final var ser = new DiscoFeedCollectionSerializer();
+        ser.initialize();
+        final var entity = checkSingle("no-uiinfo", ser);
+        Assert.assertEquals(entity.keySet().size(), 1); // just the entityID
+        Assert.assertFalse(entity.containsKey("DisplayNames"));
+    }
+
+    // Test an entity with no UIInfo container, with legacy display names
+    @Test
+    public void testNoUIInfoLegacy() throws Exception {
+        final var ser = new DiscoFeedCollectionSerializer();
+        ser.setIncludingLegacyDisplayNames(true);
+        ser.initialize();
+        final var entity = checkSingle("no-uiinfo-leg", ser);
+        Assert.assertTrue(entity.containsKey("DisplayNames"));
     }
 
     // Test a large aggregate. This test is normally disabled, but it
