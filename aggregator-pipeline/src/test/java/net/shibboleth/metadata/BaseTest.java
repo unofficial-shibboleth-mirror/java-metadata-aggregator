@@ -17,6 +17,10 @@
 
 package net.shibboleth.metadata;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -105,6 +109,22 @@ public abstract class BaseTest {
      */
     public Resource getClasspathResource(final String resourcePath) {
         return new ClassPathResource(simpleClassRelativeName(resourcePath), testingClass);
+    }
+
+    /**
+     * Read a classpath resource as an array of <code>byte</code>s.
+     *
+     * @param resourcePath classpath path to the resource
+     * 
+     * @return the resource as an array of <code>byte</code>s
+     *
+     * @throws IOException on error
+     */
+    public byte[] readBytes(@Nonnull final String resourcePath) throws IOException {
+        final var res = getClasspathResource(resourcePath);
+        try (var stream = res.getInputStream()) {
+            return stream.readAllBytes();
+        }
     }
 
 }
