@@ -17,7 +17,7 @@ public class BaseTestTest extends BaseTest {
 
     @Test
     public void testReadBytes() throws Exception {
-        final var bytes = readBytes("bytes.txt");
+        final var bytes = readBytes("bytes.bin");
         Assert.assertEquals(bytes.length, 6);
         Assert.assertEquals(new String(bytes, StandardCharsets.UTF_8), "hello\n");
     }
