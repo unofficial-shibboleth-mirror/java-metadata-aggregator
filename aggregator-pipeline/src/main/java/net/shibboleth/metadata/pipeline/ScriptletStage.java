@@ -27,9 +27,6 @@ import javax.script.ScriptContext;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.shibboleth.metadata.Item;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -57,9 +54,6 @@ import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
  */
 @ThreadSafe
 public class ScriptletStage<T> extends AbstractStage<T> {
-
-    /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(ScriptletStage.class);
 
     /**
      * Name of the scriptlet attribute containing the {@link Item} collection to be transformed.
