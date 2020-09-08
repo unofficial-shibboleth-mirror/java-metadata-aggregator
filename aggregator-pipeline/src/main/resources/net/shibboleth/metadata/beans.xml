@@ -82,6 +82,9 @@
     <bean id="mda.NamespaceStrippingStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.NamespaceStrippingStage"/>
 
+    <bean id="mda.StringElementValidationStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.dom.StringElementValidationStage"/>
+
     <bean id="mda.XMLSchemaValidationStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.XMLSchemaValidationStage"/>
 
