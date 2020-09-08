@@ -275,6 +275,9 @@
     <bean id="mda.PathSegmentStringTransformer" abstract="true"
         class="net.shibboleth.metadata.util.PathSegmentStringTransformer"/>
 
+    <bean id="mda.RegexFileFilter" abstract="true"
+        class="net.shibboleth.metadata.util.RegexFileFilter"/>
+
     <bean id="mda.SHA1StringTransformer" abstract="true"
         class="net.shibboleth.metadata.util.SHA1StringTransformer"/>
 
