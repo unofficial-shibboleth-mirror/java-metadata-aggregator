@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.Version;
 import net.shibboleth.metadata.pipeline.Pipeline;
@@ -148,19 +150,42 @@ public final class SimpleCommandLine {
     }
 
     /**
+     * Set the logback configuration to a specific location.
+     * 
+     * <p>
+     * Note that this <strong>must</strong> be done before the
+     * first logger is retrieved.
+     * </p>
+     *
+     * @param value logback configuration location to set
+     */
+    private static void setLoggingProperty(@Nonnull final String value) {
+        System.setProperty("logback.configurationFile", value);
+    }
+    
+    /**
+     * Set the logback configuration to a specific package-local resource.
+     *
+     * @param value name of resource to use as the logback configuration file
+     */
+    private static void setLoggingToLocalResource(@Nonnull final String value) {
+        setLoggingProperty("net/shibboleth/metadata/cli/" + value);
+    }
+
+    /**
      * Initialize the logging subsystem.
      * 
      * @param cli command line arguments
      */
     protected static void initLogging(final SimpleCommandLineArguments cli) {
         if (cli.getLoggingConfiguration() != null) {
-            System.setProperty("logback.configurationFile", cli.getLoggingConfiguration());
+            setLoggingProperty(cli.getLoggingConfiguration());
         } else if (cli.doVerboseOutput()) {
-            System.setProperty("logback.configurationFile", "logger-verbose.xml");
+            setLoggingToLocalResource("logger-verbose.xml");
         } else if (cli.doQuietOutput()) {
-            System.setProperty("logback.configurationFile", "logger-quiet.xml");
+            setLoggingToLocalResource("logger-quiet.xml");
         } else {
-            System.setProperty("logback.configurationFile", "logger-normal.xml");
+            setLoggingToLocalResource("logger-normal.xml");
         }
 
         log = LoggerFactory.getLogger(SimpleCommandLine.class);
