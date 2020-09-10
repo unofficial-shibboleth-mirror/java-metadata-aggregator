@@ -63,7 +63,6 @@ public class RegexFileFilter implements FileFilter {
      */
     @Override
     public boolean accept(@Nonnull final File pathname) {
-        assert pathname != null;
         return pattern.matcher(pathname.getName()).matches();
     }
 

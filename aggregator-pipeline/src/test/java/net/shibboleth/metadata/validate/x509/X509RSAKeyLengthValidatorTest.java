@@ -78,4 +78,12 @@ public class X509RSAKeyLengthValidatorTest extends BaseX509ValidatorTest {
         Assert.assertNull(val.getId(), "unset ID should be null");
     }
 
+    @Test
+    public void testDSA() throws Exception {
+        final var val = new X509RSAKeyLengthValidator();
+        val.setId("test");
+        val.initialize();
+        testCert("dsa.pem", val, 0, 0);
+    }
+
 }

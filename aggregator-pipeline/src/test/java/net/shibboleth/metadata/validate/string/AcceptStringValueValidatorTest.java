@@ -11,6 +11,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.Validator.Action;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 public class AcceptStringValueValidatorTest {
 
@@ -44,4 +45,10 @@ public class AcceptStringValueValidatorTest {
         Assert.assertEquals(errs.size(), 0);
     }
 
+    @Test(expectedExceptions = ComponentInitializationException.class)
+    public void testNoValue() throws Exception {
+        final var val = new AcceptStringValueValidator();
+        val.setId("test");
+        val.initialize();
+    }
 }

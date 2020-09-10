@@ -11,12 +11,13 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.Validator.Action;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 public class AcceptStringRegexValidatorTest {
 
     @Test
     public void validateMatch() throws Exception {
-        final AcceptStringRegexValidator v = new AcceptStringRegexValidator();
+        final var v = new AcceptStringRegexValidator();
         v.setId("comp");
         v.setRegex("a*b");
         v.initialize();
@@ -31,9 +32,9 @@ public class AcceptStringRegexValidatorTest {
 
     @Test
     public void validateMismatch() throws Exception {
-        final AcceptStringValueValidator v = new AcceptStringValueValidator();
+        final var v = new AcceptStringRegexValidator();
         v.setId("comp");
-        v.setValue("a*b");
+        v.setRegex("a*b");
         v.initialize();
 
         final Item<String> item = new MockItem("content");
@@ -42,6 +43,13 @@ public class AcceptStringRegexValidatorTest {
 
         final List<ErrorStatus> errs = item.getItemMetadata().get(ErrorStatus.class);
         Assert.assertEquals(errs.size(), 0);
+    }
+
+    @Test(expectedExceptions = ComponentInitializationException.class)
+    public void testNoValue() throws Exception {
+        final var val = new AcceptStringRegexValidator();
+        val.setId("test");
+        val.initialize();
     }
 
 }

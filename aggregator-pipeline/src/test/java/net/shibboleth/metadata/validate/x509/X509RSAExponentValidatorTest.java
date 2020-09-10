@@ -21,27 +21,16 @@ package net.shibboleth.metadata.validate.x509;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.validate.Validator;
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import net.shibboleth.metadata.validate.Validator;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
     
     public X509RSAExponentValidatorTest() throws Exception {
         super(X509RSAExponentValidator.class);
-    }
-
-    private void testCert(final String certName,
-            final Validator<X509Certificate> val,
-            final int expectedErrors, final int expectedWarnings) throws Exception {
-        final Item<String> item = new MockItem("foo");
-        final X509Certificate cert = getCertificate(certName);
-        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
-        errorsAndWarnings(item, expectedErrors, expectedWarnings);
     }
 
     private void testThreeCerts(final Validator<X509Certificate> val,
@@ -142,4 +131,11 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
         stage.setWarningBoundary(BigInteger.valueOf(-1));
     }
 
+    @Test
+    public void testDSA() throws Exception {
+        final var val = new X509RSAExponentValidator();
+        val.setId("test");
+        val.initialize();
+        testCert("dsa.pem", val, 0, 0);
+    }
 }

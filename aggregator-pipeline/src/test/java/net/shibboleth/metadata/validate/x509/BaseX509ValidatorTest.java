@@ -28,7 +28,9 @@ import org.testng.Assert;
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.validate.Validator;
 
 public abstract class BaseX509ValidatorTest extends BaseTest {
     
@@ -59,6 +61,15 @@ public abstract class BaseX509ValidatorTest extends BaseTest {
         //}
         Assert.assertEquals(errors.size(), expectedErrors, "wrong number of errors");
         Assert.assertEquals(warnings.size(), expectedWarnings, "wrong number of warnings");
+    }
+
+    protected void testCert(final String certName,
+            final Validator<X509Certificate> val,
+            final int expectedErrors, final int expectedWarnings) throws Exception {
+        final Item<String> item = new MockItem("foo");
+        final X509Certificate cert = getCertificate(certName);
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
+        errorsAndWarnings(item, expectedErrors, expectedWarnings);
     }
 
 }
