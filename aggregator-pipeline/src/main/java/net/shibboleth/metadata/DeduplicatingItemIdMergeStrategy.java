@@ -43,10 +43,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
         final HashSet<ItemId> presentItemIds = new HashSet<>();
 
         for (final Item<T> item : target) {
-            final var itemIds = item.getItemMetadata().get(ItemId.class);
-            if (itemIds != null) {
-                presentItemIds.addAll(itemIds);
-            }
+            presentItemIds.addAll(item.getItemMetadata().get(ItemId.class));
         }
 
         for (final List<Item<T>> source : sources) {
@@ -69,7 +66,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
             @Nonnull @NonnullElements final List<Item<T>> sourceItems) {
         for (final Item<T> sourceItem : sourceItems) {
             final var itemIds = sourceItem.getItemMetadata().get(ItemId.class);
-            if (itemIds == null || itemIds.isEmpty()) {
+            if (itemIds.isEmpty()) {
                 target.add(sourceItem);
                 continue;
             }
