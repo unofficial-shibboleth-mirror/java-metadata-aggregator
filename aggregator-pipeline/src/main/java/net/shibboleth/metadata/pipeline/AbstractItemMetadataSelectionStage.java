@@ -19,9 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -34,6 +32,7 @@ import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -41,15 +40,16 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * type of {@link ItemMetadata} attached to them.
  * 
  * @param <T> the type of data included in the items being processed
+ * @param <B> the type bound for the selection requirements set
  */
 @ThreadSafe
-public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStage<T> {
+public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractStage<T> {
 
     /**
      * {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be selected.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<Class<? extends ItemMetadata>> selectionRequirements = Set.of();
+    private Set<Class<? extends B>> selectionRequirements = Set.of();
 
     /** Strategy used to generate item identifiers for logging purposes. */
     @Nonnull @GuardedBy("this")
@@ -63,7 +63,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      *         selected, never null nor containing null elements
      */
     @Nonnull @NonnullElements @Unmodifiable
-    public final synchronized Collection<Class<? extends ItemMetadata>> getSelectionRequirements() {
+    public final synchronized Collection<Class<? extends B>> getSelectionRequirements() {
         return selectionRequirements;
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
      *            {@link Item} to be selected
      */
     public synchronized void setSelectionRequirements(
-            @Nonnull @NonnullElements @Unmodifiable final Collection<Class<? extends ItemMetadata>> requirements) {
+            @Nonnull @NonnullElements @Unmodifiable final Collection<Class<? extends B>> requirements) {
         throwSetterPreconditionExceptions();
         selectionRequirements = Set.copyOf(requirements);
     }
@@ -106,12 +106,11 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
         final var collectionCopy = new ArrayList<>(items);
 
         for (final Item<T> item : collectionCopy) {
-            final HashMap<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata =
-                    new HashMap<>();
+            final var matchingMetadata = new ClassToInstanceMultiMap<B>();
 
-            for (final Class<? extends ItemMetadata> infoClass : getSelectionRequirements()) {
+            for (final Class<? extends B> infoClass : getSelectionRequirements()) {
                 if (item.getItemMetadata().containsKey(infoClass)) {
-                    matchingMetadata.put(infoClass, item.getItemMetadata().get(infoClass));
+                    matchingMetadata.putAll(item.getItemMetadata().get(infoClass));
                 }
             }
 
@@ -141,8 +140,7 @@ public abstract class AbstractItemMetadataSelectionStage<T> extends AbstractStag
     protected abstract void doExecute(
             @Nonnull @NonnullElements final List<Item<T>> items,
             @Nonnull final Item<T> matchingItem,
-            @Nonnull @NonnullElements
-            final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+            @Nonnull @NonnullElements final ClassToInstanceMultiMap<B> matchingMetadata)
                     throws StageProcessingException;
 
 }

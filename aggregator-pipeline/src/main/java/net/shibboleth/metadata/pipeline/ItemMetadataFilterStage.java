@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -29,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /**
  * A {@link Stage} that filters out {@link Item} if they have a specific type of {@link ItemMetadata} attached to them.
@@ -39,19 +39,19 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * @param <T> type of items the stage operates on
  */
 @ThreadSafe
-public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionStage<T> {
+public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionStage<T, ItemMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ItemMetadataFilterStage.class);
 
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items,
-            final Item<T> matchingItem,
-            final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+            @Nonnull final Item<T> matchingItem,
+            @Nonnull @NonnullElements final ClassToInstanceMultiMap<ItemMetadata> matchingMetadata)
             throws StageProcessingException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
-        log.debug("Item {} was removed because it was marked with {}", itemId, matchingMetadata.keySet());
+        log.debug("Item {} was removed because it was marked with {}", itemId, matchingMetadata.keys());
 
         items.remove(matchingItem);
     }

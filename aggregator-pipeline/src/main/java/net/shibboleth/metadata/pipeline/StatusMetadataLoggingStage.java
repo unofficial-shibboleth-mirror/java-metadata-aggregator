@@ -18,10 +18,8 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -30,10 +28,10 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.StatusMetadata;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /**
  * A {@link Stage} that logs {@link StatusMetadata} associated with an {@link Item}.
@@ -41,7 +39,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * @param <T> type of item which this stage processes
  */
 @ThreadSafe
-public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelectionStage<T> {
+public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelectionStage<T, StatusMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(StatusMetadataLoggingStage.class);
@@ -50,8 +48,7 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
     protected void doExecute(
             @Nonnull @NonnullElements final List<Item<T>> items,
             @Nonnull final Item<T> matchingItem,
-            @Nonnull @NonnullElements final Map<Class<? extends ItemMetadata>,
-            List<? extends ItemMetadata>> matchingMetadata)
+            @Nonnull @NonnullElements final ClassToInstanceMultiMap<StatusMetadata> matchingMetadata)
                     throws StageProcessingException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
@@ -68,11 +65,10 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
      * @param statuses status messages to log
      */
     private void logInfos(@Nonnull final String itemId,
-            @Nullable @NonnullElements final List<? extends ItemMetadata> statuses) {
-        if (statuses != null && !statuses.isEmpty() && log.isInfoEnabled()) {
+            @Nonnull @NonnullElements final List<InfoStatus> statuses) {
+        if (!statuses.isEmpty() && log.isInfoEnabled()) {
             log.info("Item {} was marked with the following Info status messages", itemId);
-            for (final ItemMetadata info : statuses) {
-                final StatusMetadata status = (StatusMetadata) info;
+            for (final var status : statuses) {
                 log.info("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
@@ -85,11 +81,10 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
      * @param statuses status messages to log
      */
     private void logWarnings(@Nonnull final String itemId,
-            @Nullable @NonnullElements final List<? extends ItemMetadata> statuses) {
-        if (statuses != null && !statuses.isEmpty() && log.isWarnEnabled()) {
+            @Nonnull @NonnullElements final List<WarningStatus> statuses) {
+        if (!statuses.isEmpty() && log.isWarnEnabled()) {
             log.warn("Item {} was marked with the following Warning status messages", itemId);
-            for (final ItemMetadata info : statuses) {
-                final StatusMetadata status = (StatusMetadata) info;
+            for (final var status : statuses) {
                 log.warn("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
@@ -102,11 +97,10 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
      * @param statuses status messages to log
      */
     private void logErrors(@Nonnull final String itemId,
-            @Nullable @NonnullElements final List<? extends ItemMetadata> statuses) {
-        if (statuses != null && !statuses.isEmpty() && log.isErrorEnabled()) {
+            @Nonnull @NonnullElements final List<ErrorStatus> statuses) {
+        if (!statuses.isEmpty() && log.isErrorEnabled()) {
             log.error("Item {} was marked with the following Error status messages", itemId);
-            for (final ItemMetadata info : statuses) {
-                final StatusMetadata status = (StatusMetadata) info;
+            for (final var status : statuses) {
                 log.error("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }

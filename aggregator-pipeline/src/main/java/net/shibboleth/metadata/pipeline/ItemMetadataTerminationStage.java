@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -29,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
 
 /**
  * A {@link Stage} that terminates pipeline processing if an {@link Item} has a specific type of {@link ItemMetadata}
@@ -37,22 +37,22 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
  * @param <T> type of items the stage operates on
  */
 @ThreadSafe
-public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelectionStage<T> {
+public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelectionStage<T, ItemMetadata> {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(ItemMetadataTerminationStage.class);
 
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items,
-            final Item<T> matchingItem,
-            final Map<Class<? extends ItemMetadata>, List<? extends ItemMetadata>> matchingMetadata)
+            @Nonnull final Item<T> matchingItem,
+            @Nonnull @NonnullElements final ClassToInstanceMultiMap<ItemMetadata> matchingMetadata)
             throws TerminationException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
         log.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
-                matchingMetadata.keySet());
+                matchingMetadata.keys());
 
         throw new TerminationException("Item " + itemId + " marked with metadata of type "
-                + matchingMetadata.keySet());
+                + matchingMetadata.keys());
     }
 }
