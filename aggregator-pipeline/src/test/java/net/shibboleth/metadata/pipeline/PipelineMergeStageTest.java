@@ -81,6 +81,7 @@ public class PipelineMergeStageTest {
 
         final ArrayList<Item<String>> metadataCollection = new ArrayList<>();
         joinSource.execute(metadataCollection);
+        joinSource.destroy();
         Assert.assertEquals(metadataCollection.size(), 2);
 
         boolean md1CloneMatch = false;

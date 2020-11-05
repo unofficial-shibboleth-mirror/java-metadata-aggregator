@@ -64,6 +64,8 @@ public class XPathFilteringStageTest extends BaseDOMTest {
 
         // Filter the metadata collection
         strategy.doExecute(metadataCollection);
+        strategy.destroy();
+
         Assert.assertEquals(metadataCollection.size(), 1);
         Element element = metadataCollection.get(0).unwrap();
         String id = element.getAttribute("id");

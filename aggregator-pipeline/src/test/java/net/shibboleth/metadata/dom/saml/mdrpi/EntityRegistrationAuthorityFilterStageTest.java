@@ -57,6 +57,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 3);
 
         stage.execute(mdCollection);
+        stage.destroy();
         Assert.assertEquals(mdCollection.size(), 2);
     }
 
@@ -78,6 +79,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 3);
 
         stage.execute(mdCollection);
+        stage.destroy();
         Assert.assertEquals(mdCollection.size(), 1);
     }
 
@@ -101,6 +103,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
+        stage.destroy();
         Assert.assertEquals(mdCollection.size(), 0);
     }
 
@@ -125,6 +128,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
+        stage.destroy();
         Assert.assertEquals(mdCollection.size(), 0);
     }
 
@@ -149,6 +153,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCollection.size(), 1);
 
         stage.execute(mdCollection);
+        stage.destroy();
         Assert.assertEquals(mdCollection.size(), 1);
         Assert.assertEquals(ElementSupport.getChildElements(mdCollection.get(0).unwrap()).size(), 0);
     }

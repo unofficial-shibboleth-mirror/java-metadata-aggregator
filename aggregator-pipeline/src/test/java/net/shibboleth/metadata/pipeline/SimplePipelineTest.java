@@ -51,6 +51,7 @@ public class SimplePipelineTest {
         Assert.assertTrue(pipeline.getStages().get(0).isInitialized());
         Assert.assertTrue(pipeline.getStages().get(1).isInitialized());
         Assert.assertTrue(pipeline.getStages().get(2).isInitialized());
+        pipeline.destroy();
 
         try {
             pipeline = new SimplePipeline<>();
@@ -105,6 +106,7 @@ public class SimplePipelineTest {
         Assert.assertEquals(metadata.size(), 2);
         Assert.assertEquals(((CountingStage<String>) stages.get(1)).getInvocationCount(), 2);
         Assert.assertEquals(((CountingStage<String>) stages.get(2)).getInvocationCount(), 2);
+        pipeline.destroy();
     }
 
     protected List<Stage<String>> buildStages() {

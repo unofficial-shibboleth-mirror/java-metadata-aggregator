@@ -73,6 +73,7 @@ public class FilesInDirectoryMultiOutputStrategyTest {
         
         checkOneFile(tempDir, "preabcabc.txt");
         wipeDirectory(tempDir);
+        strategy.destroy();
     }
 
     // Test with defaults
@@ -93,6 +94,7 @@ public class FilesInDirectoryMultiOutputStrategyTest {
         
         checkOneFile(tempDir, "abc");
         wipeDirectory(tempDir);
+        strategy.destroy();
     }
 
 }

@@ -29,6 +29,7 @@ public class ElementsStrippingStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(items);
+        stage.destroy();
 
         // nothing should have changed; compare with original
         final Element out = readXMLData("in-sb.xml");
@@ -52,6 +53,7 @@ public class ElementsStrippingStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(items);
+        stage.destroy();
 
         final Element out = readXMLData("out-sb.xml");
         assertXMLIdentical(out, item.unwrap());
@@ -74,6 +76,7 @@ public class ElementsStrippingStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(items);
+        stage.destroy();
 
         final Element out = readXMLData("out-sw.xml");
         assertXMLIdentical(out, item.unwrap());
@@ -96,6 +99,7 @@ public class ElementsStrippingStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(items);
+        stage.destroy();
 
         final Element out = readXMLData("out-multi-b.xml");
         assertXMLIdentical(out, item.unwrap());
@@ -119,6 +123,7 @@ public class ElementsStrippingStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(items);
+        stage.destroy();
 
         final Element out = readXMLData("out-multi-w.xml");
         assertXMLIdentical(out, item.unwrap());

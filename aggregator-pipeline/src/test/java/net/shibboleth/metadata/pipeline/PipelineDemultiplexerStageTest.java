@@ -112,6 +112,7 @@ public class PipelineDemultiplexerStageTest {
         stage.execute(items);
 
         Assert.assertEquals(countStage.getInvocationCount(), 1);
+        stage.destroy();
     }
     
     @Test public void testThrow() throws Exception {

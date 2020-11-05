@@ -60,6 +60,7 @@ public class DOMResourceSourceStageTest extends BaseTest {
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         source.execute(metadataCollection);
+        source.destroy();
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
     }

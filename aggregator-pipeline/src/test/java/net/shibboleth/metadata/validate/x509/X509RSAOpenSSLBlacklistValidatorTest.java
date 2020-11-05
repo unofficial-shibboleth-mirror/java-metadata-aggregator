@@ -47,6 +47,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("ok.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
+        val.destroy();
     }
 
     @Test
@@ -61,6 +62,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("1024.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 1, 0);
+        val.destroy();
     }
 
     @Test
@@ -75,6 +77,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("1024.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 1, 0);
+        val.destroy();
     }
 
     @Test
@@ -89,6 +92,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("1024.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
+        val.destroy();
     }
 
     @Test
@@ -103,6 +107,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("2048.pem");
         val.validate(cert, item, "stage");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
+        val.destroy();
     }
 
     @Test
@@ -117,6 +122,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("2048.pem");
         val.validate(cert, item, "stage");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
+        val.destroy();
     }
 
     @Test
@@ -131,6 +137,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("2048.pem");
         val.validate(cert, item, "stage");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
+        val.destroy();
     }
 
     @Test
@@ -145,6 +152,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final X509Certificate cert = getCertificate("2048.pem");
         Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
         errorsAndWarnings(item, 0, 0);
+        val.destroy();
     }
 
     @Test
@@ -153,6 +161,7 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         val.setBlacklistResource(getClasspathResource("issue9.txt"));
         val.setId("test");
         val.initialize();
+        val.destroy();
     }
 
     @Test
@@ -180,4 +189,25 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
             Assert.assertTrue(cause instanceof IOException, "cause should have been an IOException");
         }
     }
+    
+    @Test
+    public void testGetResource() throws Exception {
+        final var val = new X509RSAOpenSSLBlacklistValidator();
+        val.setId("test");
+        Assert.assertNull(val.getBlacklistResource());
+        final var resource = getClasspathResource("1024.txt");
+        Assert.assertNotNull(resource);
+        val.setBlacklistResource(resource);
+        Assert.assertSame(val.getBlacklistResource(), resource);
+        val.initialize();
+        val.destroy();
+    }
+
+    @Test(expectedExceptions = ComponentInitializationException.class)
+    public void testNoResource() throws Exception {
+        final var val = new X509RSAOpenSSLBlacklistValidator();
+        val.setId("test");
+        val.initialize();
+    }
+
 }

@@ -53,6 +53,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
         final var metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 1);
     }
@@ -71,6 +72,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
 
         final var metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 2);
     }
@@ -90,6 +92,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(false);
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Element entitiesDescriptor = metadataCollection.iterator().next().unwrap();
         Assert.assertEquals(ElementSupport.getChildElements(entitiesDescriptor).size(), 2);
@@ -111,6 +114,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(false);
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 0);
     }
@@ -133,6 +137,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setWhitelistingEntities(false);
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 1);
     }
@@ -151,6 +156,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setDesignatedEntities(Collections.emptySet());
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 0);
     }
@@ -169,6 +175,7 @@ public class EntityFilterStageTest extends BaseDOMTest {
         stage.setDesignatedEntities(Collections.emptySet());
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 3);
     }

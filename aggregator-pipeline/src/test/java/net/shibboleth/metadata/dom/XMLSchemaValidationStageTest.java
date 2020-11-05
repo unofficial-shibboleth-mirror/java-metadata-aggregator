@@ -41,6 +41,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
 
         List<Item<Element>> mdCol = buildMetdataCollection("valid.xml");
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertFalse(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
     }
@@ -50,6 +51,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
         XMLSchemaValidationStage stage = buildStage();
         List<Item<Element>> mdCol = buildMetdataCollection("invalid.xml");
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
         Assert.assertTrue(mdCol.iterator().next().getItemMetadata().containsKey(ErrorStatus.class));
     }

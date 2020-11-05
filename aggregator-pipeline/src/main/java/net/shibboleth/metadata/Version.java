@@ -89,14 +89,25 @@ public final class Version {
     }
 
     static {
-        VERSION = Version.class.getPackage().getImplementationVersion();
+        final String version = Version.class.getPackage().getImplementationVersion();
 
-        // Semantic versioning: three dot-separated numbers, followed by extensions
-        // separated by '-' and '+'.
-        final String[] versionParts = VERSION.split("[\\.\\+\\-]");
-
-        MAJOR_VERSION = Integer.parseInt(versionParts[0]);
-        MINOR_VERSION = Integer.parseInt(versionParts[1]);
-        PATCH_VERSION = Integer.parseInt(versionParts[2]);
+        if (version != null) {
+            // If we're running from a package with metadata (i.e., from a .jar)
+            VERSION = version;
+    
+            // Semantic versioning: three dot-separated numbers, followed by extensions
+            // separated by '-' and '+'.
+            final String[] versionParts = VERSION.split("[\\.\\+\\-]");
+    
+            MAJOR_VERSION = Integer.parseInt(versionParts[0]);
+            MINOR_VERSION = Integer.parseInt(versionParts[1]);
+            PATCH_VERSION = Integer.parseInt(versionParts[2]);
+        } else {
+            // We don't have the package metadata available; probably a test environment
+            VERSION = "unknown";
+            MAJOR_VERSION = 0;
+            MINOR_VERSION = 0;
+            PATCH_VERSION = 0;
+        }
     }
 }

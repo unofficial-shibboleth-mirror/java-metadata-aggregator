@@ -80,6 +80,7 @@ public class X509ValidationStageTest extends BaseDOMTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
 
         errorsAndWarnings(item, 0, 0);
     }
@@ -105,6 +106,7 @@ public class X509ValidationStageTest extends BaseDOMTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
 
         errorsAndWarnings(item, 1, 0);
     }
@@ -131,6 +133,7 @@ public class X509ValidationStageTest extends BaseDOMTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
         
         errorsAndWarnings(item, 0, 1);
     }

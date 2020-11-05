@@ -42,6 +42,8 @@ public class ItemOrderingStageTest {
         Assert.assertEquals(items.get(0).unwrap(), "one");
         Assert.assertEquals(items.get(1).unwrap(), "two");
         Assert.assertEquals(items.get(2).unwrap(), "three");
+
+        stage.destroy();
     }
 
     @Test
@@ -62,6 +64,8 @@ public class ItemOrderingStageTest {
         Assert.assertEquals(items.get(2).unwrap(), "one");
         Assert.assertEquals(items.get(1).unwrap(), "two");
         Assert.assertEquals(items.get(0).unwrap(), "three");
+
+        stage.destroy();
     }
 
 }

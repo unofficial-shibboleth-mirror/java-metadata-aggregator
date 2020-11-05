@@ -57,6 +57,7 @@ public class EmptyContainerStrippingStageTest extends BaseDOMTest {
         stage.setElementNamespace("urn:oasis:names:tc:SAML:2.0:metadata");
         stage.initialize();
         stage.execute(items);
+        stage.destroy();
         
         final Element out = readXMLData("out.xml");
         assertXMLIdentical(out, item.unwrap());

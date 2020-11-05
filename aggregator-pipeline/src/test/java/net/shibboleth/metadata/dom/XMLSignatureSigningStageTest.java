@@ -110,6 +110,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -148,6 +149,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -207,6 +209,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage1.initialize();
 
         stage1.execute(mdCol1);
+        stage1.destroy();
         Assert.assertEquals(mdCol1.size(), 1);
 
         final Item<Element> result1 = mdCol1.iterator().next();
@@ -228,6 +231,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage2.initialize();
 
         stage2.execute(mdCol2);
+        stage2.destroy();
         Assert.assertEquals(mdCol2.size(), 1);
 
         final Item<Element> result2 = mdCol2.iterator().next();
@@ -275,6 +279,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(md);
+        stage.destroy();
         Assert.assertEquals(md.size(), 1);
         
         final var entitiesDescriptor = md.get(0).unwrap(); // document element
@@ -300,6 +305,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(md);
+        stage.destroy();
         Assert.assertEquals(md.size(), 1);
         
         final var entitiesDescriptor = md.get(0).unwrap(); // document element

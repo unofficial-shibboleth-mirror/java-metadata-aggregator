@@ -34,10 +34,10 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /** Unit test for {@link DOMFilesystemSourceStage}. */
-public class DOMFilesystemSourceTest extends BaseTest {
+public class DOMFilesystemSourceStageTest extends BaseTest {
 
     /** Constructor sets class under test. */
-    public DOMFilesystemSourceTest() {
+    public DOMFilesystemSourceStageTest() {
         super(DOMFilesystemSourceStage.class);
     }
 
@@ -58,6 +58,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 1);
+        source.destroy();
     }
 
     @Test public void testSuccessfulDirectoryFetchAndParse() throws Exception {
@@ -77,6 +78,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 6);
+        source.destroy();
     }
 
     @Test
@@ -104,6 +106,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         source.execute(metadataCollection);
         Assert.assertNotNull(metadataCollection);
         Assert.assertEquals(metadataCollection.size(), 2);
+        source.destroy();
     }
 
     @Test public void testSuccessfulFetchAndFailedParse() throws Exception {
@@ -126,6 +129,7 @@ public class DOMFilesystemSourceTest extends BaseTest {
         } catch (StageProcessingException e) {
             // expected this
         }
+        source.destroy();
     }
 
     @Test public void testFailedFetch() throws Exception {

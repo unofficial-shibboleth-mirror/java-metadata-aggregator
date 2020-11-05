@@ -140,6 +140,7 @@ public class SplitMergeStageTest {
         stage.initialize();
 
         stage.execute(items);
+        stage.destroy();
 
         Assert.assertEquals(selectedCount.getInvocationCount(), 1);
         Assert.assertEquals(selectedCount.getItemCount(), 3);
@@ -257,6 +258,7 @@ public class SplitMergeStageTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
         Assert.assertEquals(3, items.size());
     }
 
@@ -288,6 +290,7 @@ public class SplitMergeStageTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
         Assert.assertEquals(3, items.size());
     }
 }

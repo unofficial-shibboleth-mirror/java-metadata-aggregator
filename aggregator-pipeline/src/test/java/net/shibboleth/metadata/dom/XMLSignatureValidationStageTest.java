@@ -69,6 +69,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -100,6 +101,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertTrue(item.getItemMetadata().containsKey(ErrorStatus.class));
     }
 
@@ -123,6 +125,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -139,6 +142,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.setVerificationCertificate(signingCert);
         stage.initialize();
         stage.execute(mdCol);
+        stage.destroy();
         
         Assert.assertTrue(item2.getItemMetadata().containsKey(ErrorStatus.class));
     }
@@ -165,6 +169,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -198,6 +203,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -227,6 +233,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -260,6 +267,7 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();

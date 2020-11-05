@@ -77,6 +77,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);
@@ -127,6 +128,7 @@ public class XSLValidationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
 
         // The input element should still be the only thing in the collection
         Assert.assertEquals(mdCol.size(), 1);

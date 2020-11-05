@@ -82,6 +82,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -110,6 +111,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 0);
     }
 
@@ -132,6 +134,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 2);
 
         final Set<String> names = new HashSet<>();
@@ -167,6 +170,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
@@ -195,6 +199,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 2);
 
         final Set<String> names = new HashSet<>();
@@ -246,6 +251,7 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(mdCol);
+        stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();

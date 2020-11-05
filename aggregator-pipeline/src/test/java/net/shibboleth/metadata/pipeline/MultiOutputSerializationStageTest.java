@@ -108,6 +108,7 @@ public class MultiOutputSerializationStageTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
         
         final Map<String, String> map = strategy.map;
         Assert.assertEquals(map.size(), 3);

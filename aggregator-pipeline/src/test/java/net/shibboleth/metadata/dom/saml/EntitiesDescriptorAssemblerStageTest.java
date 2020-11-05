@@ -50,6 +50,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         stage.setId("foo");
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Element result = metadataCollection.iterator().next().unwrap();
         
@@ -69,6 +70,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         stage.setDescriptorName("nameValue");
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Element result = metadataCollection.iterator().next().unwrap();
 
@@ -101,6 +103,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         stage.setItemOrderingStrategy(new ReverseOrder());
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Element result = metadataCollection.iterator().next().unwrap();
 
@@ -120,6 +123,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         stage.setId("foo");
         stage.initialize();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Element result = metadataCollection.iterator().next().unwrap();
         

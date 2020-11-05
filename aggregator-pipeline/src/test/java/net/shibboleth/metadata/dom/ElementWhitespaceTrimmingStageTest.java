@@ -68,6 +68,7 @@ public class ElementWhitespaceTrimmingStageTest extends BaseDOMTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
         
         assertXMLIdentical(expected, item.unwrap());
     }
@@ -85,6 +86,7 @@ public class ElementWhitespaceTrimmingStageTest extends BaseDOMTest {
         stage.initialize();
         
         stage.execute(items);
+        stage.destroy();
         
         assertXMLIdentical(expected, item.unwrap());
     }

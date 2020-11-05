@@ -57,6 +57,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
         List<Item<Element>> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 1);
 
@@ -81,6 +82,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
         List<Item<Element>> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 2);
 
@@ -110,6 +112,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
         List<Item<Element>> metadataCollection = buildMetadataCollection();
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 3);
 
@@ -143,6 +146,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(metadataCollection);
+        stage.destroy();
 
         List<Element> descriptors = ElementSupport.getChildElements(metadataCollection.iterator().next().unwrap());
         Assert.assertEquals(descriptors.size(), 2);
@@ -174,6 +178,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 0);
     }
@@ -198,6 +203,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
         stage.initialize();
 
         stage.execute(metadataCollection);
+        stage.destroy();
 
         Assert.assertEquals(metadataCollection.size(), 1);
     }
