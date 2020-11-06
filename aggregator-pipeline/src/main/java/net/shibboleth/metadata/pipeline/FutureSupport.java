@@ -120,7 +120,6 @@ public final class FutureSupport {
      */
     @Nonnull public static <T> List<Item<T>> futureItems(
             @Nonnull final Future<List<Item<T>>> future) throws StageProcessingException {
-        assert future != null;
         try {
             final List<Item<T>> value = future.get();
             if (value == null) {

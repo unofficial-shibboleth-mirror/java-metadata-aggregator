@@ -164,9 +164,6 @@ public final class XMLSignatureValidator {
     private void markIdAttribute(@Nonnull final Element docElement, @Nonnull final Reference reference)
             throws ValidationException {
         
-        assert docElement != null;
-        assert reference != null;
-        
         final String referenceURI = reference.getURI();
         
         /*
@@ -226,9 +223,6 @@ public final class XMLSignatureValidator {
      */
     public void verifySignature(@Nonnull final Element docElement, @Nonnull final Element signatureElement)
             throws ValidationException {
-        
-        assert docElement != null;
-        assert signatureElement != null;
         
         log.debug("Creating XML security library XMLSignature object");
         XMLSignature signature = null;

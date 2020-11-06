@@ -132,9 +132,6 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
      */
     protected void addError(@Nonnull final Item<Element> item, @Nonnull final Element element,
             @Nonnull final String error) {
-        assert item != null;
-        assert element != null;
-        assert error != null;
         final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
         final String prefix = errorPrefix(element);
         metadata.put(new ErrorStatus(getId(), prefix + error));

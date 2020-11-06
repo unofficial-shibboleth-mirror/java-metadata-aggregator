@@ -50,7 +50,6 @@ public class SAMLStringElementCheckingStage extends AbstractElementVisitingStage
      * @return ancestor EntityDescriptor {@link Element}, or null.
      */
     private Element ancestorEntity(@Nonnull final Element element) {
-        assert element != null;
         for (Element e = element; e != null; e = (Element) e.getParentNode()) {
             if (SAMLMetadataSupport.isEntityDescriptor(e)) {
                 return e;
@@ -69,7 +68,6 @@ public class SAMLStringElementCheckingStage extends AbstractElementVisitingStage
      * @return <code>true</code> if the {@link Node}'s value matches
      */
     private static boolean match(@Nonnull final Node visited) {
-        assert visited != null;
         final String textContent = visited.getTextContent();
         final Matcher matcher = ALL_WHITE_SPACE_PATTERN.matcher(textContent);
         return matcher.matches();

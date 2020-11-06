@@ -55,7 +55,6 @@ public abstract class AbstractSAMLTraversalStage <C extends DOMTraversalContext>
      * @return ancestor EntityDescriptor {@link Element}, or null.
      */
     private Element ancestorEntity(@Nonnull final Element element) {
-        assert element != null;
         for (Element e = element; e != null; e = (Element) e.getParentNode()) {
             if (SAMLMetadataSupport.isEntityDescriptor(e)) {
                 return e;

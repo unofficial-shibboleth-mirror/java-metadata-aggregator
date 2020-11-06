@@ -37,8 +37,6 @@ class WhitespaceTrimmingVisitor implements NodeVisitor, ElementVisitor, AttrVisi
 
     @Override
     public void visitNode(@Nonnull final Node visited, @Nonnull final Item<Element> item) {
-        assert visited != null;
-        assert item != null;
         final String originalText = visited.getTextContent();
         final String newText = originalText.trim();
         visited.setTextContent(newText);

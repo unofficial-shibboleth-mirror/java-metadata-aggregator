@@ -278,9 +278,6 @@ public class Container {
     public Container locateChild(@Nonnull final Predicate<Element> matcher,
             @Nonnull final Function<Container, Element> maker,
             @Nonnull final ChildAddingStrategy adder) {
-        assert matcher != null;
-        assert maker != null;
-        assert adder != null;
 
         // Return an existing child if one exists
         final Container existing = findChild(matcher);
