@@ -28,7 +28,9 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.utilities.java.support.security.impl.FixedStringIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
@@ -37,7 +39,12 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class GenerateIdStageTest {
+public class GenerateIdStageTest extends BaseDOMTest {
+
+
+    protected GenerateIdStageTest() {
+        super(GenerateIdStage.class);
+    }
 
     /**
      * Test for MDA-90 (default identifier strategy used by GenerateIdStage
@@ -92,4 +99,37 @@ public class GenerateIdStageTest {
         Assert.assertEquals(values.size(), howMany);
     }
 
+    @Test
+    public void testExplicitConstructor() throws Exception {
+        final var strat = new FixedStringIdentifierGenerationStrategy("hello");
+
+        final var stage = new GenerateIdStage(strat);
+        stage.setId("test");
+        stage.initialize();
+        
+        final var item = readDOMItem("in.xml");
+        
+        stage.execute(List.of(item));
+        
+        stage.destroy();
+        
+        Assert.assertEquals(item.unwrap().getAttribute("ID"), "hello");
+    }
+    
+    @Test
+    public void testNotSAMLEntity() throws Exception {
+        final var strat = new FixedStringIdentifierGenerationStrategy("hello");
+
+        final var stage = new GenerateIdStage(strat);
+        stage.setId("test");
+        stage.initialize();
+        
+        final var item = readDOMItem("notentity.xml");
+        
+        stage.execute(List.of(item));
+        
+        stage.destroy();
+        
+        Assert.assertEquals(item.unwrap().getAttribute("ID"), "original");
+    }
 }
