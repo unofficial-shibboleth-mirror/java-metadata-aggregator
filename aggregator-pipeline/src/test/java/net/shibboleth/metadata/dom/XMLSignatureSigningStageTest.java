@@ -41,7 +41,6 @@ import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.testing.TestSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLParserException;
@@ -181,7 +180,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
      * Test the functionality of the MDA-216 fix.
      *
      * This test is way over-specified. It <em>will</em> fail if the Santuario
-     * library ever stops putting CRs into its output, but it wil also fail
+     * library ever stops putting CRs into its output, but it will also fail
      * if Santuario starts putting CRs into its output in other places.
      *
      * @throws Exception if something goes wrong
@@ -247,18 +246,13 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
                 .build();
 
         /*
-         * Under Java 11 or later, with the latest Santuario, we expect the two results to be
-         * different. Under previous versions of Java, we expect them to be the same.
+         * As we are running under Java 11 or later, with the latest Santuario, we expect the two
+         * results to be different. Under previous versions of Java, we expected them to be the same.
          *
          * We ascertained in other tests that they are both valid.
          */
-        if (TestSupport.isJavaV11OrLater()) {
-            Assert.assertTrue(containsCRs(result2.unwrap()), "expected CRs in result");
-            Assert.assertTrue(diff.hasDifferences(), "results were same, expected different");
-        } else {
-            Assert.assertFalse(containsCRs(result2.unwrap()), "did not expect CRs in result");
-            Assert.assertFalse(diff.hasDifferences(), "results were different, expected same");
-        }
+        Assert.assertTrue(containsCRs(result2.unwrap()), "expected CRs in result");
+        Assert.assertTrue(diff.hasDifferences(), "results were same, expected different");
     }
     
     @Test
