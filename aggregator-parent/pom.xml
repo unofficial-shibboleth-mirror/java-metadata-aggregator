@@ -35,7 +35,7 @@
         <java-support.version>8.2.1</java-support.version>
         <spring-extensions.version>6.1.2</spring-extensions.version>
         <checkstyle.configLocation>${project.basedir}/../aggregator-parent/resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
-        <aggregator-parent.site.url>${shibboleth.site.url}java-metadata-aggregator/${project.version}/</aggregator-parent.site.url>
+        <aggregator-parent.site.url>${shibboleth.site.deploy.url}java-metadata-aggregator/${project.version}/</aggregator-parent.site.url>
         <aggregator-module.site.url>${aggregator-parent.site.url}${project.artifactId}</aggregator-module.site.url>
     </properties>
 
@@ -140,7 +140,7 @@
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>dav:${aggregator-parent.site.url}</url>
+            <url>scp:${aggregator-parent.site.url}</url>
         </site>
     </distributionManagement>
 

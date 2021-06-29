@@ -34,7 +34,7 @@
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>dav:${aggregator-module.site.url}</url>
+            <url>scp:${aggregator-module.site.url}</url>
         </site>
     </distributionManagement>
 
