@@ -25,16 +25,16 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>../aggregator-blacklists</module>
-        <module>../aggregator-pipeline</module>
-        <module>../aggregator-cli</module>
-        <module>../aggregator-bom</module>
+        <module>aggregator-blacklists</module>
+        <module>aggregator-pipeline</module>
+        <module>aggregator-cli</module>
+        <module>aggregator-bom</module>
     </modules>
 
     <properties>
         <java-support.version>8.2.1</java-support.version>
         <spring-extensions.version>6.1.2</spring-extensions.version>
-        <checkstyle.configLocation>${project.basedir}/../aggregator-parent/resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
+        <checkstyle.configLocation>${project.basedir}/../resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
         <aggregator-parent.site.url>${shibboleth.site.deploy.url}java-metadata-aggregator/${project.version}/</aggregator-parent.site.url>
         <aggregator-module.site.url>${aggregator-parent.site.url}${project.artifactId}</aggregator-module.site.url>
     </properties>
