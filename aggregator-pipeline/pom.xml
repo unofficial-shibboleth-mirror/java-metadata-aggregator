@@ -17,6 +17,7 @@
 
     <properties>
         <automatic.module.name>net.shibboleth.metadata</automatic.module.name>
+        <checkstyle.configLocation>${project.basedir}/../resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
     </properties>
 
     <dependencies>
