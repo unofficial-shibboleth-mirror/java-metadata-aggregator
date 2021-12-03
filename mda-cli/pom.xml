@@ -6,13 +6,13 @@
 
     <parent>
         <groupId>net.shibboleth.metadata</groupId>
-        <artifactId>aggregator-parent</artifactId>
+        <artifactId>mda-parent</artifactId>
         <version>0.10.0-SNAPSHOT</version>
     </parent>
 
-    <name>Shibboleth Metadata Aggregator :: Command Line Interface</name>
+    <name>Command Line Interface</name>
     <description>Command Line Interface</description>
-    <artifactId>aggregator-cli</artifactId>
+    <artifactId>mda-cli</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,7 +24,7 @@
         <!-- Compile Dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>aggregator-pipeline</artifactId>
+            <artifactId>mda-framework</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -45,7 +45,7 @@
         <!-- Runtime Dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>aggregator-blacklists</artifactId>
+            <artifactId>mda-keylists-rsa</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
@@ -66,9 +66,9 @@
         </dependency>
 
         <!-- Test Dependencies -->
-        
+
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -79,7 +79,7 @@
                         <descriptor>src/main/assembly/bin.xml</descriptor>
                     </descriptors>
                 </configuration>
-            </plugin>        
+            </plugin>
         </plugins>
     </build>
 

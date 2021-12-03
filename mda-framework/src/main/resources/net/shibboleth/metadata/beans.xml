@@ -12,7 +12,7 @@
 
     <!--
         Bean definitions for simplified access to components in the
-        Shibboleth Metadata Aggregator's aggregator-pipeline artifact.
+        Shibboleth Metadata Aggregator's mda-framework artifact.
 
         All defined bean names are prefixed with "mda.".
     -->

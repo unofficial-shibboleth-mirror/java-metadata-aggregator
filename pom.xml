@@ -20,15 +20,15 @@
 
 
     <groupId>net.shibboleth.metadata</groupId>
-    <artifactId>aggregator-parent</artifactId>
+    <artifactId>mda-parent</artifactId>
     <version>0.10.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>aggregator-blacklists</module>
-        <module>aggregator-pipeline</module>
-        <module>aggregator-cli</module>
-        <module>aggregator-bom</module>
+        <module>mda-keylists-rsa</module>
+        <module>mda-framework</module>
+        <module>mda-cli</module>
+        <module>mda-bom</module>
     </modules>
 
     <properties>
@@ -88,7 +88,7 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

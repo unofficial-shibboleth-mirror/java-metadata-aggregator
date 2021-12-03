@@ -6,13 +6,13 @@
 
     <parent>
         <groupId>net.shibboleth.metadata</groupId>
-        <artifactId>aggregator-parent</artifactId>
+        <artifactId>mda-parent</artifactId>
         <version>0.10.0-SNAPSHOT</version>
     </parent>
 
-    <name>Shibboleth Metadata Aggregator :: Processing Pipeline</name>
-    <description>Processing Pipeline</description>
-    <artifactId>aggregator-pipeline</artifactId>
+    <name>Processing Framework</name>
+    <description>Processing Framework</description>
+    <artifactId>mda-framework</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -270,9 +270,9 @@
             </activation>
             <dependencies>
                 <dependency>
-		    <groupId>org.openjdk.nashorn</groupId>
-		    <artifactId>nashorn-core</artifactId>
-		    <version>${nashorn.jdk.version}</version>
+                    <groupId>org.openjdk.nashorn</groupId>
+                    <artifactId>nashorn-core</artifactId>
+                    <version>${nashorn.jdk.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
