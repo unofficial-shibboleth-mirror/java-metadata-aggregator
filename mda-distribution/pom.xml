@@ -17,6 +17,7 @@
 
     <properties>
         <mda.finalName>mda-distribution-${project.version}</mda.finalName>
+        <mda-distribution.checkM2>false</mda-distribution.checkM2>
     </properties>
 
     <dependencies>
@@ -82,6 +83,88 @@
                     <finalName>${mda.finalName}</finalName>
                 </configuration>
             </plugin>
+
+            <!-- Unpack the generated packages for verification. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <unzip src="${project.build.directory}/${mda.finalName}.zip"
+                                    dest="${project.build.directory}/unzipped"/>
+                                <untar compression="gzip"
+                                    src="${project.build.directory}/${mda.finalName}.tar.gz"
+                                    dest="${project.build.directory}/untarred"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Run the artifact signature enforcer on the unpacked artifacts. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.shibboleth.maven.enforcer.rules</groupId>
+                        <artifactId>maven-dist-enforcer</artifactId>
+                        <version>2.1.0</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>mda-enforce-signatures-zip</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
+                                    <enforcerData>${basedir}/src/main/enforcer</enforcerData>
+                                    <parentPomDir>${basedir}/..</parentPomDir>
+                                    <jarDirs>${project.build.directory}/unzipped/${mda.finalName}/lib</jarDirs>
+                                    <checkSignatures>true</checkSignatures>
+                                    <checkDependencies>true</checkDependencies>
+                                    <listJarSources>false</listJarSources>
+                                    <checkM2>${mda-distribution.checkM2}</checkM2>
+                                    <artifactMap>${basedir}/src/main/enforcer/artifactMap.properties</artifactMap>
+                                </jarEnforcer>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>mda-enforce-signatures-tgz</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
+                                    <enforcerData>${basedir}/src/main/enforcer</enforcerData>
+                                    <parentPomDir>${basedir}/..</parentPomDir>
+                                    <jarDirs>${project.build.directory}/untarred/${mda.finalName}/lib</jarDirs>
+                                    <checkSignatures>true</checkSignatures>
+                                    <checkDependencies>true</checkDependencies>
+                                    <listJarSources>false</listJarSources>
+                                    <checkM2>${mda-distribution.checkM2}</checkM2>
+                                    <artifactMap>${basedir}/src/main/enforcer/artifactMap.properties</artifactMap>
+                                </jarEnforcer>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
