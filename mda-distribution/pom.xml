@@ -84,31 +84,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Unpack the generated packages for verification. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <unzip src="${project.build.directory}/${mda.finalName}.zip"
-                                    dest="${project.build.directory}/unzipped"/>
-                                <untar compression="gzip"
-                                    src="${project.build.directory}/${mda.finalName}.tar.gz"
-                                    dest="${project.build.directory}/untarred"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Run the artifact signature enforcer on the unpacked artifacts. -->
+            <!-- Run the artifact signature enforcer on the generated artifacts. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -116,7 +92,7 @@
                     <dependency>
                         <groupId>net.shibboleth.maven.enforcer.rules</groupId>
                         <artifactId>maven-dist-enforcer</artifactId>
-                        <version>2.1.0</version>
+                        <version>3.0.0</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -129,14 +105,18 @@
                         <configuration>
                             <rules>
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
-                                    <enforcerData>${basedir}/src/main/enforcer</enforcerData>
+                                    <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
+                                    <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
+                                    <dataVersion>1.0.0-SNAPSHOT</dataVersion>
+                                    <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>${basedir}/..</parentPomDir>
-                                    <jarDirs>${project.build.directory}/unzipped/${mda.finalName}/lib</jarDirs>
+                                    <zipFiles>${project.build.directory}/${mda.finalName}.zip</zipFiles>
                                     <checkSignatures>true</checkSignatures>
+                                    <sigCheckReportPath>${project.build.directory}/sigReport-zip.txt</sigCheckReportPath>
                                     <checkDependencies>true</checkDependencies>
+                                    <depCheckReportPath>${project.build.directory}/depReport-zip.txt</depCheckReportPath>
                                     <listJarSources>false</listJarSources>
                                     <checkM2>${mda-distribution.checkM2}</checkM2>
-                                    <artifactMap>${basedir}/src/main/enforcer/artifactMap.properties</artifactMap>
                                 </jarEnforcer>
                             </rules>
                         </configuration>
@@ -150,14 +130,18 @@
                         <configuration>
                             <rules>
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
-                                    <enforcerData>${basedir}/src/main/enforcer</enforcerData>
+                                    <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
+                                    <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
+                                    <dataVersion>1.0.0-SNAPSHOT</dataVersion>
+                                    <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>${basedir}/..</parentPomDir>
-                                    <jarDirs>${project.build.directory}/untarred/${mda.finalName}/lib</jarDirs>
+                                    <tgzFiles>${project.build.directory}/${mda.finalName}.tar.gz</tgzFiles>
                                     <checkSignatures>true</checkSignatures>
+                                    <sigCheckReportPath>${project.build.directory}/sigReport-tgz.txt</sigCheckReportPath>
                                     <checkDependencies>true</checkDependencies>
+                                    <depCheckReportPath>${project.build.directory}/depReport-tgz.txt</depCheckReportPath>
                                     <listJarSources>false</listJarSources>
                                     <checkM2>${mda-distribution.checkM2}</checkM2>
-                                    <artifactMap>${basedir}/src/main/enforcer/artifactMap.properties</artifactMap>
                                 </jarEnforcer>
                             </rules>
                         </configuration>
