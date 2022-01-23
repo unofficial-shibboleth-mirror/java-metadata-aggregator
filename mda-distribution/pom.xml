@@ -107,7 +107,7 @@
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
                                     <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
                                     <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
-                                    <dataVersion>1.0.0-SNAPSHOT</dataVersion>
+                                    <dataVersion>1.0.1-SNAPSHOT</dataVersion>
                                     <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>${basedir}/..</parentPomDir>
                                     <zipFiles>${project.build.directory}/${mda.finalName}.zip</zipFiles>
@@ -132,7 +132,7 @@
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
                                     <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
                                     <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
-                                    <dataVersion>1.0.0-SNAPSHOT</dataVersion>
+                                    <dataVersion>1.0.1-SNAPSHOT</dataVersion>
                                     <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>${basedir}/..</parentPomDir>
                                     <tgzFiles>${project.build.directory}/${mda.finalName}.tar.gz</tgzFiles>
