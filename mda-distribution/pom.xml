@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -17,7 +17,7 @@
 
     <properties>
         <mda.finalName>mda-distribution-${project.version}</mda.finalName>
-        <mda-distribution.checkM2>false</mda-distribution.checkM2>
+        <net.shibboleth.maven.enforcer.rules.checkM2>false</net.shibboleth.maven.enforcer.rules.checkM2>
     </properties>
 
     <dependencies>
@@ -116,7 +116,7 @@
                                     <checkDependencies>true</checkDependencies>
                                     <depCheckReportPath>${project.build.directory}/depReport-zip.txt</depCheckReportPath>
                                     <listJarSources>false</listJarSources>
-                                    <checkM2>${mda-distribution.checkM2}</checkM2>
+                                    <checkM2>${net.shibboleth.maven.enforcer.rules.checkM2}</checkM2>
                                 </jarEnforcer>
                             </rules>
                         </configuration>
@@ -141,7 +141,7 @@
                                     <checkDependencies>true</checkDependencies>
                                     <depCheckReportPath>${project.build.directory}/depReport-tgz.txt</depCheckReportPath>
                                     <listJarSources>false</listJarSources>
-                                    <checkM2>${mda-distribution.checkM2}</checkM2>
+                                    <checkM2>${net.shibboleth.maven.enforcer.rules.checkM2}</checkM2>
                                 </jarEnforcer>
                             </rules>
                         </configuration>
