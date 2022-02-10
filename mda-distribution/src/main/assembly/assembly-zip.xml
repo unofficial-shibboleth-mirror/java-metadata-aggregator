@@ -10,20 +10,16 @@
         <format>zip</format>
     </formats>
 
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>lib</outputDirectory>
-            <directoryMode>774</directoryMode>
-            <fileMode>444</fileMode>
-            <scope>runtime</scope>
-            <includes>
-                <include>*:jar:*</include>
-            </includes>
-            <useProjectArtifact>false</useProjectArtifact>
-        </dependencySet>
-    </dependencySets>
-
     <fileSets>
+
+        <!-- Executable and dependencies -->
+        <fileSet>
+            <directory>${dependenciesDirectory}</directory>
+            <outputDirectory>lib</outputDirectory>
+            <fileMode>0444</fileMode>
+        </fileSet>
+
+        <!-- Unix invocation script. -->
         <fileSet>
             <outputDirectory/>
             <directory>${project.basedir}/src/script/bash</directory>
@@ -33,6 +29,8 @@
             </includes>
             <lineEnding>unix</lineEnding>
         </fileSet>
+
+        <!-- Windows invocation script. -->
         <fileSet>
             <outputDirectory/>
             <directory>${project.basedir}/src/script/bat</directory>

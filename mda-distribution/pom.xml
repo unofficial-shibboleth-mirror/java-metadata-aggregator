@@ -18,6 +18,7 @@
     <properties>
         <mda.finalName>mda-distribution-${project.version}</mda.finalName>
         <net.shibboleth.maven.enforcer.rules.checkM2>false</net.shibboleth.maven.enforcer.rules.checkM2>
+        <dependenciesDirectory>${project.build.directory}/dependencies</dependenciesDirectory>
     </properties>
 
     <dependencies>
@@ -60,6 +61,26 @@
 
     <build>
         <plugins>
+
+            <!-- Copy the executable's dependencies into a directory. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${dependenciesDirectory}</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
