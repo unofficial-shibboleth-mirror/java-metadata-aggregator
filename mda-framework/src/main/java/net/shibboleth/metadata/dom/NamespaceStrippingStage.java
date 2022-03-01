@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -38,7 +39,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
     /**
      * XML namespace to remove.
      */
-    @Nonnull @NotEmpty @GuardedBy("this")
+    @NonnullAfterInit @NotEmpty @GuardedBy("this")
     private String namespace;
 
     /**
