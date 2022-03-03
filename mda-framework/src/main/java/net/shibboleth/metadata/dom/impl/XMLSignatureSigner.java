@@ -236,7 +236,7 @@ public class XMLSignatureSigner {
             includeX509Certificates = stage.isIncludeX509Certificates();
             includeX509Crls = stage.isIncludeX509Crls();
             includeX509IssuerSerial = stage.isIncludeX509IssuerSerial();
-            debugPreDigest = stage.isDebugPreDigest() & log.isDebugEnabled();
+            debugPreDigest = stage.isDebugPreDigest() && log.isDebugEnabled();
             removingCRsFromSignature = stage.isRemovingCRsFromSignature();
         }
 
