@@ -284,11 +284,4 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
         return childElements;
     }
 
-    @Override
-    protected void doDestroy() {
-        designatedRoles = null;
-
-        super.doDestroy();
-    }
-
 }

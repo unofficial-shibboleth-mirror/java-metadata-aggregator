@@ -87,8 +87,8 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
     @Override
     protected void doDestroy() {
         /*
-         * We can not discard the reference to the validators object,
-         * but we can destroy it.
+         * We created and initialized the validators object,
+         * so we should destroy it.
          */
         validators.destroy();
         super.doDestroy();

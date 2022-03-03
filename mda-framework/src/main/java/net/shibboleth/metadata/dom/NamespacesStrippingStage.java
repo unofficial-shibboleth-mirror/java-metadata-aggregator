@@ -109,11 +109,4 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
         return isWhitelisting() ^ getNamespaces().contains(namespace);
     }
 
-    @Override
-    protected void doDestroy() {
-        namespaces = null;
-
-        super.doDestroy();
-    }
-
 }

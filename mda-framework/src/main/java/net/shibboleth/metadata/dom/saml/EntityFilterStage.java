@@ -198,11 +198,4 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
         return false;
     }
 
-    @Override
-    protected void doDestroy() {
-        designatedEntities = null;
-
-        super.doDestroy();
-    }
-
 }

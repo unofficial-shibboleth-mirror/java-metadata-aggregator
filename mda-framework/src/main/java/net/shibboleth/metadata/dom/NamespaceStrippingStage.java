@@ -68,13 +68,6 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
     }
 
     @Override
-    protected void doDestroy() {
-        namespace = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (namespace == null) {

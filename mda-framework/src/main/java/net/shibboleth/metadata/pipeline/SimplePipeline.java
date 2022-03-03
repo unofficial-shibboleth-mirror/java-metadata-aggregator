@@ -78,13 +78,6 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
     }
 
     @Override
-    protected void doDestroy() {
-        pipelineStages = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

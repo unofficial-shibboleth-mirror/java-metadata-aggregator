@@ -262,18 +262,6 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doDestroy() {
-        executorService = null;
-        collectionFactory = null;
-        selectionStrategy = null;
-        selectedItemPipeline = null;
-        nonselectedItemPipeline = null;
-        mergeStrategy = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

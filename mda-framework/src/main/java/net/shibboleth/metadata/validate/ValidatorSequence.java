@@ -82,12 +82,6 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
     }
 
     @Override
-    protected void doDestroy() {
-        validators = null;
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

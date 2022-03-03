@@ -141,10 +141,4 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        factory = null;
-        super.doDestroy();
-    }
-
 }

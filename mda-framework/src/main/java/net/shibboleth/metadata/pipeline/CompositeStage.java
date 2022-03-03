@@ -70,10 +70,4 @@ public class CompositeStage<T> extends AbstractStage<T> {
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        composedStages = null;
-
-        super.doDestroy();
-    }
 }

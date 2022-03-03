@@ -168,16 +168,6 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doDestroy() {
-        executorService = null;
-        collectionFactory = null;
-        mergeStrategy = null;
-        mergedPipelines = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

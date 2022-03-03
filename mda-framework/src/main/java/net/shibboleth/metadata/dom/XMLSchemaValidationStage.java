@@ -147,14 +147,6 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
     }
 
     @Override
-    protected void doDestroy() {
-        schemaResources = null;
-        validationSchema = null;
-        
-        super.doDestroy();
-    }
-    
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

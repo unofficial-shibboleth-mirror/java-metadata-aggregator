@@ -186,7 +186,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
 
     @Override
     protected void doDestroy() {
-        blacklistResource = null;
+        // We don't need references to the individual values any more.
         blacklistedValues.clear();
 
         super.doDestroy();

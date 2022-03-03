@@ -258,18 +258,6 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
             TransformerConfigurationException;
 
     @Override
-    protected void doDestroy() {
-        xslResource = null;
-        xslTemplate = null;
-        transformAttributes = null;
-        transformFeatures = null;
-        transformParameters = null;
-        uriResolver = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

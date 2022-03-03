@@ -521,19 +521,6 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doDestroy() {
-        privKey = null;
-        publicKey = null;
-        certificates = null;
-        crls = null;
-        inclusivePrefixList = null;
-        idAttributeNames = null;
-        keyNames = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

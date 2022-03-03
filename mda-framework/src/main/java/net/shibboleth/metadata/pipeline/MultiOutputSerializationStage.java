@@ -151,14 +151,6 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
     }
 
     @Override
-    protected void doDestroy() {
-        outputStrategy = null;
-        serializer = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

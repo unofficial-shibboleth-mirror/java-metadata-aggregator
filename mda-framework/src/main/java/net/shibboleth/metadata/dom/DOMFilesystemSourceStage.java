@@ -293,15 +293,6 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doDestroy() {
-        parserPool = null;
-        sourceFile = null;
-        sourceFileFilter = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

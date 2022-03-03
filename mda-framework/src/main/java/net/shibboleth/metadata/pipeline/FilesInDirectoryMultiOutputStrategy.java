@@ -200,16 +200,6 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableCom
     }
 
     @Override
-    protected void doDestroy() {
-        namePrefix = null;
-        nameTransformer = null;
-        nameSuffix = null;
-        directory = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

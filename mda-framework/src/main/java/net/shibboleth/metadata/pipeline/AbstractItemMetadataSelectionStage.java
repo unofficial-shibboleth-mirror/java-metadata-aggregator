@@ -120,14 +120,6 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        selectionRequirements = null;
-        identificationStrategy = null;
-
-        super.doDestroy();
-    }
-
     /**
      * Performs the stage's logic on the given item that contained metadata of the given type.
      * 

@@ -294,16 +294,6 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doDestroy() {
-        verificationCertificate = null;
-        verificationKey = null;
-        blacklistedDigests = null;
-        blacklistedSignatureMethods = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

@@ -192,15 +192,6 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doDestroy() {
-        executorService = null;
-        collectionFactory = null;
-        pipelineAndStrategies = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

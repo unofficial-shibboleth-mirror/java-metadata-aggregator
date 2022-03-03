@@ -90,10 +90,4 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
         return new SimpleDOMTraversalContext(item);
     }
 
-    @Override
-    protected void doDestroy() {
-        elementNames = null;
-
-        super.doDestroy();
-    }
 }

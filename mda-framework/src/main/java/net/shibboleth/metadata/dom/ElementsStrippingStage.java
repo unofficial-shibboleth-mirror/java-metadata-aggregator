@@ -227,14 +227,6 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     }
 
     @Override
-    protected void doDestroy() {
-        elementNamespace = null;
-        elementNames = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (elementNamespace == null) {

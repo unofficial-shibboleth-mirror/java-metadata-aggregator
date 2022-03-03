@@ -68,10 +68,4 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        source = null;
-
-        super.doDestroy();
-    }
 }

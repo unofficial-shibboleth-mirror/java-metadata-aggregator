@@ -145,14 +145,6 @@ public class XPathFilteringStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doDestroy() {
-        xpathExpression = null;
-        namespaceContext = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

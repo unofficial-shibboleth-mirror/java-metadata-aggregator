@@ -175,14 +175,6 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doDestroy() {
-        domResource = null;
-        parserPool = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 

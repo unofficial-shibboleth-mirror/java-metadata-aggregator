@@ -119,14 +119,6 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
     }
 
     @Override
-    protected void doDestroy() {
-        elementNamespace = null;
-        elementName = null;
-
-        super.doDestroy();
-    }
-
-    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (elementNamespace == null) {

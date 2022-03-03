@@ -394,11 +394,4 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        rules = null;
-
-        super.doDestroy();
-    }
-
 }

@@ -187,12 +187,4 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        itemOrderingStrategy = null;
-        descriptorName = null;
-
-        super.doDestroy();
-    }
-
 }

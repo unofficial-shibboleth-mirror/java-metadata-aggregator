@@ -226,9 +226,4 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
         return false;
     }
 
-    @Override
-    protected void doDestroy() {
-        designatedTypes = null;
-        super.doDestroy();
-    }
 }

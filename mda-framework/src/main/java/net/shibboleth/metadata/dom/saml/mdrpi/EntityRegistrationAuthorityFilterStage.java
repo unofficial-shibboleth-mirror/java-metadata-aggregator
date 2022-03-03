@@ -254,11 +254,4 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
         return false;
     }
 
-    @Override
-    protected void doDestroy() {
-        designatedAuthorities = null;
-
-        super.doDestroy();
-    }
-
 }

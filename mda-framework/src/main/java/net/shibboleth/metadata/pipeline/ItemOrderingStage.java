@@ -70,11 +70,4 @@ public class ItemOrderingStage<T> extends AbstractStage<T> {
         items.addAll(orderedItems);
     }
 
-    @Override
-    protected void doDestroy() {
-        orderingStrategy = null;
-
-        super.doDestroy();
-    }
-
 }

@@ -114,11 +114,4 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
         }
     }
 
-    @Override
-    protected void doDestroy() {
-        elementNames = null;
-
-        super.doDestroy();
-    }
-
 }
