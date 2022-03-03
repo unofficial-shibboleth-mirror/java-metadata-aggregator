@@ -275,7 +275,8 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @throws StageProcessingException thrown if there is a problem reading in the Element and
      *             {@link #errorCausesSourceFailure} is true
      */
-    @Nonnull protected DOMElementItem processSourceFile(@Nonnull final File source) throws StageProcessingException {
+    @Nullable
+    protected DOMElementItem processSourceFile(@Nonnull final File source) throws StageProcessingException {
         log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
         try (FileInputStream xmlIn = new FileInputStream(source)) {
             final Document doc = getParserPool().parse(xmlIn);
