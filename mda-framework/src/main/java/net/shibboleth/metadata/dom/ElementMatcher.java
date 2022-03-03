@@ -20,12 +20,12 @@ package net.shibboleth.metadata.dom;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 /**
@@ -44,8 +44,8 @@ public class ElementMatcher implements Predicate<Element> {
      * 
      * @param qnameToMatch qualified name ({@link QName}) to match
      */
-    public ElementMatcher(@Nullable final QName qnameToMatch) {
-        qname = qnameToMatch;
+    public ElementMatcher(@Nonnull final QName qnameToMatch) {
+        qname = Constraint.isNotNull(qnameToMatch, "qnameToMatch must not be null");
     }
 
     @Override
