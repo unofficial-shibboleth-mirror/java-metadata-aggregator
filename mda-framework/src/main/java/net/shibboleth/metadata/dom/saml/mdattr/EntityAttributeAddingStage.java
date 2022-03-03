@@ -37,6 +37,7 @@ import net.shibboleth.metadata.dom.saml.AttributeValueElementMatcher;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.dom.saml.SAMLSupport;
 import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -69,7 +70,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
     private String attributeNameFormat = EntityCategorySupport.EC_ATTR_NAME_FORMAT;
 
     /** The value of the attribute to be added. */
-    @Nonnull @GuardedBy("this")
+    @NonnullAfterInit @GuardedBy("this")
     private String attributeValue;
 
     /**
