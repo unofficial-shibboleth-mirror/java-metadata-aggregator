@@ -17,7 +17,6 @@
 
     <properties>
         <mda.finalName>mda-distribution-${project.version}</mda.finalName>
-        <net.shibboleth.maven.enforcer.rules.checkM2>false</net.shibboleth.maven.enforcer.rules.checkM2>
         <dependenciesDirectory>${project.build.directory}/dependencies</dependenciesDirectory>
     </properties>
 
@@ -113,7 +112,7 @@
                     <dependency>
                         <groupId>net.shibboleth.maven.enforcer.rules</groupId>
                         <artifactId>maven-dist-enforcer</artifactId>
-                        <version>3.1.1-SNAPSHOT</version>
+                        <version>${maven-dist-enforcer.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -128,7 +127,7 @@
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
                                     <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
                                     <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
-                                    <dataVersion>1.0.1-SNAPSHOT</dataVersion>
+                                    <dataVersion>${maven-dist-enforcer-data.version}</dataVersion>
                                     <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>${basedir}/..</parentPomDir>
                                     <zipFiles>${project.build.directory}/${mda.finalName}.zip</zipFiles>
@@ -137,7 +136,7 @@
                                     <checkDependencies>true</checkDependencies>
                                     <depCheckReportPath>${project.build.directory}/depReport-zip.txt</depCheckReportPath>
                                     <listJarSources>false</listJarSources>
-                                    <checkM2>${net.shibboleth.maven.enforcer.rules.checkM2}</checkM2>
+                                    <checkM2>false</checkM2>
                                 </jarEnforcer>
                             </rules>
                         </configuration>
@@ -153,7 +152,7 @@
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
                                     <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
                                     <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
-                                    <dataVersion>1.0.1-SNAPSHOT</dataVersion>
+                                    <dataVersion>${maven-dist-enforcer-data.version}</dataVersion>
                                     <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>${basedir}/..</parentPomDir>
                                     <tgzFiles>${project.build.directory}/${mda.finalName}.tar.gz</tgzFiles>
@@ -162,7 +161,7 @@
                                     <checkDependencies>true</checkDependencies>
                                     <depCheckReportPath>${project.build.directory}/depReport-tgz.txt</depCheckReportPath>
                                     <listJarSources>false</listJarSources>
-                                    <checkM2>${net.shibboleth.maven.enforcer.rules.checkM2}</checkM2>
+                                    <checkM2>false</checkM2>
                                 </jarEnforcer>
                             </rules>
                         </configuration>
