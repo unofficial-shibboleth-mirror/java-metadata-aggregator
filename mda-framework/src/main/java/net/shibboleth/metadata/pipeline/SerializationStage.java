@@ -83,7 +83,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * @param file file to which the item will be written
      */
     public synchronized void setOutputFile(@Nonnull final File file) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         outputFile = Constraint.isNotNull(file, "Output file can not be null");
     }
 
@@ -102,7 +102,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * @param isOverwriting whether an existing output file should be overwritten
      */
     public synchronized void setOverwritingExistingOutputFile(final boolean isOverwriting) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         overwritingExistingOutputFile = isOverwriting;
     }
 
@@ -121,7 +121,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * @param itemSerializer serializer used to write item to the output file
      */
     public synchronized void setSerializer(@Nonnull final ItemCollectionSerializer<T> itemSerializer) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         serializer = Constraint.isNotNull(itemSerializer, "Item collection serializer can not be null");
     }
 

@@ -170,7 +170,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param variant SHA algorithm variant used when computing the signature and digest
      */
     public synchronized void setShaVariant(@Nonnull final ShaVariant variant) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         shaVariant = Constraint.isNotNull(variant, "SHA variant can not be null");
     }
 
@@ -189,7 +189,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param key private key used to sign the content
      */
     public synchronized void setPrivateKey(@Nonnull final PrivateKey key) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         privKey = Constraint.isNotNull(key, "Private key can not be null");
     }
 
@@ -208,7 +208,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param key public key associated with private key used to sign the content
      */
     public synchronized void setPublicKey(@Nullable final PublicKey key) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         publicKey = key;
     }
 
@@ -231,7 +231,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      */
     public synchronized void setCertificates(
             @Nonnull @NonnullElements @Unmodifiable final List<X509Certificate> certs) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         certificates = List.copyOf(certs);
     }
 
@@ -252,7 +252,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      */
     public synchronized void setCrls(
             @Nonnull @NonnullElements @Unmodifiable final List<X509CRL> revocationLists) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         crls = List.copyOf(revocationLists);
     }
 
@@ -271,7 +271,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param isExclusive whether exclusive canonicalization will be used
      */
     public synchronized void setC14nExclusive(final boolean isExclusive) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         c14nExclusive = isExclusive;
     }
 
@@ -290,7 +290,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param withComments whether comments are canonicalized
      */
     public synchronized void setC14nWithComments(final boolean withComments) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         c14nWithComments = withComments;
     }
 
@@ -311,7 +311,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      */
     public synchronized void setInclusivePrefixList(
             @Nonnull @NonnullElements @Unmodifiable final List<String> prefixList) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         inclusivePrefixList = List.copyOf(prefixList);
     }
 
@@ -332,7 +332,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      */
     public synchronized void setIdAttributeNames(
             @Nonnull @NonnullElements @Unmodifiable final List<QName> names) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(names, "names property may not be null");
 
         idAttributeNames = List.copyOf(names);
@@ -355,7 +355,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      */
     public synchronized void setKeyNames(
             @Nonnull @NonnullElements @Unmodifiable final List<String> names) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         keyNames = List.copyOf(names);
     }
 
@@ -374,7 +374,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param include whether key names are included in the KeyInfo
      */
     public synchronized void setIncludeKeyNames(final boolean include) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         includeKeyNames = include;
     }
 
@@ -393,7 +393,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param included whether key values are included in the KeyInfo
      */
     public synchronized void setIncludeKeyValue(final boolean included) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         includeKeyValue = included;
     }
 
@@ -412,7 +412,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param include whether end-entity certifcate's subject name is included in the KeyInfo
      */
     public synchronized void setIncludeX509SubjectName(final boolean include) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         includeX509SubjectName = include;
     }
 
@@ -431,7 +431,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param include whether X509 certificates are included in the KeyInfo
      */
     public synchronized void setIncludeX509Certificates(final boolean include) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         includeX509Certificates = include;
     }
 
@@ -450,7 +450,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param include whether CRLs are included in the KeyInfo
      */
     public synchronized void setIncludeX509Crls(final boolean include) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         includeX509Crls = include;
     }
 
@@ -469,7 +469,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param include whether the end-entity certificate's issuer and serial number are included in the KeyInfo
      */
     public synchronized void setIncludeX509IssuerSerial(final boolean include) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         includeX509IssuerSerial = include;
     }
 
@@ -488,7 +488,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param debug whether logging of the pre-digest data stream is enabled
      */
     public synchronized void setDebugPreDigest(final boolean debug) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         debugPreDigest = debug;
     }
     
@@ -507,7 +507,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * @param newValue whether to remove CR characters from generated signatures.
      */
     public void setRemovingCRsFromSignature(final boolean newValue) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         removingCRsFromSignature = newValue;
     }
 

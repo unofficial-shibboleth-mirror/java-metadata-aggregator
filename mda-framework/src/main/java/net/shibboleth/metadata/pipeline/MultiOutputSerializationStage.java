@@ -116,7 +116,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * @param strategy output strategy function determining where an item will be written
      */
     public synchronized void setOutputStrategy(@Nonnull final OutputStrategy<T> strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         outputStrategy = Constraint.isNotNull(strategy, "Output strategy can not be null");
     }
 
@@ -135,7 +135,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * @param itemSerializer serializer used to write item to the output file
      */
     public synchronized void setSerializer(@Nonnull final ItemSerializer<T> itemSerializer) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         serializer = Constraint.isNotNull(itemSerializer, "Item serializer can not be null");
     }
 

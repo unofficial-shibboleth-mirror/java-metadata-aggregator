@@ -58,7 +58,7 @@ public class CompositeStage<T> extends AbstractStage<T> {
      */
     public synchronized void setComposedStages(
             @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         composedStages = List.copyOf(stages);
     }
 

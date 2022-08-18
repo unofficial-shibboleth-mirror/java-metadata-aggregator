@@ -88,7 +88,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param isError whether attempting to turn an empty item collection should be treated as processing error
      */
     public synchronized void setNoChildrenAProcessingError(final boolean isError) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         noChildrenAProcessingError = isError;
     }
 
@@ -107,7 +107,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param strategy strategy used to order a collection of Items
      */
     public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy<Element> strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         itemOrderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 
@@ -126,7 +126,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * @param name Name used for the generated descriptor
      */
     public synchronized void setDescriptorName(@Nullable final String name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         descriptorName = StringSupport.trimOrNull(name);
     }
 

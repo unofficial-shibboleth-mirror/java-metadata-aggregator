@@ -95,7 +95,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      */
     public synchronized void setSchemaResources(
             @Nullable @NonnullElements @Unmodifiable final List<Resource> resources) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         schemaResources = List.copyOf(resources);
     }
 
@@ -114,7 +114,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * @param isRequired whether Elements are required to be schema valid
      */
     public synchronized void setElementRequiredToBeSchemaValid(final boolean isRequired) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         elementRequiredToBeSchemaValid = isRequired;
     }
 

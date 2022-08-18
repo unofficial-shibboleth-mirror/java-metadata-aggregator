@@ -118,7 +118,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableCom
      * @param prefix the name prefix to use
      */
     public synchronized void setNamePrefix(@Nonnull final String prefix) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         namePrefix = Constraint.isNotNull(prefix, "name prefix may not be null");
     }
 
@@ -137,7 +137,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableCom
      * @param transformer the name transformer to use
      */
     public synchronized void setNameTransformer(@Nonnull final Function<String, String> transformer) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         nameTransformer = Constraint.isNotNull(transformer,
                 "name transformer may not be null");
     }
@@ -157,7 +157,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableCom
      * @param suffix the name suffix to use
      */
     public synchronized void setNameSuffix(@Nonnull final String suffix) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         nameSuffix = Constraint.isNotNull(suffix, "name suffix may not be null");
     }
 
@@ -176,7 +176,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableCom
      * @param dir the directory to use
      */
     public synchronized void setDirectory(@Nonnull final File dir) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         directory = Constraint.isNotNull(dir, "directory may not be null");
     }
 

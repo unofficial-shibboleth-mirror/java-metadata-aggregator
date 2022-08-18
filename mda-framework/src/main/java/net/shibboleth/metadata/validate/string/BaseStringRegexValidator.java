@@ -59,7 +59,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
      * @param r the regular expression to set.
      */
     public synchronized void setRegex(@Nonnull final String r) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         regex = r;
     }
 

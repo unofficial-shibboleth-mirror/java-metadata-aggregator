@@ -219,7 +219,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      */
     public synchronized void setRules(
             @Nonnull @NonnullElements @Unmodifiable final List<Predicate<EntityAttributeContext>> newRules) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         rules = List.copyOf(Constraint.isNotNull(newRules, "rules property may not be null"));
     }
     
@@ -240,7 +240,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      *                 <code>false</code> to blacklist
      */
     public synchronized void setWhitelisting(final boolean newValue) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         whitelisting = newValue;
     }
     
@@ -260,7 +260,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * @param newValue whether to remove recorded entity attributes
      */
     public synchronized void setRecordingRemovals(final boolean newValue) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         recordingRemovals = newValue;
     }
 

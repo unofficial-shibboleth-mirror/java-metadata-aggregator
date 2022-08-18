@@ -122,7 +122,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * @param resource resource that provides the XSL document
      */
     public synchronized void setXSLResource(@Nonnull final Resource resource) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         xslResource = Constraint.isNotNull(resource, "XSL resource can not be null");
     }
 
@@ -152,7 +152,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      */
     public synchronized void setTransformAttributes(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> attributes) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         transformAttributes = Map.copyOf(attributes);
     }
 
@@ -173,7 +173,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      */
     public synchronized void setTransformFeatures(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Boolean> features) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         transformFeatures = Map.copyOf(features);
     }
 
@@ -194,7 +194,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      */
     public synchronized void setTransformParameters(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> parameters) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         transformParameters = Map.copyOf(parameters);
     }
 
@@ -213,7 +213,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * @param resolver the {@link URIResolver} to use, or <code>null</code>
      */
     public synchronized void setURIResolver(@Nullable final URIResolver resolver) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         uriResolver = resolver;
     }
 

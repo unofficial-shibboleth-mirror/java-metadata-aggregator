@@ -85,7 +85,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
@@ -106,7 +106,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      */
     public synchronized void setMergedPipelines(
             @Nonnull @NonnullElements @Unmodifiable final List<? extends Pipeline<T>> pipelines) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         mergedPipelines = List.copyOf(pipelines);
     }
 
@@ -125,7 +125,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      * @param factory factory used to create the {@link Item} collection produced by this source
      */
     public synchronized void setCollectionFactory(@Nonnull final Supplier<List<Item<T>>> factory) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory may not be null");
     }
 
@@ -145,7 +145,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
      *            null
      */
     public synchronized void setCollectionMergeStrategy(@Nonnull final CollectionMergeStrategy strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         mergeStrategy = strategy;
     }
 

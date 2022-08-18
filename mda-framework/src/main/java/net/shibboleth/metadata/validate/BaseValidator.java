@@ -71,7 +71,7 @@ public abstract class BaseValidator extends BaseIdentifiableInitializableCompone
      * @since 0.10.0
      */
     public void setMessage(@Nonnull final String newMessage) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         message = Constraint.isNotNull(newMessage, "message format string may not be null");
     }
 

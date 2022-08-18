@@ -108,7 +108,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
@@ -127,7 +127,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
     public synchronized void setCollectionFactory(@Nonnull final Supplier<List<Item<T>>> factory) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
 
@@ -146,7 +146,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param strategy strategy used to split the given item collection, never null
      */
     public synchronized void setSelectionStrategy(@Nonnull final Predicate<Item<T>> strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         selectionStrategy = Constraint.isNotNull(strategy, "Item selection strategy can not be null");
     }
 
@@ -165,7 +165,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param pipeline pipeline that receives the selected items
      */
     public synchronized void setSelectedItemPipeline(@Nullable final Pipeline<T> pipeline) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         selectedItemPipeline = pipeline;
     }
 
@@ -184,7 +184,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      * @param pipeline pipeline that receives the non-selected items
      */
     public synchronized void setNonselectedItemPipeline(@Nullable final Pipeline<T> pipeline) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         nonselectedItemPipeline = pipeline;
     }
 
@@ -204,7 +204,7 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
      *            null
      */
     public synchronized void setCollectionMergeStrategy(@Nonnull final CollectionMergeStrategy strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         mergeStrategy = Constraint.isNotNull(strategy, "Collection merge strategy can not be null");
     }
 

@@ -81,7 +81,7 @@ public class ScriptletStage<T> extends AbstractStage<T> {
      * @param name the variable name
      */
     public final synchronized void setVariableName(@Nonnull @NotEmpty final String name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         variableName = Constraint.isNotNull(StringSupport.trimOrNull(name),
                 "variable name may not be null or empty");
     }
@@ -101,7 +101,7 @@ public class ScriptletStage<T> extends AbstractStage<T> {
      * @param stageScript the script executed by this stage
      */
     public synchronized void setScript(@Nonnull final EvaluableScript stageScript) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         script = Constraint.isNotNull(stageScript, "Stage script can not be null");
     }
 

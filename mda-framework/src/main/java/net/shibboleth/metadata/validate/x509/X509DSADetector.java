@@ -80,7 +80,7 @@ public class X509DSADetector extends BaseValidator implements Validator<X509Cert
      * @param newAction the {@link net.shibboleth.metadata.validate.Validator.Action} to be returned
      */
     public synchronized void setAction(@Nonnull final Action newAction) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         action = newAction;
     }
 
@@ -90,7 +90,7 @@ public class X509DSADetector extends BaseValidator implements Validator<X509Cert
      * @param newValue whether an {@link net.shibboleth.metadata.ErrorStatus} should be added on failure
      */
     public synchronized void setError(final boolean newValue) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         error = newValue;
     }
     

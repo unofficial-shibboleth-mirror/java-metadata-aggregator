@@ -56,7 +56,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
      * @param check whether to check for network addresses only
      */
     public synchronized void setCheckingNetworks(final boolean check) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         this.checkingNetworks = check;
     }
 

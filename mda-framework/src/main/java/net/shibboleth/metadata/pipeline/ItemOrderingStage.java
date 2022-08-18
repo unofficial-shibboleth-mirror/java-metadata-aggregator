@@ -58,7 +58,7 @@ public class ItemOrderingStage<T> extends AbstractStage<T> {
      * @param strategy strategy used to order a collection of Items
      */
     public synchronized void setItemOrderingStrategy(@Nonnull final ItemOrderingStrategy<T> strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         orderingStrategy = Constraint.isNotNull(strategy, "Item ordering strategy can not be null");
     }
 

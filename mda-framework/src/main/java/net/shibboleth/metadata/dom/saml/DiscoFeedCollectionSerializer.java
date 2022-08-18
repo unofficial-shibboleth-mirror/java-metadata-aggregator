@@ -271,7 +271,7 @@ public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
     @Override
     public void serializeCollection(@Nonnull @NonnullElements final Collection<Item<Element>> items,
             @Nonnull final OutputStream output) throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         final Map<String, String> generatorConfig = new HashMap<>();
         if (isPrettyPrinting()) {
             generatorConfig.put(JsonGenerator.PRETTY_PRINTING, "true");

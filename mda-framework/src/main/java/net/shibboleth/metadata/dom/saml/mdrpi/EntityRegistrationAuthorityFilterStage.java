@@ -73,7 +73,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @param isRequired whether a descriptor is required to have registration information
      */
     public synchronized void setRequiringRegistrationInformation(final boolean isRequired) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         requiringRegistrationInformation = isRequired;
     }
 
@@ -94,7 +94,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      */
     public synchronized void setDesignatedRegistrationAuthorities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> authorities) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         designatedAuthorities = Set.copyOf(authorities);
     }
 
@@ -114,7 +114,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      *            otherwise
      */
     public synchronized void setWhitelistingRegistrationAuthorities(final boolean whitelisting) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         whitelistingAuthorities = whitelisting;
     }
 
@@ -133,7 +133,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         removingEntitylessEntitiesDescriptor = remove;
     }
 

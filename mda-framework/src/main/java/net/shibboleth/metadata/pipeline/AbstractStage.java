@@ -54,7 +54,7 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
      * whether the stage will be executed
      */
     public synchronized void setCollectionPredicate(@Nonnull final Predicate<Collection<Item<T>>> pred) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         collectionPredicate = Constraint.isNotNull(pred, "collectionPredicate may not be null");
     }
     
@@ -73,7 +73,7 @@ public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComp
     @Override
     public void execute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        throwComponentStateExceptions();
+        checkComponentActive();
 
         final var start = Instant.now();
 

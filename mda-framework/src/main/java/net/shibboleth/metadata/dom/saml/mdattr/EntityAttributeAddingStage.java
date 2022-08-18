@@ -97,7 +97,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * @param name the attributeName to set
      */
     public synchronized void setAttributeName(@Nonnull final String name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         attributeName = Constraint.isNotNull(name, "attributeName must not be null");
     }
 
@@ -117,7 +117,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * @param nameFormat the attributeNameFormat to set
      */
     public synchronized void setAttributeNameFormat(@Nonnull final String nameFormat) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         attributeNameFormat = Constraint.isNotNull(nameFormat, "attributeNameFormat must not be null");
     }
 
@@ -137,7 +137,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * @param value the attributeValue to set
      */
     public synchronized void setAttributeValue(@Nonnull final String value) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         attributeValue = Constraint.isNotNull(value, "attributeValue must not be null");
     }
 
@@ -158,7 +158,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * @param addFirst <code>true</code> to add as the first child, <code>false</code> as the last
      */
     public synchronized void setAddingFirstChild(final boolean addFirst) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         addingFirstChild = addFirst;
     }
 

@@ -105,7 +105,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
     public synchronized void setParserPool(@Nonnull final ParserPool pool) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         parserPool = Constraint.isNotNull(pool, "Parser pool can not be null");
     }
 
@@ -124,7 +124,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param source path to the DOM material provided by this source
      */
     public synchronized void setSource(@Nonnull final File source) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         sourceFile = Constraint.isNotNull(source, "XML source file can not be null");
     }
 
@@ -144,7 +144,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param filter filter used to determine if a file, in a directory, should be treated as a source file, may be null
      */
     public synchronized void setSourceFileFilter(@Nonnull final FileFilter filter) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         sourceFileFilter = Constraint.isNotNull(filter, "File filter can not be null");
     }
 
@@ -163,7 +163,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param recurse whether directories will be recursively searched for XML input files
      */
     public synchronized void setRecurseDirectories(final boolean recurse) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         recurseDirectories = recurse;
     }
 
@@ -182,7 +182,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param isError whether the lack of source files is considered an error
      */
     public synchronized void setNoSourceFilesAnError(final boolean isError) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         noSourceFilesAnError = isError;
     }
 
@@ -201,7 +201,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * @param causesFailure whether an error parsing a single file causes the source to fail
      */
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         errorCausesSourceFailure = causesFailure;
     }
 

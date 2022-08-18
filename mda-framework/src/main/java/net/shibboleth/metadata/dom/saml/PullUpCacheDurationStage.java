@@ -67,7 +67,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param duration the minimum cache duration
      */
     public synchronized void setMinimumCacheDuration(final Duration duration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         if (duration.isNegative()) {
             minCacheDuration = Duration.ZERO;
         } else {
@@ -91,7 +91,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param duration maximum cache duration, must be greater than 0
      */
     public synchronized void setMaximumCacheDuration(final Duration duration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isGreaterThan(0, duration.toMillis(), "Maximum cache duration must be greater than 0");
         maxCacheDuration = duration;
     }

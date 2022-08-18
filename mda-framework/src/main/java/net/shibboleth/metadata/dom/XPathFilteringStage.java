@@ -85,7 +85,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * @param expression XPath expression to execute on each {@link DOMElementItem}
      */
     public synchronized void setXPathExpression(@Nonnull @NotEmpty final String expression) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         xpathExpression =
                 Constraint.isNotNull(StringSupport.trimOrNull(expression), "XPath expression can not be null or empty");
     }
@@ -105,7 +105,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
      * @param context {@link NamespaceContext} to use in interpreting the XPath expression
      */
     public synchronized void setNamespaceContext(@Nullable final NamespaceContext context) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         if (context == null) {
             namespaceContext = new SimpleNamespaceContext();
         } else {

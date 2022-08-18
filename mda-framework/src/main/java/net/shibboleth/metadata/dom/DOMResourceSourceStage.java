@@ -87,7 +87,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * @param resource resource from which the XML document will be fetched
      */
     public synchronized void setDOMResource(@Nonnull final Resource resource) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         domResource = Constraint.isNotNull(resource, "DOM resource can not be null");
     }
 
@@ -106,7 +106,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * @param pool pool of DOM parsers used to parse the XML file in to a DOM
      */
     public synchronized void setParserPool(@Nonnull final ParserPool pool) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         parserPool = Constraint.isNotNull(pool, "Parser pool can not be null");
     }
 
@@ -125,7 +125,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
      * @param causesFailure whether an error reading and parsing the XML file causes this stage to fail
      */
     public synchronized void setErrorCausesSourceFailure(final boolean causesFailure) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         errorCausesSourceFailure = causesFailure;
     }
 
