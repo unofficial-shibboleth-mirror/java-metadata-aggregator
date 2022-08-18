@@ -76,7 +76,7 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
      */
     public synchronized void setSelectionRequirements(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Class<? extends B>> requirements) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         selectionRequirements = Set.copyOf(requirements);
     }
 
@@ -95,7 +95,7 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
      * @param strategy strategy used to generate {@link Item} identifiers for logging purposes, can not be null
      */
     public synchronized void setIdentificationStrategy(@Nonnull final ItemIdentificationStrategy<T> strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         identificationStrategy = Constraint.isNotNull(strategy, "Item identification strategy can not be null");
     }
 

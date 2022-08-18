@@ -64,7 +64,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * @param namespace namespace of the element to strip
      */
     public synchronized void setElementNamespace(@Nonnull @NotEmpty final String namespace) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         elementNamespace = Constraint.isNotNull(StringSupport.trimOrNull(namespace),
                 "target namespace can not be null or empty");
     }
@@ -84,7 +84,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * @param name the name of the element to strip
      */
     public synchronized void setElementName(@Nonnull @NotEmpty final String name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         elementName = Constraint.isNotNull(StringSupport.trimOrNull(name),
                 "target element name can not be null or empty");
     }

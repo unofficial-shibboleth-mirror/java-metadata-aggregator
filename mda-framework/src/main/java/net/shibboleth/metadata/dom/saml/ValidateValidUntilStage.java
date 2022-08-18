@@ -64,7 +64,7 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
      * @param isRequired whether the item is required to have a validUntil attribute
      */
     public synchronized void setRequireValidUntil(final boolean isRequired) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         requireValidUntil = isRequired;
     }
 
@@ -86,7 +86,7 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
      *            than or equal to 0
      */
     public synchronized void setMaxValidityInterval(@Nonnull final Duration interval) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         Constraint.isNotNull(interval, "max validity interval can not be null");
         Constraint.isFalse(interval.isNegative(), "max validity interval can not be negative");

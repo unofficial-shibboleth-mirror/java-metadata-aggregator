@@ -94,7 +94,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * @param service executor service used to run the selected and non-selected item pipelines
      */
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
@@ -113,7 +113,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * @param isWaiting whether this child waits for all the invoked pipelines to complete before proceeding
      */
     public synchronized void setWaitingForPipelines(final boolean isWaiting) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         waitingForPipelines = isWaiting;
     }
 
@@ -132,7 +132,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * @param factory factory used to create the Item collection that is then given to the pipelines
      */
     public synchronized void setCollectionFactory(@Nonnull final Supplier<List<Item<T>>> factory) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         collectionFactory = Constraint.isNotNull(factory, "Collection factory can not be null");
     }
 
@@ -153,7 +153,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      */
     public synchronized void setPipelineAndSelectionStrategies(
             @Nonnull @NonnullElements @Unmodifiable final List<Pair<Pipeline<T>, Predicate<Item<T>>>> passes) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
             Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");

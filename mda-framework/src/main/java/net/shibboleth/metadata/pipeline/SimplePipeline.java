@@ -57,7 +57,7 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
      */
     public synchronized void setStages(
             @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         pipelineStages = List.copyOf(stages);
     }
 

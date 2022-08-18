@@ -64,7 +64,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
      */
     public synchronized void setIdTransformers(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Function<String, String>> transformers) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         idTransformers = List.copyOf(transformers);
     }
 

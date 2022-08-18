@@ -61,7 +61,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * @param names collection of element names to visit.
      */
     public synchronized void setElementNames(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> names) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(names, "elementNames may not be null");
         elementNames = Set.copyOf(names);
     }
@@ -74,7 +74,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
      * @param name {@link QName} for the element to be visited.
      */
     public synchronized void setElementName(@Nonnull final QName name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(name, "elementName may not be null");
         elementNames = Set.of(name);
     }

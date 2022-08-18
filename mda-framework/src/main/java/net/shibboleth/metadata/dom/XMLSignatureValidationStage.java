@@ -111,7 +111,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      * @param required whether the Element is required to be signed
      */
     public synchronized void setSignatureRequired(final boolean required) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         signatureRequired = required;
     }
 
@@ -130,7 +130,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      * @param isRequired whether the signature on a Element element is required to be valid
      */
     public synchronized void setValidSignatureRequired(final boolean isRequired) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         validSignatureRequired = isRequired;
     }
 
@@ -150,7 +150,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      * @param certificate certificate containing the key used to verify the signature
      */
     public synchronized void setVerificationCertificate(@Nonnull final Certificate certificate) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         verificationCertificate = Constraint.isNotNull(certificate, "Certificate can not be null");
         verificationKey = verificationCertificate.getPublicKey();
     }
@@ -170,7 +170,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      * @param key key used to verify the signature
      */
     public synchronized void setVerificationKey(@Nonnull final PublicKey key) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         verificationKey = Constraint.isNotNull(key, "Public key can not be null");
     }
     
@@ -181,7 +181,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      */
     public synchronized void setBlacklistedDigests(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         blacklistedDigests = Set.copyOf(identifiers);
     }
     
@@ -201,7 +201,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      */
     public synchronized void setBlacklistedSignatureMethods(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         blacklistedSignatureMethods = Set.copyOf(identifiers);
     }
     
@@ -229,7 +229,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
      * @param permit whether empty references are permitted
      */
     public synchronized void setPermittingEmptyReferences(final boolean permit) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         permittingEmptyReferences = permit;
     }
 

@@ -70,7 +70,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      */
     public synchronized void setDesignatedEntities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> ids) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         designatedEntities = Set.copyOf(ids);
     }
 
@@ -89,7 +89,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingEntities(final boolean whitelisting) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         whitelistingEntities = whitelisting;
     }
 
@@ -108,7 +108,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         removingEntitylessEntitiesDescriptor = remove;
     }
 

@@ -71,7 +71,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @param duration minimum amount of time a descriptor may be valid
      */
     public synchronized void setMinimumValidityDuration(@Nonnull final Duration duration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         if (duration.isNegative()) {
             minValidityDuration = Duration.ZERO;
         } else {
@@ -95,7 +95,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @param duration maximum amount of time a descriptor may be valid, must be greater than 0
      */
     public synchronized void setMaximumValidityDuration(@Nonnull final Duration duration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isGreaterThan(0, duration.toMillis(), "Maximum validity duration must be greater than 0");
         maxValidityDuration = duration;
     }

@@ -57,7 +57,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
      * @param ns namespace URI as a string
      */
     public synchronized void setNamespace(@Nonnull @NotEmpty final String ns) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         namespace = Constraint.isNotNull(StringSupport.trimOrNull(ns),
                 "target namespace can not be null or empty");
     }

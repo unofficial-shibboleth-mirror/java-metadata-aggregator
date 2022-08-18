@@ -64,7 +64,7 @@ public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
      * @param duration cache duration
      */
     public synchronized void setCacheDuration(@Nonnull final Duration duration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         Constraint.isNotNull(duration, "cache duration cannot be null");
         Constraint.isFalse(duration.isZero(), "cache duration cannot be zero");

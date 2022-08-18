@@ -70,7 +70,7 @@ public class BaseIdentifiableInitializableComponent extends AbstractIdentifiable
     /**
      * Helper for a setter method to check the standard preconditions.
      */
-    protected final void throwSetterPreconditionExceptions() {
+    protected final void checkSetterPreconditions() {
         ifDestroyedThrowDestroyedComponentException();
         ifInitializedThrowUnmodifiabledComponentException();
     }
@@ -79,7 +79,7 @@ public class BaseIdentifiableInitializableComponent extends AbstractIdentifiable
      * Helper for any method to throw appropriate exceptions if we are either
      * not initialized, or have been destroyed.
      */
-    protected final void throwComponentStateExceptions() {
+    protected final void checkComponentActive() {
         ifDestroyedThrowDestroyedComponentException();
         ifNotInitializedThrowUninitializedComponentException();
     }

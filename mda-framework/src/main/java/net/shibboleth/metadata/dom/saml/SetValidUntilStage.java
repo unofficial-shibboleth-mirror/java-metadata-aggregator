@@ -65,7 +65,7 @@ public class SetValidUntilStage extends AbstractIteratingStage<Element> {
      * @param duration amount of time the descriptors will be valid
      */
     public synchronized void setValidityDuration(@Nonnull final Duration duration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         Constraint.isNotNull(duration, "validity duration cannot be null");
         Constraint.isFalse(duration.isZero(), "validity duration cannot be zero");

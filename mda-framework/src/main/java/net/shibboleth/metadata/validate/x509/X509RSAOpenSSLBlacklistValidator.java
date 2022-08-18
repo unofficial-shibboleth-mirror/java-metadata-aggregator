@@ -85,7 +85,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
      * @param resource resource that provides the blacklist
      */
     public synchronized void setBlacklistResource(@Nonnull final Resource resource) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         blacklistResource = Constraint.isNotNull(resource, "blacklist resource can not be null");
     }
     
@@ -160,7 +160,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
     @Override
     public void doValidate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) throws StageProcessingException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         final PublicKey key = cert.getPublicKey();
 
         if ("RSA".equals(key.getAlgorithm())) {

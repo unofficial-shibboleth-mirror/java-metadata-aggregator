@@ -96,7 +96,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param roles list of designated entity roles
      */
     public synchronized void setDesignatedRoles(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> roles) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         designatedRoles = Set.copyOf(roles);
     }
 
@@ -115,7 +115,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param whitelisting true if the designated entities should be considered a whitelist, false otherwise
      */
     public synchronized void setWhitelistingRoles(final boolean whitelisting) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         whitelistingRoles = whitelisting;
     }
 
@@ -134,7 +134,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param remove whether EntityDescriptor elements without roles (after filtering) should be removed altogether
      */
     public synchronized void setRemoveRolelessEntities(final boolean remove) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         removingRolelessEntities = remove;
     }
 
@@ -153,7 +153,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @param remove whether EntitiesDescriptor that do not contain EntityDescriptors should be removed
      */
     public synchronized void setRemovingEntitylessEntitiesDescriptor(final boolean remove) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         removingEntitylessEntitiesDescriptor = remove;
     }
 

@@ -62,7 +62,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
      * @param names collection of element names to visit.
      */
     public void setElementNames(@Nonnull final Collection<QName> names) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(names, "elementNames may not be null");
         elementNames = Set.copyOf(names);
     }
@@ -75,7 +75,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
      * @param name {@link QName} for the element to be visited.
      */
     public final synchronized void setElementName(@Nonnull final QName name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(name, "elementName may not be null");
         elementNames = Set.of(name);
     }

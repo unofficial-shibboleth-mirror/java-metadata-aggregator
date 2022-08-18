@@ -75,7 +75,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * @param nss collection of namespaces
      */
     public synchronized void setNamespaces(@Nonnull @NonnullElements @Unmodifiable final Collection<String> nss) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         namespaces = Set.copyOf(nss);
     }
 
@@ -94,7 +94,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * @param wl <code>true</code> for whitelisting, <code>false</code> for blacklisting
      */
     public synchronized void setWhitelisting(final boolean wl) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         whitelisting = wl;
     }
     

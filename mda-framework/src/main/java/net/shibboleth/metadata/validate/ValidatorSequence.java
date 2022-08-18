@@ -55,7 +55,7 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
      */
     public synchronized void setValidators(
             @Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         validators = List.copyOf(newValidators);
     }
 

@@ -61,7 +61,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
      */
     public synchronized void setAdditionalItemMetadata(
             @Nonnull @NonnullElements @Unmodifiable final Collection<ItemMetadata> metadata) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         Constraint.isNotNull(metadata, "additional metadata collection must not be null");
         additionalItemMetadata = List.copyOf(metadata);

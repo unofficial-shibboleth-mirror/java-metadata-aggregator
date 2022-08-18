@@ -163,7 +163,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      * @param namespace namespace of the elements to strip
      */
     public void setElementNamespace(@Nonnull @NotEmpty final String namespace) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         elementNamespace = Constraint.isNotNull(StringSupport.trimOrNull(namespace),
                 "target namespace can not be null or empty");
     }
@@ -185,7 +185,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
      */
     public synchronized void setElementNames(
             @Nonnull @NonnullElements @Unmodifiable @NotEmpty final Collection<String> names) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         elementNames = Set.copyOf(names);
     }
 
