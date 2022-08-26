@@ -72,9 +72,8 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
 
         final XPathFactory factory = XPathFactory.newInstance();
         final XPath xpath = factory.newXPath();
-        if (namespaceContext != null) {
-            xpath.setNamespaceContext(namespaceContext);
-        }
+        xpath.setNamespaceContext(namespaceContext);
+
         compiledExpression = xpath.compile(expression);
     }
 
