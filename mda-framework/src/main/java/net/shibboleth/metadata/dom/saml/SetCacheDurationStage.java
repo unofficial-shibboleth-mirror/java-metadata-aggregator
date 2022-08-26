@@ -84,7 +84,7 @@ public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (cacheDuration == null) {

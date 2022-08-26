@@ -200,7 +200,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableCom
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (directory == null) {

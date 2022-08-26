@@ -215,7 +215,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
     
                 // If any of the existing attribute values match our value, we're done
                 if (attributeValuePresent(attributes, attributeValueMatcher)) {
-                    log.debug("attribute value '{}' already present", attributeValue);
+                    log.debug("attribute value '{}' already present", value);
                     return;
                 }
     
@@ -228,7 +228,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (attributeValue == null) {

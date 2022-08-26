@@ -114,7 +114,7 @@ public class ElementStrippingStage extends AbstractIteratingStage<Element> {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (elementNamespace == null) {
             throw new ComponentInitializationException("target namespace can not be null or empty");

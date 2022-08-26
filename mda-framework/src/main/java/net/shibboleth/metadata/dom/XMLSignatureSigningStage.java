@@ -506,7 +506,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      *
      * @param newValue whether to remove CR characters from generated signatures.
      */
-    public void setRemovingCRsFromSignature(final boolean newValue) {
+    public final synchronized void setRemovingCRsFromSignature(final boolean newValue) {
         checkSetterPreconditions();
         removingCRsFromSignature = newValue;
     }

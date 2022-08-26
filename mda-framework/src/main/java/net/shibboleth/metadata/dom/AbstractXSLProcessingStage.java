@@ -258,7 +258,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
             TransformerConfigurationException;
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (xslResource == null) {

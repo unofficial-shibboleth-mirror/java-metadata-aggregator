@@ -68,7 +68,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         if (namespace == null) {
             throw new ComponentInitializationException("target namespace can not be null or empty");

@@ -132,7 +132,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
         try {
             factory = CertificateFactory.getInstance("X.509");

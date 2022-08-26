@@ -92,10 +92,10 @@ public class X509RSAKeyLengthValidator extends AbstractX509Validator {
             final RSAPublicKey rsaKey = (RSAPublicKey) key;
             final int keyLen = rsaKey.getModulus().bitLength();
             if (keyLen < getErrorBoundary()) {
-                addError("RSA key length of " + keyLen + " bits is less than required " + errorBoundary,
+                addError("RSA key length of " + keyLen + " bits is less than required " + getErrorBoundary(),
                         item, stageId);
             } else if (keyLen < getWarningBoundary()) {
-                addWarning("RSA key length of " + keyLen + " bits is less than recommended " + warningBoundary,
+                addWarning("RSA key length of " + keyLen + " bits is less than recommended " + getWarningBoundary(),
                         item, stageId);
             }
         }

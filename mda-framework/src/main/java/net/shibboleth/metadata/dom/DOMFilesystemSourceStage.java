@@ -293,7 +293,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (parserPool == null) {

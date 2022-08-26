@@ -145,7 +145,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (xpathExpression == null) {

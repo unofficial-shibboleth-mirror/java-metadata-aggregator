@@ -61,7 +61,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
      * 
      * @param names collection of element names to visit.
      */
-    public void setElementNames(@Nonnull final Collection<QName> names) {
+    public final synchronized void setElementNames(@Nonnull final Collection<QName> names) {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "elementNames may not be null");
         elementNames = Set.copyOf(names);
@@ -106,7 +106,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (elementNames.isEmpty()) {

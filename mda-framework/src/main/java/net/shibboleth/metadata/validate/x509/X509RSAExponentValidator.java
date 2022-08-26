@@ -118,10 +118,10 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
             if (!exponent.testBit(0)) {
                 addError("RSA public exponent of " + exponent + " must be odd", item, stageId);
             } else if (exponent.compareTo(getErrorBoundary()) < 0) {
-                addError("RSA public exponent of " + exponent + " is less than required " + errorBoundary,
+                addError("RSA public exponent of " + exponent + " is less than required " + getErrorBoundary(),
                         item, stageId);
             } else if (exponent.compareTo(getWarningBoundary()) < 0) {
-                addWarning("RSA public exponent of " + exponent + " is less than recommended " + warningBoundary,
+                addWarning("RSA public exponent of " + exponent + " is less than recommended " + getWarningBoundary(),
                         item, stageId);
             }
         }

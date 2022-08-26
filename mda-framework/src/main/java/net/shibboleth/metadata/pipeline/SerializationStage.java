@@ -137,7 +137,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (outputFile == null) {

@@ -73,7 +73,7 @@ public abstract class BaseStringRegexValidator extends BaseValidator {
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (getRegex() == null) {

@@ -67,7 +67,7 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
 
         final var start = Instant.now();
 
-        for (final Stage<T> stage : pipelineStages) {
+        for (final Stage<T> stage : getStages()) {
             stage.execute(items);
         }
 
@@ -78,7 +78,7 @@ public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         for (final Stage<T> stage : pipelineStages) {

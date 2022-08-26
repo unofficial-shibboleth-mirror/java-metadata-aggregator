@@ -151,7 +151,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
     }
 
     @Override
-    protected void doInitialize() throws ComponentInitializationException {
+    protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
         if (outputStrategy == null) {
