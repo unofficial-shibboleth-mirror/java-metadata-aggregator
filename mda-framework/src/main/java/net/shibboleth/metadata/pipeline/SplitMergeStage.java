@@ -19,6 +19,7 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -241,20 +242,20 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     /**
      * Executes a pipeline.
      * 
-     * @param pipeline the pipeline, may be null
+     * @param pipeline the pipeline, may be <code>null</code>
      * @param items the collections of items
      * 
      * @return the token representing the background execution of the pipeline
      */
-    @Nonnull protected Future<List<Item<T>>> executePipeline(final Pipeline<T> pipeline,
-            final List<Item<T>> items) {
+    @Nonnull private Future<List<Item<T>>> executePipeline(@Nullable final Pipeline<T> pipeline,
+            @Nonnull final List<Item<T>> items) {
 
         /*
          * If no pipeline has been specified, just return the collection unchanged via
-         * a {@link Future}.
+         * an already completed {@link CompletableFuture}.
          */
         if (pipeline == null) {
-            return FutureSupport.futureNow(items);
+            return CompletableFuture.completedFuture(items);
         }
 
         final PipelineCallable<T> callable = new PipelineCallable<>(pipeline, items);
