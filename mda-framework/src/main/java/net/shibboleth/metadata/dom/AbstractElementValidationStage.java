@@ -92,6 +92,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
      * @param element {@link Element} being validated
      * @return converted value
      */
+    @Nonnull
     protected abstract T convert(@Nonnull final Element element);
 
     @Override
@@ -101,6 +102,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
     }
     
     @Override
+    @Nonnull
     protected DOMTraversalContext buildContext(@Nonnull final Item<Element> item) {
         return new SimpleDOMTraversalContext(item);
     }

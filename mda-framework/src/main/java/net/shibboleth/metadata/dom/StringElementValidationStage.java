@@ -31,6 +31,7 @@ import net.shibboleth.metadata.pipeline.Stage;
 public class StringElementValidationStage extends AbstractElementValidationStage<String> {
 
     @Override
+    @Nonnull
     protected String convert(@Nonnull final Element element) {
         return element.getTextContent();
     }

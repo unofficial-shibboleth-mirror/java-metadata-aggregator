@@ -29,6 +29,7 @@ import net.shibboleth.metadata.Item;
 public class SimpleDOMTraversalContext implements DOMTraversalContext {
 
     /** The {@link Item} this traversal is being performed on. */
+    @Nonnull
     private final Item<Element> item;
 
     /**
@@ -41,6 +42,7 @@ public class SimpleDOMTraversalContext implements DOMTraversalContext {
     }
 
     @Override
+    @Nonnull
     public final Item<Element> getItem() {
         return item;
     }

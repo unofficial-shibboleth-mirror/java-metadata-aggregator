@@ -59,6 +59,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
      *
      * @return an appropriate context
      */
+    @Nonnull
     protected abstract C buildContext(@Nonnull final Item<Element> item);
 
     /**
@@ -95,7 +96,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
     private void traverse(@Nonnull final Element element, @Nonnull final C context) 
         throws StageProcessingException {
         final List<Element> children = ElementSupport.getChildElements(element);
-        for (final Element child : children) {
+        for (@Nonnull final Element child : children) {
             traverse(child, context);
         }
         if (applicable(element, context)) {
@@ -104,7 +105,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
     }
 
     @Override
-    protected void doExecute(final Item<Element> item) throws StageProcessingException {
+    protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element docElement = item.unwrap();
         final C context = buildContext(item);
         traverse(docElement, context);

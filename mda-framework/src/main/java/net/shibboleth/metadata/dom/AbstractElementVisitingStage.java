@@ -86,6 +86,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
     }
 
     @Override
+    @Nonnull
     protected DOMTraversalContext buildContext(@Nonnull final Item<Element> item) {
         return new SimpleDOMTraversalContext(item);
     }
