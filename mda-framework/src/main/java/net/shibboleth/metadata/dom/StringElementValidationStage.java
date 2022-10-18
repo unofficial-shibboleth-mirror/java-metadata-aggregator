@@ -28,7 +28,7 @@ import net.shibboleth.metadata.pipeline.Stage;
  * A {@link Stage} allowing validation of DOM {@link Element}s treated as {@link String}s.
  */
 @ThreadSafe
-public class StringElementValidationStage extends AbstractElementValidationStage<String> implements Stage<Element> {
+public class StringElementValidationStage extends AbstractElementValidationStage<String> {
 
     @Override
     protected String convert(@Nonnull final Element element) {
