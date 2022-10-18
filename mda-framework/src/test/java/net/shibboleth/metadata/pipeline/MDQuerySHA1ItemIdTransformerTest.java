@@ -16,25 +16,25 @@
  */
 
 
-package net.shibboleth.metadata.util;
+package net.shibboleth.metadata.pipeline;
 
 import java.util.function.Function;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SHA1StringTransformerTest {
+public class MDQuerySHA1ItemIdTransformerTest {
 
     private static final Function<String, String> transform =
-            new SHA1StringTransformer();
+            new MDQuerySHA1ItemIdTransformer();
 
     @Test public void testMDQExample() {
         Assert.assertEquals(transform.apply("http://example.org/service"),
-                "11d72e8cf351eb6c75c721e838f469677ab41bdb");
+                "{sha1}11d72e8cf351eb6c75c721e838f469677ab41bdb");
     }
 
     @Test public void testUTF8Example() {
         Assert.assertEquals(transform.apply("Cherry \u03c0"), // pi
-                "2b159a35a20c66bfc91e3d7516db5d94ec6d2776");
+                "{sha1}2b159a35a20c66bfc91e3d7516db5d94ec6d2776");
     }
 }

@@ -17,16 +17,17 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
 
 /**
- * Transforms a string into another string that is the SHA1 hash of the original string prepended with "{sha1}".
+ * Transforms a string into another string that is the hex-encoded representation of the
+ * SHA1 hash of the UTF-8 encoding of the original string, prepended with "{sha1}".
  *
  * @since 0.9.0
  */
@@ -34,7 +35,7 @@ import org.cryptacular.util.HashUtil;
 public class MDQuerySHA1ItemIdTransformer implements Function<String, String> {
 
     @Override
-    public String apply(@Nonnull final String source) {
-        return "{sha1}" + CodecUtil.hex(HashUtil.sha1(source.getBytes()));
+    public String apply(final String source) {
+        return "{sha1}" + CodecUtil.hex(HashUtil.sha1(source.getBytes(StandardCharsets.UTF_8)));
     }
 }

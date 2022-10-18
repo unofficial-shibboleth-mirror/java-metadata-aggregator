@@ -17,9 +17,9 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.bouncycastle.crypto.digests.MD5Digest;
@@ -27,7 +27,8 @@ import org.cryptacular.util.CodecUtil;
 import org.cryptacular.util.HashUtil;
 
 /**
- * Transforms a string into another string that is the MD5 hash of the original string prepended with "{md5}".
+ * Transforms a string into another string that is the MD5 hash of the UTF-8 encoding
+ * of the original string, prepended with "{md5}".
  *
  * @since 0.9.0
  */
@@ -35,7 +36,8 @@ import org.cryptacular.util.HashUtil;
 public class MDQueryMD5ItemIdTransformer implements Function<String, String> {
 
     @Override
-    public String apply(@Nonnull final String source) {
-        return "{md5}" + CodecUtil.hex(HashUtil.hash(new MD5Digest(), source.getBytes()));
+    public String apply(final String source) {
+        return "{md5}" + CodecUtil.hex(HashUtil.hash(new MD5Digest(),
+                source.getBytes(StandardCharsets.UTF_8)));
     }
 }

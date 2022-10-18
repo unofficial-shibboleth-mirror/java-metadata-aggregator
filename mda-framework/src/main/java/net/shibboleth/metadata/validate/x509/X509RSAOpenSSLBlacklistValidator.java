@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -202,7 +203,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
         }
 
         try (BufferedReader reader =
-                new BufferedReader(new InputStreamReader(blacklistResource.getInputStream()))) {
+                new BufferedReader(new InputStreamReader(blacklistResource.getInputStream(), StandardCharsets.UTF_8))) {
             while (true) {
                 final String line = reader.readLine();
                 if (line == null) {

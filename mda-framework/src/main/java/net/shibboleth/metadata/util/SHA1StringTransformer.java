@@ -17,9 +17,9 @@
 
 package net.shibboleth.metadata.util;
 
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.cryptacular.util.CodecUtil;
@@ -27,7 +27,7 @@ import org.cryptacular.util.HashUtil;
 
 /**
  * A {@link Function} that transforms a {@link String} into a hex-encoded representation of
- * the SHA-1 digest of the string.
+ * the SHA-1 digest of the UTF-8 encoding of the string.
  *
  * @since 0.9.2
  */
@@ -35,8 +35,8 @@ import org.cryptacular.util.HashUtil;
 public class SHA1StringTransformer implements Function<String, String> {
 
     @Override
-    public String apply(@Nonnull final String input) {
-        return CodecUtil.hex(HashUtil.sha1(input.getBytes()));
+    public String apply(final String input) {
+        return CodecUtil.hex(HashUtil.sha1(input.getBytes(StandardCharsets.UTF_8)));
     }
 
 }
