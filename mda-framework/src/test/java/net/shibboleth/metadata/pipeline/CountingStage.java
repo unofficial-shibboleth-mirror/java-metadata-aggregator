@@ -19,6 +19,8 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
 
 /**
@@ -59,7 +61,7 @@ public class CountingStage<T> extends AbstractStage<T> {
 
     /** {@inheritDoc} */
     @Override
-    protected void doExecute(final List<Item<T>> metadataCollection) throws StageProcessingException {
+    protected void doExecute(@Nonnull final List<Item<T>> metadataCollection) throws StageProcessingException {
         invocationCount += 1;
         itemCount += metadataCollection.size();
     }
