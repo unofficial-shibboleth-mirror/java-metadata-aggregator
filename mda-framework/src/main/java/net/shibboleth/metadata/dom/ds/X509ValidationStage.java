@@ -99,6 +99,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     private CertificateFactory factory;
 
     @Override
+    @Nonnull
     protected Context buildContext(@Nonnull final Item<Element> item) {
         return new Context(item);
     }
@@ -126,7 +127,9 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
                 context.add(cert);
                 applyValidators(cert, context);
             }
-        } catch (final CertificateException | DecodingException e) {
+        } catch (final CertificateException e) {
+            addError(context.getItem(), element, "X.509 certificate: " + e.getMessage());
+        } catch (DecodingException e) {
             addError(context.getItem(), element, "could not convert X509Certficate data");
         }
     }

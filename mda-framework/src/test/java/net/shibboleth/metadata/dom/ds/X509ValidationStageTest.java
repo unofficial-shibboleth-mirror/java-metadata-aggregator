@@ -137,5 +137,30 @@ public class X509ValidationStageTest extends BaseDOMTest {
         
         errorsAndWarnings(item, 0, 1);
     }
-    
+
+    @Test
+    public void badCertificateNullIssuerMDA270() throws Exception {
+        final DOMElementItem item = makeItem("mda270.xml");
+        
+        final List<Item<Element>> items = new ArrayList<>();
+        items.add(item);
+        
+        final X509ValidationStage stage = makeStage();
+        stage.initialize();
+        
+        stage.execute(items);
+        stage.destroy();
+        
+        // We expect two errors, one for each occurrence of the certificate
+        errorsAndWarnings(item, 2, 0);
+        
+        // Peek at the first of those
+        var error = item.getItemMetadata().get(ErrorStatus.class).get(0);
+        var message = error.getStatusMessage();
+        
+        // We do NOT want to see the generic message, but the specific one
+        // thrown by CertificateFactory. Allow some latitude in verifying this.
+        System.out.println(message);
+        Assert.assertTrue(message.toLowerCase().contains("empty issuer dn"));
+    }
 }
