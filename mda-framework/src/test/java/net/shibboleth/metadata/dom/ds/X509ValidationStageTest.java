@@ -160,7 +160,6 @@ public class X509ValidationStageTest extends BaseDOMTest {
         
         // We do NOT want to see the generic message, but the specific one
         // thrown by CertificateFactory. Allow some latitude in verifying this.
-        System.out.println(message);
         Assert.assertTrue(message.toLowerCase().contains("empty issuer dn"));
     }
 }
