@@ -239,27 +239,6 @@
     <profiles>
 
         <!--
-            Disable JaCoCo under unsupported versions of Java.
-        -->
-        <profile>
-            <id>nojacoco</id>
-            <activation>
-                <jdk>[15,</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!--
             Pull in a Javascript engine for testing in Java
             versions where the JDK doesn't provide one.
         -->
