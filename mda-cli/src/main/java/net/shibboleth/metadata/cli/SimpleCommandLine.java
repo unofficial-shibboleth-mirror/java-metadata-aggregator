@@ -174,8 +174,9 @@ public final class SimpleCommandLine {
      * @param cli command line arguments
      */
     protected static void initLogging(final SimpleCommandLineArguments cli) {
-        if (cli.getLoggingConfiguration() != null) {
-            setLoggingProperty(cli.getLoggingConfiguration());
+        final var config = cli.getLoggingConfiguration();
+        if (config != null) {
+            setLoggingProperty(config);
         } else if (cli.doVerboseOutput()) {
             setLoggingToLocalResource("logger-verbose.xml");
         } else if (cli.doQuietOutput()) {
