@@ -23,7 +23,6 @@ import java.util.Date;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.Version;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.TerminationException;
@@ -32,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.w3c.dom.Element;
 
 /**
  * A simple driver for the metadata aggregator.
@@ -108,8 +106,7 @@ public final class SimpleCommandLine {
         log.debug("Retrieving pipeline from Spring context");
         final String pipelineName = cli.getPipelineName();
         
-        final Pipeline<Element> pipeline =
-            (Pipeline<Element>) appCtx.getBean(pipelineName, Pipeline.class);
+        final Pipeline<?> pipeline = appCtx.getBean(pipelineName, Pipeline.class);
 
         if (pipeline == null) {
             log.error("No net.shibboleth.metadata.pipeline.Pipeline, with ID {}, defined in Spring configuration",
@@ -125,10 +122,9 @@ public final class SimpleCommandLine {
                 log.debug("Retrieved pipeline has already been initialized");
             }
 
-            final ArrayList<Item<Element>> itemCollection = new ArrayList<>();
             final Date startTime = new Date();
             log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
-            pipeline.execute(itemCollection);
+            pipeline.execute(new ArrayList<>());
             final Date endTime = new Date();
             log.info("Pipeline '{}' execution completed at {}; run time {} seconds",
                     new Object[]{pipelineName, endTime, (endTime.getTime()-startTime.getTime())/1000f});
