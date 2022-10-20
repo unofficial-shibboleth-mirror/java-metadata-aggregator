@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom;
+package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -25,7 +25,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.dom.saml.AbstractSAMLTraversalStage;
+import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
@@ -86,7 +86,8 @@ public class CRDetectionStage extends AbstractSAMLTraversalStage<CRDetectionStag
     }
 
     @Override
-    protected void visit(final Element element, final Context context) throws StageProcessingException {
+    protected void visit(@Nonnull final Element element, @Nonnull final Context context)
+            throws StageProcessingException {
         // Only permit one error; short-circuit any further examinations
         if (context.hasError()) {
             return;
@@ -121,7 +122,7 @@ public class CRDetectionStage extends AbstractSAMLTraversalStage<CRDetectionStag
     }
 
     @Override
-    protected Context buildContext(@Nonnull final Item<Element> item) {
+    protected @Nonnull Context buildContext(@Nonnull final Item<Element> item) {
         return new Context(item);
     }
 

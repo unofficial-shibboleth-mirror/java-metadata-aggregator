@@ -16,7 +16,7 @@
  */
 
 
-package net.shibboleth.metadata.dom;
+package net.shibboleth.metadata.dom.saml;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 public class CRDetectionStageTest extends BaseDOMTest {

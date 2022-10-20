@@ -49,9 +49,6 @@
         net.shibboleth.metadata.dom
     -->
 
-    <bean id="mda.CRDetectionStage" abstract="true" parent="mda.stage_parent"
-        class="net.shibboleth.metadata.dom.CRDetectionStage"/>
-
     <bean id="mda.DOMElementSerializer" abstract="true"
         class="net.shibboleth.metadata.dom.DOMElementSerializer"/>
 
@@ -119,6 +116,9 @@
 
     <bean id="mda.ContactPersonFilterStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.dom.saml.ContactPersonFilterStage"/>
+
+    <bean id="mda.CRDetectionStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.dom.saml.CRDetectionStage"/>
 
     <bean id="mda.DiscoFeedCollectionSerializer" abstract="true" parent="mda.component_parent"
         class="net.shibboleth.metadata.dom.saml.DiscoFeedCollectionSerializer"/>
