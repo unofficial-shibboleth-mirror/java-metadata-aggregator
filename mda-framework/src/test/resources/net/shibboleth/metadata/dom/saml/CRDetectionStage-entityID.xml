@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+    xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init"
+    xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute"
+    xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+    xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+    xmlns:remd="http://refeds.org/metadata"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+    xmlns:ukfedlabel="http://ukfederation.org.uk/2006/11/label"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd
+        urn:oasis:names:tc:SAML:metadata:algsupport sstc-saml-metadata-algsupport-v1.0.xsd
+        urn:oasis:names:tc:SAML:metadata:attribute sstc-metadata-attr.xsd
+        urn:oasis:names:tc:SAML:metadata:rpi saml-metadata-rpi-v1.0.xsd
+        urn:oasis:names:tc:SAML:metadata:ui sstc-saml-metadata-ui-v1.0.xsd
+        urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol sstc-saml-idp-discovery.xsd
+        urn:oasis:names:tc:SAML:profiles:SSO:request-init sstc-request-initiation.xsd
+        urn:oasis:names:tc:SAML:2.0:assertion saml-schema-assertion-2.0.xsd
+        urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd
+        http://ukfederation.org.uk/2006/11/label uk-fed-label.xsd
+        http://refeds.org/metadata refeds-metadata.xsd
+        http://www.w3.org/2001/04/xmlenc# xenc-schema.xsd
+        http://www.w3.org/2009/xmlenc11# xenc-schema-11.xsd
+        http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd"
+    entityID="https://idp2.iay.org.uk/idp/shibboleth">
+    <IDPSSODescriptor
+        protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:2.0:protocol">
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+            Location="https://idp2.iay.org.uk:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+            Location="https://idp2.iay.org.uk:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest"
+            Location="https://idp2.iay.org.uk/idp/profile/Shibboleth/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="https://idp2.iay.org.uk/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+            Location="https://idp2.iay.org.uk/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+            Location="https://idp2.iay.org.uk/idp/profile/SAML2/Redirect/SSO"/>
+    </IDPSSODescriptor>
+    <Organization>
+        <OrganizationName xml:lang="en">Ian A. &#13;Young</OrganizationName>
+        <OrganizationDisplayName xml:lang="en">Ian A. Young</OrganizationDisplayName>
+        <OrganizationURL xml:lang="en">http://iay.org.uk/</OrganizationURL>
+    </Organization>
+</EntityDescriptor>

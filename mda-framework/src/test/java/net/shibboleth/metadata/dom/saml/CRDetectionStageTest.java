@@ -98,27 +98,48 @@ public class CRDetectionStageTest extends BaseDOMTest {
         return execute(item);
     }
     
-    private void expectError(final String filename, final String errorContains) throws Exception {
+    private ErrorStatus expectError(final String filename, final String errorContains) throws Exception {
         final List<ErrorStatus> errors = execute(filename);
         Assert.assertEquals(errors.size(), 1, "errors size on " + filename);
         final ErrorStatus error = errors.get(0);
         Assert.assertTrue(error.getStatusMessage().contains(errorContains),
                 filename + " does not contain " + errorContains);
+        return error;
     }
 
+    private void expectErrorNoPrefix(final String filename, final String errorContains) throws Exception {
+        var error = expectError(filename, errorContains);
+        Assert.assertFalse(error.getStatusMessage().contains(": "));
+    }
+    
     @Test
     public void testErrors() throws Exception {
-        expectError("element.xml", "element");
-        expectError("attribute.xml", "attribute");
-        expectError("assumptions.xml", "carriage return"); // contains both
-        expectError("nested-element.xml", "element");
-        expectError("nested-attribute.xml", "attribute");
-        expectError("multiple.xml", "element");
+        expectErrorNoPrefix("element.xml", "element");
+        expectErrorNoPrefix("attribute.xml", "attribute");
+        expectErrorNoPrefix("assumptions.xml", "carriage return"); // contains both
+        expectErrorNoPrefix("nested-element.xml", "element");
+        expectErrorNoPrefix("nested-attribute.xml", "attribute");
+        expectErrorNoPrefix("multiple.xml", "element");
     }
 
     @Test
     public void testOK() throws Exception {
         final List<ErrorStatus> errors = execute("ok.xml");
         Assert.assertTrue(errors.isEmpty());
+    }
+    
+    @Test
+    public void testEntityWithID() throws Exception {
+        expectError("ID.xml", "uk000006: ");
+    }
+    
+    @Test
+    public void testEntityWithEntityID() throws Exception {
+        expectError("entityID.xml", "https://idp2.iay.org.uk/idp/shibboleth: ");
+    }
+    
+    @Test
+    public void testEntityWithNoEntityIDorID() throws Exception {
+        expectErrorNoPrefix("noID.xml", "element");
     }
 }

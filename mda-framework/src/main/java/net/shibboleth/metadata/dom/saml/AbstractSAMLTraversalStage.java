@@ -18,10 +18,12 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import net.shibboleth.metadata.dom.AbstractDOMTraversalStage;
 import net.shibboleth.metadata.dom.DOMTraversalContext;
@@ -54,10 +56,10 @@ public abstract class AbstractSAMLTraversalStage <C extends DOMTraversalContext>
      * @param element {@link Element} to locate the ancestor Entity of.
      * @return ancestor EntityDescriptor {@link Element}, or null.
      */
-    private Element ancestorEntity(@Nonnull final Element element) {
-        for (Element e = element; e != null; e = (Element) e.getParentNode()) {
-            if (SAMLMetadataSupport.isEntityDescriptor(e)) {
-                return e;
+    private @Nullable Element ancestorEntity(@Nonnull final Element element) {
+        for (Node e = element; e != null && e.getNodeType() == Node.ELEMENT_NODE; e = e.getParentNode()) {
+            if (SAMLMetadataSupport.isEntityDescriptor((Element)e)) {
+                return (Element)e;
             }
         }
         return null;
@@ -71,8 +73,8 @@ public abstract class AbstractSAMLTraversalStage <C extends DOMTraversalContext>
      */
     @Override
     protected String errorPrefix(@Nonnull final Element element) {
-        if (SAMLMetadataSupport.isEntitiesDescriptor(element)) {
-            final Element entity = ancestorEntity(element);
+        final @Nullable Element entity = ancestorEntity(element);
+        if (entity != null) {
             final Attr id = entity.getAttributeNode("ID");
             if (id != null) {
                 return id.getTextContent() + ": ";
