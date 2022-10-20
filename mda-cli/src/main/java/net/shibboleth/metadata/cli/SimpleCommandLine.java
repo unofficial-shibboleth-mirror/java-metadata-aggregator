@@ -42,23 +42,46 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * All logging is done in accordance with the logback.xml file included in command line JAR file. If you wish to use a
  * different logging configuration you may do so using the <code>-Dlogback.configurationFile=/path/to/logback.xml</code>
  * JVM configuration option.
- * 
- * This CLI is not terribly robust nor does it really offer much in the way of features. It's mostly meant for testing
- * purposes and will be replaced before the 1.0 release of the software.
  */
 public final class SimpleCommandLine {
 
-    /** Return code indicating command completed successfully, {@value} . */
-    public static final int RC_OK = 0;
+    /**
+     * Exception to be thrown during processing. Carries an error
+     * code to be reported as the CLI result.
+     */
+    private static class ErrorException extends Exception {
+        /** serialVersionUID required for all exceptions. */
+        private static final long serialVersionUID = 1L;
+
+        /** CLI error code to return on exiting the JVM. */
+        private final int error;
+
+        /**
+         * Constructor.
+         *
+         * @param errorCode error code to report on exit
+         * @param message message to report on exit
+         * @param cause underlying cause of the error
+         */
+        ErrorException(final int errorCode, @Nonnull final String message, final Throwable cause) {
+            super(message, cause);
+            error = errorCode;
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param errorCode error code to report on exit
+         * @param message message to report on exit
+         */
+        ErrorException(final int errorCode, @Nonnull final String message) {
+            super(message);
+            error = errorCode;
+        }
+    }
 
     /** Return code indicating an initialization error, {@value} . */
     public static final int RC_INIT = 1;
-
-    /** Return code indicating an error reading files, {@value} . */
-    public static final int RC_IO = 2;
-
-    /** Return code indicating an unknown error occurred, {@value} . */
-    public static final int RC_UNKNOWN = -1;
 
     /** Class logger. */
     private static Logger log;
@@ -79,69 +102,73 @@ public final class SimpleCommandLine {
 
         if (cli.doHelp()) {
             cli.printHelp(System.out);
-            System.exit(RC_OK);
+            return;
         }
 
         if (cli.doVersion()) {
             System.out.println(Version.getVersion());
-            System.exit(RC_OK);
+            return;
         }
         
         initLogging(cli);
 
-        FileSystemXmlApplicationContext appCtx = null;
         try {
-            final String fileUri = new File(cli.getInputFile()).toURI().toString();
-            log.debug("Initializing Spring context with configuration file {}", fileUri);
-            appCtx = new FileSystemXmlApplicationContext(fileUri);
-            
-            // Register a shutdown hook for the context, so that beans will be
-            // correctly destroyed before the CLI exits.
-            appCtx.registerShutdownHook();
+            process(cli);
+        } catch (final ErrorException e) {
+            log.error(e.getMessage(), e.getCause());
+            System.exit(e.error);
+        }
+    }
+
+    /**
+     * Build the context and run the pipeline.
+     *
+     * @param cli command line arguments
+     *
+     * @throws ErrorException if a problem requiring termination occurs
+     */
+    private static void process(@Nonnull final SimpleCommandLineArguments cli) throws ErrorException {
+        final String fileUri = new File(cli.getInputFile()).toURI().toString();
+        log.debug("Initializing Spring context with configuration file {}", fileUri);
+        try (FileSystemXmlApplicationContext appCtx = new FileSystemXmlApplicationContext(fileUri)) {
+
+            log.debug("Retrieving pipeline from Spring context");
+            final String pipelineName = cli.getPipelineName();
+            final Pipeline<?> pipeline = appCtx.getBean(pipelineName, Pipeline.class);
+            if (pipeline == null) {
+                throw new ErrorException(RC_INIT,
+                        "No net.shibboleth.metadata.pipeline.Pipeline, with ID " + pipelineName +
+                        " defined in Spring configuration");
+            }
+
+            try {
+                if (!pipeline.isInitialized()) {
+                    log.debug("Retrieved pipeline has not been initialized, initializing it now");
+                    pipeline.initialize();
+                } else {
+                    log.debug("Retrieved pipeline has already been initialized");
+                }
+
+                final Date startTime = new Date();
+                log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
+                pipeline.execute(new ArrayList<>());
+                final Date endTime = new Date();
+                log.info("Pipeline '{}' execution completed at {}; run time {} seconds",
+                        pipelineName, endTime, (endTime.getTime()-startTime.getTime())/1000f);
+
+            } catch (final TerminationException e) {
+                if (cli.doVerboseOutput()) {
+                    throw new ErrorException(RC_INIT, "TerminationException during processing", e);
+                } else {
+                    throw new ErrorException(RC_INIT, "Terminated: " + e.getMessage());
+                }
+
+            } catch (final Exception e) {
+                throw new ErrorException(RC_INIT, "Error processing information", e);
+            }
+
         } catch (final BeansException e) {
-            log.error("Unable to initialize Spring context", e);
-            System.exit(RC_INIT);
-        }
-
-        log.debug("Retrieving pipeline from Spring context");
-        final String pipelineName = cli.getPipelineName();
-        
-        final Pipeline<?> pipeline = appCtx.getBean(pipelineName, Pipeline.class);
-
-        if (pipeline == null) {
-            log.error("No net.shibboleth.metadata.pipeline.Pipeline, with ID {}, defined in Spring configuration",
-                    pipelineName);
-            System.exit(RC_INIT);
-        }
-
-        try {
-            if (!pipeline.isInitialized()) {
-                log.debug("Retrieved pipeline has not been initialized, initializing it now");
-                pipeline.initialize();
-            } else {
-                log.debug("Retrieved pipeline has already been initialized");
-            }
-
-            final Date startTime = new Date();
-            log.info("Pipeline '{}' execution starting at {}", pipelineName, startTime);
-            pipeline.execute(new ArrayList<>());
-            final Date endTime = new Date();
-            log.info("Pipeline '{}' execution completed at {}; run time {} seconds",
-                    new Object[]{pipelineName, endTime, (endTime.getTime()-startTime.getTime())/1000f});
-
-            System.exit(RC_OK);
-            
-        } catch (final TerminationException e) {
-            if (cli.doVerboseOutput()) {
-                log.error("TerminationException during processing", e);
-            } else {
-                log.error("Terminated: {}", e.getMessage());
-            }
-            System.exit(RC_INIT);
-            
-        } catch (final Exception e) {
-            log.error("Error processing information", e);
-            System.exit(RC_INIT);
+            throw new ErrorException(RC_INIT, "Unable to initialize Spring context", e);
         }
     }
 
