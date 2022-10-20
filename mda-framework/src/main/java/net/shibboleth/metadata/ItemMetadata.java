@@ -22,8 +22,8 @@ import javax.annotation.concurrent.Immutable;
 /**
  * Additional information associated with an {@link Item} while it is being worked with.
  * 
- * Implementations of this class <strong>MUST</strong> be immutable. When an {@link Item} is cloned, the clone will
- * reference the same {@link ItemMetadata} objects as the original.
+ * <p>Implementations of this interface <strong>MUST</strong> be immutable. When an {@link Item} is cloned,
+ * the clone will reference the same {@link ItemMetadata} objects as the original.</p>
  */
 @Immutable
 public interface ItemMetadata {
