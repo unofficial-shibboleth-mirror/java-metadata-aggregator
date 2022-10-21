@@ -59,14 +59,14 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
      */
     @SuppressWarnings("null")
     @NonnullElements @Unmodifiable @GuardedBy("this")
-    private @Nonnull Set<@Nonnull QName> attributeNames = Set.of();
+    private @Nonnull Set<QName> attributeNames = Set.of();
 
     /**
      * Gets the collection of attribute names to visit.
      * 
      * @return collection of attribute names to visit
      */
-    public final synchronized @Nonnull Collection<@Nonnull QName> getAttributeNames() {
+    public final synchronized @Nonnull Collection<QName> getAttributeNames() {
         return attributeNames;
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
      *
      * @param names collection of attribute names to visit
      */
-    public final synchronized void setAttributeNames(@Nonnull final Collection<@Nonnull String> names) {
+    public final synchronized void setAttributeNames(@Nonnull final Collection<String> names) {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "attributeNames may not be null");
         final var qnames = new HashSet<QName>();
@@ -105,7 +105,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
      * 
      * @param names collection of qualified attribute names to visit
      */
-    public final synchronized void setQualifiedAttributeNames(@Nonnull final Collection<@Nonnull QName> names) {
+    public final synchronized void setQualifiedAttributeNames(@Nonnull final Collection<QName> names) {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "attributeNames may not be null");
         attributeNames = Set.copyOf(names);
