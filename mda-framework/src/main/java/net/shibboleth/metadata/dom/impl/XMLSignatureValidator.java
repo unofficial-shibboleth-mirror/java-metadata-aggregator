@@ -117,11 +117,6 @@ public final class XMLSignatureValidator {
         /** Serial version UID. */
         private static final long serialVersionUID = -6649552572123849961L;
 
-        /** Constructor. */
-        public ValidationException() {
-
-        }
-
         /**
          * Constructor.
          * 
@@ -129,15 +124,6 @@ public final class XMLSignatureValidator {
          */
         public ValidationException(@Nullable final String message) {
             super(message);
-        }
-
-        /**
-         * Constructor.
-         * 
-         * @param wrappedException exception to be wrapped by this one
-         */
-        public ValidationException(@Nullable final Exception wrappedException) {
-            super(wrappedException);
         }
 
         /**
