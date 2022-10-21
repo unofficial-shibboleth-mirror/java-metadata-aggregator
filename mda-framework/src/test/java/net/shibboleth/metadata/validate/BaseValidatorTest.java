@@ -3,6 +3,8 @@ package net.shibboleth.metadata.validate;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,7 +20,8 @@ public class BaseValidatorTest {
      */
     private class BoomValidator extends BaseValidator implements Validator<String> {
 
-        public Action validate(String e, Item<?> item, String stageId) {
+        public @Nonnull Action validate(final @Nonnull String e, final @Nonnull Item<?> item,
+                final @Nonnull String stageId) {
             addErrorMessage(e, item, stageId);
             return Action.DONE;
         }
