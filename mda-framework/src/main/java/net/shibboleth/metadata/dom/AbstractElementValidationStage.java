@@ -39,6 +39,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * to be validated as a given type.
  *
  * @param <T> type to convert each {@link Element} to for validation
+ *
+ * @since 0.10.0
  */
 @ThreadSafe
 public abstract class AbstractElementValidationStage<T> extends AbstractDOMValidationStage<T, DOMTraversalContext> {
@@ -70,7 +72,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
     /**
      * Sets a single element name to be visited.
      * 
-     * Shorthand for {@link #setElementNames} with a singleton set.
+     * <p>Shorthand for {@link #setElementNames} with a singleton set.</p>
      * 
      * @param name {@link QName} for the element to be visited.
      */
@@ -92,8 +94,7 @@ public abstract class AbstractElementValidationStage<T> extends AbstractDOMValid
      * @param element {@link Element} being validated
      * @return converted value
      */
-    @Nonnull
-    protected abstract T convert(@Nonnull final Element element);
+    protected abstract @Nonnull T convert(@Nonnull final Element element);
 
     @Override
     protected void visit(@Nonnull final Element element, @Nonnull final DOMTraversalContext context)

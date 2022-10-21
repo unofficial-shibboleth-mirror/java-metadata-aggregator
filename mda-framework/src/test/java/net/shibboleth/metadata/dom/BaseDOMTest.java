@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom;
 
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -129,13 +130,26 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @param path classpath path to the data file, never null
      * 
-     * @return an {@link Item} wrapping the document representing the data file, never null
+     * @return an {@link Item} wrapping the document representing the data file, never <code>null</code>
      * 
      * @throws XMLParserException if the file does not exist or there is a problem parsing it
      */
-    public Item<Element> readDOMItem(final String path) throws XMLParserException {
+    public @Nonnull Item<Element> readDOMItem(final String path) throws XMLParserException {
         final Element e = readXMLData(path);
         return new DOMElementItem(e);
+    }
+
+    /**
+     * Create a DOM {@link Item} from a {@link String}.
+     *
+     * @param text text to turn into a DOM item
+     * @return DOM item corresponding to the provided text
+     * @throws XMLParserException 
+     */
+    protected @Nonnull Item<Element> parseDOMItem(final @Nonnull String text) throws XMLParserException {
+        try (var reader = new StringReader(text)) {
+            return new DOMElementItem(getParserPool().parse(reader));
+        }
     }
 
     /**

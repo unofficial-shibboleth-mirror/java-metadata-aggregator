@@ -15,27 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-
-import org.w3c.dom.Element;
-
-import net.shibboleth.metadata.pipeline.Stage;
-
 /**
- * A {@link Stage} allowing validation of DOM {@link Element}s treated as {@link String}s.
- *
- * @since 0.10.0
+ * Test utility classes for the validation framework.
  */
-@ThreadSafe
-public class StringElementValidationStage extends AbstractElementValidationStage<String> {
-
-    @SuppressWarnings("null")
-    @Override
-    protected @Nonnull String convert(@Nonnull final Element element) {
-        return element.getTextContent();
-    }
-
-}
+package net.shibboleth.metadata.validate.testing;

@@ -20,22 +20,22 @@ package net.shibboleth.metadata.dom;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
 
 import net.shibboleth.metadata.pipeline.Stage;
 
 /**
- * A {@link Stage} allowing validation of DOM {@link Element}s treated as {@link String}s.
+ * A {@link Stage} allowing validation of DOM {@link Attr}s treated as {@link String}s.
  *
  * @since 0.10.0
  */
 @ThreadSafe
-public class StringElementValidationStage extends AbstractElementValidationStage<String> {
+public class StringAttributeValidationStage extends AbstractAttributeValidationStage<String> {
 
     @SuppressWarnings("null")
     @Override
-    protected @Nonnull String convert(@Nonnull final Element element) {
-        return element.getTextContent();
+    protected @Nonnull String convert(@Nonnull final Attr attr) {
+        return attr.getTextContent();
     }
 
 }
