@@ -40,14 +40,14 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 public class CollectingValidator<T> extends BaseValidator implements Validator<T> {
 
     /** Values this validator has seen, in order. */
-    private final @Nonnull List<@Nonnull T> values = new ArrayList<>();
+    private final @Nonnull List<T> values = new ArrayList<>();
     
     /**
      * Return the values recorded by this validator.
      * 
      * @return the values recorded by this validator
      */
-    public @Nonnull List<@Nonnull T> getValues() {
+    public @Nonnull List<T> getValues() {
         return values;
     }
 
