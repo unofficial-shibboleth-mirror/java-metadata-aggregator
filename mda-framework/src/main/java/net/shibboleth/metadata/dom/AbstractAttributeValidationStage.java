@@ -131,9 +131,12 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
     protected void visit(@Nonnull final Element element, @Nonnull final DOMTraversalContext context)
             throws StageProcessingException {
         
-        // Look at the attributes. If there are none, we're done.
+        // Look at the attributes.
         final var attributes = element.getAttributes();
-        if (attributes == null) return;
+        
+        // This is always non-null for an {@link Element}; it can only be
+        // null for other node types.
+        assert attributes != null;
 
         // Iterate through the attributes on this element.
         for (int i = 0; i < attributes.getLength(); i++) {
