@@ -3,6 +3,7 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -42,6 +43,25 @@ public class StringAttributeValidationStageTest extends BaseDOMTest {
         stage.setElementName(new QName("test"));
         stage.initialize();
         stage.destroy();
+    }
+    
+    @Test
+    public void getAttributeNames() {
+        var stage = new StringAttributeValidationStage();
+        // Nothing in there to start with.
+        Assert.assertEquals(stage.getAttributeNames().size(), 0);
+        // Set a single name and verify its presence.
+        stage.setQualifiedAttributeName(new QName("a", "b"));
+        var qname = stage.getAttributeNames();
+        Assert.assertEquals(qname.size(), 1);
+        Assert.assertEquals(qname.iterator().next(), new QName("a", "b"));
+        // Collection of unqualified names
+        stage.setAttributeNames(Set.of("one", "two", "three"));
+        var qnames = stage.getAttributeNames();
+        Assert.assertEquals(qnames.size(), 3);
+        Assert.assertTrue(qnames.contains(new QName("one")));
+        Assert.assertTrue(qnames.contains(new QName("two")));
+        Assert.assertTrue(qnames.contains(new QName("three")));
     }
     
     /**
