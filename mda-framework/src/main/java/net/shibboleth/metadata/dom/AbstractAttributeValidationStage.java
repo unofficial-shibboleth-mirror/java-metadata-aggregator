@@ -143,14 +143,6 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
     }
     
     /**
-     * Convert the visited {@link Attr} to the type to be validated.
-     *
-     * @param attr {@link Attr} being validated
-     * @return converted value
-     */
-    protected abstract @Nonnull T convert(final @Nonnull Attr attr);
-
-    /**
      * Returns whether the given attribute is applicable to our traversal.
      *
      * @param attr {@link Attr} candidate for visiting
@@ -159,7 +151,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
      */
     protected boolean applicable(@Nonnull final Attr attr, @Nonnull final DOMTraversalContext context) {
         final var attrName = new QName(attr.getNamespaceURI(), attr.getLocalName());
-        return attributeNames.contains(attrName);
+        return getAttributeNames().contains(attrName);
     }
 
     @Override
