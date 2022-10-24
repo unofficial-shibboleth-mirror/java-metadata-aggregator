@@ -103,7 +103,7 @@ public abstract class AbstractElementVisitingValidationStage<V, N>
     /**
      * Convert the visited {@link Node} to the type to be validated.
      *
-     * @param node being validated
+     * @param node node being validated
      * @return converted value
      */
     protected abstract @Nonnull V convert(@Nonnull final N node);
