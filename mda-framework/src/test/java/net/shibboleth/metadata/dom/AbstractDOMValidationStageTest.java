@@ -21,6 +21,8 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -40,17 +42,18 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
     private static class StringValidationStage extends AbstractDOMValidationStage<String, DOMTraversalContext> {
 
         @Override
-        protected boolean applicable(Element element, DOMTraversalContext context) {
+        protected boolean applicable(final @Nonnull Element element, final @Nonnull DOMTraversalContext context) {
             return "checkedElement".equals(element.getLocalName());
         }
 
         @Override
-        protected void visit(Element element, DOMTraversalContext context) throws StageProcessingException {
+        protected void visit(final @Nonnull Element element, final @Nonnull DOMTraversalContext context)
+                throws StageProcessingException {
             applyValidators(element.getTextContent(), context);
         }
 
         @Override
-        protected DOMTraversalContext buildContext(Item<Element> item) {
+        protected @Nonnull DOMTraversalContext buildContext(final @Nonnull Item<Element> item) {
             return new SimpleDOMTraversalContext(item);
         }
 
@@ -59,7 +62,7 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
     private static class FirstStringValidator extends BaseValidator implements Validator<String> {
 
         @Override
-        public Action validate(String e, Item<?> item, String stageId)
+        public @Nonnull Action validate(final @Nonnull String e, final @Nonnull Item<?> item, final @Nonnull String stageId)
                 throws StageProcessingException {
             addError("element contains " + e, item, stageId);
             return Action.DONE; // once per value checked
@@ -70,7 +73,8 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
     private static class UnexecutedStringValidator extends BaseValidator implements Validator<String> {
 
         @Override
-        public Action validate(String e, Item<?> item, String stageId)
+        public @Nonnull Action validate(final @Nonnull String e, final @Nonnull Item<?> item,
+                final @Nonnull String stageId)
                 throws StageProcessingException {
             Assert.fail("should not execute this");
             return Action.CONTINUE;
