@@ -46,6 +46,7 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
             return "checkedElement".equals(element.getLocalName());
         }
 
+        @SuppressWarnings("null")
         @Override
         protected void visit(final @Nonnull Element element, final @Nonnull DOMTraversalContext context)
                 throws StageProcessingException {
@@ -110,4 +111,9 @@ public class AbstractDOMValidationStageTest extends BaseDOMTest {
         Assert.assertEquals(errors.get(1).getStatusMessage(), "element contains two");
     }
 
+    @Test
+    public void noValidatorsByDefault() throws Exception {
+        var stage = new StringValidationStage();
+        Assert.assertEquals(stage.getValidators().size(), 0);
+    }
 }

@@ -30,9 +30,10 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 
 /**
- * An abstract stage to apply a collection of validators to each object from each item.
+ * An abstract stage extending {@link AbstractDOMTraversalStage} to manage a collection of
+ * {@link net.shibboleth.metadata.validate.Validator}s to individual values.
  *
- * @param <V> type of the object to be validated
+ * @param <V> type of the values to be validated
  * @param <C> the context to carry through the traversal
  *
  * @since 0.9.0

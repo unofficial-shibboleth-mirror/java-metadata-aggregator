@@ -35,15 +35,27 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
 /**
  * An abstract DOM traversal class using the template method pattern.
  *
+ * <p>
  * A context object, extending {@link DOMTraversalContext}, is created by the
  * implementing subclass and passed to the {@link #visit} method when
  * each applicable {@link Element} is visited. In very simple cases, the
  * {@link SimpleDOMTraversalContext} may suffice, but more complicated
  * behaviour can be built up by extending or re-implementing that class.
- *
+ * </p>
+ * 
+ * <p>
+ * Which {@link Element} nodes are visited during the traversal is controlled
+ * by n {@link #applicable} method implemented by subclasses. Traversal within
+ * elements to DOM attributes is not supported directly.
+ * </p>
+ * 
+ * <p>
  * At the end of the traversal, the context's {@link DOMTraversalContext#end()}
  * method is called to perform any post-processing required.
+ * </p>
  *
+ * <p>
+ * This {@link Stage} 
  * @param <C> the context to carry through the traversal
  *
  * @since 0.9.0

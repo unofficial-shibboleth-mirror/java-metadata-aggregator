@@ -42,7 +42,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  *
  * @since 0.10.0
  */
-public abstract class AbstractAttributeValidationStage<T> extends AbstractElementValidationStage<T> {
+public abstract class AbstractAttributeValidationStage<T> extends AbstractElementVisitingValidationStage<T, Attr> {
 
     /**
      * Collection of attribute names for those attributes we will be visiting.
@@ -122,11 +122,6 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
         attributeNames = Set.of(name);
     }
     
-    @Override
-    protected @Nonnull T convert(final @Nonnull Element element) {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     protected void visit(@Nonnull final Element element, @Nonnull final DOMTraversalContext context)
             throws StageProcessingException {
