@@ -54,8 +54,6 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  * method is called to perform any post-processing required.
  * </p>
  *
- * <p>
- * This {@link Stage} 
  * @param <C> the context to carry through the traversal
  *
  * @since 0.9.0
