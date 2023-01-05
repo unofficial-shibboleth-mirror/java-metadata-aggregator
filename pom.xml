@@ -215,13 +215,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
-                    <!--
-                        Ensure that we're not either directly or indirectly making use of the
-                        joda-time package. Our time handling should be exclusive based on the
-                        java.time package introduced in Java 8.
-                    -->
                     <execution>
-                        <id>no-joda-time</id>
+                        <id>banned-dependencies</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
@@ -229,9 +224,21 @@
                             <rules>
                                 <bannedDependencies>
                                     <excludes>
+                                        <!--
+                                            Ensure that we're not either directly or indirectly making use of the
+                                            joda-time package. Our time handling should be exclusively based on the
+                                            java.time package introduced in Java 8.
+                                        -->
                                         <exclude>joda-time:joda-time</exclude>
+                                        <!--
+                                            Ban use of older coordinates for Bouncy Castle components.
+                                        -->
+                                        <exclude>org.bouncycastle:*-jdk15on</exclude>
                                     </excludes>
                                     <includes>
+                                        <!--
+                                            joda-time may still be used in tests.
+                                        -->
                                         <exclude>joda-time:joda-time:*:jar:test</exclude>
                                     </includes>
                                 </bannedDependencies>
