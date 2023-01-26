@@ -15,36 +15,44 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata;
+package net.shibboleth.metadata.util;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.shared.annotation.constraint.NotEmpty;
 import net.shibboleth.shared.logic.Constraint;
-import net.shibboleth.shared.primitive.StringSupport;
+import net.shibboleth.shared.security.IdentifierGenerationStrategy;
 
-/** A {@link ItemMetadata} that can be used as a marker in tests. */
-@Immutable
-public class TestMarker implements ItemMetadata {
+/**
+ * Identifier generation strategy using a fixed identifier string.
+ *
+ * <p>This can be used in circumstances where there is no requirement that identifiers be
+ * different from each other.</p>
+ * 
+ * @since 0.10.0
+ */
+public class FixedStringIdentifierGenerationStrategy implements IdentifierGenerationStrategy {
 
-    @Nonnull @NotEmpty private final String marker;
+    /** Fixed identifier to use for all invocations. */
+    @Nonnull @NotEmpty private final String identifier;
 
     /**
      * Constructor.
-     * 
-     * @param mark a marker for an item, must not be either null or empty
+     *
+     * @param id fixed identifier to use for all invocations.
      */
-    public TestMarker(@Nonnull @NotEmpty final String mark) {
-        marker = Constraint.isNotNull(StringSupport.trimOrNull(mark), "marker may not be null or empty");
+    public FixedStringIdentifierGenerationStrategy(@Nonnull @NotEmpty final String id) {
+        identifier = Constraint.isNotEmpty(id, "identifier cannot be null or empty");
     }
 
-    /**
-     * Gets the tag for the item.
-     * 
-     * @return tag for the item, never null or empty
-     */
-    @Nonnull @NotEmpty public String getMarker() {
-        return marker;
+    /** {@inheritDoc} */
+    @Nonnull @NotEmpty public String generateIdentifier() {
+        return identifier;
     }
+
+    /** {@inheritDoc} */
+    @Nonnull @NotEmpty public String generateIdentifier(final boolean xmlSafe) {
+        return identifier;
+    }
+
 }

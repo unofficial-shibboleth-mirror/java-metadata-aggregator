@@ -22,8 +22,8 @@ import java.util.List;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

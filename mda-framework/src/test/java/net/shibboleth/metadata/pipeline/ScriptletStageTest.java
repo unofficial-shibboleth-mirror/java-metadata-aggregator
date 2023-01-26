@@ -9,13 +9,13 @@ import javax.script.ScriptEngineManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import net.shibboleth.ext.spring.resource.ResourceHelper;
+import net.shibboleth.shared.spring.resource.ResourceHelper;
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.TestMarker;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.scripting.EvaluableScript;
 
 public class ScriptletStageTest extends BaseTest {
 
@@ -49,7 +49,7 @@ public class ScriptletStageTest extends BaseTest {
     public void testJavascript() throws Exception {
         // pick up the script
         final var scriptResource = getClasspathResource("script.js");
-
+        
         final var script = new EvaluableScript();
         script.setScript(ResourceHelper.of(scriptResource));
         script.initialize();

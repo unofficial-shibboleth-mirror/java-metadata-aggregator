@@ -37,9 +37,9 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.dom.saml.mdattr.MDAttrSupport;
 import net.shibboleth.metadata.dom.saml.mdui.MDUISupport;
-import net.shibboleth.metadata.pipeline.impl.BaseInitializableComponent;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.component.AbstractInitializableComponent;
+import net.shibboleth.shared.xml.ElementSupport;
 
 /**
  * A collection serializer that generates an equivalent of the Shibboleth SP's discovery
@@ -47,7 +47,7 @@ import net.shibboleth.utilities.java.support.xml.ElementSupport;
  *
  * @since 0.10.0
  */
-public class DiscoFeedCollectionSerializer extends BaseInitializableComponent
+public class DiscoFeedCollectionSerializer extends AbstractInitializableComponent
     implements ItemCollectionSerializer<Element> {
 
     /** Whether to pretty-print the resulting JSON. Default: <code>false</code> */

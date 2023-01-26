@@ -17,7 +17,7 @@
 
 package net.shibboleth.metadata;
 
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+import net.shibboleth.shared.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

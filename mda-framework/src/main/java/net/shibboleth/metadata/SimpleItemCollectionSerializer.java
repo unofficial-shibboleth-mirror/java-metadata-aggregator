@@ -24,7 +24,7 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
 
 /**
  * A simple {@link ItemCollectionSerializer} which just serializes each {@link Item}

@@ -30,8 +30,8 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.xml.XMLParserException;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.xml.XMLParserException;
 
 public class ElementWhitespaceTrimmingStageTest extends BaseDOMTest {
     

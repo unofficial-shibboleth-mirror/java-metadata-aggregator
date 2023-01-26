@@ -24,8 +24,7 @@ import java.util.Map;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
+import net.shibboleth.shared.component.ComponentInitializationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

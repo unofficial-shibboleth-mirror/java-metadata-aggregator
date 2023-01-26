@@ -27,8 +27,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-import net.shibboleth.utilities.java.support.xml.ParserPool;
+import net.shibboleth.shared.xml.ElementSupport;
+import net.shibboleth.shared.xml.ParserPool;
 
 public class WhitespaceTrimmingVisitorTest extends BaseDOMTest {
     

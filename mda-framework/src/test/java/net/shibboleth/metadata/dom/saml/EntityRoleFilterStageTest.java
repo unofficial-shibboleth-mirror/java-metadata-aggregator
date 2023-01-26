@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.shared.xml.ElementSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

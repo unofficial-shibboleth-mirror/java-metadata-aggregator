@@ -30,9 +30,9 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.AbstractStage;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-import net.shibboleth.utilities.java.support.xml.QNameSupport;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.xml.ElementSupport;
+import net.shibboleth.shared.xml.QNameSupport;
 
 /**
  * A pipeline stage that replaces any SAML EntitiesDescriptor found in the Item collection with the EntityDescriptor

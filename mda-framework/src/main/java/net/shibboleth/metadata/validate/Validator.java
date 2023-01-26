@@ -22,9 +22,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.DestructableComponent;
-import net.shibboleth.utilities.java.support.component.IdentifiableComponent;
-import net.shibboleth.utilities.java.support.component.InitializableComponent;
+import net.shibboleth.shared.component.DestructableComponent;
+import net.shibboleth.shared.component.IdentifiableComponent;
+import net.shibboleth.shared.component.InitializableComponent;
 
 /**
  * Interface for a validator to be applied to an object in the context of a given {@link Item}.

@@ -33,8 +33,8 @@
     </modules>
 
     <properties>
-        <java-support.version>8.3.1</java-support.version>
-        <spring-extensions.version>6.2.0</spring-extensions.version>
+        <shib-shared.groupId>net.shibboleth</shib-shared.groupId>
+        <shib-shared.version>9.0.0-SNAPSHOT</shib-shared.version>
         <checkstyle.configLocation>${project.basedir}/resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
         <aggregator-parent.site.url>${shibboleth.site.deploy.url}java-metadata-aggregator/${project.version}/</aggregator-parent.site.url>
         <aggregator-module.site.url>${aggregator-parent.site.url}${project.artifactId}</aggregator-module.site.url>
@@ -86,37 +86,23 @@
         used by all project modules. -->
     <dependencyManagement>
         <dependencies>
+
+            <!-- Import Dependencies:  Shared -->
+            <dependency>
+            <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-shared-bom</artifactId>
+                <version>${shib-shared.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- Compile Dependencies -->
-            <dependency>
-                <groupId>net.shibboleth.ext</groupId>
-                <artifactId>spring-extensions</artifactId>
-                <version>${spring-extensions.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.shibboleth.utilities</groupId>
-                <artifactId>java-support</artifactId>
-                <version>${java-support.version}</version>
-            </dependency>
 
             <!-- Provided Dependencies -->
 
             <!-- Runtime Dependencies -->
 
             <!-- Test Dependencies -->
-            <dependency>
-                <groupId>net.shibboleth.ext</groupId>
-                <artifactId>spring-extensions</artifactId>
-                <version>${spring-extensions.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.shibboleth.utilities</groupId>
-                <artifactId>java-support</artifactId>
-                <version>${java-support.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>

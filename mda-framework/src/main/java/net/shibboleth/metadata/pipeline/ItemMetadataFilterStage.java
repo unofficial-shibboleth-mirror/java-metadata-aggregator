@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 
 /**
  * A {@link Stage} that filters out {@link Item} if they have a specific type of {@link ItemMetadata} attached to them.

@@ -40,10 +40,10 @@ import org.xmlunit.input.NormalizedSource;
 import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-import net.shibboleth.utilities.java.support.xml.XMLParserException;
+import net.shibboleth.shared.logic.ConstraintViolationException;
+import net.shibboleth.shared.xml.ElementSupport;
+import net.shibboleth.shared.xml.SerializeSupport;
+import net.shibboleth.shared.xml.XMLParserException;
 
 /** {@link XMLSignatureSigningStage} unit test. */
 public class XMLSignatureSigningStageTest extends BaseDOMTest {

@@ -20,7 +20,7 @@ package net.shibboleth.metadata;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.shared.annotation.constraint.NotEmpty;
 
 /** A type of {@link StatusMetadata} that indicates something is definitely wrong with the Item. */
 @Immutable

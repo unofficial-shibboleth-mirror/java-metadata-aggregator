@@ -27,10 +27,10 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
-import net.shibboleth.utilities.java.support.security.impl.Type4UUIDIdentifierGenerationStrategy;
-import net.shibboleth.utilities.java.support.xml.AttributeSupport;
+import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.security.IdentifierGenerationStrategy;
+import net.shibboleth.shared.security.impl.Type4UUIDIdentifierGenerationStrategy;
+import net.shibboleth.shared.xml.AttributeSupport;
 
 /** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
 @ThreadSafe

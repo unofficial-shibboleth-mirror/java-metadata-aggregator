@@ -26,8 +26,8 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.AbstractItem;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.xml.ElementSupport;
 
 /**
  * A {@link Item} whose data is a DOM, version 3, {@link Element}.

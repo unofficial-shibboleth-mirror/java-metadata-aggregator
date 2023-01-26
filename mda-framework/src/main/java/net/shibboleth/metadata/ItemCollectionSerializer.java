@@ -23,7 +23,7 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
 
 /**
  * Item collection serializers convert a {@link Collection} of {@link Item}s into an octet stream.

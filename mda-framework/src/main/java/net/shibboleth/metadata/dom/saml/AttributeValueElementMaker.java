@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;
-import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.shared.logic.Constraint;
 
 /**
  * A class for constructing SAML <code>AttributeValue</code> elements

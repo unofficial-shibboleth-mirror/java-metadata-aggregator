@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.dom.ElementMatcher;
-import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.shared.logic.Constraint;
 
 /**
  * Match {@link java.util.function.Predicate} for SAML <code>AttributeValue</code> elements with specific

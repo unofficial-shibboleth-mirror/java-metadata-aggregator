@@ -24,7 +24,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.pipeline.PipelineMergeStage;
 import net.shibboleth.metadata.pipeline.SplitMergeStage;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
 
 /**
  * Strategy used to merge the a number of source item collections into a target item collection.

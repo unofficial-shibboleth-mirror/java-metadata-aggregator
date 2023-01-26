@@ -35,10 +35,10 @@ import org.slf4j.LoggerFactory;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.pipeline.MultiOutputSerializationStage.Destination;
-import net.shibboleth.metadata.pipeline.impl.BaseInitializableComponent;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
+import net.shibboleth.shared.component.AbstractInitializableComponent;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.logic.Constraint;
 
 /**
  * An output strategy for use with the {@link MultiOutputSerializationStage} which generates
@@ -57,7 +57,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @since 0.9.2
  */
 @ThreadSafe
-public class FilesInDirectoryMultiOutputStrategy<T> extends BaseInitializableComponent
+public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializableComponent
     implements MultiOutputSerializationStage.OutputStrategy<T> {
     
     /** Class logger. */

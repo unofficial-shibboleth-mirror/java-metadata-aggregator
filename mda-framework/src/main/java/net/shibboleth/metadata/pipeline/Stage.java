@@ -23,10 +23,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.DestructableComponent;
-import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
-import net.shibboleth.utilities.java.support.component.InitializableComponent;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.component.DestructableComponent;
+import net.shibboleth.shared.component.IdentifiedComponent;
+import net.shibboleth.shared.component.InitializableComponent;
 
 /**
  * A stage in a {@link Pipeline} that operates upon a collection {@link Item} in a particular manner.

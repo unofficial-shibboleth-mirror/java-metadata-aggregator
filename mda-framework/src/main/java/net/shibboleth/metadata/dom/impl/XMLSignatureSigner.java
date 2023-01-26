@@ -62,12 +62,12 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.XMLSignatureSigningStage;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.constraint.Live;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
-import net.shibboleth.utilities.java.support.xml.QNameSupport;
+import net.shibboleth.shared.annotation.constraint.Live;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.primitive.StringSupport;
+import net.shibboleth.shared.xml.ElementSupport;
+import net.shibboleth.shared.xml.QNameSupport;
 
 /**
  * A class that encapsulates the various stages in signing an XML document.

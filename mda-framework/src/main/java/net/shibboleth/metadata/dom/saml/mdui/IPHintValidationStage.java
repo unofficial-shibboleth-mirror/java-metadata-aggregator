@@ -27,8 +27,8 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.AbstractDOMTraversalStage;
 import net.shibboleth.metadata.dom.DOMTraversalContext;
 import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
-import net.shibboleth.utilities.java.support.net.IPRange;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.shared.net.IPRange;
+import net.shibboleth.shared.xml.ElementSupport;
 
 /**
  * A stage which validates <code>mdui:IPHint</code> elements.

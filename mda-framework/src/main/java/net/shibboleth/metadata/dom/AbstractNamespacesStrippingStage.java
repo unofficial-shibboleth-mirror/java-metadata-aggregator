@@ -35,9 +35,9 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
-import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.xml.ElementSupport;
 
 /**
  * An abstract stage which removes all evidence of given XML namespaces from each metadata item.

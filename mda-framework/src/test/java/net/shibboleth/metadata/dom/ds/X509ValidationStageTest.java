@@ -30,8 +30,8 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.x509.X509RSAKeyLengthValidator;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.xml.XMLParserException;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.xml.XMLParserException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

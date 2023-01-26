@@ -25,7 +25,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.dom.AbstractElementVisitingStage;
 import net.shibboleth.metadata.dom.DOMTraversalContext;
-import net.shibboleth.utilities.java.support.xml.QNameSupport;
+import net.shibboleth.shared.xml.QNameSupport;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

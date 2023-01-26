@@ -19,8 +19,8 @@ package net.shibboleth.metadata;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 
 // Checkstyle: LineLength OFF
 /**

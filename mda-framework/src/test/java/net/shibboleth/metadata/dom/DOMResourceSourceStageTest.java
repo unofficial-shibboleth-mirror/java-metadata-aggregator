@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+import net.shibboleth.shared.xml.impl.BasicParserPool;
 
 public class DOMResourceSourceStageTest extends BaseTest {
 

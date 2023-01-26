@@ -17,7 +17,7 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.validate.RejectAllValidator;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.string.AcceptStringRegexValidator;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.shared.component.ComponentInitializationException;
 
 public class StringElementValidationStageTest extends BaseDOMTest {
 

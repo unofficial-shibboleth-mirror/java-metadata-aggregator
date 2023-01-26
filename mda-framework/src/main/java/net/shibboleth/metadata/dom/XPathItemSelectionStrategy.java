@@ -33,8 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext;
+import net.shibboleth.shared.annotation.constraint.NotEmpty;
 
 /**
  * Item selection strategy which selects items on the basis of a boolean XPath expression.

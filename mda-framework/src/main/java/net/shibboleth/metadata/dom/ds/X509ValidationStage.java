@@ -35,10 +35,10 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.AbstractDOMValidationStage;
 import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
-import net.shibboleth.utilities.java.support.codec.Base64Support;
-import net.shibboleth.utilities.java.support.codec.DecodingException;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
+import net.shibboleth.shared.codec.Base64Support;
+import net.shibboleth.shared.codec.DecodingException;
+import net.shibboleth.shared.component.ComponentInitializationException;
 
 /**
  * Stage to apply a collection of validators to each X.509 certificate in items.

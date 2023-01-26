@@ -30,8 +30,8 @@ import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.StatusMetadata;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 
 /**
  * A {@link Stage} that logs {@link StatusMetadata} associated with an {@link Item}.

@@ -38,10 +38,20 @@
             <groupId>org.cryptacular</groupId>
             <artifactId>cryptacular</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>net.shibboleth.utilities</groupId>
-            <artifactId>java-support</artifactId>
+            <groupId>net.shibboleth</groupId>
+            <artifactId>shib-support</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.shibboleth</groupId>
+            <artifactId>shib-networking</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.shibboleth</groupId>
+            <artifactId>shib-security</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
@@ -67,14 +77,8 @@
 
         <!-- Test Dependencies -->
         <dependency>
-            <groupId>net.shibboleth.ext</groupId>
-            <artifactId>spring-extensions</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.shibboleth.utilities</groupId>
-            <artifactId>java-support</artifactId>
-            <type>test-jar</type>
+            <groupId>net.shibboleth</groupId>
+            <artifactId>shib-spring</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

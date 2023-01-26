@@ -17,8 +17,8 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.validate.RejectAllValidator;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.testing.CollectingValidator;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.xml.XMLConstants;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.xml.XMLConstants;
 
 public class StringAttributeValidationStageTest extends BaseDOMTest {
 

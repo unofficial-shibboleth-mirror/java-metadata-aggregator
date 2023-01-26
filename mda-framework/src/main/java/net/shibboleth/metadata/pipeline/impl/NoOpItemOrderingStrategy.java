@@ -24,8 +24,8 @@ import javax.annotation.concurrent.Immutable;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 
 /**
  * An ordering strategy that simply returns the collection in whatever order it was already in.

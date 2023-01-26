@@ -27,9 +27,9 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.component.AbstractIdentifiableInitializableComponent;
+import net.shibboleth.shared.logic.Constraint;
 
 /**
  * A base class for {@link Stage} implementations.
@@ -37,7 +37,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @param <T> type of item this stage operates upon
  */
 @ThreadSafe
-public abstract class AbstractStage<T> extends BaseIdentifiableInitializableComponent implements Stage<T> {
+public abstract class AbstractStage<T> extends AbstractIdentifiableInitializableComponent implements Stage<T> {
 
     /**
      * The {@link Predicate} applied to the supplied item collection to determine whether the stage will be executed.

@@ -27,8 +27,8 @@ import java.util.function.Predicate;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
-import net.shibboleth.utilities.java.support.collection.Pair;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.shared.collection.Pair;
+import net.shibboleth.shared.component.ComponentInitializationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

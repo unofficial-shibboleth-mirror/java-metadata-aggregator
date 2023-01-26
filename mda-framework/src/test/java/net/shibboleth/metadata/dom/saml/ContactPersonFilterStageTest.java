@@ -27,10 +27,10 @@ import javax.xml.namespace.QName;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
-import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
-import net.shibboleth.utilities.java.support.xml.ElementSupport;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.component.DestroyedComponentException;
+import net.shibboleth.shared.component.UnmodifiableComponentException;
+import net.shibboleth.shared.xml.ElementSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

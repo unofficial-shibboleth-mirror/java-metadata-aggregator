@@ -24,8 +24,8 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
-import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.shared.component.AbstractIdentifiableInitializableComponent;
+import net.shibboleth.shared.logic.Constraint;
 
 /**
  * Base class for validator implementations.
@@ -36,7 +36,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * @since 0.9.0
  */
 @ThreadSafe
-public abstract class BaseValidator extends BaseIdentifiableInitializableComponent {
+public abstract class BaseValidator extends AbstractIdentifiableInitializableComponent {
 
     /**
      * Message format string.

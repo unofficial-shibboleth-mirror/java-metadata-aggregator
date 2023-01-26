@@ -23,11 +23,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.DestructableComponent;
-import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
-import net.shibboleth.utilities.java.support.component.InitializableComponent;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.component.DestructableComponent;
+import net.shibboleth.shared.component.IdentifiedComponent;
+import net.shibboleth.shared.component.InitializableComponent;
 
 /**
  * A pipeline represents an ordered list of {@link Stage} that operate on a collection of {@link Item}. In general the

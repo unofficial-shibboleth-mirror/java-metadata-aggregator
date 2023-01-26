@@ -26,10 +26,10 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.pipeline.impl.BaseIdentifiableInitializableComponent;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.component.AbstractIdentifiableInitializableComponent;
+import net.shibboleth.shared.component.ComponentInitializationException;
 
 /**
  * A very simple implementation of {@link Pipeline}.
@@ -37,7 +37,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
  * @param <T> the type of item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<T> extends BaseIdentifiableInitializableComponent
+public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponent
         implements Pipeline<T> {
 
     /** Stages for this pipeline. */

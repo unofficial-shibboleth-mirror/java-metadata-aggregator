@@ -25,8 +25,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.impl.NoOpItemOrderingStrategy;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.logic.Constraint;
 
 /**
  * A {@link net.shibboleth.metadata.pipeline.Stage} capable of ordering a collection of {@link Item}s

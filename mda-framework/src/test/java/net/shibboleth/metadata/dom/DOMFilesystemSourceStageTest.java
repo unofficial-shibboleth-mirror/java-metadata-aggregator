@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.logic.ConstraintViolationException;
+import net.shibboleth.shared.xml.impl.BasicParserPool;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
