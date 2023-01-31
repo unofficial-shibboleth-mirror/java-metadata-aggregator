@@ -43,25 +43,38 @@ import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
- * A stage which splits a given collection and passes selected items to one pipeline and non-selected items to another.
- * The selected and non-selected item pipelines are executed via the set {@link ExecutorService} and operate on
- * collections that contains clones of the (non-)selected items.
- * 
+ * A stage which splits a given collection according to a provided selection strategy
+ * and passes selected items to one pipeline and non-selected items to another.
+ *
+ * <p>
+ * The selected and non-selected item pipelines are executed via the set {@link ExecutorService}.
+ * </p>
+ *
+ * <p>
+ * The results of the two pipelines are merged to produce the result.
+ * </p>
+ *
  * <p>
  * This stage requires the following properties be set prior to initialization:
+ * </p>
+ *
  * <ul>
  * <li><code>selectionStrategy</code></li>
  * <li><code>selectedItemPipeline</code> or <code>nonselectedItemPipeline</code></li>
  * </ul>
- * 
+ *
  * <p>
- * If no {@link #executorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with
- * 6 threads.
- * 
+ * If no {@link #executorService} is provided, one will be created using {@link Executors#newSingleThreadExecutor()}.
+ * </p>
+ *
+ * <p>
  * If no {@link #collectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
- * 
- * If one or the other pipeline is null then no objects will be passed to it (obviously).
- * 
+ * </p>
+ *
+ * <p>
+ * If one or the other pipeline is <code>null</code> then no objects will be passed to it (obviously).
+ * </p>
+ *
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
