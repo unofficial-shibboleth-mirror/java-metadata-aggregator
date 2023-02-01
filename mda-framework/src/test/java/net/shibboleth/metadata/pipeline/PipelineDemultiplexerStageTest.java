@@ -52,6 +52,14 @@ public class PipelineDemultiplexerStageTest {
         Assert.assertEquals(stage.getExecutorService(), executor);
     }
 
+    @Test public void testExecutor() {
+        PipelineDemultiplexerStage<Object> stage = new PipelineDemultiplexerStage<>();
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        stage.setExecutor(executor);
+        Assert.assertEquals(stage.getExecutor(), executor);
+    }
+
     @Test public void testPipelineAndSelectionStrategies() {
         PipelineDemultiplexerStage<Object> stage = new PipelineDemultiplexerStage<>();
 

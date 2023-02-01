@@ -51,6 +51,14 @@ public class SplitMergeStageTest {
         Assert.assertEquals(stage.getExecutorService(), executor);
     }
 
+    @Test public void testExecutor() {
+        SplitMergeStage<Object> stage = new SplitMergeStage<>();
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        stage.setExecutor(executor);
+        Assert.assertEquals(stage.getExecutor(), executor);
+    }
+
     @Test public void testNonselectedItemPipeline() {
         SplitMergeStage<Object> stage = new SplitMergeStage<>();
 

@@ -19,9 +19,10 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -31,6 +32,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.metadata.pipeline.impl.DirectExecutor;
 import net.shibboleth.metadata.pipeline.impl.FutureSupport;
 import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
@@ -38,13 +40,19 @@ import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.Pair;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.DeprecationSupport;
+import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 
 /**
  * A stage which, given an item collection and a list of {@link Pipeline} and {@link Predicate} pairs, sends the
- * collection of item copies selected by the predicate to the associated pipeline. This stage is similar to
+ * collection of item copies selected by the predicate to the associated pipeline.
+ *
+ * <p>
+ * This stage is similar to
  * {@link SplitMergeStage} but a given item, or more precisely a copy of it, may end up going to more than one pipeline
  * (or no pipeline).
- * 
+ * </p>
+ *
  * <p>
  * This stage requires the following properties be set prior to initialization:
  * <ul>
@@ -52,22 +60,31 @@ import net.shibboleth.shared.logic.Constraint;
  * </ul>
  * 
  * <p>
- * If no {@link #executorService} is provided, one will be created using {@link Executors#newFixedThreadPool(int)} with
- * 6 threads.
- * 
+ * If an {@link #executor} is provided, it will be used to execute the pipelines,
+ * potentially concurrently. By default, the pipelines will be executed sequentially
+ * on the calling thread.
+ * </p>
+ *
+ * <p>
+ * The caller is responsible for the lifecycle of any provided {@link Executor},
+ * including the lifecycle of any threads or thread pools associated with it.
+ * </p>
+ *
+ * <p>
  * If no {@link #collectionFactory} is given, then {@link SimpleItemCollectionFactory} is used.
- * 
+ * </p>
+ *
  * @param <T> type of items upon which this stage operates
  */
 @ThreadSafe
 public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
 
-    /** Service used to execute the selected and/or non-selected item pipelines. */
+    /** {@link Executor} used to execute the selected and/or non-selected item pipelines. */
     @Nonnull @GuardedBy("this")
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private Executor executor = new DirectExecutor();
 
     /**
-     * Whether this child waits for all the invoked pipelines to complete before proceeding.
+     * Whether this stage waits for all the invoked pipelines to complete before proceeding.
      *
      * Default: <code>true</code>.
      */
@@ -82,22 +99,55 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = List.of();
 
     /**
+     * Gets the executor used to run the selected and non-selected item pipelines.
+     * 
+     * @return executor used to run the selected and non-selected item pipelines
+     *
+     * @since 0.10.0
+     */
+    @Nonnull public final synchronized Executor getExecutor() {
+        return executor;
+    }
+
+    /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @return executor service used to run the selected and non-selected item pipelines
+     *
+     * @deprecated
      */
-    @Nonnull public final synchronized ExecutorService getExecutorService() {
-        return executorService;
+    @Deprecated(since="0.10.0", forRemoval=true)
+    @Nonnull public final synchronized Executor getExecutorService() {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "getExecutorService",
+                "PipelineDemultiplexerStage", "getExecutor");
+        return executor;
+    }
+
+    /**
+     * Sets the executor used to run the selected and non-selected item pipelines.
+     * 
+     * @param service executor used to run the selected and non-selected item pipelines
+     *
+     * @since 0.10.0
+     */
+    public synchronized void setExecutor(@Nonnull final Executor exec) {
+        checkSetterPreconditions();
+        executor = Constraint.isNotNull(exec, "executor can not be null");
     }
 
     /**
      * Sets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @param service executor service used to run the selected and non-selected item pipelines
+     *
+     * @deprecated
      */
+    @Deprecated(since="0.10.0", forRemoval=true)
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "setExecutorService",
+                "PipelineDemultiplexerStage", "setExecutor");
         checkSetterPreconditions();
-        executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
+        executor = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -168,26 +218,27 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final ArrayList<Future<List<Item<T>>>> pipelineFutures = new ArrayList<>();
+        final @Nonnull @NonnullElements List<Future<List<Item<T>>>> pipelineFutures = new ArrayList<>();
 
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : getPipelineAndSelectionStrategies()) {
-            final Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
-            final Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
-            final List<Item<T>> selectedItems = getCollectionFactory().get();
+            final @Nonnull Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
+            final @Nonnull Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
+            final @Nonnull List<Item<T>> selectedItems = getCollectionFactory().get();
 
             for (final Item<T> item : items) {
                 if (selectionStrategy.test(item)) {
-//                    @SuppressWarnings("unchecked") final ItemType copied = (ItemType) item.copy();
-//                    selectedItems.add(copied);
                     selectedItems.add(item.copy());
                 }
             }
 
-            pipelineFutures.add(getExecutorService().submit(new PipelineCallable<>(pipeline, selectedItems)));
+            final @Nonnull var callable = new PipelineCallable<T>(pipeline, selectedItems);
+            final @Nonnull var future = new FutureTask<List<Item<T>>>(callable);
+            getExecutor().execute(future);
+            pipelineFutures.add(future);
         }
 
         if (isWaitingForPipelines()) {
-            for (final Future<List<Item<T>>> pipelineFuture : pipelineFutures) {
+            for (final @Nonnull Future<List<Item<T>>> pipelineFuture : pipelineFutures) {
                 FutureSupport.futureItems(pipelineFuture);
             }
         }

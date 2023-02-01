@@ -19,9 +19,10 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -32,30 +33,46 @@ import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.metadata.pipeline.impl.DirectExecutor;
 import net.shibboleth.metadata.pipeline.impl.FutureSupport;
 import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.DeprecationSupport;
+import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 
 /**
  * This {@link Stage} allows the merging of multiple pipeline outputs into a single {@link List} that can then be
  * used as the input source for another pipeline.
  * 
+ * <p>
  * This source works producing a {@link List} by means of the registered {@link Supplier} . Then each of its
  * registered {@link Pipeline} is invoked in turn (no ordering is guaranteed and pipelines may execute concurrently).
  * After each pipeline has completed the results are merged in to the Item collection given to this stage by means of
  * the an {@link CollectionMergeStrategy}.
+ * </p>
  * 
+ * <p>
+ * If an {@link #executor} is provided, it will be used to execute the pipelines,
+ * potentially concurrently. By default, the pipelines will be executed sequentially
+ * on the calling thread.
+ * </p>
+ *
+ * <p>
+ * The caller is responsible for the lifecycle of any provided {@link Executor},
+ * including the lifecycle of any threads or thread pools associated with it.
+ * </p>
+ *
  * @param <T> the type of items processed by the stage
  */
 @ThreadSafe
 public class PipelineMergeStage<T> extends AbstractStage<T> {
 
-    /** Service used to execute the pipelines whose results will be merged. */
+    /** {@link Executor} used to execute the selected and/or non-selected item pipelines. */
     @Nonnull @GuardedBy("this")
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private Executor executor = new DirectExecutor();
 
     /**
      * The factory used to create the item returned by this source. Default implementation is
@@ -73,22 +90,55 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     private List<Pipeline<T>> mergedPipelines = List.of();
 
     /**
+     * Gets the executor used to run the selected and non-selected item pipelines.
+     * 
+     * @return executor used to run the selected and non-selected item pipelines
+     *
+     * @since 0.10.0
+     */
+    @Nonnull public final synchronized Executor getExecutor() {
+        return executor;
+    }
+
+    /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @return executor service used to run the selected and non-selected item pipelines
+     *
+     * @deprecated
      */
-    @Nonnull public final synchronized ExecutorService getExecutorService() {
-        return executorService;
+    @Deprecated(since="0.10.0", forRemoval=true)
+    @Nonnull public final synchronized Executor getExecutorService() {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "getExecutorService",
+                "PipelineMergeStage", "getExecutor");
+        return executor;
+    }
+
+    /**
+     * Sets the executor used to run the selected and non-selected item pipelines.
+     * 
+     * @param service executor used to run the selected and non-selected item pipelines
+     *
+     * @since 0.10.0
+     */
+    public synchronized void setExecutor(@Nonnull final Executor exec) {
+        checkSetterPreconditions();
+        executor = Constraint.isNotNull(exec, "executor can not be null");
     }
 
     /**
      * Sets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @param service executor service used to run the selected and non-selected item pipelines
+     *
+     * @deprecated
      */
+    @Deprecated(since="0.10.0", forRemoval=true)
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "setExecutorService",
+                "PipelineMergeStage", "setExecutor");
         checkSetterPreconditions();
-        executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
+        executor = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -154,14 +204,16 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        final ArrayList<Future<List<Item<T>>>> pipelineResultFutures = new ArrayList<>();
+        final @Nonnull List<Future<List<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
-        for (final Pipeline<T> pipeline : getMergedPipelines()) {
-            pipelineResultFutures.add(getExecutorService().submit(
-                    new PipelineCallable<>(pipeline, getCollectionFactory().get())));
+        for (final @Nonnull Pipeline<T> pipeline : getMergedPipelines()) {
+            final @Nonnull var callable = new PipelineCallable<T>(pipeline, getCollectionFactory().get());
+            final @Nonnull var future = new FutureTask<List<Item<T>>>(callable);
+            getExecutor().execute(future);
+            pipelineResultFutures.add(future);
         }
 
-        final ArrayList<List<Item<T>>> pipelineResults = new ArrayList<>();
+        final List<List<Item<T>>> pipelineResults = new ArrayList<>();
         for (final Future<List<Item<T>>> future : pipelineResultFutures) {
             pipelineResults.add(FutureSupport.futureItems(future));
         }

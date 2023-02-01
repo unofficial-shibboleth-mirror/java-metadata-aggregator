@@ -20,6 +20,8 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.shibboleth.metadata.DeduplicatingItemIdMergeStrategy;
 import net.shibboleth.metadata.Item;
@@ -43,6 +45,22 @@ public class PipelineMergeStageTest {
         list.add(element1);
         list.add(element2);
         return list;
+    }
+    
+    @Test public void testExecutorService() {
+        PipelineMergeStage<Object> stage = new PipelineMergeStage<>();
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        stage.setExecutorService(executor);
+        Assert.assertEquals(stage.getExecutorService(), executor);
+    }
+
+    @Test public void testExecutor() {
+        PipelineMergeStage<Object> stage = new PipelineMergeStage<>();
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        stage.setExecutor(executor);
+        Assert.assertEquals(stage.getExecutor(), executor);
     }
 
     @Test public void test() throws Exception {

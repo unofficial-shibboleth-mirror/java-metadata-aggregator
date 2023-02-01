@@ -20,9 +20,10 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -38,18 +39,21 @@ import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.metadata.pipeline.impl.DirectExecutor;
 import net.shibboleth.metadata.pipeline.impl.FutureSupport;
 import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.DeprecationSupport;
+import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 
 /**
  * A stage which splits a given collection according to a provided selection strategy
  * and passes selected items to one pipeline and non-selected items to another.
  *
  * <p>
- * The selected and non-selected item pipelines are executed via the set {@link ExecutorService}.
+ * The selected and non-selected item pipelines are executed via the set {@link #executor}.
  * </p>
  *
  * <p>
@@ -66,7 +70,14 @@ import net.shibboleth.shared.logic.Constraint;
  * </ul>
  *
  * <p>
- * If no {@link #executorService} is provided, one will be created using {@link Executors#newSingleThreadExecutor()}.
+ * If an {@link #executor} is provided, it will be used to execute the pipelines,
+ * potentially concurrently. By default, the pipelines will be executed sequentially
+ * on the calling thread.
+ * </p>
+ *
+ * <p>
+ * The caller is responsible for the lifecycle of any provided {@link Executor},
+ * including the lifecycle of any threads or thread pools associated with it.
  * </p>
  *
  * <p>
@@ -85,9 +96,9 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SplitMergeStage.class);
 
-    /** Service used to execute the selected and/or non-selected item pipelines. */
+    /** {@link Executor} used to execute the pipelines. */
     @Nonnull @GuardedBy("this")
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private Executor executor = new DirectExecutor();
 
     /** Factory used to create the Item collection that is then given to the pipelines. */
     @Nonnull @GuardedBy("this")
@@ -110,22 +121,55 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     private CollectionMergeStrategy mergeStrategy = new SimpleCollectionMergeStrategy();
 
     /**
+     * Gets the executor used to run the selected and non-selected item pipelines.
+     * 
+     * @return executor used to run the selected and non-selected item pipelines
+     *
+     * @since 0.10.0
+     */
+    @Nonnull public final synchronized Executor getExecutor() {
+        return executor;
+    }
+
+    /**
      * Gets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @return executor service used to run the selected and non-selected item pipelines
+     *
+     * @deprecated
      */
-    @Nonnull public final synchronized ExecutorService getExecutorService() {
-        return executorService;
+    @Deprecated(since="0.10.0", forRemoval=true)
+    @Nonnull public final synchronized Executor getExecutorService() {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "getExecutorService",
+                "SplitMergeStage", "getExecutor");
+        return executor;
+    }
+
+    /**
+     * Sets the executor used to run the selected and non-selected item pipelines.
+     * 
+     * @param service executor used to run the selected and non-selected item pipelines
+     *
+     * @since 0.10.0
+     */
+    public synchronized void setExecutor(@Nonnull final Executor exec) {
+        checkSetterPreconditions();
+        executor = Constraint.isNotNull(exec, "executor can not be null");
     }
 
     /**
      * Sets the executor service used to run the selected and non-selected item pipelines.
      * 
      * @param service executor service used to run the selected and non-selected item pipelines
+     *
+     * @deprecated
      */
+    @Deprecated(since="0.10.0", forRemoval=true)
     public synchronized void setExecutorService(@Nonnull final ExecutorService service) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "setExecutorService",
+                "SplitMergeStage", "setExecutor");
         checkSetterPreconditions();
-        executorService = Constraint.isNotNull(service, "ExecutorService can not be null");
+        executor = Constraint.isNotNull(service, "ExecutorService can not be null");
     }
 
     /**
@@ -274,7 +318,9 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
         }
 
         final PipelineCallable<T> callable = new PipelineCallable<>(pipeline, items);
-        return getExecutorService().submit(callable);
+        final @Nonnull var future = new FutureTask<List<Item<T>>>(callable);
+        getExecutor().execute(future);
+        return future;
     }
 
     @Override
