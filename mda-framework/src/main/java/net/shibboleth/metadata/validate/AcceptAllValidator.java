@@ -35,7 +35,7 @@ import net.shibboleth.metadata.Item;
 public class AcceptAllValidator<V> extends BaseValidator implements Validator<V> {
 
     @Override
-    public Action validate(@Nonnull final V e, @Nonnull final Item<?> item, @Nonnull final String stageId) {
+    public @Nonnull Action validate(@Nonnull final V e, @Nonnull final Item<?> item, @Nonnull final String stageId) {
         return Action.DONE;
     }
 

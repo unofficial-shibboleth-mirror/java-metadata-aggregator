@@ -37,7 +37,7 @@ import net.shibboleth.metadata.validate.Validator;
 public class AcceptStringRegexValidator extends BaseStringRegexValidator implements Validator<String> {
 
     @Override
-    public Action validate(@Nonnull final String e, @Nonnull final Item<?> item, @Nonnull final String stageId) {
+    public @Nonnull Action validate(@Nonnull final String e, @Nonnull final Item<?> item, @Nonnull final String stageId) {
         final Matcher matcher = getPattern().matcher(e);
         if (matcher.matches()) {
             return Action.DONE;

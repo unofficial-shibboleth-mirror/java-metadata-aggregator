@@ -44,10 +44,10 @@ public class PipelineCallable<T> implements Callable<List<Item<T>>> {
     private final Logger log = LoggerFactory.getLogger(PipelineCallable.class);
 
     /** The pipeline to be executed, never null. */
-    private final Pipeline<T> thePipeline;
+    private final @Nonnull Pipeline<T> thePipeline;
 
     /** The collection of items upon which the pipeline will operate. */
-    private final List<Item<T>> theItems;
+    private final @Nonnull @NonnullElements List<Item<T>> theItems;
 
     /**
      * Constructor.

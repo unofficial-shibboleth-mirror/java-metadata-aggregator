@@ -82,7 +82,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
     }
 
     @Override
-    protected DOMTraversalContext buildContext(final Item<Element> item) {
+    protected @Nonnull DOMTraversalContext buildContext(final @Nonnull Item<Element> item) {
         return new SimpleDOMTraversalContext(item);
     }
 

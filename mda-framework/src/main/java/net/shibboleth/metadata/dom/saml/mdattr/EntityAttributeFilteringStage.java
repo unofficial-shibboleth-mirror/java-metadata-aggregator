@@ -166,17 +166,17 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
         }
 
         @Override
-        public String getNameFormat() {
+        public @Nonnull String getNameFormat() {
             return nameFormat;
         }
 
         @Override
-        public String getName() {
+        public @Nonnull String getName() {
             return name;
         }
 
         @Override
-        public String getValue() {
+        public @Nonnull String getValue() {
             return value;
         }
 
