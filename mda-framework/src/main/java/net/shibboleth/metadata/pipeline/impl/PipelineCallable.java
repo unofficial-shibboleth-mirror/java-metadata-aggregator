@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata.pipeline.impl;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.Pipeline;
+import net.shibboleth.metadata.pipeline.PipelineProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.logic.Constraint;
 

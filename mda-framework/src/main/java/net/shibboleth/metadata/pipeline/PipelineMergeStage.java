@@ -32,6 +32,8 @@ import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleCollectionMergeStrategy;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.metadata.pipeline.impl.FutureSupport;
+import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.component.ComponentInitializationException;

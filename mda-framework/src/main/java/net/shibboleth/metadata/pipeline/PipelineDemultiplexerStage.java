@@ -31,6 +31,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.metadata.pipeline.impl.FutureSupport;
+import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.Pair;

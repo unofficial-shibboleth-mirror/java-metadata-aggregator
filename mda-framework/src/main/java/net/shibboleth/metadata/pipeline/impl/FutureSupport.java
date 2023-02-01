@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata.pipeline.impl;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
  * Helper class for dealing with {@link Future} values.
