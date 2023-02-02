@@ -117,7 +117,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     /**
      * Sets the executor used to run the selected and non-selected item pipelines.
      * 
-     * @param service executor used to run the selected and non-selected item pipelines
+     * @param exec executor used to run the selected and non-selected item pipelines
      *
      * @since 0.10.0
      */
