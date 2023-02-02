@@ -82,6 +82,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>net.shibboleth</groupId>
+            <artifactId>shib-networking-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.shibboleth</groupId>
+            <artifactId>shib-security-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jruby</groupId>
             <artifactId>jruby</artifactId>
             <version>9.2.13.0</version>

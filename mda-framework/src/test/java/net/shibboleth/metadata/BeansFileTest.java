@@ -1,6 +1,9 @@
 
 package net.shibboleth.metadata;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
@@ -12,6 +15,14 @@ public class BeansFileTest {
 
     @Test
     public void testBeans() throws Exception {
+
+        // Set of beans which don't follow some of the normal rules
+        final Set<String> specialBeans = Set.of(
+                "mda.MigrationAssistanceBean",
+                "mda.MigrationClassMap",
+                "mda.MigrationBeanMap"
+                );
+
         // Create an application context, which also acts as a bean definition registry
         final GenericApplicationContext ctx = new GenericApplicationContext();
 
@@ -25,6 +36,12 @@ public class BeansFileTest {
 
             // All bean definitions should start with "mda."
             Assert.assertTrue(defName.startsWith("mda."), "does not start with correct prefix: " + defName);
+
+            // Skip special beans on the first pass, process them only after the context has
+            // been refreshed.
+            if (specialBeans.contains(defName)) {
+                continue;
+            }
 
             // All bean definitions should be abstract
             Assert.assertTrue(def.isAbstract(), "not abstract: " + defName);
@@ -55,6 +72,36 @@ public class BeansFileTest {
         // Refresh the context to process the bean definitions
         ctx.refresh();
 
+        // Process the special beans
+        for (final String defName : defNames) {
+            switch (defName) {
+                /*
+                 * Check that the mapped classes in the migration class map
+                 * resolve to a class that actually exists.
+                 */
+                case "mda.MigrationClassMap" -> {
+                    final Map<String, String> map = ctx.getBean(defName, Map.class);
+                    for (String toClass : map.values()) {
+                        // check that the mapped class name can be loaded
+                        Class.forName(toClass);
+                    }
+                }
+
+                /*
+                 * Check that the mapped beans in the migration bean map
+                 * have definitions.
+                 */
+                case "mda.MigrationBeanMap" -> {
+                    final Map<String, String> map = ctx.getBean(defName, Map.class);
+                    for (String toBean : map.values()) {
+                        // check that the mapped bean name is defined
+                        ctx.getBeanDefinition(toBean);
+                    }
+                }
+                    
+            }
+
+        }
     }
 
 }

@@ -331,4 +331,31 @@
     <bean id="mda.X509RSAOpenSSLBlacklistValidator" abstract="true" parent="mda.validator_parent"
         class="net.shibboleth.metadata.validate.x509.X509RSAOpenSSLBlacklistValidator"/>
 
+	<!--
+		***************************************************
+		***                                             ***
+		***   M I G R A T I O N   A S S I S T A N C E   ***
+		***                                             ***
+		***************************************************
+	-->
+
+	<bean id="mda.RelocatedBeanFactoryPostProcessor" abstract="true"
+		class="net.shibboleth.shared.spring.config.RelocatedBeanFactoryPostProcessor"/>
+
+	<bean id="mda.MigrationAssistanceBean" parent="mda.RelocatedBeanFactoryPostProcessor"
+		lazy-init="false" p:classes-ref="mda.MigrationClassMap" p:beans-ref="mda.MigrationBeanMap"/>
+
+	<util:map id="mda.MigrationClassMap">
+		<!-- MDA changes from 0.9 to 0.10 -->
+
+		<!-- dependency changes from 0.9 to 0.10 -->
+		<entry key="net.shibboleth.ext.spring.resource.HTTPResource"
+			 value="net.shibboleth.shared.spring.httpclient.resource.HTTPResource"/>
+
+	</util:map>
+
+	<util:map id="mda.MigrationBeanMap">
+
+	</util:map>
+
 </beans>
