@@ -27,6 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 /**
  * A stage which removes all evidence of a given collection of XML namespaces from each metadata item.
@@ -51,7 +52,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      * XML namespaces to whitelist or blacklist.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> namespaces = Set.of();
+    private Set<String> namespaces = CollectionSupport.emptySet();
 
     /**
      * Whether we are whitelisting or blacklisting (default: blacklisting).

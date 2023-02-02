@@ -33,6 +33,7 @@ import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
@@ -49,7 +50,7 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
      * {@link ItemMetadata} classes that, if an item contains them, will cause the {@link Item} to be selected.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<Class<? extends B>> selectionRequirements = Set.of();
+    private Set<Class<? extends B>> selectionRequirements = CollectionSupport.emptySet();
 
     /** Strategy used to generate item identifiers for logging purposes. */
     @Nonnull @GuardedBy("this")

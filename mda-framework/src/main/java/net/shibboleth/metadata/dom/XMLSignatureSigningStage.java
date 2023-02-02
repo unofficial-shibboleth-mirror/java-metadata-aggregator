@@ -41,6 +41,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 
@@ -89,11 +90,11 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * empty list
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<X509Certificate> certificates = List.of();
+    private List<X509Certificate> certificates = CollectionSupport.emptyList();
 
     /** CRLs to be included with the signature. Default value: empty list */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<X509CRL> crls = List.of();
+    private List<X509CRL> crls = CollectionSupport.emptyList();
 
     /** Whether to use exclusive canonicalization. Default value: <code>true</code> */
     @GuardedBy("this") private boolean c14nExclusive = true;
@@ -106,7 +107,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
 
     /** Inclusive prefix list used with exclusive canonicalization. Default value: empty list */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<String> inclusivePrefixList = List.of();
+    private List<String> inclusivePrefixList = CollectionSupport.emptyList();
 
     /**
      * Names of attributes to treat as ID attributes for signature referencing. Default value: list containing the
@@ -117,7 +118,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
 
     /** Explicit names to associate with the given signing key. Default value: empty list */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<String> keyNames = List.of();
+    private List<String> keyNames = CollectionSupport.emptyList();
 
     /** Whether key names should be included in the signature's KeyInfo. Default value: <code>true</code> */
     @GuardedBy("this") private boolean includeKeyNames = true;

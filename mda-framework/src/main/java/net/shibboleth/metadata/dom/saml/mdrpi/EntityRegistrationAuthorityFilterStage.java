@@ -35,6 +35,7 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.AttributeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
@@ -50,7 +51,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
 
     /** Registrars which are white/black listed depending on the value of {@link #whitelistingAuthorities}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> designatedAuthorities = Set.of();
+    private Set<String> designatedAuthorities = CollectionSupport.emptySet();
 
     /** Whether {@link #designatedAuthorities} should be considered a whitelist or a blacklist. Default value: false */
     @GuardedBy("this") private boolean whitelistingAuthorities;

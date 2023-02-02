@@ -27,6 +27,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 
 /**
@@ -46,7 +47,7 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
 
     /** The list of validators to apply. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Validator<V>> validators = List.of();
+    private List<Validator<V>> validators = CollectionSupport.emptyList();
 
     /**
      * Set the list of validators to apply to each item.

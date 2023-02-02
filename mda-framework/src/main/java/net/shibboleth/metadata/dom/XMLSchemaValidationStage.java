@@ -43,6 +43,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.xml.SchemaBuilder;
 import net.shibboleth.shared.xml.SerializeSupport;
@@ -68,7 +69,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
 
     /** Collection of schema resources. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Resource> schemaResources = List.of();
+    private List<Resource> schemaResources = CollectionSupport.emptyList();
 
     /** Whether Elements are required to be schema valid. Default value: <code>true</code> */
     @GuardedBy("this")

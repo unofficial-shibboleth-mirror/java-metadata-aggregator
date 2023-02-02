@@ -30,6 +30,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 /**
  * A pipeline stage that, taking each {@link ItemId} associated with an {@link Item}, transforms its
@@ -45,7 +46,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
 
     /** Transformers used on IDs. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Function<String, String>> idTransformers = List.of();
+    private List<Function<String, String>> idTransformers = CollectionSupport.emptyList();
 
     /**
      * Gets the transforms used to produce the transformed entity IDs.

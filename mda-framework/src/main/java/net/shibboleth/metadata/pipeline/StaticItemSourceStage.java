@@ -26,6 +26,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 /**
  * A stage which adds a static collection of Items to a {@link Item} collection.
@@ -37,7 +38,7 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
 
     /** Collection of static Items added to each Item collection by {@link #execute(List)}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Item<T>> source = List.of();
+    private List<Item<T>> source = CollectionSupport.emptyList();
 
     /**
      * Gets the collection of static Items added to the Item collection by this stage.

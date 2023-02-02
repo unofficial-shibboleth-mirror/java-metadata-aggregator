@@ -28,6 +28,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
@@ -42,7 +43,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
 
     /** {@link ItemMetadata} objects to add to each {@link Item}'s item metadata. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<ItemMetadata> additionalItemMetadata = List.of();
+    private List<ItemMetadata> additionalItemMetadata = CollectionSupport.emptyList();
 
     /**
      * Gets the {@link ItemMetadata} being added to each {@link Item}'s item metadata.

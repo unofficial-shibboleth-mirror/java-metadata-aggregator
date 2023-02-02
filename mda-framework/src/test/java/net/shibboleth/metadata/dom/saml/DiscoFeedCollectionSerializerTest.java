@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.dom.BaseDOMTest;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.XMLParserException;
 
 public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
@@ -33,7 +34,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
         ser.initialize();
         final String output;
         try (final var out = new ByteArrayOutputStream()) {
-            ser.serializeCollection(List.of(), out);
+            ser.serializeCollection(CollectionSupport.emptyList(), out);
             output = out.toString();
         }
         final var read = Json.createReader(new StringReader(output));

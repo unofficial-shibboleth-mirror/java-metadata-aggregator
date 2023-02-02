@@ -30,6 +30,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
@@ -43,7 +44,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
 
     /** Collection of element names for those elements we will be visiting. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<QName> elementNames = Set.of();
+    private Set<QName> elementNames = CollectionSupport.emptySet();
 
     /**
      * Gets the collection of element names to visit.

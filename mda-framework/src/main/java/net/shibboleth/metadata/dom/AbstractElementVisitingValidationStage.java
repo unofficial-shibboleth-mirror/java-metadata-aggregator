@@ -30,6 +30,7 @@ import org.w3c.dom.Node;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 
@@ -54,7 +55,7 @@ public abstract class AbstractElementVisitingValidationStage<V, N>
 
     /** Collection of element names for those elements we will be visiting. */
     @NonnullElements @Unmodifiable @GuardedBy("this")
-    private @Nonnull Set<QName> elementNames = Set.of();
+    private @Nonnull Set<QName> elementNames = CollectionSupport.emptySet();
 
     /**
      * Gets the collection of element names to visit.

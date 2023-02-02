@@ -51,6 +51,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.StringSupport;
@@ -89,11 +90,11 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
 
     /** Attributes set on the {@link Transformer} used by this stage. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Map<String, Object> transformAttributes = Map.of();
+    private Map<String, Object> transformAttributes = CollectionSupport.emptyMap();
 
     /** Features set on the {@link Transformer} used by this stage. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Map<String, Boolean> transformFeatures = Map.of();
+    private Map<String, Boolean> transformFeatures = CollectionSupport.emptyMap();
 
     /**
      * Collection of named parameters to make available to the transform.
@@ -101,7 +102,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
      * If not set, an empty collection.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Map<String, Object> transformParameters = Map.of();
+    private Map<String, Object> transformParameters = CollectionSupport.emptyMap();
 
     /** {@link URIResolver} to use in the transformer. Default value: <code>null</code>. */
     @Nullable @GuardedBy("this")

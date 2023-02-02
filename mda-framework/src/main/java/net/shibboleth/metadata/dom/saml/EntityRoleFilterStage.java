@@ -36,6 +36,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.DOMTypeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 import net.shibboleth.shared.xml.QNameSupport;
@@ -66,7 +67,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<QName> designatedRoles = Set.of();
+    private Set<QName> designatedRoles = CollectionSupport.emptySet();
 
     /** Whether {@link #designatedRoles} should be considered a whitelist or a blacklist. Default value: false */
     @GuardedBy("this") private boolean whitelistingRoles;

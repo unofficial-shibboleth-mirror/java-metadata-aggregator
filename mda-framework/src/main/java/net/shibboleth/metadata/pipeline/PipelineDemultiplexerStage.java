@@ -37,6 +37,7 @@ import net.shibboleth.metadata.pipeline.impl.FutureSupport;
 import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.collection.Pair;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
@@ -96,7 +97,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = List.of();
+    private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = CollectionSupport.emptyList();
 
     /**
      * Gets the executor used to run the selected and non-selected item pipelines.

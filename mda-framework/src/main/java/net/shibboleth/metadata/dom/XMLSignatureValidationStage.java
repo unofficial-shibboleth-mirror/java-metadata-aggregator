@@ -42,6 +42,7 @@ import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.xml.SerializeSupport;
@@ -86,11 +87,11 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
     
     /** Set of blacklisted digest URIs. Default value: empty set. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> blacklistedDigests = Set.of();
+    private Set<String> blacklistedDigests = CollectionSupport.emptySet();
     
     /** Set of blacklisted signature method URIs. Default value: empty set. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> blacklistedSignatureMethods = Set.of();
+    private Set<String> blacklistedSignatureMethods = CollectionSupport.emptySet();
     
     /** Option to determine whether empty references are to be permitted.  Default value: <code>true</code>. */
     @GuardedBy("this")

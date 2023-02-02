@@ -39,6 +39,7 @@ import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthority;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.xml.ElementSupport;
 
@@ -204,7 +205,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
      * termination.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Predicate<EntityAttributeContext>> rules = List.of();
+    private List<Predicate<EntityAttributeContext>> rules = CollectionSupport.emptyList();
 
     /** Mode of operation: whitelisting or blacklisting. Default: whitelisting. */
     @GuardedBy("this") private boolean whitelisting = true;

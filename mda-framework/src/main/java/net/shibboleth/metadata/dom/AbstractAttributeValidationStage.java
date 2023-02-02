@@ -31,6 +31,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 
@@ -57,9 +58,8 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
      * (which will by far dominate use cases) are given the preferred
      * identifiers.</p>
      */
-    @SuppressWarnings("null")
     @NonnullElements @Unmodifiable @GuardedBy("this")
-    private @Nonnull Set<QName> attributeNames = Set.of();
+    private @Nonnull Set<QName> attributeNames = CollectionSupport.emptySet();
 
     /**
      * Gets the collection of attribute names to visit.

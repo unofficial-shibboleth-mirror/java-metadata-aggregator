@@ -34,6 +34,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
@@ -45,7 +46,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
 
     /** Entities which are white/black listed depending on the value of {@link #whitelistingEntities}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> designatedEntities = Set.of();
+    private Set<String> designatedEntities = CollectionSupport.emptySet();
 
     /** Whether {@link #designatedEntities} should be considered a whitelist or a blacklist. Default value: false */
     @GuardedBy("this") private boolean whitelistingEntities;

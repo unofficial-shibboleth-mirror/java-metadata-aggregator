@@ -34,6 +34,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.NotEmpty;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.StringSupport;
@@ -143,7 +144,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
 
     /** Names of the elements to strip. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> elementNames = Set.of();
+    private Set<String> elementNames = CollectionSupport.emptySet();
 
     /** Whether we are operating in a whitelisting mode (<code>false</code> by default). */
     private boolean whitelisting;

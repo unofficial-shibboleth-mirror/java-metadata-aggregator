@@ -31,6 +31,7 @@ import net.shibboleth.metadata.FirstItemIdItemIdentificationStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 /**
  * Item identification strategy for interfederation use cases.
@@ -53,13 +54,13 @@ public class RegistrationAuthorityItemIdentificationStrategy<T> extends FirstIte
      * Set of registration authorities to be ignored.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> ignoredRegistrationAuthorities = Set.of();
+    private Set<String> ignoredRegistrationAuthorities = CollectionSupport.emptySet();
     
     /**
      * Replacement display names for registration authorities.
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Map<String, String> registrationAuthorityDisplayNames = Map.of();
+    private Map<String, String> registrationAuthorityDisplayNames = CollectionSupport.emptyMap();
     
     /**
      * Returns the set of registration authorities we are ignoring.

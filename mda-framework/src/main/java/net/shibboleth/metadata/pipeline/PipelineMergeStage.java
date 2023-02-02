@@ -38,6 +38,7 @@ import net.shibboleth.metadata.pipeline.impl.FutureSupport;
 import net.shibboleth.metadata.pipeline.impl.PipelineCallable;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.DeprecationSupport;
@@ -87,7 +88,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
 
     /** Pipelines whose results become the output of this source. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Pipeline<T>> mergedPipelines = List.of();
+    private List<Pipeline<T>> mergedPipelines = CollectionSupport.emptyList();
 
     /**
      * Gets the executor used to run the selected and non-selected item pipelines.
