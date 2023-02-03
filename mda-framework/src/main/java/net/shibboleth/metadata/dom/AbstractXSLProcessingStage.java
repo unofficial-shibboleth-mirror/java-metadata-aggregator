@@ -346,17 +346,17 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
         }
 
         @Override
-        public void error(@Nonnull final TransformerException e) throws TransformerException {
+        public void error(final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
         @Override
-        public void fatalError(@Nonnull final TransformerException e) throws TransformerException {
+        public void fatalError(final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 
         @Override
-        public void warning(@Nonnull final TransformerException e) throws TransformerException {
+        public void warning(final TransformerException e) throws TransformerException {
             parseAndAppendStatusInfo(e);
         }
 

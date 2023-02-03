@@ -36,53 +36,53 @@ import net.shibboleth.shared.xml.ElementSupport;
 public final class SAMLMetadataSupport {
 
     /** SAML Metadata namespace URI. */
-    public static final String MD_NS = "urn:oasis:names:tc:SAML:2.0:metadata";
+    public static final @Nonnull String MD_NS = "urn:oasis:names:tc:SAML:2.0:metadata";
 
     /** Default SAML Metadata namespace prefix. */
-    public static final String MD_PREFIX = "md";
+    public static final @Nonnull String MD_PREFIX = "md";
 
     /** EntitiesDescriptor element name. */
-    public static final QName ENTITIES_DESCRIPTOR_NAME = new QName(MD_NS, "EntitiesDescriptor", MD_PREFIX);
+    public static final @Nonnull QName ENTITIES_DESCRIPTOR_NAME = new QName(MD_NS, "EntitiesDescriptor", MD_PREFIX);
 
     /** EntityDescriptor element name. */
-    public static final QName ENTITY_DESCRIPTOR_NAME = new QName(MD_NS, "EntityDescriptor", MD_PREFIX);
+    public static final @Nonnull QName ENTITY_DESCRIPTOR_NAME = new QName(MD_NS, "EntityDescriptor", MD_PREFIX);
 
     /** Extensions element name. */
-    public static final QName EXTENSIONS_NAME = new QName(MD_NS, "Extensions", MD_PREFIX);
+    public static final @Nonnull QName EXTENSIONS_NAME = new QName(MD_NS, "Extensions", MD_PREFIX);
 
     /** validUntil attribute name. */
-    public static final QName VALID_UNTIL_ATTRIB_NAME = new QName("validUntil");
+    public static final @Nonnull QName VALID_UNTIL_ATTRIB_NAME = new QName("validUntil");
 
     /** cacheDuration attribute name. */
-    public static final QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");
+    public static final @Nonnull QName CACHE_DURATION_ATTRIB_NAME = new QName("cacheDuration");
 
     /**
      * QName of the RoleDescriptor element.
      *
      * @since 0.10.0
      */
-    public static final QName ROLE_DESCRIPTOR_NAME = new QName(MD_NS, "RoleDescriptor");
+    public static final @Nonnull QName ROLE_DESCRIPTOR_NAME = new QName(MD_NS, "RoleDescriptor");
 
     /**
      * QName of the IDPSSODescriptor element.
      *
      * @since 0.10.0
      */
-    public static final QName IDP_SSO_DESCRIPTOR_NAME = new QName(MD_NS, "IDPSSODescriptor");
+    public static final @Nonnull QName IDP_SSO_DESCRIPTOR_NAME = new QName(MD_NS, "IDPSSODescriptor");
 
     /**
      * QName of the SPSSODescriptor element.
      *
      * @since 0.10.0
      */
-    public static final QName SP_SSO_DESCRIPTOR_NAME = new QName(MD_NS, "SPSSODescriptor");
+    public static final @Nonnull QName SP_SSO_DESCRIPTOR_NAME = new QName(MD_NS, "SPSSODescriptor");
 
     /**
      * QName of the AuthnAuthorityDescriptor element.
      *
      * @since 0.10.0
      */
-    public static final QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(MD_NS,
+    public static final @Nonnull QName AUTHN_AUTHORITY_DESCRIPTOR_NAME = new QName(MD_NS,
             "AuthnAuthorityDescriptor");
 
     /**
@@ -90,7 +90,7 @@ public final class SAMLMetadataSupport {
      *
      * @since 0.10.0
      */
-    public static final QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(MD_NS,
+    public static final @Nonnull QName ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME = new QName(MD_NS,
             "AttributeAuthorityDescriptor");
 
     /**
@@ -98,35 +98,35 @@ public final class SAMLMetadataSupport {
      *
      * @since 0.10.0
      */
-    public static final QName PDP_DESCRIPTOR_NAME = new QName(MD_NS, "PDPDescriptor");
+    public static final @Nonnull QName PDP_DESCRIPTOR_NAME = new QName(MD_NS, "PDPDescriptor");
 
     /**
      * QName of the Organization element.
      *
      * @since 0.10.0
      */
-    public static final QName ORGANIZATION_NAME = new QName(MD_NS, "Organization", MD_PREFIX);
+    public static final @Nonnull QName ORGANIZATION_NAME = new QName(MD_NS, "Organization", MD_PREFIX);
 
     /**
      * QName of the OrganizationName element.
      *
      * @since 0.10.0
      */
-    public static final QName ORGANIZATIONNAME_NAME = new QName(MD_NS, "OrganizationName", MD_PREFIX);
+    public static final @Nonnull QName ORGANIZATIONNAME_NAME = new QName(MD_NS, "OrganizationName", MD_PREFIX);
 
     /**
      * QName of the OrganizationDisplayName element.
      *
      * @since 0.10.0
      */
-    public static final QName ORGANIZATIONDISPLAYNAME_NAME = new QName(MD_NS, "OrganizationDisplayName", MD_PREFIX);
+    public static final @Nonnull QName ORGANIZATIONDISPLAYNAME_NAME = new QName(MD_NS, "OrganizationDisplayName", MD_PREFIX);
 
     /**
      * QName of the OrganizationURL element.
      *
      * @since 0.10.0
      */
-    public static final QName ORGANIZATIONURL_NAME = new QName(MD_NS, "OrganizationURL", MD_PREFIX);
+    public static final @Nonnull QName ORGANIZATIONURL_NAME = new QName(MD_NS, "OrganizationURL", MD_PREFIX);
 
     /** Constructor. */
     private SAMLMetadataSupport() {

@@ -101,10 +101,10 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
     }
 
     @Override
-    protected void doExecute(final List<Item<T>> items) throws StageProcessingException {
+    protected void doExecute(final @Nonnull List<Item<T>> items) throws StageProcessingException {
         // we make a defensive copy here in case logic in the delegate #doExecute makes changes
         // to the item collection and thus would cause issues if we were iterating over it directly
-        final var collectionCopy = new ArrayList<>(items);
+        final @Nonnull var collectionCopy = new ArrayList<>(items);
 
         for (final Item<T> item : collectionCopy) {
             final var matchingMetadata = new ClassToInstanceMultiMap<B>();

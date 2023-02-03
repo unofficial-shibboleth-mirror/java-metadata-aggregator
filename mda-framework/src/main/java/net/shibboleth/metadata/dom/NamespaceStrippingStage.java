@@ -63,7 +63,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
     }
 
     @Override
-    protected boolean removingNamespace(final String ns) {
+    protected boolean removingNamespace(final @Nonnull String ns) {
         return getNamespace().equals(ns);
     }
 

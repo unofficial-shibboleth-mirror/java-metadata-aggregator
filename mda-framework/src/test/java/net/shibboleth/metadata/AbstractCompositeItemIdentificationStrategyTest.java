@@ -1,6 +1,8 @@
 
 package net.shibboleth.metadata;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -12,12 +14,12 @@ public class AbstractCompositeItemIdentificationStrategyTest {
     static class StringItemIdentificationStrategy extends AbstractCompositeItemIdentificationStrategy<String> {
 
         @Override
-        String getBasicIdentifier(Item<String> item) {
+        String getBasicIdentifier(final @Nonnull Item<String> item) {
             return "[basic:" + item.unwrap() + "]";
         }
 
         @Override
-        String getExtraIdentifier(Item<String> item) {
+        String getExtraIdentifier(final @Nonnull Item<String> item) {
             return "[extra:" + item.unwrap() + "]";
         }
         

@@ -19,6 +19,7 @@ package net.shibboleth.metadata.dom;
 
 import net.shibboleth.metadata.Item;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.w3c.dom.Element;
@@ -43,6 +44,6 @@ public interface ElementVisitor {
      * @param visited the {@link Element} being visited.
      * @param item the {@link Item} which is the context for the visit.
      */
-    void visitElement(Element visited, Item<Element> item);
+    void visitElement(@Nonnull Element visited, @Nonnull Item<Element> item);
     
 }

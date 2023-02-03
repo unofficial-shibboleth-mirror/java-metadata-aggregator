@@ -40,26 +40,26 @@ import net.shibboleth.metadata.dom.ElementMatcher;
 public final class SAMLSupport {
 
     /** Namespace URI for SAML elements. */
-    public static final String SAML_NS = "urn:oasis:names:tc:SAML:2.0:assertion";
+    public static final @Nonnull String SAML_NS = "urn:oasis:names:tc:SAML:2.0:assertion";
     
     /** Conventional prefix for SAML elements. */
-    public static final String SAML_PREFIX = "saml";
+    public static final @Nonnull String SAML_PREFIX = "saml";
     
     /** saml:Attribute element. */
-    public static final QName ATTRIBUTE_NAME = new QName(SAML_NS, "Attribute", SAML_PREFIX);
+    public static final @Nonnull QName ATTRIBUTE_NAME = new QName(SAML_NS, "Attribute", SAML_PREFIX);
     
     /** Unspecified default <code>NameFormat</code> value for <code>Attribute</code> elements. */
-    public static final String ATTRNAME_FORMAT_UNSPECIFIED = "urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified";
+    public static final @Nonnull String ATTRNAME_FORMAT_UNSPECIFIED = "urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified";
     
     /** saml:AttributeValue element. */
-    public static final QName ATTRIBUTE_VALUE_NAME = new QName(SAML_NS, "AttributeValue", SAML_PREFIX);
+    public static final @Nonnull QName ATTRIBUTE_VALUE_NAME = new QName(SAML_NS, "AttributeValue", SAML_PREFIX);
 
     /**
      * Matcher for the <code>Extensions</code> element, for use with the {@link Container} system.
      *
      * @since 0.10.0
      */
-    public static final Predicate<Element> EXTENSIONS_MATCHER =
+    public static final @Nonnull Predicate<Element> EXTENSIONS_MATCHER =
             new ElementMatcher(SAMLMetadataSupport.EXTENSIONS_NAME);
 
     /**
@@ -67,7 +67,7 @@ public final class SAMLSupport {
      *
      * @since 0.10.0
      */
-    public static final Function<Container, Element> EXTENSIONS_MAKER =
+    public static final @Nonnull Function<Container, Element> EXTENSIONS_MAKER =
             new ElementMaker(SAMLMetadataSupport.EXTENSIONS_NAME);
 
     /** Constructor. */

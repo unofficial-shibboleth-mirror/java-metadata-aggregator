@@ -109,8 +109,8 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @throws XMLParserException thrown if the file does not exist or there is a problem parsing it
      */
-    public Element readXMLData(final String path) throws XMLParserException {
-        String trimmedPath = StringSupport.trimOrNull(path);
+    public @Nonnull Element readXMLData(final @Nonnull String path) throws XMLParserException {
+        @Nonnull String trimmedPath = StringSupport.trimOrNull(path);
         Constraint.isNotNull(trimmedPath, "Path may not be null or empty");
 
         if (!trimmedPath.startsWith("/")) {
@@ -122,7 +122,11 @@ public abstract class BaseDOMTest extends BaseTest {
             throw new XMLParserException(trimmedPath + " does not exist or is not readable");
         }
 
-        return parserPool.parse(input).getDocumentElement();
+        final var docElement = parserPool.parse(input).getDocumentElement();
+        if (docElement == null) {
+            throw new XMLParserException("could not parse " + trimmedPath);
+        }
+        return docElement;
     }
 
     /**

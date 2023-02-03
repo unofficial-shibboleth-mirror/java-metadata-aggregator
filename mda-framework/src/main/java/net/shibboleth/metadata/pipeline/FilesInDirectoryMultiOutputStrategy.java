@@ -181,7 +181,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
     }
 
     @Override
-    public Destination getDestination(final Item<T> item) throws StageProcessingException {
+    public @Nonnull Destination getDestination(final @Nonnull Item<T> item) throws StageProcessingException {
         // Locate the item's identifier.
         final List<ItemId> ids = item.getItemMetadata().get(ItemId.class);
         if (ids.isEmpty()) {

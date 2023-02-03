@@ -48,7 +48,7 @@ public class ElementMaker implements Function<Container, Element> {
     }
 
     @Override
-    public Element apply(@Nonnull final Container input) {
+    public Element apply(final Container input) {
         return ElementSupport.constructElement(input.unwrap().getOwnerDocument(), name);
     }
 

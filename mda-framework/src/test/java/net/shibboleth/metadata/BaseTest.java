@@ -51,7 +51,7 @@ public abstract class BaseTest {
      * 
      * @param clazz class under test
      */
-    protected BaseTest(final Class<?> clazz) {
+    protected BaseTest(final @Nonnull Class<?> clazz) {
         testingClass = clazz;
         baseClassPath = nameToPath(testingClass.getName());
         testingPackage = testingClass.getPackage();
@@ -65,7 +65,7 @@ public abstract class BaseTest {
      * @param name name to be converted
      * @return path to resources associated with the name
      */
-    private String nameToPath(final String name) {
+    private String nameToPath(final @Nonnull String name) {
         return "/" + name.replace('.', '/');
     }
         
@@ -78,7 +78,7 @@ public abstract class BaseTest {
      * @param which class-relative resource name
      * @return absolute resource name
      */
-    protected String classRelativeResource(final String which) {
+    protected @Nonnull String classRelativeResource(final @Nonnull String which) {
         return baseClassPath + "-" + which;
     }
     
