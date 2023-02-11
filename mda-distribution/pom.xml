@@ -60,7 +60,7 @@
         </dependency>
         <dependency>
             <groupId>${httpclient.groupId}</groupId>
-            <artifactId>httpclient</artifactId>
+            <artifactId>${httpclient.artifactId}</artifactId>
             <scope>runtime</scope>
         </dependency>
 
