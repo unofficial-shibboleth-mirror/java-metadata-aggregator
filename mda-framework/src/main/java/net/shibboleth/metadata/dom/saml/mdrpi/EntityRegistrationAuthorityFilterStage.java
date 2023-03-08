@@ -165,7 +165,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
      * @return true if the descriptor should be removed, false otherwise
      */
     protected boolean processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
-        Iterator<Element> descriptorItr;
+        boolean remove = true;
 
         if (filterOutDescriptor(entitiesDescriptor)) {
             return true;
@@ -173,28 +173,25 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
 
         final List<Element> childEntitiesDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
-        descriptorItr = childEntitiesDescriptors.iterator();
-        while (descriptorItr.hasNext()) {
-            final Element descriptor = descriptorItr.next();
+        for (final var descriptor : childEntitiesDescriptors) {
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
-                descriptorItr.remove();
+            } else {
+                remove = false;
             }
         }
 
         final List<Element> childEntityDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
-        descriptorItr = childEntityDescriptors.iterator();
-        while (descriptorItr.hasNext()) {
-            final Element descriptor = descriptorItr.next();
+        for (final var descriptor : childEntityDescriptors) {
             if (filterOutDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
-                descriptorItr.remove();
+            } else {
+                remove = false;
             }
         }
 
-        if (childEntitiesDescriptors.isEmpty() && childEntityDescriptors.isEmpty() &&
-                isRemovingEntitylessEntitiesDescriptor()) {
+        if (remove && isRemovingEntitylessEntitiesDescriptor()) {
             return true;
         }
 

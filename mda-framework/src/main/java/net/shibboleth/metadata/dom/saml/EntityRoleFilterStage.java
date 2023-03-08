@@ -185,32 +185,29 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * @return true if the descriptor should be removed, false otherwise
      */
     protected boolean processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
-        Iterator<Element> descriptorItr;
+        boolean remove = true;
 
         final List<Element> childEntitiesDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
-        descriptorItr = childEntitiesDescriptors.iterator();
-        while (descriptorItr.hasNext()) {
-            final var descriptor = descriptorItr.next();
+        for (final var descriptor : childEntitiesDescriptors) {
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
-                descriptorItr.remove();
+            } else {
+                remove = false;
             }
         }
 
         final List<Element> childEntityDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
-        descriptorItr = childEntityDescriptors.iterator();
-        while (descriptorItr.hasNext()) {
-            final var descriptor = descriptorItr.next();
+        for (final var descriptor : childEntityDescriptors) {
             if (processEntityDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
-                descriptorItr.remove();
+            } else {
+                remove = false;
             }
         }
 
-        if (childEntitiesDescriptors.isEmpty() && childEntityDescriptors.isEmpty()
-                && isRemovingEntitylessEntitiesDescriptor()) {
+        if (remove && isRemovingEntitylessEntitiesDescriptor()) {
             return true;
         }
 
@@ -234,8 +231,8 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
 
         log.debug("{} pipeline stage filtering roles from EntityDescriptor {}", getId(), entityId);
 
-        final List<Element> roles = getFilteredRoles(entityId, entityDescriptor);
-        if (roles.isEmpty() && isRemovingRolelessEntities()) {
+        final boolean hasRoles = hasFilteredRoles(entityId, entityDescriptor);
+        if (!hasRoles && isRemovingRolelessEntities()) {
             return true;
         }
 
@@ -243,19 +240,17 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
     }
 
     /**
-     * Iterates over the roles of a EntitiesDescriptor, filters out the appropriate ones and returns the rest.
+     * Iterates over the roles of an EntityDescriptor and filters out the appropriate ones.
      * 
      * @param entityId ID of the entity whose roles are being processed
      * @param entityDescriptor descriptor of entity whose roles are being processed
      * 
-     * @return the list of roles remaining after processing
+     * @return <code>true</code> if the EntityDescriptor has any roles remaining after processing
      */
-    protected List<Element> getFilteredRoles(@Nonnull final String entityId, @Nonnull final Element entityDescriptor) {
+    private boolean hasFilteredRoles(@Nonnull final String entityId, @Nonnull final Element entityDescriptor) {
+        boolean remains = false;
         final List<Element> childElements = ElementSupport.getChildElements(entityDescriptor);
-
-        final Iterator<Element> childItr = childElements.iterator();
-        while (childItr.hasNext()) {
-            final Element child = childItr.next();
+        for (final var child : childElements) {
             final QName childQName = QNameSupport.getNodeQName(child);
 
             final QName roleIdentifier;
@@ -264,25 +259,24 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
             } else if (NAMED_ROLES.contains(childQName)) {
                 roleIdentifier = childQName;
             } else {
-                childItr.remove();
                 continue;
             }
 
-            final boolean isDesignatedRole = getDesignatedRoles().contains(roleIdentifier);
             if (roleIdentifier != null) {
+                final boolean isDesignatedRole = getDesignatedRoles().contains(roleIdentifier);
                 if ((isWhitelistingRoles() && !isDesignatedRole) || (!isWhitelistingRoles() && isDesignatedRole)) {
                     log.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] {getId(),
                             roleIdentifier, entityId,});
                     entityDescriptor.removeChild(child);
-                    childItr.remove();
                 } else {
                     log.debug("{} pipeline did not remove role {} from EntityDescriptor {}", new Object[] {getId(),
                             roleIdentifier, entityId,});
+                    remains = true;
                 }
             }
         }
 
-        return childElements;
+        return remains;
     }
 
 }
