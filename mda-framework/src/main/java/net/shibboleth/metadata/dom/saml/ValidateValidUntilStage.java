@@ -21,9 +21,11 @@ import java.time.Duration;
 import java.time.Instant;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -102,9 +104,19 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
             return;
         }
 
-        final Instant validUntil =
-                AttributeSupport.getDateTimeAttribute(AttributeSupport.getAttribute(element,
-                        SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
+        /*
+         * Nothing to do if there is no validUntil attribute.
+         */
+        final @Nullable Attr attr = AttributeSupport.getAttribute(element,
+                SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
+        if (attr == null) {
+            if (isRequireValidUntil()) {
+                item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
+            }
+            return;
+        }
+
+        final Instant validUntil = AttributeSupport.getDateTimeAttribute(attr);
         if (validUntil == null) {
             if (isRequireValidUntil()) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
