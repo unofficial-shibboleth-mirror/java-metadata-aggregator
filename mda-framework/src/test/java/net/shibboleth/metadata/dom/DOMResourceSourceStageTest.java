@@ -20,12 +20,14 @@ package net.shibboleth.metadata.dom;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.testng.Assert;
@@ -160,5 +162,48 @@ public class DOMResourceSourceStageTest extends BaseTest {
             Assert.assertNotNull(cause, "exception had no cause");
             Assert.assertTrue(cause instanceof IOException, "cause should have been an IOException");
         }
+    }
+
+    /**
+     * Implementation of {@link InputStream} that wraps {@link ByteArrayInputStream}
+     * while remembering if it was properly closed after use.
+     */
+    private static class WrappedInputStream extends ByteArrayInputStream {
+        private boolean closed = false;
+
+        public WrappedInputStream(byte[] buf) {
+            super(buf);
+        }
+        
+        public void close() throws IOException {
+            super.close();
+            closed = true;
+        }
+        
+        public boolean isClosed() {
+            return closed;
+        }
+    }
+
+    @Test
+    public void mda279() throws Exception {
+        final String data = "<x><y/></x>";
+        final var stream = new WrappedInputStream(data.getBytes("UTF-8"));
+        Assert.assertFalse(stream.isClosed());
+
+        final var stage = new DOMResourceSourceStage();
+        stage.setId("test");
+        stage.setParserPool(parserPool);
+        stage.setDOMResource(new InputStreamResource(stream));
+        stage.initialize();
+        Assert.assertFalse(stream.isClosed());
+
+        final var items = new ArrayList<Item<Element>>();
+        stage.execute(items);
+        Assert.assertEquals(items.size(), 1);
+
+        stage.destroy();
+
+        Assert.assertTrue(stream.isClosed());
     }
 }
