@@ -134,10 +134,10 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
             throws StageProcessingException {
 
         final var resource = getDOMResource();
-
+        assert resource != null; // enforced by doInitialize
         log.debug("Attempting to fetch XML document from '{}'", resource.getDescription());
 
-        try (InputStream ins = resource.getInputStream()) {
+        try (@Nonnull InputStream ins = resource.getInputStream()) {
             populateItemCollection(items, ins, resource);
         } catch (final IOException e) {
             if (getErrorCausesSourceFailure()) {
