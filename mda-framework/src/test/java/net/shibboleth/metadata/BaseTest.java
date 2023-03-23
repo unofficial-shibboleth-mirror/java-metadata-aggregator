@@ -107,7 +107,7 @@ public abstract class BaseTest {
      * @param resourcePath classpath path to the resource
      * @return the data file as a resource
      */
-    public Resource getClasspathResource(final String resourcePath) {
+    public @Nonnull Resource getClasspathResource(final String resourcePath) {
         return new ClassPathResource(simpleClassRelativeName(resourcePath), testingClass);
     }
 

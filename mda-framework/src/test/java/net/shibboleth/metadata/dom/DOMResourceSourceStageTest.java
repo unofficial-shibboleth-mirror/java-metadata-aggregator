@@ -23,32 +23,31 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.xml.impl.BasicParserPool;
 
 public class DOMResourceSourceStageTest extends BaseTest {
 
-    DOMResourceSourceStageTest() {
-        super(DOMResourceSourceStage.class);
-    }
-
-    BasicParserPool parserPool;
+    private final @Nonnull BasicParserPool parserPool;
     
-    @BeforeClass void initialize() throws Exception {
+    DOMResourceSourceStageTest() throws ComponentInitializationException {
+        super(DOMResourceSourceStage.class);
         parserPool = new BasicParserPool();
         parserPool.initialize();
     }
-    
+
     @Test public void testSuccessfulFetchAndParse() throws Exception {
         Resource mdResource = new ByteArrayResource("<test/>".getBytes("UTF-8"));
 
