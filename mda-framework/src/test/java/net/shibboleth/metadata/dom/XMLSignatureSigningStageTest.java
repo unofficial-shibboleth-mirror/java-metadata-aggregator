@@ -321,6 +321,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
     private Element extractKeyInfo(@Nonnull final Element root) {
         final var signature = ElementSupport.getFirstChildElement(root, XMLDSIGSupport.SIGNATURE_NAME);
+        assert signature != null;
         final var keyInfos = signature.getElementsByTagNameNS(XMLSignature.XMLNS, "KeyInfo");
         Assert.assertNotNull(keyInfos);
         if (keyInfos.getLength() != 0) {

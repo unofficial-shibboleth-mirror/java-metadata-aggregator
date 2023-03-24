@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -111,7 +110,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
      * 
      * @return serializer used to write item to the output file
      */
-    @Nullable public final synchronized ItemCollectionSerializer<T> getSerializer() {
+    public final synchronized @NonnullAfterInit ItemCollectionSerializer<T> getSerializer() {
         return serializer;
     }
 

@@ -59,7 +59,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
-        Assert.assertNotNull(durationAttr);
+        assert durationAttr != null;
 
         final var duration = AttributeSupport.getDurationAttributeValue(durationAttr);
         Assert.assertEquals(duration, Duration.ofHours(1));
@@ -94,7 +94,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
-        Assert.assertNotNull(durationAttr);
+        assert durationAttr != null;
 
         final var duration = AttributeSupport.getDurationAttributeValue(durationAttr);
         Assert.assertEquals(duration, Duration.ofHours(2));
@@ -120,7 +120,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr durationAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
-        Assert.assertNotNull(durationAttr);
+        assert durationAttr != null;
 
         final var duration = AttributeSupport.getDurationAttributeValue(durationAttr);
         Assert.assertEquals(duration, Duration.ofMinutes(30));

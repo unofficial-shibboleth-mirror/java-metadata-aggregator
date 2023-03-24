@@ -69,9 +69,10 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         stage.execute(metadataCollection);
 
         Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
-        Assert.assertNotNull(validUntilAttr);
+        assert validUntilAttr != null;
 
         final var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        assert validUntil != null;
         Assert.assertTrue(validUntil.isAfter(now.plus(duration).minus(Duration.ofMillis(100))));
         Assert.assertTrue(validUntil.isBefore(now.plus(duration).plus(Duration.ofMillis(100))));
     }
@@ -100,9 +101,10 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         stage.execute(metadataCollection);
 
         Attr validUntilAttr = AttributeSupport.getAttribute(metadataCollection.iterator().next().unwrap(), SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
-        Assert.assertNotNull(validUntilAttr);
+        assert validUntilAttr != null;
 
         final var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        assert validUntil != null;
         Assert.assertTrue(validUntil.isAfter(now.plus(duration).minus(Duration.ofMillis(100))));
         Assert.assertTrue(validUntil.isBefore(now.plus(duration).plus(Duration.ofMillis(100))));
     }

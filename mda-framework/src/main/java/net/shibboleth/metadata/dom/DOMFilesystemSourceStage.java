@@ -95,7 +95,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return pool of DOM parsers used to parse the XML file in to a DOM
      */
-    @Nullable public final synchronized ParserPool getParserPool() {
+    public final synchronized @NonnullAfterInit ParserPool getParserPool() {
         return parserPool;
     }
 
@@ -114,7 +114,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      * 
      * @return path to the DOM material provided by this source
      */
-    @Nullable public final synchronized File getSource() {
+    public final synchronized @NonnullAfterInit File getSource() {
         return sourceFile;
     }
 

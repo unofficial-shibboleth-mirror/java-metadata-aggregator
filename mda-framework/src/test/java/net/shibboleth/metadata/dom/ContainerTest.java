@@ -36,7 +36,7 @@ public class ContainerTest extends BaseDOMTest {
         final Element e2 = doc.createElementNS("ns", "el2");
         e1.insertBefore(e2, e1.getFirstChild());
         final Container c2 = c1.findChild(x -> true);
-        Assert.assertNotNull(c2);
+        assert c2 != null;
         c2.prime();
         Assert.assertEquals(e2.getTextContent(), "\n    ");
 
@@ -193,7 +193,7 @@ public class ContainerTest extends BaseDOMTest {
             }
             
         });
-        Assert.assertNotNull(child);
+        assert child != null;
         Assert.assertEquals(child.unwrap().getTextContent(), "find me 1");
     }
 

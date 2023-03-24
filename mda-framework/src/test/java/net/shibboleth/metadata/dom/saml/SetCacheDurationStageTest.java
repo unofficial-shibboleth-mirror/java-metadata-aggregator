@@ -58,7 +58,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         final DatatypeFactory dtf = DatatypeFactory.newInstance();
         final Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor,
                 SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
-        Assert.assertNotNull(cacheDurationAttr);
+        assert cacheDurationAttr != null;
         return Duration.ofMillis(dtf.newDuration(cacheDurationAttr.getValue()).getTimeInMillis(baseDate));
     }
     

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -106,7 +105,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * 
      * @return the output strategy function
      */
-    @Nullable public final synchronized OutputStrategy<T> getOutputStrategy() {
+    public final synchronized @NonnullAfterInit OutputStrategy<T> getOutputStrategy() {
         return outputStrategy;
     }
 
@@ -125,7 +124,7 @@ public class MultiOutputSerializationStage<T> extends AbstractIteratingStage<T> 
      * 
      * @return serializer used to write item to the output file
      */
-    @Nullable public final synchronized ItemSerializer<T> getSerializer() {
+    public final synchronized @NonnullAfterInit ItemSerializer<T> getSerializer() {
         return serializer;
     }
 

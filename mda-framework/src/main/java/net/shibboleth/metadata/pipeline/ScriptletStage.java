@@ -91,7 +91,7 @@ public class ScriptletStage<T> extends AbstractStage<T> {
      * 
      * @return the script executed by this stage
      */
-    @Nullable public final synchronized EvaluableScript getScript() {
+    public final synchronized @NonnullAfterInit EvaluableScript getScript() {
         return script;
     }
 

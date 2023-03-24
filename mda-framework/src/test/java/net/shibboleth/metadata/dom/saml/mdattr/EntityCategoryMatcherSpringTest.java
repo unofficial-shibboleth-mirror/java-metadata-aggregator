@@ -45,6 +45,7 @@ public class EntityCategoryMatcherSpringTest extends AbstractTestNGSpringContext
     @Test
     @SuppressWarnings("unchecked")
     public void testNoRA() {
+       	assert applicationContext != null;
         final var matcher = applicationContext.getBean("categoryMatcherNoRA", Predicate.class);
         
         // all four components match
@@ -67,6 +68,7 @@ public class EntityCategoryMatcherSpringTest extends AbstractTestNGSpringContext
     @Test
     @SuppressWarnings("unchecked")
     public void testWithRA() {
+       	assert applicationContext != null;
         final var matcher = applicationContext.getBean("categoryMatcherWithRA", Predicate.class);
         
         // all four components match

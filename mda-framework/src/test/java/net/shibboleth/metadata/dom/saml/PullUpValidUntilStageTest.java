@@ -60,9 +60,10 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
-        Assert.assertNotNull(validUntilAttr);
+        assert validUntilAttr != null;
 
         final var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        assert validUntil != null;
         Assert.assertEquals(validUntil.toEpochMilli(), 2429913600000L);
 
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor,
@@ -97,9 +98,10 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
-        Assert.assertNotNull(validUntilAttr);
+        assert validUntilAttr != null;
 
         var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        assert validUntil != null;
         Assert.assertTrue(validUntil.isAfter(Instant.now().plus(hundredYears).minus(Duration.ofMinutes(1))));
     }
 
@@ -126,9 +128,10 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         Attr validUntilAttr = AttributeSupport
                 .getAttribute(entitiesDescriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
-        Assert.assertNotNull(validUntilAttr);
+        assert validUntilAttr != null;
 
         final var validUntil = AttributeSupport.getDateTimeAttribute(validUntilAttr);
+        assert validUntil != null;
 
         final var delta = Duration.ofSeconds(10); // ten seconds permitted either side to allow for test execution time
         Assert.assertTrue(validUntil.isBefore(twoYearsFromNow.plus(delta)));

@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -47,7 +46,7 @@ public class NamespaceStrippingStage extends AbstractNamespacesStrippingStage {
      * 
      * @return namespace URI
      */
-    @Nullable public final synchronized String getNamespace() {
+    public final synchronized @NonnullAfterInit String getNamespace() {
         return namespace;
     }
 
