@@ -130,4 +130,50 @@ public class EntityDescriptorItemIdPopulationStageTest extends BaseDOMTest {
             Assert.assertEquals(itemId.getId(), entityDescriptor.getAttributeNS(null, "entityID"));
         }
     }
+
+    /**
+     * Tests running the stage on an <code>EntityDescriptor</code> lacking a <code>entityID</code>.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testNoEntityID() throws Exception {
+    	final var item = new DOMElementItem(readXMLData("noEntityID.xml"));
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
+        metadataCollection.add(item);
+
+        EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
+        stage.setId("test");
+        stage.initialize();
+
+        stage.execute(metadataCollection);
+
+        final var itemIds = item.getItemMetadata().get(ItemId.class);
+        Assert.assertEquals(itemIds.size(), 0);
+        
+        stage.destroy();
+    }
+
+    /**
+     * Tests running the stage on an <code>EntityDescriptor</code> with an empty <code>entityID</code>.
+     * 
+     * @throws Exception if something bad happens
+     */
+    @Test
+    public void testEmptyEntityID() throws Exception {
+    	final var item = new DOMElementItem(readXMLData("emptyID.xml"));
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
+        metadataCollection.add(item);
+
+        EntityDescriptorItemIdPopulationStage stage = new EntityDescriptorItemIdPopulationStage();
+        stage.setId("test");
+        stage.initialize();
+
+        stage.execute(metadataCollection);
+
+        final var itemIds = item.getItemMetadata().get(ItemId.class);
+        Assert.assertEquals(itemIds.size(), 0);
+        
+        stage.destroy();
+    }
 }

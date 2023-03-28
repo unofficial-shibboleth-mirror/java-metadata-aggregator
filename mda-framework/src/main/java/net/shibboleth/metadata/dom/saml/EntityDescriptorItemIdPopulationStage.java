@@ -26,11 +26,25 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.shared.primitive.StringSupport;
 import net.shibboleth.shared.xml.AttributeSupport;
 
 /**
  * A stage which, for each EntityDescriptor collection element, adds an {@link ItemId}, with the entity's entity ID, to
  * the metadata item.
+ * 
+ * <p>Ignores:</p>
+ * <ul>
+ *   <li>Items that don't contain an <code>EntityDescriptor</code></li>
+ *   <li><code>EntityDescriptors</code> lacking an <code>entityID</code></li>
+ *   <li><code>EntityDescriptors</code> with an empty <code>entityID</code></li>
+ * </ul>
+ *
+ * <p>
+ * Most uses of this stage will expect that it will attach an {@link ItemId} to every {@link Item}
+ * in the collection. To ensure that it does so, it may be useful to schema-validate entities
+ * beforehand, and remove malformed entities.
+ * </p>
  */
 @ThreadSafe
 public class EntityDescriptorItemIdPopulationStage extends AbstractIteratingStage<Element> {
@@ -40,8 +54,11 @@ public class EntityDescriptorItemIdPopulationStage extends AbstractIteratingStag
         final Element metadataElement = item.unwrap();
 
         if (SAMLMetadataSupport.isEntityDescriptor(metadataElement)) {
-            final String entityId = AttributeSupport.getAttributeValue(metadataElement, null, "entityID");
-            item.getItemMetadata().put(new ItemId(entityId));
+            final String entityId = StringSupport.trimOrNull(
+            		AttributeSupport.getAttributeValue(metadataElement, null, "entityID"));
+            if (entityId != null) {
+            	item.getItemMetadata().put(new ItemId(entityId));
+            }
         }
     }
 }

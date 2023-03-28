@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Extensions>
+        <shibmd:Scope xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" regexp="false">unifr.ch</shibmd:Scope>
+    </Extensions>
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0">
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:KeyName>aai.unifr.ch</ds:KeyName>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIDGzCCAgOgAwIBAgIUP8Gy5z0CP/joSEYbKGS0Np66XeUwDQYJKoZIhvcNAQEF
+                        BQAwFzEVMBMGA1UEAxMMYWFpLnVuaWZyLmNoMB4XDTA5MDczMDEzNTUyNVoXDTEy
+                        MDczMDEzNTUyNVowFzEVMBMGA1UEAxMMYWFpLnVuaWZyLmNoMIIBIjANBgkqhkiG
+                        9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm8TgEsFh5W6xFbiqKgGj23riyn1TWp03p63z
+                        qM48wLotMWij1hAQlv3hxSTE39qvWMXt3PwOYn9Ck+O2soVIqGonCeq9MNjQUeSD
+                        uZiMUKHq0w/3l/3vbA5KR6dl3x4FaFqv7RaIbO0mu/tH5ScEteuKrNVby9ojQwsI
+                        PcTXbbRJrlFKM+2GTeE1mJhd9PquOS/iKqmIpr6c4r7hKu1nErKG7lFrqTA6exKl
+                        Nb4dUj3Gp+revcwf6UgZJwBxQ858Noy7BAeg5LT7r1dGE68YmrBPYJLj84jeNyIA
+                        /KS5zeeSWZnaHljunjEax9zoSkm3wRgfS6W2ruS/q2DdHxvOzwIDAQABo18wXTA8
+                        BgNVHREENTAzggxhYWkudW5pZnIuY2iGI2h0dHBzOi8vYWFpLnVuaWZyLmNoL2lk
+                        cC9zaGliYm9sZXRoMB0GA1UdDgQWBBT5gNjirVVpDtJqTpZJVpU7jF+LJDANBgkq
+                        hkiG9w0BAQUFAAOCAQEAM/EIJuqE1zWUuUWpbc9uxD1sNv4AQ/wBj7LlAQ4FcJem
+                        cZcycgaE1c4IC+hQGQ9pFjAoQQbJmz2P5btQ8SGpNI+gD45OOIaUa7wgKNJeDGR6
+                        vLWvyof5uNQ2Af9FpM0l23prY3phkGxtqSKvigOFIJEEuMOTrUikxFtrRdEQ6qDk
+                        y4RKFDZ92qV076YLeCI6GX+IMrSKE8GQKxvq32IEw/LlvjC21IJSeTwU9hPQsCLL
+                        06PCqiwBffRqZguTXXOWk0n/Btri44echadREWrOem6cwJuHs6nvQ/iHSjjmHVSs
+                        V29q22MI4G0dXLKIBkHsMyrEdS06vIvIbXuILzV6lQ==
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://aai.unifr.ch:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://aai.unifr.ch:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" Location="https://aai.unifr.ch/idp/profile/Shibboleth/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://aai.unifr.ch/idp/profile/SAML2/Redirect/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aai.unifr.ch/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://aai.unifr.ch/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+    </IDPSSODescriptor>
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:KeyName>aai.unifr.ch</ds:KeyName>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIDGzCCAgOgAwIBAgIUP8Gy5z0CP/joSEYbKGS0Np66XeUwDQYJKoZIhvcNAQEF
+                        BQAwFzEVMBMGA1UEAxMMYWFpLnVuaWZyLmNoMB4XDTA5MDczMDEzNTUyNVoXDTEy
+                        MDczMDEzNTUyNVowFzEVMBMGA1UEAxMMYWFpLnVuaWZyLmNoMIIBIjANBgkqhkiG
+                        9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm8TgEsFh5W6xFbiqKgGj23riyn1TWp03p63z
+                        qM48wLotMWij1hAQlv3hxSTE39qvWMXt3PwOYn9Ck+O2soVIqGonCeq9MNjQUeSD
+                        uZiMUKHq0w/3l/3vbA5KR6dl3x4FaFqv7RaIbO0mu/tH5ScEteuKrNVby9ojQwsI
+                        PcTXbbRJrlFKM+2GTeE1mJhd9PquOS/iKqmIpr6c4r7hKu1nErKG7lFrqTA6exKl
+                        Nb4dUj3Gp+revcwf6UgZJwBxQ858Noy7BAeg5LT7r1dGE68YmrBPYJLj84jeNyIA
+                        /KS5zeeSWZnaHljunjEax9zoSkm3wRgfS6W2ruS/q2DdHxvOzwIDAQABo18wXTA8
+                        BgNVHREENTAzggxhYWkudW5pZnIuY2iGI2h0dHBzOi8vYWFpLnVuaWZyLmNoL2lk
+                        cC9zaGliYm9sZXRoMB0GA1UdDgQWBBT5gNjirVVpDtJqTpZJVpU7jF+LJDANBgkq
+                        hkiG9w0BAQUFAAOCAQEAM/EIJuqE1zWUuUWpbc9uxD1sNv4AQ/wBj7LlAQ4FcJem
+                        cZcycgaE1c4IC+hQGQ9pFjAoQQbJmz2P5btQ8SGpNI+gD45OOIaUa7wgKNJeDGR6
+                        vLWvyof5uNQ2Af9FpM0l23prY3phkGxtqSKvigOFIJEEuMOTrUikxFtrRdEQ6qDk
+                        y4RKFDZ92qV076YLeCI6GX+IMrSKE8GQKxvq32IEw/LlvjC21IJSeTwU9hPQsCLL
+                        06PCqiwBffRqZguTXXOWk0n/Btri44echadREWrOem6cwJuHs6nvQ/iHSjjmHVSs
+                        V29q22MI4G0dXLKIBkHsMyrEdS06vIvIbXuILzV6lQ==
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://aai.unifr.ch:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://aai.unifr.ch:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+    </AttributeAuthorityDescriptor>
+    <Organization>
+        <OrganizationName xml:lang="en">unifr.ch</OrganizationName>
+        <OrganizationDisplayName xml:lang="de">Université de Fribourg - Universität
+            Freiburg</OrganizationDisplayName>
+        <OrganizationDisplayName xml:lang="en">University of Fribourg</OrganizationDisplayName>
+        <OrganizationDisplayName xml:lang="fr">Université de Fribourg - Universität
+            Freiburg</OrganizationDisplayName>
+        <OrganizationURL xml:lang="fr">http://www.unifr.ch/aai</OrganizationURL>
+    </Organization>
+</EntityDescriptor>
