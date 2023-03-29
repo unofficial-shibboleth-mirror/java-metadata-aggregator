@@ -26,7 +26,6 @@ import java.util.Set;
 
 import javax.annotation.concurrent.Immutable;
 
-import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
@@ -86,7 +85,6 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("output.xml");
@@ -139,7 +137,6 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
 
         final Set<String> names = new HashSet<>();
         for (Item<Element> result : mdCol) {
-            AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
             Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
             names.add(result.unwrap().getNodeName());
         }
@@ -174,7 +171,6 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("paramOutput.xml");
@@ -204,8 +200,6 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
 
         final Set<String> names = new HashSet<>();
         for (Item<Element> result : mdCol) {
-            AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
-
             // each output item should have preserved the TestInfo that was on the input
             Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -255,7 +249,6 @@ public class MultiOutputXSLTransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, MultiOutputXSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         Element expected = readXMLData("output.xml");

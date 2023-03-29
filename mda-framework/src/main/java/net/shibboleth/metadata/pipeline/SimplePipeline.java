@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,15 +64,8 @@ public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponen
     public void execute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws PipelineProcessingException {
 
-        final var start = Instant.now();
-
         for (final Stage<T> stage : getStages()) {
             stage.execute(items);
-        }
-
-        final var componentInfo = new ComponentInfo(getId(), getClass(), start, Instant.now());
-        for (final var item : items) {
-            item.getItemMetadata().put(componentInfo);
         }
     }
 

@@ -52,13 +52,8 @@ public class ItemIdTransformStageTest {
 
         stage.execute(mdColl);
         Assert.assertEquals(mdColl.size(), 1);
-        Assert.assertEquals(item.getItemMetadata().values().size(), 4);
-
-        final ComponentInfo compInfo = item.getItemMetadata().get(ComponentInfo.class).get(0);
-        Assert.assertNotNull(compInfo.getCompleteInstant());
-        Assert.assertEquals(compInfo.getComponentId(), "test");
-        Assert.assertEquals(compInfo.getComponentType(), ItemIdTransformStage.class);
-        Assert.assertNotNull(compInfo.getStartInstant());
+        // Three item metadata values: the original ItemId plus two transformed versions
+        Assert.assertEquals(item.getItemMetadata().values().size(), 3);
 
         final List<ItemId> idInfos = item.getItemMetadata().get(ItemId.class);
         Assert.assertEquals(idInfos.size(), 3);

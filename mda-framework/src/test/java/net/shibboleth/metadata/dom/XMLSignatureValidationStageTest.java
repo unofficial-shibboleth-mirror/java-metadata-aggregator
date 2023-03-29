@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -73,7 +72,6 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
         
         // There should not have been any errors.
         final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);
@@ -129,7 +127,6 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
 
         final DOMElementItem item2 = makeItem("entities2.xml");
         
@@ -237,7 +234,6 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureValidationStage.class, "test");
         
         // There should not have been any errors.
         final List<ErrorStatus> errors = result.getItemMetadata().get(ErrorStatus.class);

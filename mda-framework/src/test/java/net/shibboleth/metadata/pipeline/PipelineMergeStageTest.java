@@ -112,8 +112,8 @@ public class PipelineMergeStageTest {
                 md2CloneMatch = true;
                 Assert.assertFalse(metadata == md2);
             }
-            // two ComponentInfo: one from the pipeline, one from the static inject stage, one from the join stage
-            Assert.assertEquals(metadata.getItemMetadata().values().size(), 3);
+            // no item metadata, as we don't have ComponentInfo any more
+            Assert.assertEquals(metadata.getItemMetadata().values().size(), 0);
         }
 
         Assert.assertTrue(md1CloneMatch);

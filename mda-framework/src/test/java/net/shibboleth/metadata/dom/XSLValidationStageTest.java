@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
 
-import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
@@ -86,9 +85,6 @@ public class XSLValidationStageTest extends BaseDOMTest {
         // The XML should be unchanged
         final Element expected = readXMLData("input.xml");
         assertXMLIdentical(expected, result.unwrap());
-
-        // It should have been processed by the appropriate stage
-        AssertSupport.assertValidComponentInfo(result, 1, XSLValidationStage.class, "test");
 
         // result item should have preserved the TestInfo that was on the input
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);

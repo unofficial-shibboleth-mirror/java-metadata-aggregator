@@ -37,7 +37,6 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.input.NormalizedSource;
 
-import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.shared.logic.ConstraintViolationException;
@@ -113,7 +112,6 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
         Element expected = readXMLData("output.xml");
         assertXMLIdentical(expected, result.unwrap());
@@ -152,7 +150,6 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XMLSignatureSigningStage.class, "test");
 
         final Element expected = readXMLData("mda196.xml");
         assertXMLIdentical(expected, result.unwrap());
@@ -212,7 +209,6 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol1.size(), 1);
 
         final Item<Element> result1 = mdCol1.iterator().next();
-        AssertSupport.assertValidComponentInfo(result1, 1, XMLSignatureSigningStage.class, "test");
         Assert.assertFalse(containsCRs(result1.unwrap()));
 
         /*
@@ -234,7 +230,6 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol2.size(), 1);
 
         final Item<Element> result2 = mdCol2.iterator().next();
-        AssertSupport.assertValidComponentInfo(result2, 1, XMLSignatureSigningStage.class, "test");
 
         /*
          * Compare the two results.

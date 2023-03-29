@@ -31,7 +31,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import net.shibboleth.metadata.AssertSupport;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
@@ -93,7 +92,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("output.xml");
@@ -126,7 +124,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("paramOutput.xml");
@@ -156,8 +153,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
 
         final Set<String> names = new HashSet<>();
         for (Item<Element> result : mdCol) {
-            AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
-
             // each output item should have preserved the TestInfo that was on the input
             Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
@@ -207,7 +202,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("output.xml");
@@ -236,7 +230,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("transform1.xml");
@@ -298,7 +291,6 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
         Assert.assertEquals(mdCol.size(), 1);
 
         final Item<Element> result = mdCol.iterator().next();
-        AssertSupport.assertValidComponentInfo(result, 1, XSLTransformationStage.class, "test");
         Assert.assertEquals(result.getItemMetadata().get(TestInfo.class).size(), 1);
 
         final Element expected = readXMLData("output2.xml");

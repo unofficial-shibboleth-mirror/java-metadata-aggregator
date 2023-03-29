@@ -17,7 +17,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -75,15 +74,8 @@ public abstract class AbstractStage<T> extends AbstractIdentifiableInitializable
             throws StageProcessingException {
         checkComponentActive();
 
-        final var start = Instant.now();
-
         if (getCollectionPredicate().test(items)) {
             doExecute(items);
-        }
-
-        final var componentInfo = new ComponentInfo(getId(), getClass(), start, Instant.now());
-        for (final var item : items) {
-            item.getItemMetadata().put(componentInfo);
         }
     }
 
