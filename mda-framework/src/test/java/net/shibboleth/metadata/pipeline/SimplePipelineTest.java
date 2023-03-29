@@ -20,6 +20,8 @@ package net.shibboleth.metadata.pipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.shared.component.ComponentInitializationException;
@@ -88,8 +90,6 @@ public class SimplePipelineTest {
         Assert.assertEquals(((CountingStage<String>) stages.get(1)).getInvocationCount(), 1);
         Assert.assertEquals(((CountingStage<String>) stages.get(2)).getInvocationCount(), 1);
 
-        Item<String> md = metadata.iterator().next();
-
         try {
             List<Stage<String>> pipelineStages = pipeline.getStages();
             pipelineStages.clear();
@@ -106,7 +106,7 @@ public class SimplePipelineTest {
         pipeline.destroy();
     }
 
-    protected List<Stage<String>> buildStages() {
+    protected @Nonnull List<Stage<String>> buildStages() {
         final Item<String> md1 = new MockItem("one");
         final Item<String> md2 = new MockItem("two");
         final List<Item<String>> items = new ArrayList<>();

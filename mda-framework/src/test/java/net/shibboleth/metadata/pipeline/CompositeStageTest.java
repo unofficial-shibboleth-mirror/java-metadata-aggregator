@@ -17,7 +17,7 @@ public class CompositeStageTest {
         final var stage = new CompositeStage<String>();
         stage.setId("test");
         stage.initialize();
-        Assert.assertEquals(stage.getComposedStages().size(), 0);
+        Assert.assertEquals(stage.getStages().size(), 0);
         
         final var items = List.<Item<String>>of(new MockItem("hello"));
         stage.execute(items);
@@ -34,9 +34,9 @@ public class CompositeStageTest {
 
         final var stage = new CompositeStage<String>();
         stage.setId("test");
-        stage.setComposedStages(List.of(marker));
+        stage.setStages(List.of(marker));
         stage.initialize();
-        Assert.assertEquals(stage.getComposedStages().size(), 1);
+        Assert.assertEquals(stage.getStages().size(), 1);
 
         final var items = List.<Item<String>>of(new MockItem("hello"));
         stage.execute(items);
@@ -53,9 +53,9 @@ public class CompositeStageTest {
 
         final var stage = new CompositeStage<String>();
         stage.setId("test");
-        stage.setComposedStages(List.of(marker, marker));
+        stage.setStages(List.of(marker, marker));
         stage.initialize();
-        Assert.assertEquals(stage.getComposedStages().size(), 2);
+        Assert.assertEquals(stage.getStages().size(), 2);
 
         final var items = List.<Item<String>>of(new MockItem("hello"));
         stage.execute(items);
@@ -72,4 +72,19 @@ public class CompositeStageTest {
         stage.destroy();
     }
 
+    @Test
+    public void testDeprecatedMethods() throws Exception {
+        final var marker = new MarkerStage<String>();
+        marker.setId("marker");
+        marker.initialize();
+
+        final var stage = new CompositeStage<String>();
+        stage.setId("test");
+        Assert.assertEquals(stage.getComposedStages().size(), 0);
+
+        stage.setComposedStages(List.of(marker));
+        Assert.assertEquals(stage.getStages().size(), 1);
+
+        stage.destroy();
+    }
 }

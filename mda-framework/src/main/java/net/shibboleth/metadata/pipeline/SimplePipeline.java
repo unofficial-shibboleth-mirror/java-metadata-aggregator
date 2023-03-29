@@ -17,18 +17,7 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
-
-import net.shibboleth.metadata.Item;
-import net.shibboleth.shared.annotation.constraint.NonnullElements;
-import net.shibboleth.shared.annotation.constraint.Unmodifiable;
-import net.shibboleth.shared.component.AbstractIdentifiableInitializableComponent;
-import net.shibboleth.shared.component.ComponentInitializationException;
 
 /**
  * A very simple implementation of {@link Pipeline}.
@@ -36,47 +25,6 @@ import net.shibboleth.shared.component.ComponentInitializationException;
  * @param <T> the type of item upon which this stage operates
  */
 @ThreadSafe
-public class SimplePipeline<T> extends AbstractIdentifiableInitializableComponent
-        implements Pipeline<T> {
+public class SimplePipeline<T> extends CompositeStage<T> {
 
-    /** Stages for this pipeline. */
-    @Nonnull @NonnullElements @GuardedBy("this")
-    private List<Stage<T>> pipelineStages = Collections.emptyList();
-
-    @Override
-    @Nonnull @NonnullElements @Unmodifiable
-    public final synchronized List<Stage<T>> getStages() {
-        return pipelineStages;
-    }
-
-    /**
-     * Sets the stages that make up this pipeline.
-     * 
-     * @param stages stages that make up this pipeline
-     */
-    public synchronized void setStages(
-            @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
-        checkSetterPreconditions();
-        pipelineStages = List.copyOf(stages);
-    }
-
-    @Override
-    public void execute(@Nonnull @NonnullElements final List<Item<T>> items)
-            throws PipelineProcessingException {
-
-        for (final Stage<T> stage : getStages()) {
-            stage.execute(items);
-        }
-    }
-
-    @Override
-    protected synchronized void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-
-        for (final Stage<T> stage : pipelineStages) {
-            if (!stage.isInitialized()) {
-                stage.initialize();
-            }
-        }
-    }
 }
