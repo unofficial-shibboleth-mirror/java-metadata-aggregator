@@ -83,7 +83,7 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
      * 
      * @return composite component identifier
      */
-    private String makeComponentId(@Nonnull final String stageId) {
+    private @Nonnull String makeComponentId(@Nonnull final String stageId) {
         final String id = getId();
         if (id == null) {
             return stageId;
@@ -147,6 +147,7 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
     protected void addErrorMessage(@Nonnull final Object extra, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
         final String mess = String.format(getMessage(), extra);
+        assert mess != null;
         addError(mess, item, stageId);
     }
 

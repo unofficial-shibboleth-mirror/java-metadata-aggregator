@@ -18,22 +18,21 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.component.DestroyedComponentException;
 import net.shibboleth.shared.component.UnmodifiableComponentException;
 import net.shibboleth.shared.xml.ElementSupport;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
@@ -45,14 +44,8 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         super(ContactPersonFilterStage.class);
     }
 
-    private final QName contactPersonQname = new QName(SAMLMetadataSupport.MD_NS, "ContactPerson");
+    private final @Nonnull QName contactPersonQname = new QName(SAMLMetadataSupport.MD_NS, "ContactPerson");
     
-    private Element entitiesDescriptor;
-
-    @BeforeClass public void setup() throws Exception {
-        entitiesDescriptor = readXMLData("entities.xml");
-    }
-
     @Test public void testDesignatedTypes() throws ComponentInitializationException {
         ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
@@ -63,19 +56,19 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.SUPPORT));
         Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
-        stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE,
+        stage.setDesignatedTypes(CollectionSupport.setOf(ContactPersonFilterStage.ADMINISTRATIVE,
                 ContactPersonFilterStage.TECHNICAL, "", "foo", ContactPersonFilterStage.OTHER));
         Assert.assertEquals(stage.getDesignatedTypes().size(), 3);
         Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.ADMINISTRATIVE));
         Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.OTHER));
         Assert.assertTrue(stage.getDesignatedTypes().contains(ContactPersonFilterStage.TECHNICAL));
 
-        stage.setDesignatedTypes(Collections.<String>emptyList());
+        stage.setDesignatedTypes(CollectionSupport.<String>emptyList());
         Assert.assertEquals(stage.getDesignatedTypes().size(), 0);
 
         stage.initialize();
         try {
-            stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE));
+            stage.setDesignatedTypes(CollectionSupport.setOf(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (UnmodifiableComponentException e) {
             Assert.assertEquals(stage.getDesignatedTypes().size(), 0);
@@ -84,7 +77,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         stage = new ContactPersonFilterStage();
         stage.destroy();
         try {
-            stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE));
+            stage.setDesignatedTypes(CollectionSupport.setOf(ContactPersonFilterStage.ADMINISTRATIVE));
             Assert.fail();
         } catch (DestroyedComponentException e) {
             // expected this
@@ -126,6 +119,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
     }
     
     @Test public void testWhitelistContactPersons() throws Exception {
+        final @Nonnull var entitiesDescriptor = readXMLData("entities.xml");
         ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
         stage.initialize();
@@ -139,22 +133,26 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         List<Element> entityDescriptors = ElementSupport.getChildElements(filteredEntitiesDescriptor);
         
         Element idpDescriptor = entityDescriptors.get(0);
+        assert idpDescriptor != null;
         List<Element> contactPersons = ElementSupport.getChildElements(idpDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 1);
         
         Element issuesDescriptor = entityDescriptors.get(1);
+        assert issuesDescriptor != null;
         contactPersons = ElementSupport.getChildElements(issuesDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 5);
         
         Element wikiDescriptor = entityDescriptors.get(2);
+        assert wikiDescriptor != null;
         contactPersons = ElementSupport.getChildElements(wikiDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 0);
     }
     
     @Test public void testBlacklistContactPersons() throws Exception {
+        final @Nonnull var entitiesDescriptor = readXMLData("entities.xml");
         ContactPersonFilterStage stage = new ContactPersonFilterStage();
         stage.setId("foo");
-        stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
+        stage.setDesignatedTypes(CollectionSupport.setOf(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
         stage.setWhitelistingTypes(false);
         stage.initialize();
 
@@ -167,14 +165,17 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
         List<Element> entityDescriptors = ElementSupport.getChildElements(filteredEntitiesDescriptor);
         
         Element idpDescriptor = entityDescriptors.get(0);
+        assert idpDescriptor != null;
         List<Element> contactPersons = ElementSupport.getChildElements(idpDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 1);
         
         Element issuesDescriptor = entityDescriptors.get(1);
+        assert issuesDescriptor != null;
         contactPersons = ElementSupport.getChildElements(issuesDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 3);
         
         Element wikiDescriptor = entityDescriptors.get(2);
+        assert wikiDescriptor !=  null;
         contactPersons = ElementSupport.getChildElements(wikiDescriptor, contactPersonQname);
         Assert.assertEquals(contactPersons.size(), 0);
     }
@@ -183,7 +184,7 @@ public class ContactPersonFilterStageTest extends BaseDOMTest {
     public void mda243() throws Exception {
         final var stage = new ContactPersonFilterStage();
         stage.setId("test");
-        stage.setDesignatedTypes(Set.of(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
+        stage.setDesignatedTypes(CollectionSupport.setOf(ContactPersonFilterStage.ADMINISTRATIVE, ContactPersonFilterStage.OTHER));
         stage.initialize();
         final var types = stage.getDesignatedTypes();
         Assert.assertEquals(types.size(), 2);

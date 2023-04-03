@@ -25,6 +25,7 @@ public class AttributeElementMakerTest extends BaseDOMTest {
     public void apply() {
         final var maker = new AttributeElementMaker("name", "nameFormat");
         final Element root = doc.createElementNS("ns", "root");
+        assert root != null;
         final Container rootContainer = new Container(root);
         final Element newElement = maker.apply(rootContainer);
         Assert.assertNotNull(newElement);

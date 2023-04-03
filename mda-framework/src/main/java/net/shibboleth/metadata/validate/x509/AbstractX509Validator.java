@@ -53,7 +53,7 @@ public abstract class AbstractX509Validator extends BaseValidator implements Val
             @Nonnull final String stageId) throws StageProcessingException;
 
     @Override
-    public Action validate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
+    public @Nonnull Action validate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) throws StageProcessingException {
         doValidate(cert, item, stageId);
         return Action.CONTINUE;

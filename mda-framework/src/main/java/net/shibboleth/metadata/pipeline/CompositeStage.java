@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.primitive.DeprecationSupport;
 import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
@@ -70,7 +71,7 @@ public class CompositeStage<T> extends AbstractStage<T> implements Pipeline<T> {
 
     /** Stages which compose this stage. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Stage<T>> composedStages = List.of();
+    private List<Stage<T>> composedStages = CollectionSupport.emptyList();
     
     /**
      * Whether we are logging progress through the stages.
@@ -104,7 +105,7 @@ public class CompositeStage<T> extends AbstractStage<T> implements Pipeline<T> {
     public final synchronized void setStages(
             @Nonnull @NonnullElements @Unmodifiable final List<Stage<T>> stages) {
         checkSetterPreconditions();
-        composedStages = List.copyOf(stages);
+        composedStages = CollectionSupport.copyToList(stages);
     }
 
     /**

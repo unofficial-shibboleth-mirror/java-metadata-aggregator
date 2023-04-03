@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
@@ -38,20 +39,20 @@ import net.shibboleth.metadata.dom.ElementMatcher;
 public final class MDAttrSupport {
 
     /** MDAttr namespace. */
-    public static final String MDATTR_NS = "urn:oasis:names:tc:SAML:metadata:attribute";
+    public static final @Nonnull String MDATTR_NS = "urn:oasis:names:tc:SAML:metadata:attribute";
     
     /** MDAttr conventional prefix. */
-    public static final String MDATTR_PREFIX = "mdattr";
+    public static final @Nonnull String MDATTR_PREFIX = "mdattr";
 
     /** mdattr:EntityAttributes element. */
-    public static final QName ENTITY_ATTRIBUTES_NAME = new QName(MDATTR_NS, "EntityAttributes", MDATTR_PREFIX);
+    public static final @Nonnull QName ENTITY_ATTRIBUTES_NAME = new QName(MDATTR_NS, "EntityAttributes", MDATTR_PREFIX);
 
     /**
      * Matcher for the <code>EntityAttributes</code> element, for use with the {@link Container} system.
      *
      * @since 0.10.0
      */
-    public static final Predicate<Element> ENTITY_ATTRIBUTES_MATCHER =
+    public static final @Nonnull Predicate<Element> ENTITY_ATTRIBUTES_MATCHER =
             new ElementMatcher(ENTITY_ATTRIBUTES_NAME);
 
     /**
@@ -59,7 +60,7 @@ public final class MDAttrSupport {
      *
      * @since 0.10.0
      */
-    public static final Function<Container, Element> ENTITY_ATTRIBUTES_MAKER =
+    public static final @Nonnull Function<Container, Element> ENTITY_ATTRIBUTES_MAKER =
             new ElementMaker(ENTITY_ATTRIBUTES_NAME);
 
     /** Constructor. */

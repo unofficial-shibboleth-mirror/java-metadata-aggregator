@@ -1,8 +1,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.List;
-
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -16,6 +14,7 @@ import ch.qos.logback.core.read.ListAppender;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.TestMarker;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 public class CompositeStageTest {
 
@@ -48,7 +47,7 @@ public class CompositeStageTest {
         stage.initialize();
         Assert.assertEquals(stage.getStages().size(), 0);
         
-        final var items = List.<Item<String>>of(new MockItem("hello"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("hello"));
         stage.execute(items);
         Assert.assertEquals(items.size(), 1);
         // No stages --> no errors added
@@ -63,11 +62,11 @@ public class CompositeStageTest {
 
         final var stage = new CompositeStage<String>();
         stage.setId("test");
-        stage.setStages(List.of(marker));
+        stage.setStages(CollectionSupport.listOf(marker));
         stage.initialize();
         Assert.assertEquals(stage.getStages().size(), 1);
 
-        final var items = List.<Item<String>>of(new MockItem("hello"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("hello"));
         stage.execute(items);
         Assert.assertEquals(items.size(), 1);
         // One stage --> one error added
@@ -82,11 +81,11 @@ public class CompositeStageTest {
 
         final var stage = new CompositeStage<String>();
         stage.setId("test");
-        stage.setStages(List.of(marker, marker));
+        stage.setStages(CollectionSupport.listOf(marker, marker));
         stage.initialize();
         Assert.assertEquals(stage.getStages().size(), 2);
 
-        final var items = List.<Item<String>>of(new MockItem("hello"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("hello"));
         stage.execute(items);
         Assert.assertEquals(items.size(), 1);
         // Two stages --> two errors added
@@ -109,12 +108,12 @@ public class CompositeStageTest {
 
         final var stage = new CompositeStage<String>();
         stage.setId("test");
-        stage.setStages(List.of(marker, marker));
+        stage.setStages(CollectionSupport.listOf(marker, marker));
         stage.initialize();
         Assert.assertFalse(stage.isLoggingProgress());
         Assert.assertEquals(stage.getStages().size(), 2);
 
-        final var items = List.<Item<String>>of(new MockItem("hello"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("hello"));
         stage.execute(items);
         stage.destroy();
         
@@ -133,13 +132,13 @@ public class CompositeStageTest {
 
         final var stage = new CompositeStage<String>();
         stage.setId("test");
-        stage.setStages(List.of(marker, marker));
+        stage.setStages(CollectionSupport.listOf(marker, marker));
         stage.setLoggingProgress(true);
         stage.initialize();
         Assert.assertTrue(stage.isLoggingProgress());
         Assert.assertEquals(stage.getStages().size(), 2);
 
-        final var items = List.<Item<String>>of(new MockItem("hello"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("hello"));
         stage.execute(items);
         stage.destroy();
         
@@ -163,7 +162,7 @@ public class CompositeStageTest {
         stage.setId("test");
         Assert.assertEquals(stage.getComposedStages().size(), 0);
 
-        stage.setComposedStages(List.of(marker));
+        stage.setComposedStages(CollectionSupport.listOf(marker));
         Assert.assertEquals(stage.getStages().size(), 1);
 
         stage.destroy();

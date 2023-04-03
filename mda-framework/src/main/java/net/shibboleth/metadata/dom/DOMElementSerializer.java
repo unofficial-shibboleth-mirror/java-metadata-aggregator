@@ -74,7 +74,9 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
             @Nonnull final OutputStream output) throws IOException {
         final Iterator<Item<Element>> iter = items.iterator();
         if (iter.hasNext()) {
-            serialize(iter.next(), output);
+            final var item = iter.next();
+            assert item != null;
+            serialize(item, output);
             if (iter.hasNext()) {
                 LOG.warn("collection contained more than one Item; rest ignored");
             }

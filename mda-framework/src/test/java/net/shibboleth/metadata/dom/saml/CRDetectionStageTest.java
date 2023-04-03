@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Comment;
@@ -93,12 +95,12 @@ public class CRDetectionStageTest extends BaseDOMTest {
         return item.getItemMetadata().get(ErrorStatus.class);
     }
 
-    private List<ErrorStatus> execute(final String filename) throws Exception {
+    private List<ErrorStatus> execute(final @Nonnull String filename) throws Exception {
         final Item<Element> item = readDOMItem(filename);
         return execute(item);
     }
     
-    private ErrorStatus expectError(final String filename, final String errorContains) throws Exception {
+    private ErrorStatus expectError(final @Nonnull String filename, final String errorContains) throws Exception {
         final List<ErrorStatus> errors = execute(filename);
         Assert.assertEquals(errors.size(), 1, "errors size on " + filename);
         final ErrorStatus error = errors.get(0);
@@ -107,7 +109,7 @@ public class CRDetectionStageTest extends BaseDOMTest {
         return error;
     }
 
-    private void expectErrorNoPrefix(final String filename, final String errorContains) throws Exception {
+    private void expectErrorNoPrefix(final @Nonnull String filename, final String errorContains) throws Exception {
         var error = expectError(filename, errorContains);
         Assert.assertFalse(error.getStatusMessage().contains(": "));
     }

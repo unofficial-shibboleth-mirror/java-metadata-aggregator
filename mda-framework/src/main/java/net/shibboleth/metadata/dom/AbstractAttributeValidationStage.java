@@ -83,7 +83,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
         for (final var name : names) {
             qnames.add(new QName(name));
         }
-        attributeNames = Set.copyOf(qnames);
+        attributeNames = CollectionSupport.copyToSet(qnames);
     }
     
     /**
@@ -97,7 +97,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
     public final synchronized void setAttributeName(@Nonnull final String name) {
         checkSetterPreconditions();
         Constraint.isNotNull(name, "unqualifiedAttributeName may not be null");
-        attributeNames = Set.of(new QName(name));
+        attributeNames = CollectionSupport.setOf(new QName(name));
     }
     
     /**
@@ -108,7 +108,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
     public final synchronized void setQualifiedAttributeNames(@Nonnull final Collection<QName> names) {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "attributeNames may not be null");
-        attributeNames = Set.copyOf(names);
+        attributeNames = CollectionSupport.copyToSet(names);
     }
     
     /**
@@ -119,7 +119,7 @@ public abstract class AbstractAttributeValidationStage<T> extends AbstractElemen
     public final synchronized void setQualifiedAttributeName(@Nonnull final QName name) {
         checkSetterPreconditions();
         Constraint.isNotNull(name, "attributeName may not be null");
-        attributeNames = Set.of(name);
+        attributeNames = CollectionSupport.setOf(name);
     }
     
     @Override

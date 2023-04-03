@@ -85,6 +85,7 @@ public abstract class AbstractExactValueMatcher extends AbstractEntityAttributeM
             // ignore the context's registration authority value
             return true;
         }
+        assert registrationAuthority != null;
         return registrationAuthority.equals(inputRegistrationAuthority);
     }
 

@@ -5,9 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -42,15 +42,18 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
         Assert.assertEquals(array.size(), 0);
     }
 
-    private JsonArray fetchJSONArray(@Nonnull final String path) throws IOException {
+    private @Nonnull JsonArray fetchJSONArray(@Nonnull final String path) throws IOException {
         try (var in = BaseDOMTest.class.getResourceAsStream(classRelativeResource(path))) {
             try (var reader = Json.createReader(in)) {
-                return reader.readArray();
+                var array = reader.readArray();
+                assert array != null;
+                return array;
             }
         }
     }
 
-    private void checkEntity(@Nonnull final JsonObject entity) {
+    private void checkEntity(@Nullable final JsonObject entity) {
+        assert entity != null;
         Assert.assertEquals(entity.getString("entityID"), "https://idp.example.com/idp/shibboleth");
     }
 
@@ -111,7 +114,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
             throws IOException, XMLParserException {
         final String output;
         try (final var out = new ByteArrayOutputStream()) {
-            ser.serializeCollection(List.of(readDOMItem(name + ".xml")), out);
+            ser.serializeCollection(CollectionSupport.listOf(readDOMItem(name + ".xml")), out);
             output = out.toString();
         }
         //System.out.println(output);
@@ -222,7 +225,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
         ser.initialize();
         final String output;
         try (final var out = new ByteArrayOutputStream()) {
-            ser.serializeCollection(List.of(readDOMItem("noidp.xml")), out);
+            ser.serializeCollection(CollectionSupport.listOf(readDOMItem("noidp.xml")), out);
             output = out.toString();
         }
         Assert.assertEquals(output, "[]");
@@ -235,7 +238,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
         ser.initialize();
         final String output;
         try (final var out = new ByteArrayOutputStream()) {
-            ser.serializeCollection(List.of(readDOMItem("nonentity.xml")), out);
+            ser.serializeCollection(CollectionSupport.listOf(readDOMItem("nonentity.xml")), out);
             output = out.toString();
         }
         Assert.assertEquals(output, "[]");
@@ -287,6 +290,7 @@ public class DiscoFeedCollectionSerializerTest extends BaseDOMTest {
         }
         final var read = Json.createReader(new StringReader(output));
         final var array = read.readArray();
+        assert array != null;
 
         final var expected = fetchJSONArray("all.json");
         compareCollections(array, expected);

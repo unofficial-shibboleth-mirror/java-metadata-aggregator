@@ -214,6 +214,7 @@ public class Container {
     @Nullable
     public Container findChild(@Nonnull final Predicate<Element> matcher) {
         for (final Element e : ElementSupport.getChildElements(element)) {
+            assert e != null;
             if (matcher.test(e)) {
                 return new Container(e, this);
             }
@@ -231,6 +232,7 @@ public class Container {
     public List<Container> findChildren(@Nonnull final Predicate<Element> matcher) {
         final List<Container> list = new ArrayList<>();
         for (final Element e : ElementSupport.getChildElements(element)) {
+            assert e != null;
             if (matcher.test(e)) {
                 list.add(new Container(e, this));
             }
@@ -262,6 +264,7 @@ public class Container {
     public Container addChild(@Nonnull final Function<Container, Element> maker,
             @Nonnull final ChildAddingStrategy adder) {
         final Element child = maker.apply(this);
+        assert child != null;
         return addChild(child, adder);
     }
 

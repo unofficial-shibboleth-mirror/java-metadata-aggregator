@@ -53,6 +53,7 @@ public abstract class AbstractFilteringStage<T> extends AbstractStage<T> {
 
         while (itemIterator.hasNext()) {
             final Item<T> item = itemIterator.next();
+            assert item != null;
             if (!doExecute(item)) {
                 itemIterator.remove();
             }

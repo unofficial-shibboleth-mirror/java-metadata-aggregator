@@ -129,6 +129,7 @@ public class DiscoFeedCollectionSerializer extends AbstractInitializableComponen
     @Nullable
     private Element findFirstUIInfo(@Nonnull @NonnullElements final List<Element> idpDescriptors) {
         for (final var idpDescriptor : idpDescriptors) {
+            assert idpDescriptor != null;
             final var uiInfo = SAMLMetadataSupport.getDescriptorExtension(idpDescriptor, MDUISupport.UIINFO_NAME);
             if (uiInfo != null) {
                 return uiInfo;
@@ -189,6 +190,7 @@ public class DiscoFeedCollectionSerializer extends AbstractInitializableComponen
             if (!attributes.isEmpty()) {
                 gen.writeStartArray("EntityAttributes");
                     for (final var attribute : attributes) {
+                        assert attribute != null;
                         final var values = ElementSupport.getChildElements(attribute, SAMLSupport.ATTRIBUTE_VALUE_NAME);
                         if (!values.isEmpty()) {
                             gen.writeStartObject();

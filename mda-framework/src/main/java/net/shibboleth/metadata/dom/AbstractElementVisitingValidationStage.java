@@ -74,7 +74,7 @@ public abstract class AbstractElementVisitingValidationStage<V, N>
     public final synchronized void setElementNames(@Nonnull final Collection<QName> names) {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "elementNames may not be null");
-        elementNames = Set.copyOf(names);
+        elementNames = CollectionSupport.copyToSet(names);
     }
     
     /**
@@ -87,7 +87,7 @@ public abstract class AbstractElementVisitingValidationStage<V, N>
     public final synchronized void setElementName(@Nonnull final QName name) {
         checkSetterPreconditions();
         Constraint.isNotNull(name, "elementName may not be null");
-        elementNames = Set.of(name);
+        elementNames = CollectionSupport.setOf(name);
     }
 
     @Override

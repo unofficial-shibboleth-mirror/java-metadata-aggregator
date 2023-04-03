@@ -24,27 +24,29 @@ import javax.annotation.Nonnull;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import net.shibboleth.shared.logic.Constraint;
+
 public abstract class BaseTest {
 
     /** Class being tested. */
-    protected final Class<?> testingClass;
+    protected final @Nonnull Class<?> testingClass;
     
     /**
      * Base path for class-relative test resource references.
      * 
      * Will <em>not</em> end in a '/'.
      */
-    private final String baseClassPath;
+    private final @Nonnull String baseClassPath;
     
     /** Package for the class being tested. */
-    private final Package testingPackage;
+    private final @Nonnull Package testingPackage;
     
     /**
      * Base path for package-relative test resource references.
      * 
      * Will always end in a '/'.
      */
-    private final String basePackagePath;
+    private final @Nonnull String basePackagePath;
     
     /**
      * Constructor
@@ -53,9 +55,14 @@ public abstract class BaseTest {
      */
     protected BaseTest(final @Nonnull Class<?> clazz) {
         testingClass = clazz;
-        baseClassPath = nameToPath(testingClass.getName());
-        testingPackage = testingClass.getPackage();
-        basePackagePath = nameToPath(testingPackage.getName()) + "/";
+        final @Nonnull String testingClassName = Constraint.isNotNull(testingClass.getName(),
+                "testing class name can not be null");
+        baseClassPath = nameToPath(testingClassName);
+        testingPackage = Constraint.isNotNull(testingClass.getPackage(),
+                "testing class package can not be null");
+        final var testingPackageName = Constraint.isNotNull(testingPackage.getName(),
+                "testing package name can not be null");
+        basePackagePath = nameToPath(testingPackageName) + "/";
     }
     
     /**
@@ -65,7 +72,7 @@ public abstract class BaseTest {
      * @param name name to be converted
      * @return path to resources associated with the name
      */
-    private String nameToPath(final @Nonnull String name) {
+    private @Nonnull String nameToPath(final @Nonnull String name) {
         return "/" + name.replace('.', '/');
     }
         
@@ -82,7 +89,7 @@ public abstract class BaseTest {
         return baseClassPath + "-" + which;
     }
     
-    protected String simpleClassRelativeName(final String which) {
+    protected @Nonnull String simpleClassRelativeName(final String which) {
         return testingClass.getSimpleName() + "-" + which;
     }
         
@@ -95,7 +102,7 @@ public abstract class BaseTest {
      * @param which package-relative resource name
      * @return absolute resource name
      */
-    protected String packageRelativeResource(final String which) {
+    protected @Nonnull String packageRelativeResource(final String which) {
         return basePackagePath + which;
     }
     

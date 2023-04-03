@@ -73,7 +73,7 @@ public abstract class AbstractEntityAttributeMatcher implements Predicate<Entity
     protected abstract boolean matchRegistrationAuthority(@Nullable final String inputRegistrationAuthority);
 
     @Override
-    public boolean test(@Nonnull final EntityAttributeContext input) {
+    public boolean test(final EntityAttributeContext input) {
         return matchRegistrationAuthority(input.getRegistrationAuthority()) &&
                 matchAttributeNameFormat(input.getNameFormat()) &&
                 matchAttributeName(input.getName()) &&

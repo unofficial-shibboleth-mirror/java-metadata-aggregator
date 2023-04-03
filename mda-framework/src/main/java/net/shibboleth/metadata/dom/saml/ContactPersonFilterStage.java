@@ -34,6 +34,7 @@ import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.primitive.StringSupport;
@@ -74,14 +75,15 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
 
     /** Allowed contact person types. */
     @Nonnull @NonnullElements @Unmodifiable
-    private static final Set<String> ALLOWED_TYPES = Set.of(TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING, OTHER);
+    private static final Set<String> ALLOWED_TYPES =
+        CollectionSupport.setOf(TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING, OTHER);
 
     /** Class logger. */
     private static final @Nonnull Logger LOG = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private Set<String> designatedTypes = Set.copyOf(ALLOWED_TYPES);
+    private Set<String> designatedTypes = CollectionSupport.copyToSet(ALLOWED_TYPES);
 
     /** Whether {@link #designatedTypes} should be considered a whitelist. Default value: true */
     @GuardedBy("this") private boolean whitelistingTypes = true;
@@ -115,7 +117,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
             }
         }
 
-        designatedTypes = Set.copyOf(checkedTypes);
+        designatedTypes = CollectionSupport.copyToSet(checkedTypes);
     }
 
     /**
@@ -156,6 +158,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
     protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (final Element child : children) {
+            assert child != null;
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
             } else if (SAMLMetadataSupport.isEntityDescriptor(child)) {
@@ -178,6 +181,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
         if (!contactPersons.isEmpty()) {
             LOG.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
             for (final Element contactPerson : contactPersons) {
+                assert contactPerson != null;
                 if (!isRetainedContactPersonType(contactPerson)) {
                     entityDescriptor.removeChild(contactPerson);
                 }

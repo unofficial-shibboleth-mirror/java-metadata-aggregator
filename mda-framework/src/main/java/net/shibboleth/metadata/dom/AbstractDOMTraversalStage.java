@@ -106,7 +106,8 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
     private void traverse(@Nonnull final Element element, @Nonnull final C context) 
         throws StageProcessingException {
         final List<Element> children = ElementSupport.getChildElements(element);
-        for (@Nonnull final Element child : children) {
+        for (final Element child : children) {
+            assert child != null;
             traverse(child, context);
         }
         if (applicable(element, context)) {

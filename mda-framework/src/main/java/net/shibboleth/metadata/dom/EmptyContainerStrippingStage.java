@@ -112,6 +112,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
         // handled correctly.
         for (int eIndex = extensionList.getLength()-1; eIndex >= 0; eIndex--) {
             final Element extensions = (Element) extensionList.item(eIndex);
+            assert extensions != null;
             if (!hasChildElements(extensions)) {
                 extensions.getParentNode().removeChild(extensions);
             }

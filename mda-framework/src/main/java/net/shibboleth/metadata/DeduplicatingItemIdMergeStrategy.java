@@ -47,6 +47,7 @@ public class DeduplicatingItemIdMergeStrategy implements CollectionMergeStrategy
         }
 
         for (final List<Item<T>> source : sources) {
+            assert source != null;
             merge(presentItemIds, target, source);
         }
     }

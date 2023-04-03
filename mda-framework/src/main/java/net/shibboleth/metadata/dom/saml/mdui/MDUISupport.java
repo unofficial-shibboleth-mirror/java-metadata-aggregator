@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml.mdui;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
@@ -25,35 +26,35 @@ import javax.xml.namespace.QName;
 public final class MDUISupport {
 
     /** MDUI namespace. */
-    public static final String MDUI_NS = "urn:oasis:names:tc:SAML:metadata:ui";
+    public static final @Nonnull String MDUI_NS = "urn:oasis:names:tc:SAML:metadata:ui";
 
     /** {@link QName} representing an <code>mdui:UIInfo</code>. */
-    public static final QName UIINFO_NAME = new QName(MDUI_NS, "UIInfo");
+    public static final @Nonnull QName UIINFO_NAME = new QName(MDUI_NS, "UIInfo");
     
     /** {@link QName} representing an <code>mdui:DisplayName</code>. */
-    public static final QName DISPLAYNAME_NAME = new QName(MDUI_NS, "DisplayName");
+    public static final @Nonnull QName DISPLAYNAME_NAME = new QName(MDUI_NS, "DisplayName");
     
     /** {@link QName} representing an <code>mdui:Description</code>. */
-    public static final QName DESCRIPTION_NAME = new QName(MDUI_NS, "Description");
+    public static final @Nonnull QName DESCRIPTION_NAME = new QName(MDUI_NS, "Description");
     
     /** {@link QName} representing an <code>mdui:Keywords</code>. */
-    public static final QName KEYWORDS_NAME = new QName(MDUI_NS, "Keywords");
+    public static final @Nonnull QName KEYWORDS_NAME = new QName(MDUI_NS, "Keywords");
     
     /** {@link QName} representing an <code>mdui:Logo</code>. */
-    public static final QName LOGO_NAME = new QName(MDUI_NS, "Logo");
+    public static final @Nonnull QName LOGO_NAME = new QName(MDUI_NS, "Logo");
     
     /** {@link QName} representing an <code>mdui:InformationURL</code>. */
-    public static final QName INFORMATIONURL_NAME = new QName(MDUI_NS, "InformationURL");
+    public static final @Nonnull QName INFORMATIONURL_NAME = new QName(MDUI_NS, "InformationURL");
     
     /** {@link QName} representing an <code>mdui:PrivacyStatementURL</code>. */
-    public static final QName PRIVACYSTATEMENTURL_NAME = new QName(MDUI_NS, "PrivacyStatementURL");
+    public static final @Nonnull QName PRIVACYSTATEMENTURL_NAME = new QName(MDUI_NS, "PrivacyStatementURL");
 
     /**
      * {@link QName} representing an <code>mdui:IPHint</code>.
      *
      * @since 0.10.0
      */
-    public static final QName IPHINT_NAME = new QName(MDUI_NS, "IPHint");
+    public static final @Nonnull QName IPHINT_NAME = new QName(MDUI_NS, "IPHint");
 
     /** Constructor. */
     private MDUISupport() {

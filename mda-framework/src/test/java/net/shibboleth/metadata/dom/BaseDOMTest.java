@@ -69,7 +69,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @param clazz class under test
      */
-    protected BaseDOMTest(final Class<?> clazz) {
+    protected BaseDOMTest(final @Nonnull Class<?> clazz) {
         super(clazz);
     }
 
@@ -110,8 +110,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * @throws XMLParserException thrown if the file does not exist or there is a problem parsing it
      */
     public @Nonnull Element readXMLData(final @Nonnull String path) throws XMLParserException {
-        @Nonnull String trimmedPath = StringSupport.trimOrNull(path);
-        Constraint.isNotNull(trimmedPath, "Path may not be null or empty");
+        @Nonnull String trimmedPath = Constraint.isNotNull(StringSupport.trimOrNull(path), "Path may not be null or empty");        
 
         if (!trimmedPath.startsWith("/")) {
             trimmedPath = classRelativeResource(trimmedPath);
@@ -138,7 +137,7 @@ public abstract class BaseDOMTest extends BaseTest {
      * 
      * @throws XMLParserException if the file does not exist or there is a problem parsing it
      */
-    public @Nonnull Item<Element> readDOMItem(final String path) throws XMLParserException {
+    public @Nonnull Item<Element> readDOMItem(final @Nonnull String path) throws XMLParserException {
         final Element e = readXMLData(path);
         return new DOMElementItem(e);
     }

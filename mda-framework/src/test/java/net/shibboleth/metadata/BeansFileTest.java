@@ -32,6 +32,7 @@ public class BeansFileTest {
 
         final String[] defNames = ctx.getBeanDefinitionNames();
         for (final String defName : defNames) {
+            assert defName != null;
             final BeanDefinition def = ctx.getBeanDefinition(defName);
 
             // All bean definitions should start with "mda."
@@ -94,6 +95,7 @@ public class BeansFileTest {
                 case "mda.MigrationBeanMap" -> {
                     final Map<String, String> map = ctx.getBean(defName, Map.class);
                     for (String toBean : map.values()) {
+                        assert toBean != null;
                         // check that the mapped bean name is defined
                         ctx.getBeanDefinition(toBean);
                     }

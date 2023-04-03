@@ -187,7 +187,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     public synchronized void setElementNames(
             @Nonnull @NonnullElements @Unmodifiable @NotEmpty final Collection<String> names) {
         checkSetterPreconditions();
-        elementNames = Set.copyOf(names);
+        elementNames = CollectionSupport.copyToSet(names);
     }
 
     /**
@@ -236,7 +236,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
     }
 
     @Override
-    protected synchronized Context buildContext(@Nonnull final Item<Element> item) {
+    protected synchronized @Nonnull Context buildContext(@Nonnull final Item<Element> item) {
         return new Context(item, getElementNamespace(), getElementNames(), isWhitelisting());
     }
 

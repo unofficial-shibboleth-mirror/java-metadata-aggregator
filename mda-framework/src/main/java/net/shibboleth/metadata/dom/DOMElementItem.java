@@ -77,11 +77,11 @@ public class DOMElementItem extends AbstractItem<Element> {
      * @param document {@link Document} to wrap
      * @return processed element
      */
-    @Nonnull private static Element processDocument(@Nonnull final Document document) {
+    private static @Nonnull Element processDocument(@Nonnull final Document document) {
         Constraint.isNotNull(document, "DOM Document can not be null");
         
-        final Element docElement = document.getDocumentElement();
-        Constraint.isNotNull(docElement, "DOM Document Element may not be null");
+        final @Nonnull Element docElement =
+                Constraint.isNotNull(document.getDocumentElement(), "DOM Document Element may not be null");
 
         return docElement;
     }
@@ -98,19 +98,20 @@ public class DOMElementItem extends AbstractItem<Element> {
      * @param element {@link Element} to process
      * @return processed element
      */
-    @Nonnull private static Element processElement(@Nonnull final Element element) {
+    private static @Nonnull Element processElement(@Nonnull final Element element) {
         Constraint.isNotNull(element, "DOM Document Element may not be null");
 
         final DOMImplementation domImpl = element.getOwnerDocument().getImplementation();
         final Document newDocument = domImpl.createDocument(null, null, null);
         final Element newDocumentRoot = (Element) newDocument.importNode(element, true);
+        assert newDocumentRoot != null;
         ElementSupport.setDocumentElement(newDocument, newDocumentRoot);
 
         return newDocumentRoot;
     }
 
     @Override
-    public Item<Element> copy() {
+    public @Nonnull Item<Element> copy() {
         final DOMElementItem clone = new DOMElementItem(unwrap());
         clone.getItemMetadata().putAll(getItemMetadata());
         return clone;

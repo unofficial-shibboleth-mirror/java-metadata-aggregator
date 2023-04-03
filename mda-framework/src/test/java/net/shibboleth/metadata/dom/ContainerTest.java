@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -24,6 +26,7 @@ public class ContainerTest extends BaseDOMTest {
     public void prime() {
         // simple top-level element with no indentation
         final Element e1 = doc.createElementNS("ns", "el");
+        assert e1 != null;
         final Container c1 = new Container(e1);
         c1.prime();
         Assert.assertEquals(e1.getTextContent(), "\n");
@@ -48,6 +51,7 @@ public class ContainerTest extends BaseDOMTest {
     @Test
     public void addChildElementFirst() throws Exception {
         final Element e1 = doc.createElementNS("ns", "root");
+        assert e1 != null;
         final Element e2 = doc.createElementNS("ns", "child");
         e2.setTextContent("child value");
         final Container c1 = new Container(e1);
@@ -59,32 +63,35 @@ public class ContainerTest extends BaseDOMTest {
         final Element e3 = doc.createElementNS("ns", "child2");
         e3.setTextContent("child 2 value");
         c1.addChild(e3, Container.FIRST_CHILD);
-        final Element ok2 = readXMLData("addFirst.xml");
+        final var ok2 = readXMLData("addFirst.xml");
         assertXMLIdentical(ok2, e1);
     }
 
     @Test
     public void addChildElementLast() throws Exception {
         final Element e1 = doc.createElementNS("ns", "root");
+        assert e1 != null;
         final Element e2 = doc.createElementNS("ns", "child");
         e2.setTextContent("child value");
         final Container c1 = new Container(e1);
         c1.addChild(e2, Container.LAST_CHILD);
 
-        final Element ok = readXMLData("add1.xml");
+        final @Nonnull Element ok = readXMLData("add1.xml");
         assertXMLIdentical(ok, e1);
 
         final Element e3 = doc.createElementNS("ns", "child2");
         e3.setTextContent("child 2 value");
         c1.addChild(e3, Container.LAST_CHILD);
-        final Element ok2 = readXMLData("addLast.xml");
+        final var ok2 = readXMLData("addLast.xml");
         assertXMLIdentical(ok2, e1);
     }
 
     @Test
     public void addChildElementNested() throws Exception {
         final Element root = doc.createElementNS("ns", "root");
+        assert root != null;
         final Element mid = doc.createElementNS("ns", "mid");
+        assert mid != null;
         final Element leaf1 = doc.createElementNS("ns", "leaf");
         leaf1.setTextContent("leaf 1");
         final Element leaf2 = doc.createElementNS("ns", "leaf");
@@ -94,13 +101,14 @@ public class ContainerTest extends BaseDOMTest {
         midContainer.addChild(leaf1, Container.LAST_CHILD);
         midContainer.addChild(leaf2, Container.LAST_CHILD);
 
-        final Element ok = readXMLData("nested.xml");
+        final var ok = readXMLData("nested.xml");
         assertXMLIdentical(ok, root);
     }
 
     @Test
     public void addChildFunctionFirst() throws Exception {
         final Element e1 = doc.createElementNS("ns", "root");
+        assert e1 != null;
         final Container c1 = new Container(e1);
 
         c1.addChild(new Function<Container, Element>(){
@@ -135,6 +143,7 @@ public class ContainerTest extends BaseDOMTest {
     @Test
     public void addChildFunctionLast() throws Exception {
         final Element e1 = doc.createElementNS("ns", "root");
+        assert e1 != null;
         final Container c1 = new Container(e1);
 
         c1.addChild(new Function<Container, Element>(){
@@ -177,6 +186,7 @@ public class ContainerTest extends BaseDOMTest {
     @Test
     public void setText() {
         final Element e = doc.createElementNS("ns", "root");
+        assert e != null;
         final Container c = new Container(e);
         c.setText("some text");
         Assert.assertEquals(e.getTextContent(), "some text");
@@ -218,6 +228,7 @@ public class ContainerTest extends BaseDOMTest {
     @Test
     public void locateChild() throws Exception {
         final Element e1 = doc.createElementNS("ns", "root");
+        assert e1 != null;
         final Container c1 = new Container(e1);
 
         c1.locateChild(new Predicate<Element>(){

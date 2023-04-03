@@ -64,7 +64,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
     public synchronized void setElementNames(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> names) {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "elementNames may not be null");
-        elementNames = Set.copyOf(names);
+        elementNames = CollectionSupport.copyToSet(names);
     }
     
     /**
@@ -77,7 +77,7 @@ public abstract class AbstractElementVisitingStage extends AbstractDOMTraversalS
     public synchronized void setElementName(@Nonnull final QName name) {
         checkSetterPreconditions();
         Constraint.isNotNull(name, "elementName may not be null");
-        elementNames = Set.of(name);
+        elementNames = CollectionSupport.setOf(name);
     }
     
     @Override
