@@ -28,7 +28,7 @@ import java.util.concurrent.Executor;
 public class DirectExecutor implements Executor {
 
     @Override
-    public void execute(Runnable command) {
+    public void execute(final Runnable command) {
         command.run();
     }
 
