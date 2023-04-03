@@ -30,6 +30,7 @@ import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
 import net.shibboleth.shared.codec.Base64Support;
 import net.shibboleth.shared.codec.EncodingException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.AttributeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
@@ -43,7 +44,6 @@ import org.apache.xml.security.transforms.Transform;
 import org.apache.xml.security.transforms.TransformationException;
 import org.apache.xml.security.transforms.Transforms;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,7 +66,7 @@ import org.w3c.dom.Node;
 public final class XMLSignatureValidator {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(XMLSignatureValidator.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XMLSignatureValidator.class);
 
     /** Public key used to verify signatures. */
     private final PublicKey verificationKey;
@@ -157,7 +157,7 @@ public final class XMLSignatureValidator {
          * and no attribute is being referenced.
          */
         if (referenceURI.isEmpty()) {
-            log.debug("reference was empty; no ID marking required");
+            LOG.debug("reference was empty; no ID marking required");
             return;
         }
         
@@ -165,7 +165,7 @@ public final class XMLSignatureValidator {
          * If something has already identified an ID element, don't interfere
          */
         if (AttributeSupport.getIdAttribute(docElement) != null ) {
-            log.debug("document element already has an ID attribute");
+            LOG.debug("document element already has an ID attribute");
             return;
         }
 
@@ -186,7 +186,7 @@ public final class XMLSignatureValidator {
         for (int i = 0; i < attributes.getLength(); i++) {
             final Attr attribute = (Attr) attributes.item(i);
             if (id.equals(attribute.getValue())) {
-                log.debug("marking ID attribute {}", attribute.getName());
+                LOG.debug("marking ID attribute {}", attribute.getName());
                 docElement.setIdAttributeNode(attribute, true);
                 return;
             }
@@ -197,7 +197,7 @@ public final class XMLSignatureValidator {
          * Signature validation will fail later, but let's give a warning here
          * as well to help people debug their signature code.
          */
-        log.debug("did not find a document element attribute with value '{}'", id);
+        LOG.debug("did not find a document element attribute with value '{}'", id);
     }
 
     /**
@@ -210,7 +210,7 @@ public final class XMLSignatureValidator {
     public void verifySignature(@Nonnull final Element docElement, @Nonnull final Element signatureElement)
             throws ValidationException {
         
-        log.debug("Creating XML security library XMLSignature object");
+        LOG.debug("Creating XML security library XMLSignature object");
         XMLSignature signature = null;
         try {
             signature = new XMLSignature(signatureElement, "");
@@ -228,7 +228,7 @@ public final class XMLSignatureValidator {
         // check reference digest algorithm against blacklist
         try {
             final String alg = ref.getMessageDigestAlgorithm().getAlgorithmURI();
-            log.debug("blacklist checking digest {}", alg);
+            LOG.debug("blacklist checking digest {}", alg);
             if (blacklistedDigests.contains(alg)) {
                 throw new ValidationException("Digest algorithm " + alg + " is blacklisted");
             }
@@ -238,14 +238,14 @@ public final class XMLSignatureValidator {
         
         // check signature algorithm against blacklist
         final String alg = signature.getSignedInfo().getSignatureMethodURI();
-        log.debug("blacklist checking signature method {}", alg);
+        LOG.debug("blacklist checking signature method {}", alg);
         if (blacklistedSignatureMethods.contains(alg)) {
             throw new ValidationException("Signature algorithm " + alg + " is blacklisted");
         }        
 
-        if (log.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             try {
-                log.debug("Verifying XML signature with key\n{}",
+                LOG.debug("Verifying XML signature with key\n{}",
                         Base64Support.encode(verificationKey.getEncoded(), false));
             } catch (final EncodingException e) {
                 //do nothing, as only logging, and this is unlikely. 
@@ -265,13 +265,13 @@ public final class XMLSignatureValidator {
                  * this point, we can't use one from before the signature validation.
                  */
                 validateSignatureReference(docElement, extractReference(signature));
-                log.debug("XML document signature verified.");
+                LOG.debug("XML document signature verified.");
             } else {
                 throw new ValidationException("XML document signature verification failed");
             }
         } catch (final XMLSignatureException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Unable to validate signature", e);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Unable to validate signature", e);
             }
             throw new ValidationException("XML document signature verification failed with an error: " +
                     e.getMessage());
@@ -390,11 +390,11 @@ public final class XMLSignatureValidator {
             }
             final String uri = transform.getURI();
             if (Transforms.TRANSFORM_ENVELOPED_SIGNATURE.equals(uri)) {
-                log.debug("Saw Enveloped signature transform");
+                LOG.debug("Saw Enveloped signature transform");
                 sawEnveloped = true;
             } else if (Transforms.TRANSFORM_C14N_EXCL_OMIT_COMMENTS.equals(uri)
                     || Transforms.TRANSFORM_C14N_EXCL_WITH_COMMENTS.equals(uri)) {
-                log.debug("Saw Exclusive C14N signature transform");
+                LOG.debug("Saw Exclusive C14N signature transform");
             } else {
                 throw new ValidationException("Saw invalid signature transform: " + uri);
             }

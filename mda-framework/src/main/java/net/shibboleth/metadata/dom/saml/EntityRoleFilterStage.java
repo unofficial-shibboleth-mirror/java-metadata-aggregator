@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -29,7 +28,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -37,6 +35,7 @@ import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.DOMTypeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 import net.shibboleth.shared.xml.QNameSupport;
@@ -63,7 +62,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
             SAMLMetadataSupport.PDP_DESCRIPTOR_NAME);
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntityRoleFilterStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntityRoleFilterStage.class);
 
     /** Role element or type names which are white/black listed depending on the value of {@link #whitelistingRoles}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
@@ -229,7 +228,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
 
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
 
-        log.debug("{} pipeline stage filtering roles from EntityDescriptor {}", getId(), entityId);
+        LOG.debug("{} pipeline stage filtering roles from EntityDescriptor {}", getId(), entityId);
 
         final boolean hasRoles = hasFilteredRoles(entityId, entityDescriptor);
         if (!hasRoles && isRemovingRolelessEntities()) {
@@ -265,11 +264,11 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
             if (roleIdentifier != null) {
                 final boolean isDesignatedRole = getDesignatedRoles().contains(roleIdentifier);
                 if ((isWhitelistingRoles() && !isDesignatedRole) || (!isWhitelistingRoles() && isDesignatedRole)) {
-                    log.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] {getId(),
+                    LOG.debug("{} pipeline stage removing role {} from EntityDescriptor {}", new Object[] {getId(),
                             roleIdentifier, entityId,});
                     entityDescriptor.removeChild(child);
                 } else {
-                    log.debug("{} pipeline did not remove role {} from EntityDescriptor {}", new Object[] {getId(),
+                    LOG.debug("{} pipeline did not remove role {} from EntityDescriptor {}", new Object[] {getId(),
                             roleIdentifier, entityId,});
                     remains = true;
                 }

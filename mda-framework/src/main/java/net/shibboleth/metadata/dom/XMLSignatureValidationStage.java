@@ -30,7 +30,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.apache.xml.security.Init;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.ErrorStatus;
@@ -45,6 +44,7 @@ import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.SerializeSupport;
 
 /**
@@ -67,7 +67,7 @@ import net.shibboleth.shared.xml.SerializeSupport;
 public class XMLSignatureValidationStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(XMLSignatureValidationStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XMLSignatureValidationStage.class);
 
     /** Whether Elements are required to be signed. */
     @GuardedBy("this")
@@ -250,30 +250,30 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
             signatureElement = validator.getSignatureElement(docElement);
             if (signatureElement == null) {
                 if (isSignatureRequired()) {
-                    log.debug("DOM Element was not signed and signature is required");
+                    LOG.debug("DOM Element was not signed and signature is required");
                     item.getItemMetadata().put(
                             new ErrorStatus(getId(), "DOM Element was not signed but signatures are required"));
                 } else {
-                    log.debug("DOM Element is not signed, no verification performed");
+                    LOG.debug("DOM Element is not signed, no verification performed");
                 }
                 return;
             }
         } catch (final ValidationException e) {
             // pass on an error from signature location (e.g., multiple signatures)
-            log.debug("setting status: ", e.getMessage());
+            LOG.debug("setting status: ", e.getMessage());
             item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
             return;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("DOM Element contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("DOM Element contained Signature element\n{}", SerializeSupport.prettyPrintXML(signatureElement));
         }
 
         try {
             validator.verifySignature(docElement, signatureElement);
         } catch (final ValidationException e) {
             final String message = "element signature is invalid: " + e.getMessage();
-            log.debug("setting status: ", message);
+            LOG.debug("setting status: ", message);
             if (isValidSignatureRequired()) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), message));
             } else {

@@ -27,7 +27,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
@@ -38,6 +37,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ParserPool;
 import net.shibboleth.shared.xml.XMLParserException;
 
@@ -55,7 +55,7 @@ import net.shibboleth.shared.xml.XMLParserException;
 public class DOMResourceSourceStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DOMResourceSourceStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(DOMResourceSourceStage.class);
 
     /** Resource used to fetch remote XML document. */
     @NonnullAfterInit @GuardedBy("this")
@@ -135,7 +135,7 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
 
         final var resource = getDOMResource();
         assert resource != null; // enforced by doInitialize
-        log.debug("Attempting to fetch XML document from '{}'", resource.getDescription());
+        LOG.debug("Attempting to fetch XML document from '{}'", resource.getDescription());
 
         try (@Nonnull InputStream ins = resource.getInputStream()) {
             populateItemCollection(items, ins, resource);
@@ -144,8 +144,8 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
                 throw new StageProcessingException("Error retrieving XML document from " +
                         resource.getDescription(), e);
             }
-            log.warn("stage {}: unable to read in XML file", getId());
-            log.debug("stage {}: HTTP resource exception", getId(), e);
+            LOG.warn("stage {}: unable to read in XML file", getId());
+            LOG.debug("stage {}: HTTP resource exception", getId(), e);
         }
     }
 
@@ -162,15 +162,15 @@ public class DOMResourceSourceStage extends AbstractStage<Element> {
     protected void populateItemCollection(@Nonnull @NonnullElements final List<Item<Element>> items,
             @Nonnull final InputStream data, @Nonnull final Resource resource) throws StageProcessingException {
         try {
-            log.debug("Parsing XML document retrieved from '{}'", resource.getDescription());
+            LOG.debug("Parsing XML document retrieved from '{}'", resource.getDescription());
             items.add(new DOMElementItem(getParserPool().parse(data)));
         } catch (final XMLParserException e) {
             if (getErrorCausesSourceFailure()) {
                 throw new StageProcessingException(getId() + " unable to parse returned XML document " +
                         resource.getDescription(), e);
             }
-            log.warn("stage {}: unable to parse XML document", getId());
-            log.debug("stage {}: parsing exception", getId(), e);
+            LOG.warn("stage {}: unable to parse XML document", getId());
+            LOG.debug("stage {}: parsing exception", getId(), e);
         }
     }
 

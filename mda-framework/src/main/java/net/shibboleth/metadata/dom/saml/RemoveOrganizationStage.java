@@ -23,12 +23,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ElementSupport;
 
 /** Filtering stage that removes Organization elements from EntityDescriptors. */
@@ -36,7 +36,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 public class RemoveOrganizationStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
@@ -76,7 +76,7 @@ public class RemoveOrganizationStage extends AbstractIteratingStage<Element> {
         final List<Element> organizations =
                 ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS, "Organization");
         if (!organizations.isEmpty()) {
-            log.debug("{} pipeline stage filtering Organization from EntityDescriptor {}", getId(), entityId);
+            LOG.debug("{} pipeline stage filtering Organization from EntityDescriptor {}", getId(), entityId);
             for (final Element organization : organizations) {
                 entityDescriptor.removeChild(organization);
             }

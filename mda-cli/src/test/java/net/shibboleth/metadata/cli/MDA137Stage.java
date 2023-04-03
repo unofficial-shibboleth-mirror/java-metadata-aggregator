@@ -22,11 +22,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A stage which does nothing except be created and destroyed.
@@ -36,7 +36,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 public class MDA137Stage<T> extends AbstractStage<T> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(MDA137Stage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(MDA137Stage.class);
 
     @Override
     protected void doExecute(@Nonnull List<Item<T>> items) throws StageProcessingException {
@@ -45,12 +45,12 @@ public class MDA137Stage<T> extends AbstractStage<T> {
 
     @Override
     protected void doInitialize() {
-        log.info("MDA-137 initialized");
+        LOG.info("MDA-137 initialized");
     }
     
     @Override
     protected void doDestroy() {
-        log.info("MDA-137 destroyed");
+        LOG.info("MDA-137 destroyed");
     }
 
 }

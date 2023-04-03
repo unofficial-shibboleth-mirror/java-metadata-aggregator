@@ -23,12 +23,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A {@link Stage} that terminates pipeline processing if an {@link Item} has a specific type of {@link ItemMetadata}
@@ -40,7 +40,7 @@ import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelectionStage<T, ItemMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(ItemMetadataTerminationStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(ItemMetadataTerminationStage.class);
 
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items,
@@ -49,7 +49,7 @@ public class ItemMetadataTerminationStage<T> extends AbstractItemMetadataSelecti
             throws TerminationException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
-        log.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
+        LOG.error("Item {} caused processing to terminate because it was marked with a {}", itemId,
                 matchingMetadata.keys());
 
         throw new TerminationException("Item " + itemId + " marked with metadata of type "

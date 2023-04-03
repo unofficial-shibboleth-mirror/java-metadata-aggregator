@@ -29,11 +29,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NotEmpty;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * Item selection strategy which selects items on the basis of a boolean XPath expression.
@@ -42,7 +42,7 @@ import net.shibboleth.shared.annotation.constraint.NotEmpty;
 public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(XPathItemSelectionStrategy.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XPathItemSelectionStrategy.class);
 
     /**
      * Compiled form of the expression.
@@ -81,7 +81,7 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
         try {
             return compiledExpression.evaluateExpression(item.unwrap(), Boolean.class);
         } catch (final XPathExpressionException e) {
-            log.warn("Exception thrown during XPath evaluation: " + e);
+            LOG.warn("Exception thrown during XPath evaluation: " + e);
             return false;
         }
     }

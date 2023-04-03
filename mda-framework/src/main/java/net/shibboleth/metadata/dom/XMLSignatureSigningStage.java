@@ -31,7 +31,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.xml.security.Init;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -44,6 +43,7 @@ import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A pipeline stage that creates, and adds, an enveloped signature for each element in the given {@link DOMElementItem}
@@ -71,7 +71,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     };
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(XMLSignatureSigningStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XMLSignatureSigningStage.class);
 
     /** SHA algorithm variant used in signature and digest algorithms. Default value: <code>ShaVariant.SHA256</code> */
     @Nonnull @GuardedBy("this")
@@ -515,7 +515,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items)
             throws StageProcessingException {
-        final var signer = new XMLSignatureSigner(this, log);
+        final var signer = new XMLSignatureSigner(this, LOG);
         for (final Item<Element> item : items) {
             signer.sign(item);
         }

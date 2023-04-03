@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
@@ -32,6 +31,7 @@ import net.shibboleth.metadata.StatusMetadata;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A {@link Stage} that logs {@link StatusMetadata} associated with an {@link Item}.
@@ -42,7 +42,7 @@ import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelectionStage<T, StatusMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(StatusMetadataLoggingStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(StatusMetadataLoggingStage.class);
 
     @Override
     protected void doExecute(
@@ -66,10 +66,10 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
      */
     private void logInfos(@Nonnull final String itemId,
             @Nonnull @NonnullElements final List<InfoStatus> statuses) {
-        if (!statuses.isEmpty() && log.isInfoEnabled()) {
-            log.info("Item {} was marked with the following Info status messages", itemId);
+        if (!statuses.isEmpty() && LOG.isInfoEnabled()) {
+            LOG.info("Item {} was marked with the following Info status messages", itemId);
             for (final var status : statuses) {
-                log.info("    {}: {}", status.getComponentId(), status.getStatusMessage());
+                LOG.info("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }
@@ -82,10 +82,10 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
      */
     private void logWarnings(@Nonnull final String itemId,
             @Nonnull @NonnullElements final List<WarningStatus> statuses) {
-        if (!statuses.isEmpty() && log.isWarnEnabled()) {
-            log.warn("Item {} was marked with the following Warning status messages", itemId);
+        if (!statuses.isEmpty() && LOG.isWarnEnabled()) {
+            LOG.warn("Item {} was marked with the following Warning status messages", itemId);
             for (final var status : statuses) {
-                log.warn("    {}: {}", status.getComponentId(), status.getStatusMessage());
+                LOG.warn("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }
@@ -98,10 +98,10 @@ public class StatusMetadataLoggingStage<T> extends AbstractItemMetadataSelection
      */
     private void logErrors(@Nonnull final String itemId,
             @Nonnull @NonnullElements final List<ErrorStatus> statuses) {
-        if (!statuses.isEmpty() && log.isErrorEnabled()) {
-            log.error("Item {} was marked with the following Error status messages", itemId);
+        if (!statuses.isEmpty() && LOG.isErrorEnabled()) {
+            LOG.error("Item {} was marked with the following Error status messages", itemId);
             for (final var status : statuses) {
-                log.error("    {}: {}", status.getComponentId(), status.getStatusMessage());
+                LOG.error("    {}: {}", status.getComponentId(), status.getStatusMessage());
             }
         }
     }

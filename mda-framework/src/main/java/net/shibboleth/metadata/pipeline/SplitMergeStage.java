@@ -33,7 +33,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.CollectionMergeStrategy;
 import net.shibboleth.metadata.Item;
@@ -47,6 +46,7 @@ import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.DeprecationSupport;
 import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A stage which splits a given collection according to a provided selection strategy
@@ -94,7 +94,7 @@ import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 public class SplitMergeStage<T> extends AbstractStage<T> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(SplitMergeStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(SplitMergeStage.class);
 
     /** {@link Executor} used to execute the pipelines. */
     @Nonnull @GuardedBy("this")
@@ -332,12 +332,12 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
         }
 
         if (selectedItemPipeline != null && !selectedItemPipeline.isInitialized()) {
-            log.debug("Selected item pipeline was not initialized, initializing it now.");
+            LOG.debug("Selected item pipeline was not initialized, initializing it now.");
             selectedItemPipeline.initialize();
         }
 
         if (nonselectedItemPipeline != null && !nonselectedItemPipeline.isInitialized()) {
-            log.debug("Non-selected item pipeline was not initialized, initializing it now.");
+            LOG.debug("Non-selected item pipeline was not initialized, initializing it now.");
             nonselectedItemPipeline.initialize();
         }
     }

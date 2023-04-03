@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +26,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -36,6 +34,7 @@ import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.AttributeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
@@ -44,7 +43,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntityRegistrationAuthorityFilterStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntityRegistrationAuthorityFilterStage.class);
 
     /** Whether a descriptor is required to have registration information. Default value: false */
     @GuardedBy("this") private boolean requiringRegistrationInformation;
@@ -216,7 +215,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
                 SAMLMetadataSupport.getDescriptorExtension(descriptor, MDRPIMetadataSupport.MDRPI_REGISTRATION_INFO);
         if (registrationInfoElement == null) {
             if (isRequiringRegistrationInformation()) {
-                log.debug(
+                LOG.debug(
                         "{} pipeline stage removing Item because it did not have " +
                                 "required registration information extension",
                         getId());
@@ -228,7 +227,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
         final String registrationAuthority =
                 AttributeSupport.getAttributeValue(registrationInfoElement, null, "registrationAuthority");
         if (registrationAuthority == null) {
-            log.debug(
+            LOG.debug(
                     "{} pipeline stage removing Item because it contained a registration info extension " +
                             "but no authority attribute",
                     getId());
@@ -237,14 +236,14 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
 
         if (isWhitelistingRegistrationAuthorities() &&
                 !getDesignatedRegistrationAuthorities().contains(registrationAuthority)) {
-            log.debug("{} pipeline stage removing Item because its registration authority was not on the whitelist",
+            LOG.debug("{} pipeline stage removing Item because its registration authority was not on the whitelist",
                     getId());
             return true;
         }
 
         if (!isWhitelistingRegistrationAuthorities() &&
                 getDesignatedRegistrationAuthorities().contains(registrationAuthority)) {
-            log.debug("{} pipeline stage removing Item because its registration authority was on the blacklist",
+            LOG.debug("{} pipeline stage removing Item because its registration authority was on the blacklist",
                     getId());
             return true;
         }

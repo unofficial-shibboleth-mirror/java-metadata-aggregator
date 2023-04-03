@@ -28,7 +28,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
@@ -36,6 +35,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A stage which writes the given item collection out to a file using a provided
@@ -54,7 +54,7 @@ import net.shibboleth.shared.logic.Constraint;
 public class SerializationStage<T> extends AbstractStage<T> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(SerializationStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(SerializationStage.class);
 
     /** File to which the item will be written. */
     @NonnullAfterInit @GuardedBy("this")
@@ -163,7 +163,7 @@ public class SerializationStage<T> extends AbstractStage<T> {
                             + outputFile.getAbsolutePath() + "'");
                 }
             } else {
-                log.warn(
+                LOG.warn(
                         "Unable to determine parent directory for output file {}, " +
                             "this may result in a problem during stage execution",
                         outputFile.getAbsolutePath());

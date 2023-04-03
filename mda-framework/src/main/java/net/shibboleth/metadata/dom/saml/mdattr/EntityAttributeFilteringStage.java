@@ -27,7 +27,6 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -41,6 +40,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ElementSupport;
 
 /**
@@ -63,7 +63,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 public class EntityAttributeFilteringStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntityAttributeFilteringStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntityAttributeFilteringStage.class);
 
     /**
      * An entity attribute context against which matches can take place. It consists
@@ -334,7 +334,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
                             attributeNameFormat, registrationAuthority);            
             final boolean matched = applyRules(ctx);
             if (matched ^ isWhitelisting()) {
-                log.debug("removing {}", ctx);
+                LOG.debug("removing {}", ctx);
                 if (isRecordingRemovals()) {
                     item.getItemMetadata().put(new WarningStatus(getId(),
                             "removing '" + ctx.getName() + "' = '" + ctx.getValue() + "'"));
@@ -364,7 +364,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
             
             // remove the Attribute container if it is now empty
             if (ElementSupport.getFirstChildElement(attribute) == null) {
-                log.debug("removing empty Attribute");
+                LOG.debug("removing empty Attribute");
                 entityAttributes.removeChild(attribute);
             }
         }
@@ -388,7 +388,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
 
             // remove the EntityAttributes container if it is now empty
             if (ElementSupport.getFirstChildElement(entityAttributes) == null) {
-                log.debug("removing empty EntityAttributes");
+                LOG.debug("removing empty EntityAttributes");
                 final Node extensions = entityAttributes.getParentNode();
                 extensions.removeChild(entityAttributes);
             }

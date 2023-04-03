@@ -24,13 +24,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.PipelineProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A {@link Callable} that executes a {@link Pipeline} and returns the given item collection.
@@ -41,7 +41,7 @@ import net.shibboleth.shared.logic.Constraint;
 public class PipelineCallable<T> implements Callable<List<Item<T>>> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(PipelineCallable.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(PipelineCallable.class);
 
     /** The pipeline to be executed, never null. */
     private final @Nonnull Pipeline<T> thePipeline;
@@ -64,7 +64,7 @@ public class PipelineCallable<T> implements Callable<List<Item<T>>> {
     }
 
     @Override @Nonnull @NonnullElements public List<Item<T>> call() throws PipelineProcessingException {
-        log.debug("Executing pipeline {} on an item collection containing {} items", thePipeline.getId(),
+        LOG.debug("Executing pipeline {} on an item collection containing {} items", thePipeline.getId(),
                 theItems.size());
         thePipeline.execute(theItems);
         return theItems;

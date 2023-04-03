@@ -30,7 +30,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -45,6 +44,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.SchemaBuilder;
 import net.shibboleth.shared.xml.SerializeSupport;
 
@@ -65,7 +65,7 @@ import net.shibboleth.shared.xml.SerializeSupport;
 public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XMLSchemaValidationStage.class);
 
     /** Collection of schema resources. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
@@ -130,14 +130,14 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        log.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
+        LOG.debug("{} pipeline stage schema validating DOM Element collection elements", getId());
 
         final Validator validator = getValidationSchema().newValidator();
         try {
             validator.validate(new DOMSource(item.unwrap()));
         } catch (final Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("DOM Element was not valid:\n{}", SerializeSupport.prettyPrintXML(item.unwrap()), e);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("DOM Element was not valid:\n{}", SerializeSupport.prettyPrintXML(item.unwrap()), e);
             }
             if (isElementRequiredToBeSchemaValid()) {
                 item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
@@ -157,7 +157,7 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
         }
         
         try {
-            log.debug("{} pipeline stage building validation schema resources", getId());
+            LOG.debug("{} pipeline stage building validation schema resources", getId());
             final SchemaBuilder builder = new SchemaBuilder();
             for (final Resource schemaResource : schemaResources) {
                 try {

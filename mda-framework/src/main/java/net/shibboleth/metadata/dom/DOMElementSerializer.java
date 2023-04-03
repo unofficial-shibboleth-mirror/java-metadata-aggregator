@@ -34,9 +34,9 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.ItemSerializer;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
 public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollectionSerializer<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DOMElementSerializer.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(DOMElementSerializer.class);
 
     @Override
     public void serialize(@Nonnull final Item<Element> item, @Nonnull final OutputStream output)
@@ -64,7 +64,7 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
             serializer.setOutputProperty("encoding", "UTF-8");
             serializer.transform(new DOMSource(documentRoot.getOwnerDocument()), new StreamResult(output));
         } catch (final TransformerException e) {
-            log.error("Unable to write out XML", e);
+            LOG.error("Unable to write out XML", e);
             throw new IOException(e);
         }
     }
@@ -76,10 +76,10 @@ public class DOMElementSerializer implements ItemSerializer<Element>, ItemCollec
         if (iter.hasNext()) {
             serialize(iter.next(), output);
             if (iter.hasNext()) {
-                log.warn("collection contained more than one Item; rest ignored");
+                LOG.warn("collection contained more than one Item; rest ignored");
             }
         } else {
-            log.warn("collection was empty");
+            LOG.warn("collection was empty");
         }
     }
 

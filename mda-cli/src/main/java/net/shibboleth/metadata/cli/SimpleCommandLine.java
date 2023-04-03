@@ -26,22 +26,33 @@ import javax.annotation.Nonnull;
 import net.shibboleth.metadata.Version;
 import net.shibboleth.metadata.pipeline.Pipeline;
 import net.shibboleth.metadata.pipeline.TerminationException;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
  * A simple driver for the metadata aggregator.
- * 
+ *
+ * <p>
  * This class takes two parameters, the first is the file path to the Spring configuration file. The second parameter is
  * the name of bean ID of the Pipeline to be executed. If the pipeline is not initialized by Spring it will be
  * initialized by this CLI.
+ * </p>
  * 
- * All logging is done in accordance with the logback.xml file included in command line JAR file. If you wish to use a
- * different logging configuration you may do so using the <code>-Dlogback.configurationFile=/path/to/logback.xml</code>
- * JVM configuration option.
+ * <p>
+ * Logging is configured through the <code>logback.configurationFile</code> system property.
+ * This property is set here depending on the command-line options selected. A value set
+ * outside this code will be overwritten and therefore ignored.
+ * </p>
+ *
+ * <p>
+ * Because logback only looks at the <code>logback.configurationFile</code> once,
+ * on the first call to <code>getLogger()</code>, it is important that this code
+ * and anything referenced by it does <em>not</em> define static loggers, as this
+ * may cause premature initialisation with the default settings.
+ * </p>
  */
 public final class SimpleCommandLine {
 
@@ -197,7 +208,12 @@ public final class SimpleCommandLine {
 
     /**
      * Initialize the logging subsystem.
-     * 
+     *
+     * <p>
+     * Because this sets the system property logback uses for configuration, it must
+     * be called <em>before</em> any calls to {@link LoggerFactory#getLogger}.
+     * </p>
+     *
      * @param cli command line arguments
      */
     protected static void initLogging(final SimpleCommandLineArguments cli) {

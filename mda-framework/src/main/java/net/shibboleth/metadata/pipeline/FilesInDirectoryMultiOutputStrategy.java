@@ -30,7 +30,6 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
@@ -39,6 +38,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.component.AbstractInitializableComponent;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * An output strategy for use with the {@link MultiOutputSerializationStage} which generates
@@ -61,7 +61,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
     implements MultiOutputSerializationStage.OutputStrategy<T> {
     
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(FilesInDirectoryMultiOutputStrategy.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(FilesInDirectoryMultiOutputStrategy.class);
 
     /**
      * Class implementing the returned {@link MultiOutputSerializationStage.Destination} objects.
@@ -191,7 +191,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
 
         // Construct file name
         final String name = getNamePrefix() + getNameTransformer().apply(id.getId()) + getNameSuffix();
-        log.debug("id mapped {} -> {}", id.getId(), name);
+        LOG.debug("id mapped {} -> {}", id.getId(), name);
         
         // Locate the output file within the directory
         final File outputFile = new File(getDirectory(), name);

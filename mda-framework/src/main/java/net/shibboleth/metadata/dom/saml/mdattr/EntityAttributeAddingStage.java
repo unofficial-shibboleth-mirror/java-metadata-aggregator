@@ -25,7 +25,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -41,6 +40,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A stage which adds entity attribute values to entity definitions.
@@ -51,7 +51,7 @@ import net.shibboleth.shared.logic.Constraint;
 public class EntityAttributeAddingStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntityAttributeAddingStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntityAttributeAddingStage.class);
 
     /**
      * The <code>Name</code> of the attribute to be added.
@@ -215,7 +215,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
     
                 // If any of the existing attribute values match our value, we're done
                 if (attributeValuePresent(attributes, attributeValueMatcher)) {
-                    log.debug("attribute value '{}' already present", value);
+                    LOG.debug("attribute value '{}' already present", value);
                     return;
                 }
     

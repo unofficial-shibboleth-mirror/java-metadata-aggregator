@@ -26,7 +26,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,6 +38,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.metadata.pipeline.impl.NoOpItemOrderingStrategy;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.primitive.StringSupport;
 import net.shibboleth.shared.xml.AttributeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
@@ -55,7 +55,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
     private static final QName NAME_ATTRIB_NAME = new QName("Name");
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorAssemblerStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntitiesDescriptorAssemblerStage.class);
 
     /**
      * Whether attempting to turn an empty item collection, which would result in a schema-invalid childless
@@ -137,7 +137,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
             if (isNoChildrenAProcessingError()) {
                 throw new StageProcessingException("Unable to assemble EntitiesDescriptor from an empty collection");
             }
-            log.debug("Unable to assemble EntitiesDescriptor from an empty collection");
+            LOG.debug("Unable to assemble EntitiesDescriptor from an empty collection");
             return;
         }
 

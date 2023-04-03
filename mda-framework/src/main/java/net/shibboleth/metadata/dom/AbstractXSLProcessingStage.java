@@ -38,7 +38,6 @@ import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
@@ -54,6 +53,7 @@ import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.primitive.StringSupport;
 
 /**
@@ -69,7 +69,7 @@ import net.shibboleth.shared.primitive.StringSupport;
 public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(AbstractXSLProcessingStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(AbstractXSLProcessingStage.class);
 
     /** Resource that provides the XSL document. */
     @NonnullAfterInit @GuardedBy("this")
@@ -287,7 +287,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
                 tfactory.setURIResolver(uriResolver);
             }
 
-            log.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
+            LOG.debug("{} pipeline stage compiling XSL file {}", getId(), xslResource);
             xslTemplate = tfactory.newTemplates(new StreamSource(xslResource.getInputStream(), 
                                                 xslResource.getURL().toExternalForm()));
         } catch (final TransformerConfigurationException e) {

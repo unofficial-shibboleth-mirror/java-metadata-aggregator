@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +26,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -35,6 +33,7 @@ import net.shibboleth.metadata.pipeline.AbstractFilteringStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ElementSupport;
 
 /** A pipeline stage that will remove SAML EntityDescriptior elements which do meet specified filtering criteria. */
@@ -42,7 +41,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 public class EntityFilterStage extends AbstractFilteringStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntityFilterStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntityFilterStage.class);
 
     /** Entities which are white/black listed depending on the value of {@link #whitelistingEntities}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
@@ -181,13 +180,13 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
 
         // if we're whitelisting entities and this entity isn't in the list, kick it out
         if (isWhitelistingEntities() && !getDesignatedEntities().contains(entityId)) {
-            log.debug("{} pipeline stage removing entity {} because it wasn't on the whitelist", getId(), entityId);
+            LOG.debug("{} pipeline stage removing entity {} because it wasn't on the whitelist", getId(), entityId);
             return true;
         }
 
         // if we're backlisting entities and this entity is in the list, kick it out
         if (!isWhitelistingEntities() && getDesignatedEntities().contains(entityId)) {
-            log.debug("{} pipeline stage removing entity {} because it was on the blacklist", getId(), entityId);
+            LOG.debug("{} pipeline stage removing entity {} because it was on the blacklist", getId(), entityId);
             return true;
         }
 

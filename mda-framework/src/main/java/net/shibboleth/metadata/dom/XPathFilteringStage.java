@@ -31,7 +31,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -42,6 +41,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.NotEmpty;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.primitive.StringSupport;
 
 /**
@@ -59,7 +59,7 @@ import net.shibboleth.shared.primitive.StringSupport;
 public class XPathFilteringStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(XPathFilteringStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XPathFilteringStage.class);
 
     /** The XPath expression to execute on each {@link DOMElementItem}. */
     @NonnullAfterInit @NotEmpty @GuardedBy("this")
@@ -132,7 +132,7 @@ public class XPathFilteringStage extends AbstractStage<Element> {
             final Item<Element> item = iterator.next();
             try {
                 if (compiledExpression.evaluateExpression(item.unwrap(), Boolean.class)) {
-                    log.debug("removing item matching XPath condition");
+                    LOG.debug("removing item matching XPath condition");
                     iterator.remove();
                 }
             } catch (final XPathExpressionException e) {

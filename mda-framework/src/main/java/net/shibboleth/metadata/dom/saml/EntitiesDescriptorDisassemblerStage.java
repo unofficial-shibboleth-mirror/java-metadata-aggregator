@@ -24,13 +24,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.pipeline.AbstractStage;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ElementSupport;
 import net.shibboleth.shared.xml.QNameSupport;
 
@@ -42,7 +42,7 @@ import net.shibboleth.shared.xml.QNameSupport;
 public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntitiesDescriptorDisassemblerStage.class);
 
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items) {
@@ -59,7 +59,7 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> 
             } else if (SAMLMetadataSupport.isEntityDescriptor(element)) {
                 processEntityDescriptor(items, element);
             } else {
-                log.debug("{} pipeline stage: DOM Element {} not supported, ignoring it", getId(),
+                LOG.debug("{} pipeline stage: DOM Element {} not supported, ignoring it", getId(),
                         QNameSupport.getNodeQName(element));
             }
         }

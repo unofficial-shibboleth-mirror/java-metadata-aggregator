@@ -23,12 +23,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A {@link Stage} that filters out {@link Item} if they have a specific type of {@link ItemMetadata} attached to them.
@@ -42,7 +42,7 @@ import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionStage<T, ItemMetadata> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(ItemMetadataFilterStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(ItemMetadataFilterStage.class);
 
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items,
@@ -51,7 +51,7 @@ public class ItemMetadataFilterStage<T> extends AbstractItemMetadataSelectionSta
             throws StageProcessingException {
 
         final String itemId = getItemIdentificationStrategy().getItemIdentifier(matchingItem);
-        log.debug("Item {} was removed because it was marked with {}", itemId, matchingMetadata.keys());
+        LOG.debug("Item {} was removed because it was marked with {}", itemId, matchingMetadata.keys());
 
         items.remove(matchingItem);
     }

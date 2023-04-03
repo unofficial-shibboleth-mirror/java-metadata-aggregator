@@ -29,7 +29,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,6 +40,7 @@ import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ParserPool;
 
 /**
@@ -56,7 +56,7 @@ import net.shibboleth.shared.xml.ParserPool;
 public class DOMFilesystemSourceStage extends AbstractStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(DOMFilesystemSourceStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(DOMFilesystemSourceStage.class);
 
     /** Pool of DOM parsers used to parse the XML file in to a DOM. */
     @NonnullAfterInit @GuardedBy("this")
@@ -219,7 +219,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
 
         if (sourceFiles.isEmpty()) {
             if (!isNoSourceFilesAnError()) {
-                log.warn("stage {}: no input XML files in source path {}", getId(), sFile.getPath());
+                LOG.warn("stage {}: no input XML files in source path {}", getId(), sFile.getPath());
                 return;
             }
             throw new StageProcessingException("stage " + getId() + ": no source file was available for parsing");
@@ -277,7 +277,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
      */
     @Nullable
     protected DOMElementItem processSourceFile(@Nonnull final File source) throws StageProcessingException {
-        log.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
+        LOG.debug("{} pipeline source parsing XML file {}", getId(), source.getPath());
         try (FileInputStream xmlIn = new FileInputStream(source)) {
             final Document doc = getParserPool().parse(xmlIn);
             return new DOMElementItem(doc);
@@ -286,7 +286,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
                 throw new StageProcessingException(getId() + " pipeline source unable to parse XML input file "
                         + source.getPath(), e);
             }
-            log.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
+            LOG.warn("{} pipeline source: unable to parse XML source file {}, ignoring it bad file", new Object[] {
                     getId(), source.getPath(), e,});
             return null;
         }

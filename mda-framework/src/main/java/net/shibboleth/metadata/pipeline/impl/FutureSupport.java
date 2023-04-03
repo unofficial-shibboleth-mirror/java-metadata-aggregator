@@ -25,10 +25,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * Helper class for dealing with {@link Future} values.
@@ -37,7 +37,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 public final class FutureSupport {
 
     /** Class logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(FutureSupport.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(FutureSupport.class);
 
     /** Constructor. */
     private FutureSupport() {

@@ -26,7 +26,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.XMLConstants;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -37,6 +36,7 @@ import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.xml.ElementSupport;
 
 /**
@@ -54,7 +54,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 public abstract class AbstractNamespacesStrippingStage extends AbstractIteratingStage<Element> {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(AbstractNamespacesStrippingStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(AbstractNamespacesStrippingStage.class);
 
     /**
      * Determine whether a particular namespace should be stripped.
@@ -104,21 +104,21 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractIterating
             final Attr attribute = (Attr) attributes.item(aIndex);
             final String attrNamespace = attribute.getNamespaceURI();
             final String attrLocalName = attribute.getLocalName();
-            log.trace("checking attribute {{}}:{}", attrNamespace, attrLocalName);
+            LOG.trace("checking attribute {{}}:{}", attrNamespace, attrLocalName);
             
             // Handle namespace prefix definitions first
             if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(attrNamespace)) {
                 // namespace prefix definition
                 if (removingNamespace(attribute.getTextContent())) {
                     // remove prefix definition
-                    log.trace("   prefix {} definition; will remove", attrLocalName);
+                    LOG.trace("   prefix {} definition; will remove", attrLocalName);
                     removeTarget.add(attribute);
                 }
     
             } else if (attrNamespace != null && removingNamespace(attrNamespace)) {
                 // remove attribute in target namespace
                 // never remove attributes without an explicit namespace prefix
-                log.trace("   in target namespace; will remove");
+                LOG.trace("   in target namespace; will remove");
                 removePrefix.add(attribute);
             }
         }
@@ -144,13 +144,13 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractIterating
      */
     private void processElement(@Nonnull final Element element, final int depth) {
         Constraint.isNotNull(element, "Element can not be null");
-        log.trace("{}: element {}", depth, element.getLocalName());
+        LOG.trace("{}: element {}", depth, element.getLocalName());
     
         /*
          * If this element is in the target namespace, remove it from the DOM entirely and we're done.
          */
         if (removingNamespace(element.getNamespaceURI())) {
-            log.trace("{}: removing element entirely", depth);
+            LOG.trace("{}: removing element entirely", depth);
             element.getParentNode().removeChild(element);
             return;
         }

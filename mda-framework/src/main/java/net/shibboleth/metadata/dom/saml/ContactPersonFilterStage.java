@@ -27,7 +27,6 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
@@ -36,6 +35,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.LoggerFactory;
 import net.shibboleth.shared.primitive.StringSupport;
 import net.shibboleth.shared.xml.AttributeSupport;
 import net.shibboleth.shared.xml.ElementSupport;
@@ -77,7 +77,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
     private static final Set<String> ALLOWED_TYPES = Set.of(TECHNICAL, SUPPORT, ADMINISTRATIVE, BILLING, OTHER);
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(ContactPersonFilterStage.class);
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(ContactPersonFilterStage.class);
 
     /** Person types which are white/black listed depending on the value of {@link #whitelistingTypes}. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
@@ -110,7 +110,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
             if (ALLOWED_TYPES.contains(type)) {
                 checkedTypes.add(type);
             } else {
-                log.debug("Stage {}: {} is not an allowed contact person type and so has been ignored", getId(),
+                LOG.debug("Stage {}: {} is not an allowed contact person type and so has been ignored", getId(),
                         type);
             }
         }
@@ -176,7 +176,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
                 ElementSupport
                         .getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS, "ContactPerson");
         if (!contactPersons.isEmpty()) {
-            log.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
+            LOG.debug("{} pipeline stage filtering ContactPerson from EntityDescriptor {}", getId(), entityId);
             for (final Element contactPerson : contactPersons) {
                 if (!isRetainedContactPersonType(contactPerson)) {
                     entityDescriptor.removeChild(contactPerson);
@@ -199,7 +199,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
                 StringSupport.trimOrNull(AttributeSupport.getAttributeValue(contactPerson, null, "contactType"));
 
         if (type == null) {
-            log.debug(
+            LOG.debug(
                     "The following ContactPerson does not contain the required contactType attribute, " +
                             "it will be removed:\n{}",
                     SerializeSupport.prettyPrintXML(contactPerson));
@@ -207,7 +207,7 @@ public class ContactPersonFilterStage extends AbstractIteratingStage<Element> {
         }
 
         if (!ALLOWED_TYPES.contains(type)) {
-            log.debug("The following ContactPerson contained an invalid contactType, it will be removed:\n{}",
+            LOG.debug("The following ContactPerson contained an invalid contactType, it will be removed:\n{}",
                     SerializeSupport.prettyPrintXML(contactPerson));
             return false;
         }
