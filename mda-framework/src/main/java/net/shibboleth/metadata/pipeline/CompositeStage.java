@@ -17,11 +17,15 @@
 
 package net.shibboleth.metadata.pipeline;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
+
+import org.slf4j.Logger;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
@@ -29,6 +33,7 @@ import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.primitive.DeprecationSupport;
 import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
+import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
  * A stage that is composed of other stages. This allows a collection of stages to be grouped together and for that
@@ -43,9 +48,39 @@ import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 @ThreadSafe
 public class CompositeStage<T> extends AbstractStage<T> implements Pipeline<T> {
 
+    /**
+     * Class logger.
+     *
+     * @since 0.10.0
+     */
+    private static final @Nonnull Logger LOG = LoggerFactory.getLogger(CompositeStage.class);
+
+    /**
+     * Whether we are logging progress for all instances, regardless of their
+     * {@link #loggingProgress} settings.
+     *
+     * <p>
+     * To enable this feature, define the system property
+     * <code>net.shibboleth.metadata.loggingAllProgress</code>
+     * to the token <code>true</code>.
+     * </p>
+     */
+    private static final boolean LOGGING_ALL_PROGRESS =
+            Boolean.parseBoolean(System.getProperty("net.shibboleth.metadata.loggingAllProgress"));
+
     /** Stages which compose this stage. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
     private List<Stage<T>> composedStages = List.of();
+    
+    /**
+     * Whether we are logging progress through the stages.
+     *
+     * <p>Default value: <code>false</code></p>
+     *
+     * @since 0.10.0
+     */
+    @GuardedBy("this")
+    private boolean loggingProgress;
 
     /**
      * Gets an unmodifiable list of the stages that compose this stage.
@@ -102,11 +137,50 @@ public class CompositeStage<T> extends AbstractStage<T> implements Pipeline<T> {
         setStages(stages);
     }
 
+    /**
+     * Returns whether we are logging progress.
+     *
+     * @return <code>true</code> if we are logging progress
+     *
+     * @since 0.10.0
+     */
+    public final synchronized boolean isLoggingProgress() {
+        return loggingProgress;
+    }
+
+    /**
+     * Sets whether we are logging progress.
+     *
+     * @param log <code>true</code> to log progress
+     *
+     * @since 0.10.0
+     */
+    public final synchronized void setLoggingProgress(final boolean log) {
+        checkSetterPreconditions();
+        loggingProgress = log;
+    }
+
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        for (final Stage<T> stage : getStages()) {
-            stage.execute(items);
+        if (LOGGING_ALL_PROGRESS || isLoggingProgress()) {            
+            final var id = getId();
+            final var start = Instant.now();
+            for (final Stage<T> stage : getStages()) {
+                final var stageId = stage.getId();
+                final var stageStart = Instant.now();
+                LOG.info("{} >>> {}, count={}", id, stageId, items.size());
+                stage.execute(items);
+                final var stageEnd = Instant.now();
+                final var stageTime = Duration.between(stageStart, stageEnd);
+                LOG.info("{} <<< {}, count={}, duration={}", id, stageId,
+                        items.size(), stageTime);
+            }
+            LOG.info("{} completed, duration={}", id, Duration.between(start, Instant.now()));
+        } else {
+            for (final Stage<T> stage : getStages()) {
+                stage.execute(items);
+            }
         }
     }
 
