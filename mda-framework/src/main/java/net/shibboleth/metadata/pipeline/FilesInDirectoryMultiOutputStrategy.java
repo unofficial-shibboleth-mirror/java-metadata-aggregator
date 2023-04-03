@@ -86,7 +86,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
         }
 
         @Override
-        public OutputStream getOutputStream() throws IOException {
+        public @Nonnull OutputStream getOutputStream() throws IOException {
             return new FileOutputStream(file);
         }
         

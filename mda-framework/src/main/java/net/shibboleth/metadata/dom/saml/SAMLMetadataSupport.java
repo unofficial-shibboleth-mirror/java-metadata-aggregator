@@ -119,7 +119,8 @@ public final class SAMLMetadataSupport {
      *
      * @since 0.10.0
      */
-    public static final @Nonnull QName ORGANIZATIONDISPLAYNAME_NAME = new QName(MD_NS, "OrganizationDisplayName", MD_PREFIX);
+    public static final @Nonnull QName ORGANIZATIONDISPLAYNAME_NAME =
+            new QName(MD_NS, "OrganizationDisplayName", MD_PREFIX);
 
     /**
      * QName of the OrganizationURL element.
@@ -140,7 +141,7 @@ public final class SAMLMetadataSupport {
      * 
      * @return true if the element is an EntityDescriptor or EntitiesDescriptor
      */
-    public static boolean isEntityOrEntitiesDescriptor(@Nullable final Element e) {
+    public static boolean isEntityOrEntitiesDescriptor(@Nonnull final Element e) {
         return isEntitiesDescriptor(e) || isEntityDescriptor(e);
     }
 
@@ -151,7 +152,7 @@ public final class SAMLMetadataSupport {
      * 
      * @return true if the element is an EntitiesDescriptor, false otherwise
      */
-    public static boolean isEntitiesDescriptor(@Nullable final Element e) {
+    public static boolean isEntitiesDescriptor(@Nonnull final Element e) {
         return ElementSupport.isElementNamed(e, ENTITIES_DESCRIPTOR_NAME);
     }
 
@@ -162,7 +163,7 @@ public final class SAMLMetadataSupport {
      * 
      * @return true if the element is an EntityDescriptor, false otherwise
      */
-    public static boolean isEntityDescriptor(@Nullable final Element e) {
+    public static boolean isEntityDescriptor(@Nonnull final Element e) {
         return ElementSupport.isElementNamed(e, ENTITY_DESCRIPTOR_NAME);
     }
 

@@ -77,6 +77,7 @@ public class EntitiesDescriptorDisassemblerStage extends AbstractStage<Element> 
 
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (final Element child : children) {
+            assert child != null;
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(items, child);
             }

@@ -24,6 +24,7 @@ public class ElementMakerTest extends BaseDOMTest {
     public void apply() {
         final Function<Container, Element> maker = new ElementMaker(new QName("ns", "local"));
         final Element root = doc.createElementNS("ns", "root");
+        assert root != null;
         final Container rootContainer = new Container(root);
         final Element newElement = maker.apply(rootContainer);
         Assert.assertNotNull(newElement);
