@@ -55,7 +55,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      * {@link SAMLMetadataSupport#ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME}, {@link SAMLMetadataSupport#PDP_DESCRIPTOR_NAME}.
      */
     @Nonnull  @NonnullElements @Unmodifiable
-    private static final Set<QName> NAMED_ROLES = Set.of(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
+    private static final Set<QName> NAMED_ROLES = CollectionSupport.setOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
             SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME,
             SAMLMetadataSupport.AUTHN_AUTHORITY_DESCRIPTOR_NAME,
             SAMLMetadataSupport.ATTRIBUTE_AUTHORITY_DESCRIPTOR_NAME,
@@ -97,7 +97,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
      */
     public synchronized void setDesignatedRoles(@Nonnull @NonnullElements @Unmodifiable final Collection<QName> roles) {
         checkSetterPreconditions();
-        designatedRoles = Set.copyOf(roles);
+        designatedRoles = CollectionSupport.copyToSet(roles);
     }
 
     /**
@@ -189,6 +189,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
         final List<Element> childEntitiesDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final var descriptor : childEntitiesDescriptors) {
+            assert descriptor != null;
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
             } else {
@@ -199,6 +200,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
         final List<Element> childEntityDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final var descriptor : childEntityDescriptors) {
+            assert descriptor != null;
             if (processEntityDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
             } else {
@@ -227,6 +229,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
         }
 
         final String entityId = entityDescriptor.getAttributeNS(null, "entityID");
+        assert entityId != null;
 
         LOG.debug("{} pipeline stage filtering roles from EntityDescriptor {}", getId(), entityId);
 
@@ -250,6 +253,7 @@ public class EntityRoleFilterStage extends AbstractFilteringStage<Element> {
         boolean remains = false;
         final List<Element> childElements = ElementSupport.getChildElements(entityDescriptor);
         for (final var child : childElements) {
+            assert child != null;
             final QName childQName = QNameSupport.getNodeQName(child);
 
             final QName roleIdentifier;

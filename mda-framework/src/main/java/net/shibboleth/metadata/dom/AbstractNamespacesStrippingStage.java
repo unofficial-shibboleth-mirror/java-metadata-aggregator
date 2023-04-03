@@ -160,6 +160,7 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractIterating
          */
         final List<Element> children = ElementSupport.getChildElements(element);
         for (final Element child : children) {
+            assert child != null;
             processElement(child, depth+1);
         }
     

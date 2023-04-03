@@ -49,7 +49,9 @@ public class ElementMaker implements Function<Container, Element> {
 
     @Override
     public Element apply(final Container input) {
-        return ElementSupport.constructElement(input.unwrap().getOwnerDocument(), name);
+        final var element = input.unwrap().getOwnerDocument();
+        assert element != null;
+        return ElementSupport.constructElement(element, name);
     }
 
 }

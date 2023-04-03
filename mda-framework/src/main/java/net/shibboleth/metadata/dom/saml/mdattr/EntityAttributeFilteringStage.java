@@ -221,7 +221,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
     public synchronized void setRules(
             @Nonnull @NonnullElements @Unmodifiable final List<Predicate<EntityAttributeContext>> newRules) {
         checkSetterPreconditions();
-        rules = List.copyOf(Constraint.isNotNull(newRules, "rules property may not be null"));
+        rules = CollectionSupport.copyToList(Constraint.isNotNull(newRules, "rules property may not be null"));
     }
     
     /**
@@ -316,6 +316,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
             @Nonnull final Item<Element> item) {
         // Determine the attribute's name; this will default to the empty string if not present
         final String attributeName = attribute.getAttribute("Name");
+        assert attributeName != null;
         
         // Determine the attribute's NameFormat
         final String attributeNameFormat = SAMLSupport.extractAttributeNameFormat(attribute);
@@ -327,6 +328,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
         // Filter each AttributeValue in turn
         for (final Element value : attributeValues) {
             final String attributeValue = value.getTextContent();
+            assert attributeValue != null;
 
             // Construct an entity attribute context to be matched against
             final EntityAttributeContext ctx =
@@ -360,6 +362,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
         
         // Filter each Attribute in turn
         for (final Element attribute : attributes) {
+            assert attribute != null;
             filterAttribute(attribute, registrationAuthority, item);
             
             // remove the Attribute container if it is now empty
@@ -384,6 +387,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
          */
         for (final Element entityAttributes : SAMLMetadataSupport.getDescriptorExtensionList(entity,
                 MDAttrSupport.ENTITY_ATTRIBUTES_NAME)) {
+            assert entityAttributes != null;
             filterEntityAttributes(entityAttributes, registrationAuthority, item);
 
             // remove the EntityAttributes container if it is now empty

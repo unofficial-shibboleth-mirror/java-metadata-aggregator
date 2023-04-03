@@ -4,6 +4,8 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
@@ -21,14 +23,14 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         setUp();
     }
 
-    private List<Item<Element>> makeItems(final String inputFile) throws Exception {
+    private @Nonnull List<Item<Element>> makeItems(final @Nonnull String inputFile) throws Exception {
         final Element startElement = readXMLData(inputFile);
         final List<Item<Element>> items = new ArrayList<>();
         items.add(new DOMElementItem(startElement));
         return items;
     }
 
-    private Stage<Element> makeStage(final String value) throws Exception {
+    private Stage<Element> makeStage(final @Nonnull String value) throws Exception {
         final EntityAttributeAddingStage stage = new EntityAttributeAddingStage();
         stage.setId("test");
         stage.setAttributeValue(value);
@@ -36,7 +38,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         return stage;
     }
 
-    private Stage<Element> makeStage(final String value, final String name) throws Exception {
+    private Stage<Element> makeStage(final @Nonnull String value, final @Nonnull String name) throws Exception {
         final EntityAttributeAddingStage stage = new EntityAttributeAddingStage();
         stage.setId("test");
         stage.setAttributeValue(value);
@@ -45,7 +47,8 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         return stage;
     }
 
-    private Stage<Element> makeStage(final String value, final String name, final String nameFormat) throws Exception {
+    private Stage<Element> makeStage(final @Nonnull String value, final @Nonnull String name,
+            final @Nonnull String nameFormat) throws Exception {
         final EntityAttributeAddingStage stage = new EntityAttributeAddingStage();
         stage.setId("test");
         stage.setAttributeValue(value);
@@ -55,7 +58,7 @@ public class EntityAttributeAddingStageTest extends BaseDOMTest {
         return stage;
     }
 
-    private Pipeline<Element> makePipeline(final List<Stage<Element>> stages) throws Exception {
+    private @Nonnull Pipeline<Element> makePipeline(final @Nonnull List<Stage<Element>> stages) throws Exception {
         final SimplePipeline<Element> pipeline = new SimplePipeline<>();
         pipeline.setId("test");
         pipeline.setStages(stages);

@@ -7,6 +7,8 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import net.shibboleth.shared.collection.CollectionSupport;
+
 public class DeduplicatingItemIdMergeStrategyTest {
 
     @Test
@@ -21,7 +23,7 @@ public class DeduplicatingItemIdMergeStrategyTest {
 
         final var merge = new DeduplicatingItemIdMergeStrategy();
         final var result = new ArrayList<Item<String>>();
-        merge.merge(result, List.of(coll1, coll2));
+        merge.merge(result, CollectionSupport.listOf(coll1, coll2));
         
         Assert.assertEquals(result.size(), 3);
         final var i1 = result.get(0);

@@ -154,7 +154,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     public synchronized void setTransformAttributes(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> attributes) {
         checkSetterPreconditions();
-        transformAttributes = Map.copyOf(attributes);
+        transformAttributes = CollectionSupport.copyToMap(attributes);
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     public synchronized void setTransformFeatures(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Boolean> features) {
         checkSetterPreconditions();
-        transformFeatures = Map.copyOf(features);
+        transformFeatures = CollectionSupport.copyToMap(features);
     }
 
     /**
@@ -196,7 +196,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
     public synchronized void setTransformParameters(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, Object> parameters) {
         checkSetterPreconditions();
-        transformParameters = Map.copyOf(parameters);
+        transformParameters = CollectionSupport.copyToMap(parameters);
     }
 
     /**
@@ -233,6 +233,7 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
              * a Transformer for each execution.
              */
             final Transformer transformer = getXSLTemplate().newTransformer();
+            assert transformer != null;
 
             // Set each of the transform's parameters
             for (final Map.Entry<String, Object> entry : getTransformParameters().entrySet()) {
@@ -347,16 +348,19 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
 
         @Override
         public void error(final TransformerException e) throws TransformerException {
+            assert e != null;
             parseAndAppendStatusInfo(e);
         }
 
         @Override
         public void fatalError(final TransformerException e) throws TransformerException {
+            assert e != null;
             parseAndAppendStatusInfo(e);
         }
 
         @Override
         public void warning(final TransformerException e) throws TransformerException {
+            assert e != null;
             parseAndAppendStatusInfo(e);
         }
 

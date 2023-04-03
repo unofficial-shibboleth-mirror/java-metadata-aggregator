@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
@@ -89,7 +91,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         class ReverseOrder implements ItemOrderingStrategy<Element> {
 
         	@Override
-        	public List<Item<Element>> order(List<Item<Element>> items) {
+        	public @Nonnull List<Item<Element>> order(@Nonnull List<Item<Element>> items) {
                 final List<Item<Element>> result = new ArrayList<>(items);
                 Collections.reverse(result);
                 return result;
@@ -135,7 +137,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         Assert.assertEquals("urn:oasis:names:tc:SAML:2.0:metadata", nsattr);
     }
 
-    protected List<Item<Element>> buildMetadataCollection() throws Exception {
+    protected @Nonnull List<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         Element descriptor = readXMLData("entity1.xml");
@@ -145,6 +147,7 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         metadataCollection.add(new DOMElementItem(descriptor));
 
         Element fooElement = getParserPool().newDocument().createElement("foo");
+        assert fooElement != null;
         metadataCollection.add(new DOMElementItem(fooElement));
 
         return metadataCollection;

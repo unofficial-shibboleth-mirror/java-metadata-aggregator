@@ -18,15 +18,14 @@
 package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import javax.xml.namespace.QName;
+import javax.annotation.Nonnull;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
 import org.testng.Assert;
@@ -51,7 +50,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     public void testRoleWhitelist() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
-        stage.setDesignatedRoles(Collections.singletonList(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
+        stage.setDesignatedRoles(CollectionSupport.listOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(true);
         stage.initialize();
 
@@ -76,7 +75,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     public void testRoleBlacklist() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
-        stage.setDesignatedRoles(Collections.singletonList(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
+        stage.setDesignatedRoles(CollectionSupport.listOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
         stage.initialize();
 
@@ -105,7 +104,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
     public void testDontRemoveRolelessEntityDescriptor() throws Exception {
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
-        stage.setDesignatedRoles(Collections.singletonList(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
+        stage.setDesignatedRoles(CollectionSupport.listOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(true);
         stage.setRemoveRolelessEntities(false);
         stage.initialize();
@@ -141,7 +140,7 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
-        stage.setDesignatedRoles(Collections.singletonList(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
+        stage.setDesignatedRoles(CollectionSupport.listOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
         stage.initialize();
 
@@ -152,10 +151,12 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
         Assert.assertEquals(descriptors.size(), 2);
 
         Element descriptor = descriptors.get(0);
+        assert descriptor != null;
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
 
         descriptor = descriptors.get(1);
+        assert descriptor != null;
         Assert.assertEquals(ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME)
                 .size(), 1);
     }
@@ -172,8 +173,8 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
-        stage.setDesignatedRoles(Arrays.asList(new QName[]{SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
-                SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME}));
+        stage.setDesignatedRoles(CollectionSupport.listOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
+                SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
         stage.initialize();
 
@@ -196,8 +197,8 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
 
         EntityRoleFilterStage stage = new EntityRoleFilterStage();
         stage.setId("test");
-        stage.setDesignatedRoles(Arrays.asList(new QName[]{SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
-                SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME}));
+        stage.setDesignatedRoles(CollectionSupport.listOf(SAMLMetadataSupport.IDP_SSO_DESCRIPTOR_NAME,
+                SAMLMetadataSupport.SP_SSO_DESCRIPTOR_NAME));
         stage.setWhitelistingRoles(false);
         stage.setRemovingEntitylessEntitiesDescriptor(false);
         stage.initialize();
@@ -215,12 +216,13 @@ public class EntityRoleFilterStageTest extends BaseDOMTest {
      * 
      * @throws Exception if something bad happens
      */
-    private List<Item<Element>> buildMetadataCollection() throws Exception {
+    private @Nonnull List<Item<Element>> buildMetadataCollection() throws Exception {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
 
         List<Element> descriptors =
                 ElementSupport.getChildElements(readXMLData("in.xml"));
         for (Element descriptor : descriptors) {
+            assert descriptor != null;
             metadataCollection.add(new DOMElementItem(descriptor));
         }
 

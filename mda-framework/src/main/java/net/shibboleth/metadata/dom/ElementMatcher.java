@@ -49,7 +49,7 @@ public class ElementMatcher implements Predicate<Element> {
     }
 
     @Override
-    public boolean test(@Nonnull final Element input) {
+    public boolean test(final Element input) {
         return ElementSupport.isElementNamed(input, qname);
     }
 

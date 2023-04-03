@@ -95,7 +95,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
     public synchronized void setDesignatedRegistrationAuthorities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> authorities) {
         checkSetterPreconditions();
-        designatedAuthorities = Set.copyOf(authorities);
+        designatedAuthorities = CollectionSupport.copyToSet(authorities);
     }
 
     /**
@@ -173,6 +173,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
         final List<Element> childEntitiesDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final var descriptor : childEntitiesDescriptors) {
+            assert descriptor != null;
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
             } else {
@@ -183,6 +184,7 @@ public class EntityRegistrationAuthorityFilterStage extends AbstractFilteringSta
         final List<Element> childEntityDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final var descriptor : childEntityDescriptors) {
+            assert descriptor != null;
             if (filterOutDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
             } else {

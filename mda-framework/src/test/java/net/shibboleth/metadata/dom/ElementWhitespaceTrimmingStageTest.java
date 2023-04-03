@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
 
 import org.testng.annotations.Test;
@@ -46,7 +47,7 @@ public class ElementWhitespaceTrimmingStageTest extends BaseDOMTest {
         return stage; 
     }
     
-    private DOMElementItem makeItem(final String which) throws XMLParserException {
+    private DOMElementItem makeItem(final @Nonnull String which) throws XMLParserException {
         final Element doc = readXMLData(classRelativeResource(which));
         return new DOMElementItem(doc);
     }

@@ -16,11 +16,13 @@ public class DOMElementItemTest extends BaseDOMTest {
         super(DOMElementItem.class);
     }
 
+    @SuppressWarnings("null")
     @Test(expectedExceptions=ConstraintViolationException.class)
     public void testNullDocument() {
         new DOMElementItem((Document)null);
     }
 
+    @SuppressWarnings("null")
     @Test(expectedExceptions=ConstraintViolationException.class)
     public void testNullElement() {
         new DOMElementItem((Element)null);

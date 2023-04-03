@@ -52,7 +52,9 @@ public class DOMResourceSourceStageTest extends BaseTest {
     }
 
     @Test public void testSuccessfulFetchAndParse() throws Exception {
-        Resource mdResource = new ByteArrayResource("<test/>".getBytes("UTF-8"));
+        final var bytes = "<test/>".getBytes("UTF-8");
+        assert bytes != null;
+        Resource mdResource = new ByteArrayResource(bytes);
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         source.setId("test");
@@ -68,7 +70,9 @@ public class DOMResourceSourceStageTest extends BaseTest {
     }
 
     @Test public void testFailedParse() throws Exception {
-        Resource mdResource = new ByteArrayResource("this is not valid XML".getBytes("UTF-8"));
+        final var bytes = "this is not valid XML".getBytes("UTF-8");
+        assert bytes != null;
+        Resource mdResource = new ByteArrayResource(bytes);
 
         DOMResourceSourceStage source = new DOMResourceSourceStage();
         final String stageIdentifier = "testStage";

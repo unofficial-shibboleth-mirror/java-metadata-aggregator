@@ -152,6 +152,7 @@ public class CompositeStageTest {
         }
     }
 
+    @SuppressWarnings("removal")
     @Test
     public void testDeprecatedMethods() throws Exception {
         final var marker = new MarkerStage<String>();

@@ -52,7 +52,7 @@ import net.shibboleth.shared.xml.NamespaceSupport;
 public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
 
     /** Name of the EntitiesDescriptor's Name attribute. */
-    private static final QName NAME_ATTRIB_NAME = new QName("Name");
+    private static final @Nonnull QName NAME_ATTRIB_NAME = new QName("Name");
 
     /** Class logger. */
     private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntitiesDescriptorAssemblerStage.class);
@@ -144,6 +144,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
         final DOMImplementation domImpl =
                 items.iterator().next().unwrap().getOwnerDocument().getImplementation();
         final Document entitiesDescriptorDocument = domImpl.createDocument(null, null, null);
+        assert entitiesDescriptorDocument != null;
 
         final Element entitiesDescriptor =
                 ElementSupport.constructElement(entitiesDescriptorDocument,

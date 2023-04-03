@@ -44,7 +44,8 @@ public abstract class AbstractIteratingStage<T> extends AbstractStage<T> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
-        for (@Nonnull final Item<T> item : items) {
+        for (final Item<T> item : items) {
+            assert item != null;
             doExecute(item);
         }
     }

@@ -18,8 +18,6 @@
 package net.shibboleth.metadata.dom.saml.mdrpi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.testng.Assert;
@@ -29,6 +27,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
 /** Unit test for {@link EntityRegistrationAuthorityFilterStage}. */
@@ -50,7 +49,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setId("test");
         stage.setRequiringRegistrationInformation(false);
         stage.setWhitelistingRegistrationAuthorities(true);
-        stage.setDesignatedRegistrationAuthorities(Collections.singletonList("urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(CollectionSupport.listOf("urn:example.org:authority2"));
         stage.initialize();
 
         final var mdCollection = buildMetadataCollection();
@@ -72,7 +71,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setId("test");
         stage.setWhitelistingRegistrationAuthorities(false);
         stage.setRequiringRegistrationInformation(false);
-        stage.setDesignatedRegistrationAuthorities(Collections.singletonList("urn:example.org:authority2"));
+        stage.setDesignatedRegistrationAuthorities(CollectionSupport.listOf("urn:example.org:authority2"));
         stage.initialize();
 
         final var mdCollection = buildMetadataCollection();
@@ -94,8 +93,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setId("test");
         stage.setRequiringRegistrationInformation(true);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(Arrays.asList(new String[]{"urn:example.org:authority1",
-                "urn:example.org:authority2"}));
+        stage.setDesignatedRegistrationAuthorities(CollectionSupport.listOf("urn:example.org:authority1",
+                "urn:example.org:authority2"));
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
@@ -119,8 +118,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setRequiringRegistrationInformation(true);
         stage.setRemovingEntitylessEntitiesDescriptor(true);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(Arrays.asList(new String[]{"urn:example.org:authority1",
-                "urn:example.org:authority2"}));
+        stage.setDesignatedRegistrationAuthorities(CollectionSupport.listOf("urn:example.org:authority1",
+                "urn:example.org:authority2"));
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
@@ -144,8 +143,8 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         stage.setRemovingEntitylessEntitiesDescriptor(false);
         stage.setRequiringRegistrationInformation(false);
         stage.setWhitelistingRegistrationAuthorities(false);
-        stage.setDesignatedRegistrationAuthorities(Arrays.asList(new String[]{"urn:example.org:authority1",
-                "urn:example.org:authority2"}));
+        stage.setDesignatedRegistrationAuthorities(CollectionSupport.listOf("urn:example.org:authority1",
+                "urn:example.org:authority2"));
         stage.initialize();
 
         final ArrayList<Item<Element>> mdCollection = new ArrayList<>();
@@ -171,6 +170,7 @@ public class EntityRegistrationAuthorityFilterStageTest extends BaseDOMTest {
         List<Element> descriptors =
                 ElementSupport.getChildElements(readXMLData("in.xml"));
         for (Element descriptor : descriptors) {
+            assert descriptor != null;
             metadataCollection.add(new DOMElementItem(descriptor));
         }
 

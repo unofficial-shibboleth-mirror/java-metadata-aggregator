@@ -54,6 +54,7 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
         try {
             final ArrayList<Item<Element>> newItems = new ArrayList<>();
             for (final Item<Element> domItem : items) {
+                assert domItem != null;
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 final Element element = domItem.unwrap();
 
@@ -64,8 +65,11 @@ public class MultiOutputXSLTransformationStage extends AbstractXSLProcessingStag
                 // The document fragment contains a number of Elements, each of which
                 // becomes a new DomElementItem in the output collection carrying the same
                 // ItemMetadata objects as the input.
-                final List<Element> transformedElements = ElementSupport.getChildElements(result.getNode());
+                final var node = result.getNode();
+                assert node != null;
+                final List<Element> transformedElements = ElementSupport.getChildElements(node);
                 for (final Element transformedElement : transformedElements) {
+                    assert transformedElement != null;
                     final DOMElementItem newItem = new DOMElementItem(transformedElement);
                     newItem.getItemMetadata().putAll(domItem.getItemMetadata());
                     newItems.add(newItem);

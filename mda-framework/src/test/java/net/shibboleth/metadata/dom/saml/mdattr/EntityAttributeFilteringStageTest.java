@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
 import net.shibboleth.metadata.dom.BaseDOMTest;
@@ -40,11 +42,11 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
         super(EntityAttributeFilteringStage.class);
     }
     
-    private Element makeInputDocument() throws Exception {
+    private @Nonnull Element makeInputDocument() throws Exception {
         return readXMLData("input.xml");
     }
     
-    private List<Item<Element>> makeItems(final Element inputElement) throws Exception {
+    private @Nonnull List<Item<Element>> makeItems(final @Nonnull Element inputElement) throws Exception {
         final Item<Element> item = new DOMElementItem(inputElement);
         final List<Item<Element>> items = new ArrayList<>();
         items.add(item);
@@ -59,7 +61,7 @@ public class EntityAttributeFilteringStageTest extends BaseDOMTest {
         return items;
     }
 
-    private List<Item<Element>> makeInputItems() throws Exception {
+    private @Nonnull List<Item<Element>> makeInputItems() throws Exception {
         return makeItems(makeInputDocument());
     }
     

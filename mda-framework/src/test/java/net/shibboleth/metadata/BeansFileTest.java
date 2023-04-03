@@ -81,6 +81,7 @@ public class BeansFileTest {
                  * resolve to a class that actually exists.
                  */
                 case "mda.MigrationClassMap" -> {
+                    @SuppressWarnings("unchecked")
                     final Map<String, String> map = ctx.getBean(defName, Map.class);
                     for (String toClass : map.values()) {
                         // check that the mapped class name can be loaded
@@ -93,6 +94,7 @@ public class BeansFileTest {
                  * have definitions.
                  */
                 case "mda.MigrationBeanMap" -> {
+                    @SuppressWarnings("unchecked")
                     final Map<String, String> map = ctx.getBean(defName, Map.class);
                     for (String toBean : map.values()) {
                         assert toBean != null;

@@ -226,6 +226,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         }
 
         for (final File source : sourceFiles) {
+            assert source != null;
             final var dme = processSourceFile(source);
             if (dme != null) {
                 items.add(dme);

@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.saml.mdrpi;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
@@ -25,10 +26,10 @@ import javax.xml.namespace.QName;
 public final class MDRPIMetadataSupport {
 
     /** MDRPI namespace. */
-    public static final String MDRPI_NS = "urn:oasis:names:tc:SAML:metadata:rpi";
+    public static final @Nonnull String MDRPI_NS = "urn:oasis:names:tc:SAML:metadata:rpi";
 
     /** mdrpi:RegistrationInfo element. */
-    public static final QName MDRPI_REGISTRATION_INFO = new QName(MDRPI_NS, "RegistrationInfo");
+    public static final @Nonnull QName MDRPI_REGISTRATION_INFO = new QName(MDRPI_NS, "RegistrationInfo");
     
     /** Constructor. */
     private MDRPIMetadataSupport() {

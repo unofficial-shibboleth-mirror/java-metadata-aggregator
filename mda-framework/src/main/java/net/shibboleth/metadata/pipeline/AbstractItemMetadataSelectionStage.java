@@ -78,7 +78,7 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
     public synchronized void setSelectionRequirements(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Class<? extends B>> requirements) {
         checkSetterPreconditions();
-        selectionRequirements = Set.copyOf(requirements);
+        selectionRequirements = CollectionSupport.copyToSet(requirements);
     }
 
     /**
@@ -107,6 +107,7 @@ public abstract class AbstractItemMetadataSelectionStage<T, B> extends AbstractS
         final @Nonnull var collectionCopy = new ArrayList<>(items);
 
         for (final Item<T> item : collectionCopy) {
+            assert item != null;
             final var matchingMetadata = new ClassToInstanceMultiMap<B>();
 
             for (final Class<? extends B> infoClass : getSelectionRequirements()) {
