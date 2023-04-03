@@ -146,11 +146,6 @@ public final class SimpleCommandLine {
             log.debug("Retrieving pipeline from Spring context");
             final String pipelineName = cli.getPipelineName();
             final Pipeline<?> pipeline = appCtx.getBean(pipelineName, Pipeline.class);
-            if (pipeline == null) {
-                throw new ErrorException(RC_INIT,
-                        "No net.shibboleth.metadata.pipeline.Pipeline, with ID " + pipelineName +
-                        " defined in Spring configuration");
-            }
 
             try {
                 if (!pipeline.isInitialized()) {
