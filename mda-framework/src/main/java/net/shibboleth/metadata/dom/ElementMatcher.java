@@ -14,43 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.shibboleth.metadata.dom;
 
-import java.util.function.Predicate;
-
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import net.shibboleth.shared.logic.Constraint;
-import net.shibboleth.shared.xml.ElementSupport;
-
 /**
- * Basic matcher class for {@link Element}s for use with the {@link Container} system.
+ * Functional interface representing matching an {@link Element}.
  *
  * @since 0.10.0
  */
-@Immutable
-public class ElementMatcher implements Predicate<Element> {
-
-    /** Element {@link QName} to match. */
-    @Nonnull private final QName qname;
+@FunctionalInterface
+public interface ElementMatcher {
 
     /**
-     * Constructor.
-     * 
-     * @param qnameToMatch qualified name ({@link QName}) to match
+     * Match an {@link Element} against specified criteria.
+     *
+     * @param input the {@link Element} to match
+     * @return <code>true</code> if the {@link Element} matches
      */
-    public ElementMatcher(@Nonnull final QName qnameToMatch) {
-        qname = Constraint.isNotNull(qnameToMatch, "qnameToMatch must not be null");
-    }
-
-    @Override
-    public boolean test(final Element input) {
-        return ElementSupport.isElementNamed(input, qname);
-    }
+    boolean match(@Nonnull Element input);
 
 }

@@ -24,7 +24,7 @@ public class AttributeValueElementMakerTest extends BaseDOMTest {
         final var maker = new AttributeValueElementMaker("value text");
         final Element root = doc.createElementNS("ns", "root");
         final Container rootContainer = new Container(root);
-        final Element newElement = maker.apply(rootContainer);
+        final Element newElement = maker.make(rootContainer);
         Assert.assertNotNull(newElement);
         Assert.assertEquals(newElement.getLocalName(), "AttributeValue");
         Assert.assertEquals(newElement.getNamespaceURI(), SAMLSupport.SAML_NS);

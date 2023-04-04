@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.dom.Container;
-import net.shibboleth.metadata.dom.ElementMaker;
+import net.shibboleth.metadata.dom.SimpleElementMaker;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
@@ -31,7 +31,7 @@ import net.shibboleth.shared.logic.Constraint;
  * for use with the {@link Container} system.
  */
 @Immutable
-public class AttributeValueElementMaker extends ElementMaker {
+public class AttributeValueElementMaker extends SimpleElementMaker {
 
     /** Value for the attribute. */
     @Nonnull
@@ -48,8 +48,8 @@ public class AttributeValueElementMaker extends ElementMaker {
     }
 
     @Override
-    public Element apply(@Nonnull final Container container) {
-        final Element newElement = super.apply(container);
+    public Element make(@Nonnull final Container container) {
+        final Element newElement = super.make(container);
         newElement.setTextContent(attributeValue);
         return newElement;
     }

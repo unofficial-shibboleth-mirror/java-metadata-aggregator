@@ -1,6 +1,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -12,7 +14,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 
 public class AttributeValueElementMatcherTest extends BaseDOMTest {
 
-    private final Document doc;
+    private final @Nonnull Document doc;
     private Element value;
 
     protected AttributeValueElementMatcherTest() throws Exception {
@@ -31,18 +33,18 @@ public class AttributeValueElementMatcherTest extends BaseDOMTest {
         final var matcher1 = new AttributeValueElementMatcher("value");
 
         value.setTextContent("value");
-        Assert.assertTrue(matcher1.test(value));
+        Assert.assertTrue(matcher1.match(value));
 
         value.setTextContent("other");
-        Assert.assertFalse(matcher1.test(value));
+        Assert.assertFalse(matcher1.match(value));
 
         final var matcher2 = new AttributeValueElementMatcher("other");
 
         value.setTextContent("value");
-        Assert.assertFalse(matcher2.test(value));
+        Assert.assertFalse(matcher2.match(value));
 
         value.setTextContent("other");
-        Assert.assertTrue(matcher2.test(value));
+        Assert.assertTrue(matcher2.match(value));
     }
 
 }

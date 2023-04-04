@@ -17,18 +17,15 @@
 
 package net.shibboleth.metadata.dom.saml.mdattr;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Element;
-
 import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;
 import net.shibboleth.metadata.dom.ElementMatcher;
+import net.shibboleth.metadata.dom.SimpleElementMaker;
+import net.shibboleth.metadata.dom.SimpleElementMatcher;
 
 /**
  * Helper class for dealing with MDAttr metadata.
@@ -52,16 +49,16 @@ public final class MDAttrSupport {
      *
      * @since 0.10.0
      */
-    public static final @Nonnull Predicate<Element> ENTITY_ATTRIBUTES_MATCHER =
-            new ElementMatcher(ENTITY_ATTRIBUTES_NAME);
+    public static final @Nonnull ElementMatcher ENTITY_ATTRIBUTES_MATCHER =
+            new SimpleElementMatcher(ENTITY_ATTRIBUTES_NAME);
 
     /**
      * Maker for the <code>EntityAttributes</code> element, for use with the {@link Container} system.
      *
      * @since 0.10.0
      */
-    public static final @Nonnull Function<Container, Element> ENTITY_ATTRIBUTES_MAKER =
-            new ElementMaker(ENTITY_ATTRIBUTES_NAME);
+    public static final @Nonnull ElementMaker ENTITY_ATTRIBUTES_MAKER =
+            new SimpleElementMaker(ENTITY_ATTRIBUTES_NAME);
 
     /** Constructor. */
     private MDAttrSupport() {

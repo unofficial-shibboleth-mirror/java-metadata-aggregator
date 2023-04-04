@@ -27,7 +27,7 @@ public class AttributeElementMakerTest extends BaseDOMTest {
         final Element root = doc.createElementNS("ns", "root");
         assert root != null;
         final Container rootContainer = new Container(root);
-        final Element newElement = maker.apply(rootContainer);
+        final Element newElement = maker.make(rootContainer);
         Assert.assertNotNull(newElement);
         Assert.assertEquals(newElement.getLocalName(), "Attribute");
         Assert.assertEquals(newElement.getNamespaceURI(), SAMLSupport.SAML_NS);

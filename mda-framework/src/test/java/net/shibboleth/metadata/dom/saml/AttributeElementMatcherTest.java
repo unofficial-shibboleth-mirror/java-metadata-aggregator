@@ -31,13 +31,13 @@ public class AttributeElementMatcherTest extends BaseDOMTest {
         final var matcher1 = new AttributeElementMatcher("name", "name-format");
         attr.setAttribute("Name", "name");
         attr.setAttribute("NameFormat", "name-format");
-        Assert.assertTrue(matcher1.test(attr));
+        Assert.assertTrue(matcher1.match(attr));
 
         final var matcher2 = new AttributeElementMatcher("name2", "name-format");
-        Assert.assertFalse(matcher2.test(attr));
+        Assert.assertFalse(matcher2.match(attr));
 
         final var matcher3 = new AttributeElementMatcher("name", "name-format2");
-        Assert.assertFalse(matcher3.test(attr));
+        Assert.assertFalse(matcher3.match(attr));
     }
 
     @Test
@@ -45,10 +45,10 @@ public class AttributeElementMatcherTest extends BaseDOMTest {
         attr.setAttribute("Name", "name");
 
         final var matcher1 = new AttributeElementMatcher("name", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
-        Assert.assertTrue(matcher1.test(attr));
+        Assert.assertTrue(matcher1.match(attr));
 
         final var matcher2 = new AttributeElementMatcher("name2", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
-        Assert.assertFalse(matcher2.test(attr));
+        Assert.assertFalse(matcher2.match(attr));
     }
 
 }

@@ -19,12 +19,11 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.xml.ElementSupport;
 
@@ -205,17 +204,16 @@ public class Container {
     }
 
     /**
-     * Find an existing child matching the {@link Predicate}, if there is one.
+     * Find an existing child matching the {@link ElementMatcher}, if there is one.
      * 
-     * @param matcher {@link Predicate} to match against existing children
+     * @param matcher {@link ElementMatcher} to match against existing children
      * @return a child {@link Container} whose {@link Element} matches
-     *      the supplied {@link Predicate}.
+     *      the supplied {@link ElementMatcher}.
      */
-    @Nullable
-    public Container findChild(@Nonnull final Predicate<Element> matcher) {
+    public @Nullable Container findChild(final @Nonnull ElementMatcher matcher) {
         for (final Element e : ElementSupport.getChildElements(element)) {
             assert e != null;
-            if (matcher.test(e)) {
+            if (matcher.match(e)) {
                 return new Container(e, this);
             }
         }
@@ -223,17 +221,16 @@ public class Container {
     }
 
     /**
-     * Find all existing children matching the {@link Predicate}.
+     * Find all existing children matching the {@link ElementMatcher}.
      * 
-     * @param matcher {@link Predicate} to match against existing children
+     * @param matcher {@link ElementMatcher} to match against existing children
      * @return a {@link List} of all matching children
      */
-    @Nonnull
-    public List<Container> findChildren(@Nonnull final Predicate<Element> matcher) {
+    public @Nonnull @NonnullElements List<Container> findChildren(final @Nonnull ElementMatcher matcher) {
         final List<Container> list = new ArrayList<>();
         for (final Element e : ElementSupport.getChildElements(element)) {
             assert e != null;
-            if (matcher.test(e)) {
+            if (matcher.match(e)) {
                 list.add(new Container(e, this));
             }
         }
@@ -256,30 +253,28 @@ public class Container {
     /**
      * Add a child to the container.
      * 
-     * @param maker {@link Function} to create the new child element
+     * @param maker {@link ElementMaker} to create the new child element
      * @param adder strategy class to place the new child inside the container
      * @return a container wrapping the new child element
      */
-    @Nonnull
-    public Container addChild(@Nonnull final Function<Container, Element> maker,
+    public @Nonnull Container addChild(@Nonnull final ElementMaker maker,
             @Nonnull final ChildAddingStrategy adder) {
-        final Element child = maker.apply(this);
+        final Element child = maker.make(this);
         assert child != null;
         return addChild(child, adder);
     }
 
     /**
-     * Locate a child container matching the {@link Predicate}, creating one
+     * Locate a child container matching the {@link ElementMatcher}, creating one
      * if necessary.
      * 
-     * @param matcher {@link Predicate} to match against existing children
-     * @param maker a {@link Function} to create a new child {@link Element}
+     * @param matcher {@link ElementMatcher} to match against existing children
+     * @param maker a {@link ElementMaker} to create a new child {@link Element}
      * @param adder a {@link ChildAddingStrategy} determining where to place the new child
      * @return a child {@link Container}, possibly just created
      */
-    @Nonnull
-    public Container locateChild(@Nonnull final Predicate<Element> matcher,
-            @Nonnull final Function<Container, Element> maker,
+    public @Nonnull Container locateChild(final @Nonnull ElementMatcher matcher,
+            @Nonnull final ElementMaker maker,
             @Nonnull final ChildAddingStrategy adder) {
 
         // Return an existing child if one exists

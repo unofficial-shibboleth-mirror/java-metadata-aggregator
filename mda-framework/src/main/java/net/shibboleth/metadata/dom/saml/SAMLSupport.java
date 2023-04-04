@@ -17,9 +17,6 @@
 
 package net.shibboleth.metadata.dom.saml;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
@@ -29,7 +26,9 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;
+import net.shibboleth.metadata.dom.SimpleElementMaker;
 import net.shibboleth.metadata.dom.ElementMatcher;
+import net.shibboleth.metadata.dom.SimpleElementMatcher;
 
 /**
  * Helper class for dealing with SAML documents.
@@ -49,7 +48,8 @@ public final class SAMLSupport {
     public static final @Nonnull QName ATTRIBUTE_NAME = new QName(SAML_NS, "Attribute", SAML_PREFIX);
     
     /** Unspecified default <code>NameFormat</code> value for <code>Attribute</code> elements. */
-    public static final @Nonnull String ATTRNAME_FORMAT_UNSPECIFIED = "urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified";
+    public static final @Nonnull String ATTRNAME_FORMAT_UNSPECIFIED =
+            "urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified";
     
     /** saml:AttributeValue element. */
     public static final @Nonnull QName ATTRIBUTE_VALUE_NAME = new QName(SAML_NS, "AttributeValue", SAML_PREFIX);
@@ -59,16 +59,16 @@ public final class SAMLSupport {
      *
      * @since 0.10.0
      */
-    public static final @Nonnull Predicate<Element> EXTENSIONS_MATCHER =
-            new ElementMatcher(SAMLMetadataSupport.EXTENSIONS_NAME);
+    public static final @Nonnull ElementMatcher EXTENSIONS_MATCHER =
+            new SimpleElementMatcher(SAMLMetadataSupport.EXTENSIONS_NAME);
 
     /**
      * Maker for the <code>Extensions</code> element, for use with the {@link Container} system.
      *
      * @since 0.10.0
      */
-    public static final @Nonnull Function<Container, Element> EXTENSIONS_MAKER =
-            new ElementMaker(SAMLMetadataSupport.EXTENSIONS_NAME);
+    public static final @Nonnull ElementMaker EXTENSIONS_MAKER =
+            new SimpleElementMaker(SAMLMetadataSupport.EXTENSIONS_NAME);
 
     /** Constructor. */
     private SAMLSupport() {
@@ -81,13 +81,14 @@ public final class SAMLSupport {
      * @param attribute <code>Attribute</code> {@link Element}
      * @return <code>NameFormat</code> value, or the "unspecified" default
      */
-    @Nonnull
-    public static String extractAttributeNameFormat(@Nonnull final Element attribute) {
+    public static @Nonnull String extractAttributeNameFormat(@Nonnull final Element attribute) {
         final Attr attr = attribute.getAttributeNode("NameFormat");
         if (attr == null) {
             return ATTRNAME_FORMAT_UNSPECIFIED;
         }
-        return attr.getValue();
+        final var value = attr.getValue();
+        assert value != null;
+        return value;
     }
 
 }

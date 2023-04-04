@@ -14,27 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.xml.ElementSupport;
+
 /**
- * Functional interface allowing for the construction of a new {@link Element}
- * within the given {@link Container}.
+ * Basic matcher class for {@link Element}s for use with the {@link Container} system.
  *
  * @since 0.10.0
  */
-@FunctionalInterface
-public interface ElementMaker {
+@Immutable
+public class SimpleElementMatcher implements ElementMatcher {
+
+    /** Element {@link QName} to match. */
+    private final @Nonnull QName qname;
 
     /**
-     * Construct an {@link Element} within the given {@link Container}.
-     *
-     * @param container parent {@link Container} for the new {@link Element}
-     * @return newly constructed {@link Element}
+     * Constructor.
+     * 
+     * @param qnameToMatch qualified name ({@link QName}) to match
      */
-    @Nonnull Element make(@Nonnull Container container);
+    public SimpleElementMatcher(@Nonnull final QName qnameToMatch) {
+        qname = Constraint.isNotNull(qnameToMatch, "qnameToMatch must not be null");
+    }
+
+    @Override
+    public boolean match(final @Nonnull Element input) {
+        return ElementSupport.isElementNamed(input, qname);
+    }
 
 }

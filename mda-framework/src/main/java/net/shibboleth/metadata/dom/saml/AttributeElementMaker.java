@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.dom.Container;
-import net.shibboleth.metadata.dom.ElementMaker;
+import net.shibboleth.metadata.dom.SimpleElementMaker;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
@@ -33,7 +33,7 @@ import net.shibboleth.shared.logic.Constraint;
  * @since 0.10.0
  */
 @Immutable
-public class AttributeElementMaker extends ElementMaker {
+public class AttributeElementMaker extends SimpleElementMaker {
 
     /** Value for the <code>Name</code> XML attribute. */
     @Nonnull
@@ -56,8 +56,8 @@ public class AttributeElementMaker extends ElementMaker {
     }
 
     @Override
-    public Element apply(final Container container) {
-        final Element newElement = super.apply(container);
+    public @Nonnull Element make(final @Nonnull Container container) {
+        final Element newElement = super.make(container);
         newElement.setAttributeNS(null, "Name", attributeName);
         newElement.setAttributeNS(null, "NameFormat", attributeNameFormat);
         return newElement;

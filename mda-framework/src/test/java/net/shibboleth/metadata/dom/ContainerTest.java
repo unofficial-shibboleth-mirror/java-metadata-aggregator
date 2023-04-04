@@ -2,8 +2,6 @@
 package net.shibboleth.metadata.dom;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -111,10 +109,10 @@ public class ContainerTest extends BaseDOMTest {
         assert e1 != null;
         final Container c1 = new Container(e1);
 
-        c1.addChild(new Function<Container, Element>(){
+        c1.addChild(new ElementMaker(){
 
             @Override
-            public Element apply(Container input) {
+            public @Nonnull Element make(@Nonnull Container input) {
                 final Element e2 = doc.createElementNS("ns", "child");
                 e2.setTextContent("child value");
                 return e2;
@@ -125,10 +123,10 @@ public class ContainerTest extends BaseDOMTest {
         final Element ok = readXMLData("add1.xml");
         assertXMLIdentical(ok, e1);
 
-        c1.addChild(new Function<Container, Element>(){
+        c1.addChild(new ElementMaker(){
 
             @Override
-            public Element apply(Container input) {
+            public @Nonnull Element make(@Nonnull Container input) {
                 final Element e3 = doc.createElementNS("ns", "child2");
                 e3.setTextContent("child 2 value");
                 return e3;
@@ -146,10 +144,10 @@ public class ContainerTest extends BaseDOMTest {
         assert e1 != null;
         final Container c1 = new Container(e1);
 
-        c1.addChild(new Function<Container, Element>(){
+        c1.addChild(new ElementMaker(){
 
             @Override
-            public Element apply(Container input) {
+            public @Nonnull Element make(@Nonnull Container input) {
                 final Element e2 = doc.createElementNS("ns", "child");
                 e2.setTextContent("child value");
                 return e2;
@@ -160,10 +158,10 @@ public class ContainerTest extends BaseDOMTest {
         final Element ok = readXMLData("add1.xml");
         assertXMLIdentical(ok, e1);
 
-        c1.addChild(new Function<Container, Element>(){
+        c1.addChild(new ElementMaker(){
 
             @Override
-            public Element apply(Container input) {
+            public @Nonnull Element make(@Nonnull Container input) {
                 final Element e3 = doc.createElementNS("ns", "child2");
                 e3.setTextContent("child 2 value");
                 return e3;
@@ -195,10 +193,10 @@ public class ContainerTest extends BaseDOMTest {
     @Test
     public void findChild() throws Exception {
         final Container root = new Container(readXMLData("find.xml"));
-        final Container child = root.findChild(new Predicate<Element>(){
+        final Container child = root.findChild(new ElementMatcher(){
 
             @Override
-            public boolean test(Element input) {
+            public boolean match(@Nonnull Element input) {
                 return "findme".equals(input.getLocalName());
             }
             
@@ -210,10 +208,10 @@ public class ContainerTest extends BaseDOMTest {
     @Test
     public void findChildren() throws Exception {
         final Container root = new Container(readXMLData("find.xml"));
-        final List<Container> children = root.findChildren(new Predicate<Element>(){
+        final List<Container> children = root.findChildren(new ElementMatcher(){
 
             @Override
-            public boolean test(Element input) {
+            public boolean match(@Nonnull Element input) {
                 return "findme".equals(input.getLocalName());
             }
             
@@ -231,18 +229,18 @@ public class ContainerTest extends BaseDOMTest {
         assert e1 != null;
         final Container c1 = new Container(e1);
 
-        c1.locateChild(new Predicate<Element>(){
+        c1.locateChild(new ElementMatcher(){
 
             @Override
-            public boolean test(Element input) {
+            public boolean match(@Nonnull Element input) {
                 return "child".equals(input.getLocalName());
             }
             
             
-        }, new Function<Container, Element>(){
+        }, new ElementMaker(){
 
             @Override
-            public Element apply(Container input) {
+            public @Nonnull Element make(@Nonnull Container input) {
                 final Element e2 = doc.createElementNS("ns", "child");
                 e2.setTextContent("child value");
                 return e2;
@@ -255,18 +253,18 @@ public class ContainerTest extends BaseDOMTest {
 
         // same again should NOT change the result for locate
 
-        c1.locateChild(new Predicate<Element>(){
+        c1.locateChild(new ElementMatcher(){
 
             @Override
-            public boolean test(Element input) {
+            public boolean match(@Nonnull Element input) {
                 return "child".equals(input.getLocalName());
             }
             
             
-        }, new Function<Container, Element>(){
+        }, new ElementMaker(){
 
             @Override
-            public Element apply(Container input) {
+            public @Nonnull Element make(@Nonnull Container input) {
                 final Element e2 = doc.createElementNS("ns", "child");
                 e2.setTextContent("child value");
                 return e2;

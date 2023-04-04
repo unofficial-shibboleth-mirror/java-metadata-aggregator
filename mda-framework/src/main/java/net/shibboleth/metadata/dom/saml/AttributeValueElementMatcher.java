@@ -22,16 +22,16 @@ import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Element;
 
-import net.shibboleth.metadata.dom.ElementMatcher;
+import net.shibboleth.metadata.dom.SimpleElementMatcher;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
- * Match {@link java.util.function.Predicate} for SAML <code>AttributeValue</code> elements with specific
+ * {@link ElementMatcher} for SAML <code>AttributeValue</code> elements with specific
  * text values,
  * for use with the {@link net.shibboleth.metadata.dom.Container} system.
  */
 @Immutable
-public class AttributeValueElementMatcher extends ElementMatcher {
+public class AttributeValueElementMatcher extends SimpleElementMatcher {
 
     /** <code>Attribute</code> value to match. */
     @Nonnull private final String matchValue;
@@ -47,9 +47,9 @@ public class AttributeValueElementMatcher extends ElementMatcher {
     }
 
     @Override
-    public boolean test(@Nonnull final Element element) {
+    public boolean match(@Nonnull final Element element) {
         // check for element name
-        if (!super.test(element)) {
+        if (!super.match(element)) {
             return false;
         }
 

@@ -18,7 +18,6 @@
 package net.shibboleth.metadata.dom.saml.mdattr;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
@@ -29,6 +28,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.Container;
+import net.shibboleth.metadata.dom.ElementMatcher;
 import net.shibboleth.metadata.dom.saml.AttributeElementMaker;
 import net.shibboleth.metadata.dom.saml.AttributeElementMatcher;
 import net.shibboleth.metadata.dom.saml.AttributeValueElementMaker;
@@ -167,11 +167,11 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * Attribute container elements.
      * 
      * @param attributes {@link List} of Attribute {@link Container}s
-     * @param matcher {@link Predicate} that matches the {@link Element} we are looking for
+     * @param matcher {@link ElementMatcher} that matches the {@link Element} we are looking for
      * @return true iff the value appears somewhere in the list of containers
      */
     private boolean attributeValuePresent(@Nonnull final List<Container> attributes,
-            @Nonnull final Predicate<Element> matcher) {
+            @Nonnull final ElementMatcher matcher) {
         for (final Container attribute : attributes) {
             if (attribute.findChild(matcher) != null) {
                 return true;

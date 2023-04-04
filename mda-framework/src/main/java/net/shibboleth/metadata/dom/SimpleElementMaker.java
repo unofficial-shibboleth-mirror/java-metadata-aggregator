@@ -14,27 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package net.shibboleth.metadata.dom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.shared.xml.ElementSupport;
+
 /**
- * Functional interface allowing for the construction of a new {@link Element}
- * within the given {@link Container}.
+ * Basic maker class for {@link Element}s for use with the {@link Container} system.
  *
  * @since 0.10.0
  */
-@FunctionalInterface
-public interface ElementMaker {
+@Immutable
+public class SimpleElementMaker implements ElementMaker {
+
+    /** Qualified name for the {@link Element} to be created. */
+    @Nonnull private final QName name;
 
     /**
-     * Construct an {@link Element} within the given {@link Container}.
-     *
-     * @param container parent {@link Container} for the new {@link Element}
-     * @return newly constructed {@link Element}
+     * Constructor.
+     * 
+     * @param qname qualified name for the {@link Element} to be created
      */
-    @Nonnull Element make(@Nonnull Container container);
+    public SimpleElementMaker(@Nonnull final QName qname) {
+        name = qname;
+    }
+
+    @Override
+    public @Nonnull Element make(final @Nonnull Container container) {
+        final var element = container.unwrap().getOwnerDocument();
+        assert element != null;
+        return ElementSupport.constructElement(element, name);
+    }
 
 }

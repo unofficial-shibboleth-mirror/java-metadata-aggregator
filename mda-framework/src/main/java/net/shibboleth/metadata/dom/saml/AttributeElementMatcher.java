@@ -22,18 +22,18 @@ import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Element;
 
-import net.shibboleth.metadata.dom.ElementMatcher;
+import net.shibboleth.metadata.dom.SimpleElementMatcher;
 import net.shibboleth.shared.logic.Constraint;
 
 /**
- * Match {@link java.util.function.Predicate} for SAML <code>Attribute</code> elements with specific
+ * {@link ElementMatcher} for SAML <code>Attribute</code> elements with specific
  * <code>Name</code> and <code>NameFormat</code> attributes,
  * for use with the {@link net.shibboleth.metadata.dom.Container} system.
  *
  * @since 0.10.0
  */
 @Immutable
-public class AttributeElementMatcher extends ElementMatcher {
+public class AttributeElementMatcher extends SimpleElementMatcher {
 
     /** <code>NameFormat</code> attribute value to match. */
     @Nonnull private final String matchFormat;
@@ -54,9 +54,9 @@ public class AttributeElementMatcher extends ElementMatcher {
     }
 
     @Override
-    public boolean test(@Nonnull final Element element) {
+    public boolean match(@Nonnull final Element element) {
         // check for element name
-        if (!super.test(element)) {
+        if (!super.match(element)) {
             return false;
         }
 

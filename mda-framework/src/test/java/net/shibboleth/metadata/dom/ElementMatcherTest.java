@@ -12,18 +12,18 @@ public class ElementMatcherTest extends BaseDOMTest {
     private final Document doc;
 
     protected ElementMatcherTest() throws Exception {
-        super(ElementMatcher.class);
+        super(SimpleElementMatcher.class);
         setUp();
         doc = getParserPool().newDocument();
     }
 
     @Test
     public void matcher() throws Exception {
-        final var matcher = new ElementMatcher(new QName("ns", "xxx"));
-        Assert.assertTrue(matcher.test(doc.createElementNS("ns", "xxx")));
-        Assert.assertFalse(matcher.test(doc.createElementNS("ns", "yyy")));
-        Assert.assertFalse(matcher.test(doc.createElementNS("ns2", "xxx")));
-        Assert.assertFalse(matcher.test(doc.createElementNS("ns2", "yyy")));
+        final ElementMatcher matcher = new SimpleElementMatcher(new QName("ns", "xxx"));
+        Assert.assertTrue(matcher.match(doc.createElementNS("ns", "xxx")));
+        Assert.assertFalse(matcher.match(doc.createElementNS("ns", "yyy")));
+        Assert.assertFalse(matcher.match(doc.createElementNS("ns2", "xxx")));
+        Assert.assertFalse(matcher.match(doc.createElementNS("ns2", "yyy")));
     }
 
 }
