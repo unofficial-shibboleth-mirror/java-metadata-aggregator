@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -49,7 +51,7 @@ public class X509ValidationStageTest extends BaseDOMTest {
         return stage; 
     }
     
-    private DOMElementItem makeItem(final String which) throws XMLParserException {
+    private DOMElementItem makeItem(final @Nonnull String which) throws XMLParserException {
         final Element doc = readXMLData(classRelativeResource(which));
         return new DOMElementItem(doc);
     }

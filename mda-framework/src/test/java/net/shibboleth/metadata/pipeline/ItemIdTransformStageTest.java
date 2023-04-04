@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 public class ItemIdTransformStageTest {
 
@@ -86,11 +87,11 @@ public class ItemIdTransformStageTest {
         Assert.assertEquals(stage.getIdTransformers().size(), 0);
         
         // Put in a list of one thing.
-        stage.setIdTransformers(List.of(new MDQueryMD5ItemIdTransformer()));
+        stage.setIdTransformers(CollectionSupport.listOf(new MDQueryMD5ItemIdTransformer()));
         Assert.assertEquals(stage.getIdTransformers().size(), 1);
         
         // Put in a list of one other thing
-        stage.setIdTransformers(List.of(new MDQuerySHA1ItemIdTransformer()));
+        stage.setIdTransformers(CollectionSupport.listOf(new MDQuerySHA1ItemIdTransformer()));
         // Should still be one thing, not accumulated to two
         Assert.assertEquals(stage.getIdTransformers().size(), 1);
         // Should also be the new thing, not the old thing.

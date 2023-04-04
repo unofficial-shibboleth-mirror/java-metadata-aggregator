@@ -49,6 +49,7 @@ public class FilesInDirectoryMultiOutputStrategyTest {
     // Test with a prefix, a suffix, and an ID transform that doubles the name
     @Test public void testFull() throws Exception {
         final File tempDir = Files.createTempDirectory("FilesInDirectoryMultiOutputStrategyTest").toFile();
+        assert tempDir != null;
         //System.out.println("temp dir: " + tempDir.getAbsolutePath());
         
         final FilesInDirectoryMultiOutputStrategy<String> strategy = new FilesInDirectoryMultiOutputStrategy<>();
@@ -79,6 +80,7 @@ public class FilesInDirectoryMultiOutputStrategyTest {
     // Test with defaults
     @Test public void testDefaults() throws Exception {
         final File tempDir = Files.createTempDirectory("FilesInDirectoryMultiOutputStrategyTest").toFile();
+        assert tempDir != null;
         //System.out.println("temp dir: " + tempDir.getAbsolutePath());
 
         final FilesInDirectoryMultiOutputStrategy<String> strategy = new FilesInDirectoryMultiOutputStrategy<>();

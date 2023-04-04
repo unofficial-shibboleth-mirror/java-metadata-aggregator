@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,7 +42,7 @@ public class SimpleItemCollectionSerializerTest {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final var base = new ItemSerializer<String>() {
             @Override
-            public void serialize(Item<String> item, OutputStream out) {
+            public void serialize(@Nonnull Item<String> item, @Nonnull OutputStream out) {
                 try {
                     out.write(item.unwrap().getBytes());
                 } catch (IOException e) {

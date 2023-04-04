@@ -69,6 +69,7 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         Assert.assertEquals(entityDescriptors.size(), 3);
 
         for (Element entityDescriptor : entityDescriptors) {
+            assert entityDescriptor != null;
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
                     SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME));
         }

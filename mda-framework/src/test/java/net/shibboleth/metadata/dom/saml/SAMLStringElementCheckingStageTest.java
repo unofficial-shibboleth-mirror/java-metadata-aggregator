@@ -3,7 +3,6 @@ package net.shibboleth.metadata.dom.saml;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,6 +12,7 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 public class SAMLStringElementCheckingStageTest extends BaseDOMTest {
 
@@ -29,7 +29,7 @@ public class SAMLStringElementCheckingStageTest extends BaseDOMTest {
         
         final SAMLStringElementCheckingStage stage = new SAMLStringElementCheckingStage();
         stage.setId("test");
-        stage.setElementNames(Set.of(SAMLMetadataSupport.ORGANIZATIONNAME_NAME));
+        stage.setElementNames(CollectionSupport.setOf(SAMLMetadataSupport.ORGANIZATIONNAME_NAME));
         stage.initialize();
         
         stage.execute(items);
@@ -48,7 +48,7 @@ public class SAMLStringElementCheckingStageTest extends BaseDOMTest {
         
         final SAMLStringElementCheckingStage stage = new SAMLStringElementCheckingStage();
         stage.setId("test");
-        stage.setElementNames(Set.of(SAMLMetadataSupport.ORGANIZATIONNAME_NAME,
+        stage.setElementNames(CollectionSupport.setOf(SAMLMetadataSupport.ORGANIZATIONNAME_NAME,
                 SAMLMetadataSupport.ORGANIZATIONDISPLAYNAME_NAME));
         stage.initialize();
         

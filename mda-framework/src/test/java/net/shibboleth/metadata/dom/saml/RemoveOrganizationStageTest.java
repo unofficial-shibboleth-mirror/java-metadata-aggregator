@@ -48,6 +48,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
         List<Element> descriptors = ElementSupport
                 .getChildElements(readXMLData("in.xml"));
         for (Element descriptor : descriptors) {
+            assert descriptor != null;
             metadataCollection.add(new DOMElementItem(descriptor));
         }
 
@@ -83,6 +84,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
         Element entitiesDescriptor = metadataCollection.get(0).unwrap();
         List<Element> entityDescriptors = ElementSupport.getChildElements(entitiesDescriptor);
         for (Element entityDescriptor : entityDescriptors) {
+            assert entityDescriptor != null;
             Assert.assertFalse(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }
@@ -96,6 +98,7 @@ public class RemoveOrganizationStageTest extends BaseDOMTest {
         Assert.assertEquals(metadataCollection.size(), 1);
 
         for (Element entityDescriptor : entityDescriptors) {
+            assert entityDescriptor != null;
             Assert.assertTrue(ElementSupport.getChildElementsByTagNameNS(entityDescriptor, SAMLMetadataSupport.MD_NS,
                     "Organization").isEmpty());
         }

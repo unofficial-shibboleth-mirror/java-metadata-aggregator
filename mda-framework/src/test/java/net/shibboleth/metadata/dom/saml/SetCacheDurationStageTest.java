@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.annotation.Nonnull;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
@@ -53,7 +54,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
      * @return the cache duration attribute value converted to a {@link Duration}
      * @throws DatatypeConfigurationException if a {@link DatatypeFactory} can't be constructed
      */
-    private Duration fetchDuration(Element descriptor) throws DatatypeConfigurationException {
+    private Duration fetchDuration(@Nonnull Element descriptor) throws DatatypeConfigurationException {
         final Date baseDate = new Date(0);
         final DatatypeFactory dtf = DatatypeFactory.newInstance();
         final Attr cacheDurationAttr = AttributeSupport.getAttribute(descriptor,
@@ -78,6 +79,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         metadataCollection.add(item);
 
         final var duration = Duration.ofMillis(123456);
+        assert duration != null;
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
         stage.setCacheDuration(duration);
@@ -99,6 +101,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         final Item<Element> item = new DOMElementItem(entitiesDescriptor);
         
         final var originalDuration = Duration.ofMillis(987654);
+        assert originalDuration != null;
         AttributeSupport.appendDurationAttribute(entitiesDescriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
                 originalDuration);
 
@@ -109,6 +112,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         metadataCollection.add(item);
 
         final var duration = Duration.ofMillis(123456);
+        assert duration != null;
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
         stage.setCacheDuration(duration);
@@ -131,12 +135,14 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
 
         Document newDoc = parserPool.newDocument();
         Element root = newDoc.createElementNS("http://example.org", "foo");
+        assert root != null;
         ElementSupport.setDocumentElement(newDoc, root);
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(root));
 
         final var duration = Duration.ofMillis(123456);
+        assert duration != null;
         SetCacheDurationStage stage = new SetCacheDurationStage();
         stage.setId("test");
         stage.setCacheDuration(duration);
@@ -155,7 +161,9 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         stage.setId("test");
 
         try {
-            stage.setCacheDuration(Duration.ofMillis(-987654));
+            final var duration = Duration.ofMillis(-987654);
+            assert duration != null;
+            stage.setCacheDuration(duration);
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // expected this
@@ -169,7 +177,9 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         stage.setId("test");
 
         try {
-            stage.setCacheDuration(Duration.ZERO);
+            final var duration = Duration.ZERO;
+            assert duration != null;
+            stage.setCacheDuration(duration);
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // expected this
@@ -177,6 +187,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
     }
 
     /** Tests that the stage properly rejects null durations. */
+    @SuppressWarnings("null")
     @Test
     public void testNullDuration() {
         final var stage = new SetCacheDurationStage();

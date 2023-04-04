@@ -57,7 +57,7 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
     public synchronized void setValidators(
             @Nonnull @NonnullElements @Unmodifiable final List<Validator<V>> newValidators) {
         checkSetterPreconditions();
-        validators = List.copyOf(newValidators);
+        validators = CollectionSupport.copyToList(newValidators);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ValidatorSequence<V> extends BaseValidator implements Validator<V> 
     }
 
     @Override
-    public Action validate(@Nonnull final V value, @Nonnull final Item<?> item, @Nonnull final String stageId)
+    public @Nonnull Action validate(@Nonnull final V value, @Nonnull final Item<?> item, @Nonnull final String stageId)
             throws StageProcessingException {
         for (final Validator<V> validator: getValidators()) {
             final Action action = validator.validate(value, item, stageId);

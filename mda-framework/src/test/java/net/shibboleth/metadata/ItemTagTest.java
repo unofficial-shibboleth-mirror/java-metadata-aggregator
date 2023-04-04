@@ -25,7 +25,8 @@ import org.testng.annotations.Test;
 /** Unit test for {@link ItemTag}. */
 public class ItemTagTest {
 
-    @Test public void test() {
+    @Test
+    public void test() {
         ItemTag info = new ItemTag(" test ");
         Assert.assertEquals(info.getTag(), "test");
 
@@ -34,9 +35,13 @@ public class ItemTagTest {
         } catch (ConstraintViolationException e) {
             // expected this
         }
-
+    }
+    
+    @SuppressWarnings("null")
+    @Test
+    public void testNull() {
         try {
-            info = new ItemTag(null);
+            new ItemTag(null);
         } catch (ConstraintViolationException e) {
             // expected this
         }

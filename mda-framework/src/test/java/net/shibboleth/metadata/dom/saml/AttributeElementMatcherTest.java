@@ -1,6 +1,8 @@
 
 package net.shibboleth.metadata.dom.saml;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -12,7 +14,7 @@ import net.shibboleth.shared.xml.ElementSupport;
 
 public class AttributeElementMatcherTest extends BaseDOMTest {
 
-    private final Document doc;
+    private final @Nonnull Document doc;
     private Element attr;
 
     protected AttributeElementMatcherTest() throws Exception {
@@ -29,14 +31,17 @@ public class AttributeElementMatcherTest extends BaseDOMTest {
     @Test
     public void matchNormal() throws Exception {
         final var matcher1 = new AttributeElementMatcher("name", "name-format");
+        assert attr != null;
         attr.setAttribute("Name", "name");
         attr.setAttribute("NameFormat", "name-format");
         Assert.assertTrue(matcher1.match(attr));
 
         final var matcher2 = new AttributeElementMatcher("name2", "name-format");
+        assert attr != null;
         Assert.assertFalse(matcher2.match(attr));
 
         final var matcher3 = new AttributeElementMatcher("name", "name-format2");
+        assert attr != null;
         Assert.assertFalse(matcher3.match(attr));
     }
 
@@ -45,9 +50,11 @@ public class AttributeElementMatcherTest extends BaseDOMTest {
         attr.setAttribute("Name", "name");
 
         final var matcher1 = new AttributeElementMatcher("name", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
+        assert attr != null;
         Assert.assertTrue(matcher1.match(attr));
 
         final var matcher2 = new AttributeElementMatcher("name2", SAMLSupport.ATTRNAME_FORMAT_UNSPECIFIED);
+        assert attr != null;
         Assert.assertFalse(matcher2.match(attr));
     }
 

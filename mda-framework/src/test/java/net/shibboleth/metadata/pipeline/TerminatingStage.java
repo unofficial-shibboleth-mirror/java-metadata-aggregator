@@ -19,6 +19,8 @@ package net.shibboleth.metadata.pipeline;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.Item;
 
 /**
@@ -34,7 +36,7 @@ class TerminatingStage<T> extends AbstractStage<T> {
     }
 
     @Override
-    protected void doExecute(List<Item<T>> items) throws StageProcessingException {
+    protected void doExecute(@Nonnull List<Item<T>> items) throws StageProcessingException {
         throw new TerminationException("from TerminatingStage");
     }
 }

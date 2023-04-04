@@ -52,6 +52,7 @@ public class SimpleItemCollectionSerializer<T> implements ItemCollectionSerializ
             @Nonnull final OutputStream output)
         throws IOException {
         for (final Item<T> item : items) {
+            assert item != null;
             serializer.serialize(item, output);
         }
     }

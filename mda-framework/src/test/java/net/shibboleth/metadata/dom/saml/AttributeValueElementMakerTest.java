@@ -23,6 +23,7 @@ public class AttributeValueElementMakerTest extends BaseDOMTest {
     public void apply() {
         final var maker = new AttributeValueElementMaker("value text");
         final Element root = doc.createElementNS("ns", "root");
+        assert root != null;
         final Container rootContainer = new Container(root);
         final Element newElement = maker.make(rootContainer);
         Assert.assertNotNull(newElement);

@@ -4,6 +4,7 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
 
 import org.testng.Assert;
@@ -17,6 +18,7 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.validate.RejectAllValidator;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.string.AcceptStringRegexValidator;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 
 public class StringElementValidationStageTest extends BaseDOMTest {
@@ -73,7 +75,7 @@ public class StringElementValidationStageTest extends BaseDOMTest {
         stop.setId("stop");
         stop.initialize();
         
-        final List<Validator<String>> validators = List.of(val, stop);
+        final @Nonnull List<Validator<String>> validators = CollectionSupport.listOf(val, stop);
       
         final StringElementValidationStage stage = new StringElementValidationStage();
         stage.setId("test");
@@ -100,9 +102,9 @@ public class StringElementValidationStageTest extends BaseDOMTest {
         
         final StringElementValidationStage stage = new StringElementValidationStage();
         stage.setId("test");
-        stage.setElementNames(List.of(SAMLMetadataSupport.ORGANIZATIONNAME_NAME,
+        stage.setElementNames(CollectionSupport.listOf(SAMLMetadataSupport.ORGANIZATIONNAME_NAME,
                 SAMLMetadataSupport.ORGANIZATIONDISPLAYNAME_NAME));
-        stage.setValidators(List.of(stop)); // reject everything
+        stage.setValidators(CollectionSupport.listOf(stop)); // reject everything
         stage.initialize();
       
         stage.execute(items);

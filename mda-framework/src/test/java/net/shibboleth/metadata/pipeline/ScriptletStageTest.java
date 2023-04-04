@@ -1,8 +1,6 @@
 
 package net.shibboleth.metadata.pipeline;
 
-import java.util.List;
-
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 
@@ -14,6 +12,7 @@ import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.TestMarker;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.scripting.EvaluableScript;
 
@@ -59,7 +58,7 @@ public class ScriptletStageTest extends BaseTest {
         stage.setScript(script);
         stage.initialize();
 
-        final var items = List.<Item<String>>of(new MockItem("one"), new MockItem("two"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("one"), new MockItem("two"));
         stage.execute(items);
 
         // The script should have added a TestMarker to each item.
@@ -91,7 +90,7 @@ public class ScriptletStageTest extends BaseTest {
         stage.setScript(script);
         stage.initialize();
         
-        final var items = List.<Item<String>>of(new MockItem("one"), new MockItem("two"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("one"), new MockItem("two"));
         
         try {
             stage.execute(items);
@@ -129,7 +128,7 @@ public class ScriptletStageTest extends BaseTest {
         stage.setVariableName("$items");
         stage.initialize();
         
-        final var items = List.<Item<String>>of(new MockItem("one"), new MockItem("two"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("one"), new MockItem("two"));
         stage.execute(items);
         
         // The script should have added a TestMarker to each item.
@@ -162,7 +161,7 @@ public class ScriptletStageTest extends BaseTest {
         stage.setScript(script);
         stage.initialize();
         
-        final var items = List.<Item<String>>of(new MockItem("one"), new MockItem("two"));
+        final var items = CollectionSupport.<Item<String>>listOf(new MockItem("one"), new MockItem("two"));
         stage.execute(items);
         
         // The script should have added a TestMarker to each item.

@@ -19,7 +19,6 @@ package net.shibboleth.metadata.dom.saml.mdattr;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
@@ -50,11 +49,12 @@ public class RegistrationAuthorityMatcher implements Predicate<EntityAttributeCo
     }
 
     @Override
-    public boolean test(@Nonnull final EntityAttributeContext input) {
+    public boolean test(final EntityAttributeContext input) {
         if (registrationAuthority == null) {
             // match entities *without* a registration authority
             return null == input.getRegistrationAuthority();
         }
+        assert registrationAuthority != null;
         return registrationAuthority.equals(input.getRegistrationAuthority());
     }
 

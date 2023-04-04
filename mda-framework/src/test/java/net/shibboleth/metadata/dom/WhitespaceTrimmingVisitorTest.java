@@ -41,6 +41,7 @@ public class WhitespaceTrimmingVisitorTest extends BaseDOMTest {
         final ParserPool parserPool = getParserPool();
         final DocumentBuilder builder = parserPool.getBuilder();
         final Document document = builder.newDocument();
+        assert document != null;
         final Element element = ElementSupport.constructElement(document,
                 SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         ElementSupport.setDocumentElement(document, element);

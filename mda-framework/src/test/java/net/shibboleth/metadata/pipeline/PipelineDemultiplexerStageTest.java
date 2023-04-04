@@ -18,20 +18,20 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.collection.Pair;
 import net.shibboleth.shared.component.ComponentInitializationException;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /** Unit test of {@link PipelineDemultiplexerStage}. */
 public class PipelineDemultiplexerStageTest {
@@ -44,10 +44,12 @@ public class PipelineDemultiplexerStageTest {
         Assert.assertEquals(stage.getCollectionFactory(), factory);
     }
 
+    @SuppressWarnings("removal")
     @Test public void testExecutorService() {
         PipelineDemultiplexerStage<Object> stage = new PipelineDemultiplexerStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        assert executor != null;
         stage.setExecutorService(executor);
         Assert.assertEquals(stage.getExecutorService(), executor);
     }
@@ -56,6 +58,7 @@ public class PipelineDemultiplexerStageTest {
         PipelineDemultiplexerStage<Object> stage = new PipelineDemultiplexerStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        assert executor != null;
         stage.setExecutor(executor);
         Assert.assertEquals(stage.getExecutor(), executor);
     }
@@ -83,11 +86,11 @@ public class PipelineDemultiplexerStageTest {
 
         stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
-        stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
+        stage.setPipelineAndSelectionStrategies(CollectionSupport.listOf(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
                 x -> true)));
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
-        Assert.assertNotNull(stage.getExecutorService());
+        Assert.assertNotNull(stage.getExecutor());
 
         try {
             stage = new PipelineDemultiplexerStage<>();
@@ -103,7 +106,7 @@ public class PipelineDemultiplexerStageTest {
         SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("selectedPipeline");
         CountingStage<String> countStage = new CountingStage<>();
-        pipeline.setStages(Collections.<Stage<String>>singletonList(countStage));
+        pipeline.setStages(CollectionSupport.<Stage<String>>listOf(countStage));
 
         final List<Item<String>> items = new ArrayList<>();
         items.add(new MockItem("one"));
@@ -113,7 +116,7 @@ public class PipelineDemultiplexerStageTest {
         PipelineDemultiplexerStage<String> stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
         stage.setWaitingForPipelines(true);
-        stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
+        stage.setPipelineAndSelectionStrategies(CollectionSupport.listOf(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
                 x -> true)));
         stage.initialize();
 
@@ -127,7 +130,7 @@ public class PipelineDemultiplexerStageTest {
         final SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("selectedPipeline");
         final TerminatingStage<String> terminatingStage = new TerminatingStage<>();
-        pipeline.setStages(Collections.<Stage<String>>singletonList(terminatingStage));
+        pipeline.setStages(CollectionSupport.<Stage<String>>listOf(terminatingStage));
 
         final List<Item<String>> items = new ArrayList<>();
         items.add(new MockItem("one"));
@@ -137,7 +140,7 @@ public class PipelineDemultiplexerStageTest {
         PipelineDemultiplexerStage<String> stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
         stage.setWaitingForPipelines(true);
-        stage.setPipelineAndSelectionStrategies(Collections.singletonList(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
+        stage.setPipelineAndSelectionStrategies(CollectionSupport.listOf(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
                 x -> true)));
         stage.initialize();
 

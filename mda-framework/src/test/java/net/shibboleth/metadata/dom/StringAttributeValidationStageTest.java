@@ -3,7 +3,6 @@ package net.shibboleth.metadata.dom;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -17,6 +16,7 @@ import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
 import net.shibboleth.metadata.validate.RejectAllValidator;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.testing.CollectingValidator;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.xml.XMLConstants;
 
@@ -56,7 +56,7 @@ public class StringAttributeValidationStageTest extends BaseDOMTest {
         Assert.assertEquals(qname.size(), 1);
         Assert.assertEquals(qname.iterator().next(), new QName("a", "b"));
         // Collection of unqualified names
-        stage.setAttributeNames(Set.of("one", "two", "three"));
+        stage.setAttributeNames(CollectionSupport.setOf("one", "two", "three"));
         var qnames = stage.getAttributeNames();
         Assert.assertEquals(qnames.size(), 3);
         Assert.assertTrue(qnames.contains(new QName("one")));

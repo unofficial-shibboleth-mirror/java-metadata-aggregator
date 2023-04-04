@@ -18,19 +18,19 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /** Unit test of {@link SplitMergeStage}. */
 public class SplitMergeStageTest {
@@ -43,10 +43,12 @@ public class SplitMergeStageTest {
         Assert.assertEquals(stage.getCollectionFactory(), factory);
     }
 
+    @SuppressWarnings("removal")
     @Test public void testExecutorService() {
         SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        assert executor != null;
         stage.setExecutorService(executor);
         Assert.assertEquals(stage.getExecutorService(), executor);
     }
@@ -55,6 +57,7 @@ public class SplitMergeStageTest {
         SplitMergeStage<Object> stage = new SplitMergeStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        assert executor != null;
         stage.setExecutor(executor);
         Assert.assertEquals(stage.getExecutor(), executor);
     }
@@ -96,7 +99,7 @@ public class SplitMergeStageTest {
         stage.setSelectionStrategy(x -> true);
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
-        Assert.assertNotNull(stage.getExecutorService());
+        Assert.assertNotNull(stage.getExecutor());
 
         stage = new SplitMergeStage<>();
         stage.setId("test");
@@ -125,12 +128,12 @@ public class SplitMergeStageTest {
         SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
         CountingStage<String> selectedCount = new CountingStage<>();
-        selectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedCount));
+        selectedPipeline.setStages(CollectionSupport.listOf(selectedCount));
 
         SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
         nonselectedPipeline.setId("nonselectedPipeline");
         CountingStage<String> nonselectedCount = new CountingStage<>();
-        nonselectedPipeline.setStages(Collections.<Stage<String>>singletonList(nonselectedCount));
+        nonselectedPipeline.setStages(CollectionSupport.listOf(nonselectedCount));
 
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");
@@ -169,12 +172,12 @@ public class SplitMergeStageTest {
         final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
         final TerminatingStage<String> selectedTerm = new TerminatingStage<>();
-        selectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedTerm));
+        selectedPipeline.setStages(CollectionSupport.listOf(selectedTerm));
 
         SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
         nonselectedPipeline.setId("nonselectedPipeline");
         CountingStage<String> nonselectedCount = new CountingStage<>();
-        nonselectedPipeline.setStages(Collections.<Stage<String>>singletonList(nonselectedCount));
+        nonselectedPipeline.setStages(CollectionSupport.listOf(nonselectedCount));
 
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");
@@ -208,12 +211,12 @@ public class SplitMergeStageTest {
         final SimplePipeline<String> selectedPipeline = new SimplePipeline<>();
         selectedPipeline.setId("selectedPipeline");
         CountingStage<String> selectedCount = new CountingStage<>();
-        selectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedCount));
+        selectedPipeline.setStages(CollectionSupport.listOf(selectedCount));
 
         SimplePipeline<String> nonselectedPipeline = new SimplePipeline<>();
         nonselectedPipeline.setId("nonselectedPipeline");
         final TerminatingStage<String> selectedTerm = new TerminatingStage<>();
-        nonselectedPipeline.setStages(Collections.<Stage<String>>singletonList(selectedTerm));
+        nonselectedPipeline.setStages(CollectionSupport.listOf(selectedTerm));
 
         MockItem item1 = new MockItem("one");
         MockItem item2 = new MockItem("two");

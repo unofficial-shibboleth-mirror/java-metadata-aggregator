@@ -32,6 +32,7 @@ import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.util.FixedStringIdentifierGenerationStrategy;
 import net.shibboleth.shared.xml.impl.BasicParserPool;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 
 import org.testng.Assert;
@@ -109,7 +110,7 @@ public class GenerateIdStageTest extends BaseDOMTest {
         
         final var item = readDOMItem("in.xml");
         
-        stage.execute(List.of(item));
+        stage.execute(CollectionSupport.listOf(item));
         
         stage.destroy();
         
@@ -126,7 +127,7 @@ public class GenerateIdStageTest extends BaseDOMTest {
         
         final var item = readDOMItem("notentity.xml");
         
-        stage.execute(List.of(item));
+        stage.execute(CollectionSupport.listOf(item));
         
         stage.destroy();
         

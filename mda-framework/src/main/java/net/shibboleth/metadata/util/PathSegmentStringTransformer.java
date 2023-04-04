@@ -19,7 +19,6 @@ package net.shibboleth.metadata.util;
 
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import com.google.common.net.UrlEscapers;
@@ -37,7 +36,7 @@ import com.google.common.net.UrlEscapers;
 public class PathSegmentStringTransformer implements Function<String, String> {
 
     @Override
-    public String apply(@Nonnull final String input) {
+    public String apply(final String input) {
         return UrlEscapers.urlPathSegmentEscaper().escape(input);
     }
 

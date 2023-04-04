@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.transform.dom.DOMSource;
@@ -95,9 +94,9 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
      * @param resources schema resources against which Elements are validated
      */
     public synchronized void setSchemaResources(
-            @Nullable @NonnullElements @Unmodifiable final List<Resource> resources) {
+            final @Nonnull @NonnullElements @Unmodifiable List<Resource> resources) {
         checkSetterPreconditions();
-        schemaResources = List.copyOf(resources);
+        schemaResources = CollectionSupport.copyToList(resources);
     }
 
     /**

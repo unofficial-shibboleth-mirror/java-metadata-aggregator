@@ -7,7 +7,8 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
-import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -15,13 +16,15 @@ import org.testng.annotations.Test;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 
 public class SerializationStageTest {
     
     private static class StringSerializer implements ItemCollectionSerializer<String> {
 
-        public void serializeCollection(Collection<Item<String>> items, OutputStream output) throws IOException {
+        public void serializeCollection(@Nonnull Collection<Item<String>> items,
+                @Nonnull OutputStream output) throws IOException {
             for (final var item : items) {
                 output.write(item.unwrap().getBytes(StandardCharsets.UTF_8));
                 output.write('\n');
@@ -44,7 +47,7 @@ public class SerializationStageTest {
             stage.setSerializer(new StringSerializer());
             stage.initialize();
             
-            stage.execute(List.of(new MockItem("one"), new MockItem("two")));
+            stage.execute(CollectionSupport.listOf(new MockItem("one"), new MockItem("two")));
 
             // Read the file back in.
             var text = Files.readString(path);

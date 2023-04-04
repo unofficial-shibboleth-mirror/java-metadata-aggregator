@@ -60,6 +60,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         final var duration = Duration.ofMillis(123456);
+        assert duration != null;
         final var now = Instant.now();
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
@@ -92,6 +93,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         metadataCollection.add(new DOMElementItem(entitiesDescriptor));
 
         final var duration = Duration.ofMillis(123456);
+        assert duration != null;
         final var now = Instant.now();
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
@@ -121,12 +123,14 @@ public class SetValidUntilStageTest extends BaseDOMTest {
 
         Document newDoc = parserPool.newDocument();
         Element root = newDoc.createElementNS("http://example.org", "foo");
+        assert root != null;
         ElementSupport.setDocumentElement(newDoc, root);
 
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(root));
 
         final var duration = Duration.ofMillis(123456);
+        assert duration != null;
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
         stage.setValidityDuration(duration);
@@ -143,6 +147,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
     public void testNegativeDuration() {
 
         final var duration = Duration.ofMillis(-987654);
+        assert duration != null;
         SetValidUntilStage stage = new SetValidUntilStage();
         stage.setId("test");
 
@@ -161,7 +166,9 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         stage.setId("test");
 
         try {
-            stage.setValidityDuration(Duration.ZERO);
+            final var duration = Duration.ZERO;
+            assert duration != null;
+            stage.setValidityDuration(duration);
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // expected this
@@ -169,6 +176,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
     }
 
     /** Tests that the stage properly rejects null durations. */
+    @SuppressWarnings("null")
     @Test
     public void testNullDuration() {
         final var stage = new SetValidUntilStage();

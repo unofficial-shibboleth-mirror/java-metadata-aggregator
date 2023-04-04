@@ -2,7 +2,8 @@
 package net.shibboleth.metadata.pipeline;
 
 import java.util.List;
-import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -19,6 +20,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
 import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 
 public class StatusMetadataLoggingStageTest {
@@ -48,14 +50,14 @@ public class StatusMetadataLoggingStageTest {
     private static class StringSelfIdentificationStrategy implements ItemIdentificationStrategy<String> {
 
         @Override
-        public String getItemIdentifier(Item<String> item) {
+        public @Nonnull String getItemIdentifier(@Nonnull Item<String> item) {
             return item.unwrap();
         }
         
     }
 
-    private List<Item<String>> getItems() {
-        final List<Item<String>> items = List.of(new MockItem("item1"),
+    private @Nonnull List<Item<String>> getItems() {
+        final @Nonnull List<Item<String>> items = CollectionSupport.listOf(new MockItem("item1"),
                 new MockItem("item2"), new MockItem("item3"));
         items.get(0).getItemMetadata().put(new ErrorStatus("comp1", "err1"));
         items.get(0).getItemMetadata().put(new ErrorStatus("comp1", "err2"));
@@ -71,7 +73,7 @@ public class StatusMetadataLoggingStageTest {
         final var stage = new StatusMetadataLoggingStage<String>();
         stage.setId("test");
         stage.setIdentificationStrategy(new StringSelfIdentificationStrategy());
-        stage.setSelectionRequirements(Set.of(ErrorStatus.class, InfoStatus.class, WarningStatus.class));
+        stage.setSelectionRequirements(CollectionSupport.setOf(ErrorStatus.class, InfoStatus.class, WarningStatus.class));
         stage.initialize();
         
         stage.execute(items);
@@ -88,7 +90,7 @@ public class StatusMetadataLoggingStageTest {
         final var stage = new StatusMetadataLoggingStage<String>();
         stage.setId("test");
         stage.setIdentificationStrategy(new StringSelfIdentificationStrategy());
-        stage.setSelectionRequirements(Set.of(ErrorStatus.class));
+        stage.setSelectionRequirements(CollectionSupport.setOf(ErrorStatus.class));
         stage.initialize();
         
         stage.execute(items);

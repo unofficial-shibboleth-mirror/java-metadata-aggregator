@@ -113,13 +113,15 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
     @Override
     protected void visit(@Nonnull final Element element, @Nonnull final Context context) 
         throws StageProcessingException {
-        final String text = element.getTextContent();        
+        final String text = element.getTextContent();
+        assert text != null;
         try {
             final byte[] data = Base64Support.decode(text);
 
             final X509Certificate cert;
             synchronized (this) {
                     cert = (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(data));
+                    assert cert != null;
             }
 
             // only process each certificate once per item
@@ -129,7 +131,7 @@ public class X509ValidationStage extends AbstractDOMValidationStage<X509Certific
             }
         } catch (final CertificateException e) {
             addError(context.getItem(), element, "X.509 certificate: " + e.getMessage());
-        } catch (DecodingException e) {
+        } catch (final DecodingException e) {
             addError(context.getItem(), element, "could not convert X509Certficate data");
         }
     }

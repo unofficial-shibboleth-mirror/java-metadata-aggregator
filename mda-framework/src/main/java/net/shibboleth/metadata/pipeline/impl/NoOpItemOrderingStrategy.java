@@ -26,6 +26,7 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 /**
  * An ordering strategy that simply returns the collection in whatever order it was already in.
@@ -40,7 +41,7 @@ public class NoOpItemOrderingStrategy<T> implements ItemOrderingStrategy<T> {
     @Override
     @Nonnull @NonnullElements @Unmodifiable
     public List<Item<T>> order(@Nonnull @NonnullElements @Unmodifiable final List<Item<T>> items) {
-        return List.copyOf(items);
+        return CollectionSupport.copyToList(items);
     }
 
 }

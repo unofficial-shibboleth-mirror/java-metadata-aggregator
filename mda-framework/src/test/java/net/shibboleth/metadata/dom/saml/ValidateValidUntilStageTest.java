@@ -100,14 +100,19 @@ public class ValidateValidUntilStageTest extends BaseDOMTest {
      * 
      * @throws Exception if something bad happens
      */
-    private DOMElementItem buildDomElementItem(@Nonnull final Duration validUntilInterval) throws Exception {
+    private @Nonnull DOMElementItem buildDomElementItem(final Duration validUntilInterval) throws Exception {
+        assert validUntilInterval != null;
         Element descriptor = readXMLData("in.xml");
         if (!validUntilInterval.isZero()) {
+            final var when = Instant.now().plus(validUntilInterval);
+            assert when != null;
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
-                    Instant.now().plus(validUntilInterval));
+                    when);
         }else{
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         }
-        return new DOMElementItem(descriptor.getOwnerDocument());
+        final var doc = descriptor.getOwnerDocument();
+        assert doc != null;
+        return new DOMElementItem(doc);
     }
 }

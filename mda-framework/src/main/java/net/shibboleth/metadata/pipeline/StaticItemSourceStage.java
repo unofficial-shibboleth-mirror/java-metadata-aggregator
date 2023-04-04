@@ -58,7 +58,7 @@ public class StaticItemSourceStage<T> extends AbstractStage<T> {
     public synchronized void setSourceItems(
             @Nonnull @NonnullElements @Unmodifiable final List<Item<T>> items) {
         checkSetterPreconditions();
-        source = List.copyOf(items);
+        source = CollectionSupport.copyToList(items);
     }
 
     @Override

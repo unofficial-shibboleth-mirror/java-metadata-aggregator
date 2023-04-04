@@ -19,6 +19,7 @@ package net.shibboleth.metadata;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /** A mock implementation of {@link Item}. */
@@ -30,12 +31,12 @@ public class MockItem extends AbstractItem<String> {
      * 
      * @param str data held by this item
      */
-    public MockItem(String str) {
+    public MockItem(@Nonnull String str) {
         super(str);
     }
 
     @Override
-    public Item<String> copy() {
+    public @Nonnull Item<String> copy() {
         final MockItem clone = new MockItem(new String(unwrap()));
         clone.getItemMetadata().putAll(getItemMetadata());
         return clone;
