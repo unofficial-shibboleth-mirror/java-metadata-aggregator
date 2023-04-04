@@ -55,9 +55,9 @@ public class EntityDescriptorItemIdPopulationStage extends AbstractIteratingStag
 
         if (SAMLMetadataSupport.isEntityDescriptor(metadataElement)) {
             final String entityId = StringSupport.trimOrNull(
-            		AttributeSupport.getAttributeValue(metadataElement, null, "entityID"));
+                    AttributeSupport.getAttributeValue(metadataElement, null, "entityID"));
             if (entityId != null) {
-            	item.getItemMetadata().put(new ItemId(entityId));
+                item.getItemMetadata().put(new ItemId(entityId));
             }
         }
     }
