@@ -20,7 +20,6 @@ package net.shibboleth.metadata.pipeline;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.script.ScriptContext;
