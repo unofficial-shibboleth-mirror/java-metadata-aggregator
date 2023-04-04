@@ -109,7 +109,7 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
             whitelisting = wl;
         }
 
-        protected final String getElementNamespace() {
+        protected final @Nonnull String getElementNamespace() {
             return elementNamespace;
         }
 
@@ -237,7 +237,9 @@ public class ElementsStrippingStage extends AbstractDOMTraversalStage<ElementsSt
 
     @Override
     protected synchronized @Nonnull Context buildContext(@Nonnull final Item<Element> item) {
-        return new Context(item, getElementNamespace(), getElementNames(), isWhitelisting());
+        final var ns = getElementNamespace();
+        assert ns != null;
+        return new Context(item, ns, getElementNames(), isWhitelisting());
     }
 
 }

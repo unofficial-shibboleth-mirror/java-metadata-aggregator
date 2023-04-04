@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -44,7 +46,7 @@ public class MultiOutputSerializationStageTest {
         private class StringDestination implements MultiOutputSerializationStage.Destination {
 
             private final String id;
-            private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            private final @Nonnull ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             public StringDestination(String i) {
                 id = i;
@@ -56,14 +58,14 @@ public class MultiOutputSerializationStageTest {
             }
 
             @Override
-            public OutputStream getOutputStream() throws IOException {
+            public @Nonnull OutputStream getOutputStream() throws IOException {
                 return baos;
             }
             
         }
 
         @Override
-        public Destination getDestination(Item<String> item) throws StageProcessingException {
+        public @Nonnull Destination getDestination(@Nonnull Item<String> item) throws StageProcessingException {
             // Locate the item's identifier.
             final List<ItemId> ids = item.getItemMetadata().get(ItemId.class);
             if (ids.isEmpty()) {
@@ -95,7 +97,7 @@ public class MultiOutputSerializationStageTest {
         stage.setSerializer(new ItemSerializer<String> () {
 
             @Override
-            public void serialize(Item<String> item, OutputStream output) {
+            public void serialize(@Nonnull Item<String> item, @Nonnull OutputStream output) {
                 try {
                     output.write(item.unwrap().getBytes("UTF-8"));
                 } catch (IOException e) {

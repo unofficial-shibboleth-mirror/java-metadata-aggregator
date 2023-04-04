@@ -66,7 +66,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
     public synchronized void setIdTransformers(
             @Nonnull @NonnullElements @Unmodifiable final Collection<Function<String, String>> transformers) {
         checkSetterPreconditions();
-        idTransformers = List.copyOf(transformers);
+        idTransformers = CollectionSupport.copyToList(transformers);
     }
 
     @Override
@@ -77,6 +77,7 @@ public class ItemIdTransformStage<T> extends AbstractIteratingStage<T> {
         for (final ItemId id : ids) {
             for (final Function<String, String> idTransform : getIdTransformers()) {
                 final String transformedId = idTransform.apply(id.getId());
+                assert transformedId != null;
                 transformedIds.add(new ItemId(transformedId));
             }
         }

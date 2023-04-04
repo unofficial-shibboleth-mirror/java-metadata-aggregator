@@ -103,8 +103,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
         return mappings.inverse().get(namespaceURI);
     }
 
-    /** {@inheritDoc} */
-    @Nonnull public Iterator<String> getPrefixes(final String namespaceURI) {
+    @Override
+    public Iterator<String> getPrefixes(final String namespaceURI) {
         if (namespaceURI == null) {
             throw new IllegalArgumentException("Namespace URI can not be null");
         }

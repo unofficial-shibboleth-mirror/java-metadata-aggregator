@@ -239,7 +239,8 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
         }
 
         if (isWaitingForPipelines()) {
-            for (final @Nonnull Future<List<Item<T>>> pipelineFuture : pipelineFutures) {
+            for (final Future<List<Item<T>>> pipelineFuture : pipelineFutures) {
+                assert pipelineFuture != null;
                 FutureSupport.futureItems(pipelineFuture);
             }
         }

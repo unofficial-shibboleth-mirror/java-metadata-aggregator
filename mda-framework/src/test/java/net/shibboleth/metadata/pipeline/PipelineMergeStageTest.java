@@ -23,10 +23,13 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.DeduplicatingItemIdMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,23 +37,25 @@ import org.testng.annotations.Test;
 /** {@link PipelineMergeStage} unit test. */
 public class PipelineMergeStageTest {
 
-    private <T> List<T> newSingletonList(T element) {
+    private @Nonnull <T> List<T> newSingletonList(T element) {
         final List<T> list = new ArrayList<>();
         list.add(element);
         return list;
     }
     
-    private <T> List<T> newTwoElementList(T element1, T element2) {
+    private @Nonnull <T> List<T> newTwoElementList(T element1, T element2) {
         final List<T> list = new ArrayList<>();
         list.add(element1);
         list.add(element2);
         return list;
     }
     
+    @SuppressWarnings("removal")
     @Test public void testExecutorService() {
         PipelineMergeStage<Object> stage = new PipelineMergeStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        assert executor != null;
         stage.setExecutorService(executor);
         Assert.assertEquals(stage.getExecutorService(), executor);
     }
@@ -59,6 +64,7 @@ public class PipelineMergeStageTest {
         PipelineMergeStage<Object> stage = new PipelineMergeStage<>();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        assert executor != null;
         stage.setExecutor(executor);
         Assert.assertEquals(stage.getExecutor(), executor);
     }
@@ -144,7 +150,7 @@ public class PipelineMergeStageTest {
         MockItem item6 = new MockItem("item6");
         source1.add(item6);
 
-        strategy.merge(target, List.of(source1));
+        strategy.merge(target, CollectionSupport.listOf(source1));
         Assert.assertTrue(target.contains(item1));
         Assert.assertTrue(target.contains(item2));
         Assert.assertTrue(target.contains(item3));
@@ -188,7 +194,7 @@ public class PipelineMergeStageTest {
         item9.getItemMetadata().put(new ItemId("itemA"));
         source2.add(item9);
 
-        strategy.merge(target, List.of(source1, source2));
+        strategy.merge(target, CollectionSupport.listOf(source1, source2));
         Assert.assertTrue(target.contains(item1));
         Assert.assertTrue(target.contains(item2));
         Assert.assertTrue(target.contains(item3));

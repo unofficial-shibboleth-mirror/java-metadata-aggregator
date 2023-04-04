@@ -71,7 +71,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
     public synchronized void setDesignatedEntities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> ids) {
         checkSetterPreconditions();
-        designatedEntities = Set.copyOf(ids);
+        designatedEntities = CollectionSupport.copyToSet(ids);
     }
 
     /**
@@ -144,6 +144,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
         final List<Element> childEntitiesDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final var descriptor : childEntitiesDescriptors) {
+            assert descriptor != null;
             if (processEntitiesDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
             } else {
@@ -154,6 +155,7 @@ public class EntityFilterStage extends AbstractFilteringStage<Element> {
         final List<Element> childEntityDescriptors =
                 ElementSupport.getChildElements(entitiesDescriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final var descriptor : childEntityDescriptors) {
+            assert descriptor != null;
             if (processEntityDescriptor(descriptor)) {
                 entitiesDescriptor.removeChild(descriptor);
             } else {

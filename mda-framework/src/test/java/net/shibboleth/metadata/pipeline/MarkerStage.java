@@ -1,5 +1,6 @@
 package net.shibboleth.metadata.pipeline;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -21,12 +22,12 @@ public class MarkerStage<T> extends AbstractIteratingStage<T> {
 
     @GuardedBy("this") private int sequence = 1;
     
-    private final synchronized String nextMessage() {
+    private final synchronized @Nonnull String nextMessage() {
         return "marker #" + sequence++;
     }
 
     @Override
-    protected void doExecute(Item<T> item) throws StageProcessingException {
+    protected void doExecute(@Nonnull Item<T> item) throws StageProcessingException {
         item.getItemMetadata().put(new TestMarker(nextMessage()));
     }
 

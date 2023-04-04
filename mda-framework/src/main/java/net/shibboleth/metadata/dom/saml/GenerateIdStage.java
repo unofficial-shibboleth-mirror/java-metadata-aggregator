@@ -37,7 +37,7 @@ import net.shibboleth.shared.xml.AttributeSupport;
 public class GenerateIdStage extends AbstractIteratingStage<Element> {
 
     /** QName of the ID attribute added to the descriptor. */
-    public static final QName ID_ATTRIB = new QName("ID");
+    public static final @Nonnull QName ID_ATTRIB = new QName("ID");
 
     /** Strategy used to generate identifiers. */
     @Nonnull
