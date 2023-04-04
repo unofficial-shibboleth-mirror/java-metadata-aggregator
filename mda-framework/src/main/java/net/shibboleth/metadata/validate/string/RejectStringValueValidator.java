@@ -35,7 +35,8 @@ import net.shibboleth.metadata.validate.Validator;
 public class RejectStringValueValidator extends BaseStringValueValidator implements Validator<String> {
 
     @Override
-    public @Nonnull Action validate(@Nonnull final String e, @Nonnull final Item<?> item, @Nonnull final String stageId) {
+    public @Nonnull Action validate(@Nonnull final String e, @Nonnull final Item<?> item,
+            @Nonnull final String stageId) {
         if (e.equals(getValue())) {
             addErrorMessage(e, item, stageId);
             return Action.DONE;
