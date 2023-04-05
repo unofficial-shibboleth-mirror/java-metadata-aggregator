@@ -22,6 +22,7 @@ import javax.annotation.concurrent.Immutable;
 
 import org.w3c.dom.Element;
 
+import net.shibboleth.metadata.dom.ElementMatcher;
 import net.shibboleth.metadata.dom.SimpleElementMatcher;
 import net.shibboleth.shared.logic.Constraint;
 
