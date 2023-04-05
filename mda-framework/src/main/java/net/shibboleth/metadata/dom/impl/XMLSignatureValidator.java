@@ -207,6 +207,7 @@ public final class XMLSignatureValidator {
      * @param signatureElement element containing the signature to be validated
      * @throws ValidationException if any of a number of invalid conditions are detected
      */
+    // Checkstyle: CyclomaticComplexity OFF
     public void verifySignature(@Nonnull final Element docElement, @Nonnull final Element signatureElement)
             throws ValidationException {
         
@@ -278,6 +279,7 @@ public final class XMLSignatureValidator {
                     e.getMessage());
         }
     }
+    // Checkstyle: CyclomaticComplexity ON
 
     /**
      * Extract the reference within the provided XML signature while ensuring that there

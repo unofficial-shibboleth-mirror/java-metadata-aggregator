@@ -115,8 +115,8 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    @Nullable
-    protected Duration getShortestCacheDuration(@Nonnull final Element descriptor) {
+    // Checkstyle: CyclomaticComplexity OFF
+    protected @Nullable Duration getShortestCacheDuration(@Nonnull final Element descriptor) {
         Duration shortestCacheDuration = null;
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return shortestCacheDuration;
@@ -129,7 +129,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
             assert entitiesDescriptor != null;
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
             if (cacheDuration != null &&
-                    (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
+                    (shortestCacheDuration == null || cacheDuration.compareTo(shortestCacheDuration) < 0)) {
                 shortestCacheDuration = cacheDuration;
             }
         }
@@ -140,7 +140,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
             assert entityDescriptor != null;
             cacheDuration = getShortestCacheDuration(entityDescriptor);
             if (cacheDuration != null &&
-                    (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
+                    (shortestCacheDuration == null || cacheDuration.compareTo(shortestCacheDuration) < 0)) {
                 shortestCacheDuration = cacheDuration;
             }
         }
@@ -150,7 +150,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
         if (cacheDurationAttr != null) {
             cacheDuration = AttributeSupport.getDurationAttributeValue(cacheDurationAttr);
             if (cacheDuration != null &&
-                    (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
+                    (shortestCacheDuration == null || cacheDuration.compareTo(shortestCacheDuration) < 0)) {
                 shortestCacheDuration = cacheDuration;
             }
 
@@ -159,6 +159,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
 
         return shortestCacheDuration;
     }
+    // Checkstyle: CyclomaticComplexity ON
 
     /**
      * Sets the cache duration on the given descriptor. If the given cache duration is less than, or equal to, 0 no

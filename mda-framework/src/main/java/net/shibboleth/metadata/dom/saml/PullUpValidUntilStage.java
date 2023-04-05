@@ -119,8 +119,8 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
      * @return the shortest cache duration from the descriptor and its descendants or null if the descriptor does not
      *         contain a cache duration
      */
-    @Nullable
-    protected Instant getNearestValidUntil(@Nonnull final Element descriptor) {
+    // Checkstyle: CyclomaticComplexity OFF
+    protected @Nullable Instant getNearestValidUntil(@Nonnull final Element descriptor) {
         Instant nearestValidUntil = null;
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             return nearestValidUntil;
@@ -160,6 +160,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
 
         return nearestValidUntil;
     }
+    // Checkstyle: CyclomaticComplexity ON
 
     /**
      * Sets the valid until instant on the given descriptor. If the given validUntil is null no instant is set. If the

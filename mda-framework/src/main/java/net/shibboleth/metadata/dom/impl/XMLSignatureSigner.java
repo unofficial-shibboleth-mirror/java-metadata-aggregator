@@ -396,7 +396,8 @@ public class XMLSignatureSigner {
      * 
      * @return the ID value for the element, or null
      */
-    @Nullable protected String getElementId(@Nonnull final Element target) {
+    // Checkstyle: CyclomaticComplexity OFF
+    protected @Nullable String getElementId(@Nonnull final Element target) {
         final NamedNodeMap attributes = target.getAttributes();
         if (attributes == null || attributes.getLength() < 1) {
             return null;
@@ -429,6 +430,7 @@ public class XMLSignatureSigner {
 
         return null;
     }
+    // Checkstyle: CyclomaticComplexity ON
 
     /**
      * Builds the KeyInfo element to be included in the signature.

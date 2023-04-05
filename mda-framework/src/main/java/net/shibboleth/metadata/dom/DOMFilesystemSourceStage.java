@@ -258,7 +258,7 @@ public class DOMFilesystemSourceStage extends AbstractStage<Element> {
         if (files != null) {
             final var recursing = getRecurseDirectories();
             for (final File file : files) {
-                if (file.isFile() || (file.isDirectory() && recursing)) {
+                if (file.isFile() || recursing && file.isDirectory()) {
                     getSourceFiles(file, collector);
                 }
             }
