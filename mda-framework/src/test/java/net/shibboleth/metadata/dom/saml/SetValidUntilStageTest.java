@@ -175,6 +175,8 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         }
     }
 
+    private static Duration noDuration;
+
     /** Tests that the stage properly rejects null durations. */
     @SuppressWarnings("null")
     @Test
@@ -183,7 +185,7 @@ public class SetValidUntilStageTest extends BaseDOMTest {
         stage.setId("test");
 
         try {
-            stage.setValidityDuration(null);
+            stage.setValidityDuration(noDuration);
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // expected this

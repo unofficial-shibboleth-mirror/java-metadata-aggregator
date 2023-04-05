@@ -37,11 +37,13 @@ public class ItemTagTest {
         }
     }
     
+    private static String nothing;
+    
     @SuppressWarnings("null")
     @Test
     public void testNull() {
         try {
-            new ItemTag(null);
+            new ItemTag(nothing);
         } catch (ConstraintViolationException e) {
             // expected this
         }

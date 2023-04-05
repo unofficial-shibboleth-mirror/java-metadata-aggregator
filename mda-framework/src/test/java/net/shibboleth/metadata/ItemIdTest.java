@@ -36,11 +36,13 @@ public class ItemIdTest {
         }
     }
     
+    private static String noString;
+
     @SuppressWarnings("null")
     @Test
     public void testNull() {
         try {
-            new ItemId(null);
+            new ItemId(noString);
         } catch (ConstraintViolationException e) {
             // expected this
         }

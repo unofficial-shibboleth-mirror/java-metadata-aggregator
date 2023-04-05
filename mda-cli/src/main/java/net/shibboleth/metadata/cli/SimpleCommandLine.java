@@ -140,11 +140,16 @@ public final class SimpleCommandLine {
      */
     private static void process(@Nonnull final SimpleCommandLineArguments cli) throws ErrorException {
         final String fileUri = new File(cli.getInputFile()).toURI().toString();
+        assert fileUri != null;
         log.debug("Initializing Spring context with configuration file {}", fileUri);
+
         try (FileSystemXmlApplicationContext appCtx = new FileSystemXmlApplicationContext(fileUri)) {
 
             log.debug("Retrieving pipeline from Spring context");
             final String pipelineName = cli.getPipelineName();
+            // Guaranteed by parseCommandLineArguments
+            assert pipelineName != null;
+
             final Pipeline<?> pipeline = appCtx.getBean(pipelineName, Pipeline.class);
 
             try {

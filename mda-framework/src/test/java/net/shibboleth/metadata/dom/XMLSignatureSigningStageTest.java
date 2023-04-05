@@ -158,13 +158,15 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         assertXMLIdentical(expected, result.unwrap());
     }
 
+    private static List<QName> noQNames;
+
     @SuppressWarnings("null")
     @Test
     public void testSetIdAttributeNamesNull() throws Exception {
         final XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
         stage.setId("test");
         try {
-            stage.setIdAttributeNames(null);
+            stage.setIdAttributeNames(noQNames);
             Assert.fail("expected a constraint exception");
         } catch (ConstraintViolationException e) {
             // expected

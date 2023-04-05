@@ -186,6 +186,8 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         }
     }
 
+    private static Duration noDuration;
+
     /** Tests that the stage properly rejects null durations. */
     @SuppressWarnings("null")
     @Test
@@ -194,7 +196,7 @@ public class SetCacheDurationStageTest extends BaseDOMTest {
         stage.setId("test");
 
         try {
-            stage.setCacheDuration(null);
+            stage.setCacheDuration(noDuration);
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // expected this
