@@ -5,22 +5,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.MockItem;
+import net.shibboleth.shared.collection.CollectionSupport;
 
 public class ItemOrderingStageTest {
 
     private class ReversalOrderingStrategy<T> implements ItemOrderingStrategy<T> {
 
         @Override
-        public List<Item<T>> order(List<Item<T>> items) throws StageProcessingException {
+        public @Nonnull List<Item<T>> order(@Nonnull List<Item<T>> items) throws StageProcessingException {
             final var collection = new ArrayList<Item<T>>();
             collection.addAll(items);
             Collections.reverse(collection);
-            return List.copyOf(collection);
+            return CollectionSupport.copyToList(collection);
         }
         
     }

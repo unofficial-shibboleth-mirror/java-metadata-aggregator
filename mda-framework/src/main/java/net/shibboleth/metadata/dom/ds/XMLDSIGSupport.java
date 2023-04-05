@@ -17,6 +17,7 @@
 
 package net.shibboleth.metadata.dom.ds;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.namespace.QName;
@@ -30,7 +31,7 @@ import javax.xml.namespace.QName;
 public final class XMLDSIGSupport {
 
     /** Signature element name. */
-    public static final QName SIGNATURE_NAME = new QName(XMLSignature.XMLNS, "Signature");
+    public static final @Nonnull QName SIGNATURE_NAME = new QName(XMLSignature.XMLNS, "Signature");
 
     /** Constructor. */
     private XMLDSIGSupport() {

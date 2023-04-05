@@ -161,10 +161,12 @@ public class XMLSignatureSigner {
     /* Fields created during construction. */
 
     /** Factory used to create XML signature objects. */
-    @Nonnull private final XMLSignatureFactory xmlSigFactory = XMLSignatureFactory.getInstance();
+    @SuppressWarnings("null")
+    private final @Nonnull XMLSignatureFactory xmlSigFactory = XMLSignatureFactory.getInstance();
 
     /** Factory used to create KeyInfo objects. */
-    @Nonnull private KeyInfoFactory keyInfoFactory = xmlSigFactory.getKeyInfoFactory();
+    @SuppressWarnings("null")
+    private final @Nonnull KeyInfoFactory keyInfoFactory = xmlSigFactory.getKeyInfoFactory();
 
     /**
      * Constructor.
@@ -281,6 +283,8 @@ public class XMLSignatureSigner {
         if (removingCRsFromSignature) {
             final Element signatureElement = ElementSupport.getFirstChildElement(element,
                     XMLDSIGSupport.SIGNATURE_NAME);
+            // Must be present, by construction
+            assert signatureElement != null;
             removeCRsFromNamedChildren(signatureElement, "SignatureValue");
             removeCRsFromNamedChildren(signatureElement, "X509Certificate");
         }
@@ -396,6 +400,7 @@ public class XMLSignatureSigner {
         if (idAttributeNames != null && !idAttributeNames.isEmpty()) {
             for (int i = 0; i < attributes.getLength(); i++) {
                 final Attr attribute = (Attr) attributes.item(i);
+                assert attribute != null;
                 if (idAttributeNames.contains(QNameSupport.getNodeQName(attribute))) {
                     // mark the attribute as an ID attribute so that it can be referenced by the signature
                     target.setIdAttributeNode(attribute, true);

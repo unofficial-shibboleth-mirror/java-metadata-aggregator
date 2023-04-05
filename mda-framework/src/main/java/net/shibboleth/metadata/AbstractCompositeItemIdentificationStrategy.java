@@ -101,8 +101,10 @@ public abstract class AbstractCompositeItemIdentificationStrategy<T> implements 
             res.append(extra);
             res.append(")");
         }
-        
-        return res.toString();
+
+        final var result = res.toString();
+        assert result != null;
+        return result;
     }
 
 }

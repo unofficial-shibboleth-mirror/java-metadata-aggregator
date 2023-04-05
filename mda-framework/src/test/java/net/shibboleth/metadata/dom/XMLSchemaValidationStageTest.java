@@ -20,6 +20,8 @@ package net.shibboleth.metadata.dom;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -68,7 +70,7 @@ public class XMLSchemaValidationStageTest extends BaseDOMTest {
         return stage;
     }
 
-    protected List<Item<Element>> buildMetdataCollection(String xmlPath) throws Exception {
+    protected @Nonnull List<Item<Element>> buildMetdataCollection(@Nonnull String xmlPath) throws Exception {
         final Element element = readXMLData(xmlPath);
         final List<Item<Element>> mdCol = new ArrayList<>();
         mdCol.add(new DOMElementItem(element));

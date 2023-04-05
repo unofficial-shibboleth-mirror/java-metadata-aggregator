@@ -55,8 +55,8 @@ public class X509DSADetector extends BaseValidator implements Validator<X509Cert
      * {@link net.shibboleth.metadata.validate.Validator.Action} to return when a DSA key is detected. Default:
      * {@link net.shibboleth.metadata.validate.Validator.Action#DONE}.
      */
-    @Nonnull @GuardedBy("this")
-    private Action action = Action.DONE;
+    @GuardedBy("this")
+    private @Nonnull Action action = Action.DONE;
 
     /**
      * Whether an {@link net.shibboleth.metadata.ErrorStatus} should be added on failure.
@@ -70,7 +70,7 @@ public class X509DSADetector extends BaseValidator implements Validator<X509Cert
      *
      * @return the {@link net.shibboleth.metadata.validate.Validator.Action} to be returned
      */
-    public final synchronized Action getAction() {
+    public final synchronized @Nonnull Action getAction() {
         return action;
     }
 
@@ -104,7 +104,7 @@ public class X509DSADetector extends BaseValidator implements Validator<X509Cert
     }
 
     @Override
-    public Action validate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
+    public @Nonnull Action validate(@Nonnull final X509Certificate cert, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
         final PublicKey key = cert.getPublicKey();
         if ("DSA".equals(key.getAlgorithm())) {

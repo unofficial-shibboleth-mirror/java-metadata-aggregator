@@ -57,6 +57,7 @@ public class RemoveOrganizationStage extends AbstractIteratingStage<Element> {
     protected void processEntitiesDescriptor(@Nonnull final Element entitiesDescriptor) {
         final List<Element> children = ElementSupport.getChildElements(entitiesDescriptor);
         for (final Element child : children) {
+            assert child != null;
             if (SAMLMetadataSupport.isEntitiesDescriptor(child)) {
                 processEntitiesDescriptor(child);
             } else if (SAMLMetadataSupport.isEntityDescriptor(child)) {
