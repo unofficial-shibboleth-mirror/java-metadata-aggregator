@@ -18,11 +18,13 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import net.shibboleth.metadata.dom.Container;
 import net.shibboleth.metadata.dom.ElementMaker;
@@ -72,6 +74,43 @@ public final class SAMLSupport {
 
     /** Constructor. */
     private SAMLSupport() {
+    }
+
+    /**
+     * Returns the {@link Element} representing the EntityDescriptor which is the
+     * closest-containing ancestor of the given element.
+     * 
+     * @param element {@link Element} to locate the ancestor Entity of.
+     * @return ancestor EntityDescriptor {@link Element}, or null.
+     */
+    private static @Nullable Element ancestorEntity(@Nonnull final Element element) {
+        for (Node e = element; e != null && e.getNodeType() == Node.ELEMENT_NODE; e = e.getParentNode()) {
+            if (SAMLMetadataSupport.isEntityDescriptor((Element)e)) {
+                return (Element)e;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Computes an entity-specific prefix to be put in front of a message.
+     *
+     * @param element {@link Element} forming the context for the prefix
+     * @return a prefix for the error message
+     */
+    public static @Nonnull String errorPrefix(@Nonnull final Element element) {
+        final @Nullable Element entity = ancestorEntity(element);
+        if (entity != null) {
+            final Attr id = entity.getAttributeNode("ID");
+            if (id != null) {
+                return id.getTextContent() + ": ";
+            }
+            final Attr entityID = entity.getAttributeNode("entityID");
+            if (entityID != null) {
+                return entityID.getTextContent() + ": ";
+            }
+        }
+        return "";
     }
 
     /**

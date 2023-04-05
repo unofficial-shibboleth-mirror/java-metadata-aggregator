@@ -129,7 +129,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
      * @param element {@link Element} forming the context for the prefix
      * @return a prefix for the error message
      */
-    protected String errorPrefix(@Nonnull final Element element) {
+    protected @Nonnull String errorPrefix(@Nonnull final Element element) {
         return "";
     }
 

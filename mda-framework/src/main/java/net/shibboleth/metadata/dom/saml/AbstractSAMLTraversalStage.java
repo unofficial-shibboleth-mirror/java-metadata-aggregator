@@ -18,12 +18,9 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import net.shibboleth.metadata.dom.AbstractDOMTraversalStage;
 import net.shibboleth.metadata.dom.DOMTraversalContext;
@@ -49,42 +46,9 @@ import net.shibboleth.metadata.dom.SimpleDOMTraversalContext;
 public abstract class AbstractSAMLTraversalStage <C extends DOMTraversalContext>
     extends AbstractDOMTraversalStage<C> {
 
-    /**
-     * Returns the {@link Element} representing the EntityDescriptor which is the
-     * closest-containing ancestor of the given element.
-     * 
-     * @param element {@link Element} to locate the ancestor Entity of.
-     * @return ancestor EntityDescriptor {@link Element}, or null.
-     */
-    private @Nullable Element ancestorEntity(@Nonnull final Element element) {
-        for (Node e = element; e != null && e.getNodeType() == Node.ELEMENT_NODE; e = e.getParentNode()) {
-            if (SAMLMetadataSupport.isEntityDescriptor((Element)e)) {
-                return (Element)e;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Computes a prefix to be put in front of the message in {@link #addError}.
-     *
-     * @param element {@link Element} forming the context for the prefix
-     * @return a prefix for the error message
-     */
     @Override
-    protected String errorPrefix(@Nonnull final Element element) {
-        final @Nullable Element entity = ancestorEntity(element);
-        if (entity != null) {
-            final Attr id = entity.getAttributeNode("ID");
-            if (id != null) {
-                return id.getTextContent() + ": ";
-            }
-            final Attr entityID = entity.getAttributeNode("entityID");
-            if (entityID != null) {
-                return entityID.getTextContent() + ": ";
-            }
-        }
-        return "";
+    protected @Nonnull String errorPrefix(@Nonnull final Element element) {
+        return SAMLSupport.errorPrefix(element);
     }
 
 }
