@@ -82,7 +82,9 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
      */
     protected void applyValidators(@Nonnull final V obj, @Nonnull final C context)
             throws StageProcessingException {
-        validators.validate(obj, context.getItem(), getId());
+        final var myId = getId();
+        assert myId != null;
+        validators.validate(obj, context.getItem(), myId);
     }
     
     @Override
@@ -98,7 +100,9 @@ public abstract class AbstractDOMValidationStage<V, C extends DOMTraversalContex
     @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        validators.setId(getId());
+        final var myId = getId();
+        assert myId != null;
+        validators.setId(myId);
         validators.initialize();
     }
 
