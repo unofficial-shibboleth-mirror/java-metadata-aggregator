@@ -34,9 +34,13 @@ public class ItemIdTest {
         } catch (ConstraintViolationException e) {
             // expected this
         }
-
+    }
+    
+    @SuppressWarnings("null")
+    @Test
+    public void testNull() {
         try {
-            info = new ItemId(null);
+            new ItemId(null);
         } catch (ConstraintViolationException e) {
             // expected this
         }

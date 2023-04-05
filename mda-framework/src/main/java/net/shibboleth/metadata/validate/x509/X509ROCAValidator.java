@@ -126,7 +126,9 @@ public class X509ROCAValidator extends AbstractX509Validator {
         final PublicKey key = cert.getPublicKey();
         if ("RSA".equals(key.getAlgorithm())) {
             final RSAPublicKey rsaKey = (RSAPublicKey) key;
-            if (BrokenKey.isAffected(rsaKey.getModulus())) {
+            final var modulus = rsaKey.getModulus();
+            assert modulus != null;
+            if (BrokenKey.isAffected(modulus)) {
                 addError("RSA public key is vulnerable to ROCA", item, stageId);
             }
         }

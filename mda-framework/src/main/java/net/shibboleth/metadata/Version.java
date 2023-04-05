@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 public final class Version {
 
     /** Metadata pipeline version. */
-    private static final String VERSION;
+    private static final @Nonnull String VERSION;
 
     /** Metadata pipeline major version number. */
     private static final int MAJOR_VERSION;

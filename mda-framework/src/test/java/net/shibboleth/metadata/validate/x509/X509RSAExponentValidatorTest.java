@@ -21,6 +21,8 @@ package net.shibboleth.metadata.validate.x509;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,6 +31,9 @@ import net.shibboleth.shared.logic.ConstraintViolationException;
 
 public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
     
+    private static final @Nonnull BigInteger ZERO = new BigInteger("0");
+    private static final @Nonnull BigInteger MINUS_ONE = new BigInteger("-1");
+
     public X509RSAExponentValidatorTest() throws Exception {
         super(X509RSAExponentValidator.class);
     }
@@ -110,25 +115,25 @@ public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {
 
     public void testErrorBoundaryBigZero() throws Exception {
         final var stage = new X509RSAExponentValidator();
-        stage.setErrorBoundary(BigInteger.ZERO);
+        stage.setErrorBoundary(ZERO);
     }
 
     @Test(expectedExceptions = ConstraintViolationException.class)
     public void testErrorBoundaryBigNegative() throws Exception {
         final var stage = new X509RSAExponentValidator();
-        stage.setErrorBoundary(BigInteger.valueOf(-1));
+        stage.setErrorBoundary(MINUS_ONE);
     }
 
     @Test
     public void testWarningBoundaryBigZero() throws Exception {
         final var stage = new X509RSAExponentValidator();
-        stage.setWarningBoundary(BigInteger.ZERO);
+        stage.setWarningBoundary(ZERO);
     }
 
     @Test(expectedExceptions = ConstraintViolationException.class)
     public void testWarningBoundaryBigNegative() throws Exception {
         final var stage = new X509RSAExponentValidator();
-        stage.setWarningBoundary(BigInteger.valueOf(-1));
+        stage.setWarningBoundary(MINUS_ONE);
     }
 
     @Test

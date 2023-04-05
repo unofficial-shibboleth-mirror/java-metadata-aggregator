@@ -79,8 +79,10 @@ public class SetValidUntilStage extends AbstractIteratingStage<Element> {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
+            final var until = Instant.now().plus(getValidityDuration());
+            assert until != null;
             AttributeSupport.appendDateTimeAttribute(descriptor, SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME,
-                    Instant.now().plus(getValidityDuration()));
+                    until);
         }
     }
 

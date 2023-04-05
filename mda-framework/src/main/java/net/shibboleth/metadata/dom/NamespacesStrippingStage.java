@@ -77,7 +77,7 @@ public class NamespacesStrippingStage extends AbstractNamespacesStrippingStage {
      */
     public synchronized void setNamespaces(@Nonnull @NonnullElements @Unmodifiable final Collection<String> nss) {
         checkSetterPreconditions();
-        namespaces = Set.copyOf(nss);
+        namespaces = CollectionSupport.copyToSet(nss);
     }
 
     /**

@@ -49,6 +49,7 @@ public class XSLValidationStage extends AbstractXSLProcessingStage {
 
         try {
             for (final Item<Element> domItem : items) {
+                assert domItem != null;
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 transformer.transform(new DOMSource(domItem.unwrap().getOwnerDocument()), new DOMResult());
             }

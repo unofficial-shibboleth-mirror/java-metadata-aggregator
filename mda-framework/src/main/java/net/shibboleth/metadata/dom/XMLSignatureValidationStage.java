@@ -183,7 +183,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
     public synchronized void setBlacklistedDigests(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
         checkSetterPreconditions();
-        blacklistedDigests = Set.copyOf(identifiers);
+        blacklistedDigests = CollectionSupport.copyToSet(identifiers);
     }
     
     /**
@@ -203,7 +203,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
     public synchronized void setBlacklistedSignatureMethods(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> identifiers) {
         checkSetterPreconditions();
-        blacklistedSignatureMethods = Set.copyOf(identifiers);
+        blacklistedSignatureMethods = CollectionSupport.copyToSet(identifiers);
     }
     
     /**
@@ -285,11 +285,14 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
     @Override
     protected void doExecute(@Nonnull @NonnullElements final List<Item<Element>> items) {
         // Create a single non-thread-safe validator
-        final var validator = new XMLSignatureValidator(getVerificationKey(),
+        final var key = getVerificationKey();
+        assert key != null;
+        final var validator = new XMLSignatureValidator(key,
                 getBlacklistedDigests(), getBlacklistedSignatureMethods(), isPermittingEmptyReferences());
 
         // Use it to validate each item in turn
-        for (@Nonnull final var item : items) {
+        for (final var item : items) {
+            assert item != null;
             validateItem(item, validator);
         }
     }

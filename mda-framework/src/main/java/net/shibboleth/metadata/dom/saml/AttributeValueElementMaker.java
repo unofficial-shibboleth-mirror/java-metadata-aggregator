@@ -48,7 +48,7 @@ public class AttributeValueElementMaker extends SimpleElementMaker {
     }
 
     @Override
-    public Element make(@Nonnull final Container container) {
+    public @Nonnull Element make(@Nonnull final Container container) {
         final Element newElement = super.make(container);
         newElement.setTextContent(attributeValue);
         return newElement;

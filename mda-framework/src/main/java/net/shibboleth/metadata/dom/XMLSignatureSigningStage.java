@@ -114,7 +114,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * non-namespace-qualified attributes 'ID', 'Id', 'id'
      */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<QName> idAttributeNames = List.of(new QName("ID"), new QName("id"), new QName("Id"));
+    private List<QName> idAttributeNames = CollectionSupport.listOf(new QName("ID"), new QName("id"), new QName("Id"));
 
     /** Explicit names to associate with the given signing key. Default value: empty list */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
@@ -233,7 +233,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     public synchronized void setCertificates(
             @Nonnull @NonnullElements @Unmodifiable final List<X509Certificate> certs) {
         checkSetterPreconditions();
-        certificates = List.copyOf(certs);
+        certificates = CollectionSupport.copyToList(certs);
     }
 
     /**
@@ -254,7 +254,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     public synchronized void setCrls(
             @Nonnull @NonnullElements @Unmodifiable final List<X509CRL> revocationLists) {
         checkSetterPreconditions();
-        crls = List.copyOf(revocationLists);
+        crls = CollectionSupport.copyToList(revocationLists);
     }
 
     /**
@@ -313,7 +313,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     public synchronized void setInclusivePrefixList(
             @Nonnull @NonnullElements @Unmodifiable final List<String> prefixList) {
         checkSetterPreconditions();
-        inclusivePrefixList = List.copyOf(prefixList);
+        inclusivePrefixList = CollectionSupport.copyToList(prefixList);
     }
 
     /**
@@ -336,7 +336,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
         checkSetterPreconditions();
         Constraint.isNotNull(names, "names property may not be null");
 
-        idAttributeNames = List.copyOf(names);
+        idAttributeNames = CollectionSupport.copyToList(names);
     }
 
     /**
@@ -357,7 +357,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     public synchronized void setKeyNames(
             @Nonnull @NonnullElements @Unmodifiable final List<String> names) {
         checkSetterPreconditions();
-        keyNames = List.copyOf(names);
+        keyNames = CollectionSupport.copyToList(names);
     }
 
     /**
@@ -517,6 +517,7 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
             throws StageProcessingException {
         final var signer = new XMLSignatureSigner(this, LOG);
         for (final Item<Element> item : items) {
+            assert item != null;
             signer.sign(item);
         }
     }

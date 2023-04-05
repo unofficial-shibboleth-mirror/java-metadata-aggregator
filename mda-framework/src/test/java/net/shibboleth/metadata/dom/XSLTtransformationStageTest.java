@@ -42,6 +42,7 @@ import net.shibboleth.shared.xml.XMLParserException;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -234,10 +235,14 @@ public class XSLTtransformationStageTest extends BaseDOMTest {
 
         final Element expected = readXMLData("transform1.xml");
         // Compare *documents* here so that we include the prolog
-        assertXMLIdentical(expected.getOwnerDocument(), result.unwrap().getOwnerDocument());
+        final var ownerDocument = expected.getOwnerDocument();
+        assert ownerDocument != null;
+        Document ownerDocument2 = result.unwrap().getOwnerDocument();
+        assert ownerDocument2 != null;
+        assertXMLIdentical(ownerDocument, ownerDocument2);
 
         // peek at the first node in the document; should be a comment
-        final Node firstNode = result.unwrap().getOwnerDocument().getFirstChild();
+        final Node firstNode = ownerDocument2.getFirstChild();
         Assert.assertEquals(firstNode.getNodeType(), Node.COMMENT_NODE);
         Assert.assertEquals(firstNode.getNodeValue(), "this is a comment");
     }

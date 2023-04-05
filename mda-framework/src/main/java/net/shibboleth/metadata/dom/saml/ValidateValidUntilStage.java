@@ -49,7 +49,17 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
      * Interval from now within which the validUntil date must fall. A value of 0 indicates that no
      * maximum interval is checked. Default value: 1 week
      */
-    @Nonnull @GuardedBy("this") private Duration maxValidityInterval = Duration.ofDays(7);
+    @GuardedBy("this")
+    private @Nonnull Duration maxValidityInterval;
+
+    /**
+     * Constructor.
+     */
+    public ValidateValidUntilStage() {
+        final var dur = Duration.ofDays(7);
+        assert dur != null;
+        maxValidityInterval = dur;
+    }
 
     /**
      * Gets whether the item is required to have a validUntil attribute.

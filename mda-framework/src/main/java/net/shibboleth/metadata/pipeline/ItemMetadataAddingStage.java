@@ -65,7 +65,7 @@ public class ItemMetadataAddingStage<T> extends AbstractIteratingStage<T> {
         checkSetterPreconditions();
 
         Constraint.isNotNull(metadata, "additional metadata collection must not be null");
-        additionalItemMetadata = List.copyOf(metadata);
+        additionalItemMetadata = CollectionSupport.copyToList(metadata);
     }
 
     @Override

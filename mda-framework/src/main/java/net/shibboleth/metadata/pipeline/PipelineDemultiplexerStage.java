@@ -213,7 +213,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
             Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
         }
 
-        pipelineAndStrategies = List.copyOf(passes);
+        pipelineAndStrategies = CollectionSupport.copyToList(passes);
     }
 
     @Override
@@ -222,9 +222,12 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
         final @Nonnull @NonnullElements List<Future<List<Item<T>>>> pipelineFutures = new ArrayList<>();
 
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : getPipelineAndSelectionStrategies()) {
-            final @Nonnull Pipeline<T> pipeline = pipelineAndStrategy.getFirst();
-            final @Nonnull Predicate<Item<T>> selectionStrategy = pipelineAndStrategy.getSecond();
-            final @Nonnull List<Item<T>> selectedItems = getCollectionFactory().get();
+            final @Nonnull Pipeline<T> pipeline =
+                    Constraint.isNotNull(pipelineAndStrategy.getFirst(), "pipeline may not be null");
+            final @Nonnull Predicate<Item<T>> selectionStrategy =
+                    Constraint.isNotNull(pipelineAndStrategy.getSecond(), "strategy may not be null");
+            final List<Item<T>> selectedItems = getCollectionFactory().get();
+            assert selectedItems != null;
 
             for (final Item<T> item : items) {
                 if (selectionStrategy.test(item)) {
@@ -256,7 +259,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
         }
 
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
-            final var pipeline = pipelineAndStrategy.getFirst();
+            final var pipeline = Constraint.isNotNull(pipelineAndStrategy.getFirst(), "pipeline may not be null");
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }

@@ -80,7 +80,9 @@ public class SAMLStringElementCheckingStage extends AbstractElementVisitingStage
             b.append(QNameSupport.getNodeQName(e));
             b.append(" must contain at least one non-whitespace character");
             final Element entity = ancestorEntity(e);
-            addError(context.getItem(), entity, b.toString());
+            final var message = b.toString();
+            assert message != null;
+            addError(context.getItem(), entity, message);
         }
     }
 

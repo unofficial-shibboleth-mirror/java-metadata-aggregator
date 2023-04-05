@@ -59,14 +59,16 @@ public class GenerateIdStage extends AbstractIteratingStage<Element> {
 
     @Override
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
-        final Element element = item.unwrap();
+        final var element = item.unwrap();
         if (!SAMLMetadataSupport.isEntityOrEntitiesDescriptor(element)) {
             return;
         }
 
         Attr idAttribute = AttributeSupport.getAttribute(element, ID_ATTRIB);
         if (idAttribute == null) {
-            idAttribute = AttributeSupport.constructAttribute(element.getOwnerDocument(), ID_ATTRIB);
+            final var ownerDocument = element.getOwnerDocument();
+            assert ownerDocument != null;
+            idAttribute = AttributeSupport.constructAttribute(ownerDocument, ID_ATTRIB);
             element.setAttributeNode(idAttribute);
         }
 

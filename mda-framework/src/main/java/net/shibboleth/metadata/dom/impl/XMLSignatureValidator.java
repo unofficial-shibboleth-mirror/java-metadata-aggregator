@@ -245,8 +245,9 @@ public final class XMLSignatureValidator {
 
         if (LOG.isDebugEnabled()) {
             try {
-                LOG.debug("Verifying XML signature with key\n{}",
-                        Base64Support.encode(verificationKey.getEncoded(), false));
+                final var bytes = verificationKey.getEncoded();
+                assert bytes != null;
+                LOG.debug("Verifying XML signature with key\n{}", Base64Support.encode(bytes, false));
             } catch (final EncodingException e) {
                 //do nothing, as only logging, and this is unlikely. 
             }
@@ -286,7 +287,7 @@ public final class XMLSignatureValidator {
      * @return the extracted reference
      * @throws ValidationException if a reference could not be extracted
      */
-    private Reference extractReference(@Nonnull final XMLSignature signature) throws ValidationException {
+    private @Nonnull Reference extractReference(@Nonnull final XMLSignature signature) throws ValidationException {
         final int numReferences = signature.getSignedInfo().getLength();
         if (numReferences != 1) {
             throw new ValidationException("Signature SignedInfo had invalid number of References: " + numReferences);

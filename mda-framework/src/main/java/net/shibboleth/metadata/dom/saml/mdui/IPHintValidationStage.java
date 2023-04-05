@@ -68,6 +68,7 @@ public class IPHintValidationStage extends AbstractDOMTraversalStage<DOMTraversa
     @Override
     protected void visit(@Nonnull final Element ipHint, @Nonnull final DOMTraversalContext context) {
         final String hint = ipHint.getTextContent();
+        assert hint != null;
         try {
             final IPRange range = IPRange.parseCIDRBlock(hint);
             if (isCheckingNetworks()) {

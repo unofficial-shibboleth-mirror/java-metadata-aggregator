@@ -272,7 +272,9 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
     protected void doExecute(@Nonnull @NonnullElements final List<Item<T>> items)
             throws StageProcessingException {
         final List<Item<T>> selectedItems = getCollectionFactory().get();
+        assert selectedItems != null;
         final List<Item<T>> nonselectedItems = getCollectionFactory().get();
+        assert nonselectedItems != null;
 
         final var strategy = getSelectionStrategy();
         for (final Item<T> item : items) {
@@ -314,7 +316,9 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
          * an already completed {@link CompletableFuture}.
          */
         if (pipeline == null) {
-            return CompletableFuture.completedFuture(items);
+            final var future = CompletableFuture.completedFuture(items);
+            assert future != null;
+            return future;
         }
 
         final PipelineCallable<T> callable = new PipelineCallable<>(pipeline, items);
@@ -333,11 +337,13 @@ public class SplitMergeStage<T> extends AbstractStage<T> {
 
         if (selectedItemPipeline != null && !selectedItemPipeline.isInitialized()) {
             LOG.debug("Selected item pipeline was not initialized, initializing it now.");
+            assert selectedItemPipeline != null;
             selectedItemPipeline.initialize();
         }
 
         if (nonselectedItemPipeline != null && !nonselectedItemPipeline.isInitialized()) {
             LOG.debug("Non-selected item pipeline was not initialized, initializing it now.");
+            assert nonselectedItemPipeline != null;
             nonselectedItemPipeline.initialize();
         }
     }

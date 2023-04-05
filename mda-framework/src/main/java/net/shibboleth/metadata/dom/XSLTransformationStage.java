@@ -54,12 +54,14 @@ public class XSLTransformationStage extends AbstractXSLProcessingStage {
         try {
             final ArrayList<Item<Element>> newItems = new ArrayList<>();
             for (final Item<Element> domItem : items) {
+                assert domItem != null;
                 transformer.setErrorListener(new StatusInfoAppendingErrorListener(domItem));
                 final Element element = domItem.unwrap();
 
                 // Create a new document to hold the result of the transform.
                 final DOMImplementation domImpl = element.getOwnerDocument().getImplementation();
                 final Document newDocument = domImpl.createDocument(null, null, null);
+                assert newDocument != null;
 
                 // perform the transformation
                 transformer.transform(new DOMSource(element.getOwnerDocument()), new DOMResult(newDocument));

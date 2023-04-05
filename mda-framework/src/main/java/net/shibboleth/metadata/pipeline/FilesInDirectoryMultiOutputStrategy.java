@@ -166,7 +166,7 @@ public class FilesInDirectoryMultiOutputStrategy<T> extends AbstractInitializabl
      * 
      * @return the directory in use
      */
-    @Nonnull public final synchronized File getDirectory() {
+    public final synchronized @NonnullAfterInit File getDirectory() {
         return directory;
     }
 

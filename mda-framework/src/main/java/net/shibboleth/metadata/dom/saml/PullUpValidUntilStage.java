@@ -45,15 +45,17 @@ import net.shibboleth.shared.xml.ElementSupport;
 public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
 
     /** The minimum amount of time a descriptor may be valid. Default value: 0 */
-    @Nonnull @GuardedBy("this")
-    private Duration minValidityDuration = Duration.ZERO;
+    @SuppressWarnings("null")
+    @GuardedBy("this")
+    private @Nonnull Duration minValidityDuration = Duration.ZERO;
 
     /**
      * The maximum amount of time a descriptor may be valid. Default value:
      * {@value java.lang.Long#MAX_VALUE}
      */
-    @Nonnull @GuardedBy("this")
-    private Duration maxValidityDuration = Duration.ofMillis(Long.MAX_VALUE);
+    @SuppressWarnings("null")
+    @GuardedBy("this")
+    private @Nonnull Duration maxValidityDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
      * Gets the minimum amount of time a descriptor may be valid.
@@ -73,7 +75,9 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
     public synchronized void setMinimumValidityDuration(@Nonnull final Duration duration) {
         checkSetterPreconditions();
         if (duration.isNegative()) {
-            minValidityDuration = Duration.ZERO;
+            final var dur = Duration.ZERO;
+            assert dur != null;
+            minValidityDuration = dur;
         } else {
             minValidityDuration = duration;
         }
@@ -126,6 +130,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
         final List<Element> entitiesDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final Element entitiesDescriptor : entitiesDescriptors) {
+            assert entitiesDescriptor != null;
             validUntil = getNearestValidUntil(entitiesDescriptor);
             if (validUntil != null && (nearestValidUntil == null || (validUntil.isBefore(nearestValidUntil)))) {
                 nearestValidUntil = validUntil;
@@ -135,6 +140,7 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
         final List<Element> entityDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final Element entityDescriptor : entityDescriptors) {
+            assert entityDescriptor != null;
             validUntil = getNearestValidUntil(entityDescriptor);
             if (validUntil != null && (nearestValidUntil == null || (validUntil.isBefore(nearestValidUntil)))) {
                 nearestValidUntil = validUntil;
@@ -171,9 +177,11 @@ public class PullUpValidUntilStage extends AbstractIteratingStage<Element> {
 
         final Instant now = Instant.now();
         final Instant minValidUntil = now.plus(getMinimumValidityDuration());
+        assert minValidUntil != null;
         final Instant maxValidUntil = now.plus(getMaximumValidityDuration());
+        assert maxValidUntil != null;
 
-        final Instant boundedValidUntil;
+        final @Nonnull Instant boundedValidUntil;
         if (validUntil.isBefore(minValidUntil)) {
             boundedValidUntil = minValidUntil;
         } else if (validUntil.isAfter(maxValidUntil)) {

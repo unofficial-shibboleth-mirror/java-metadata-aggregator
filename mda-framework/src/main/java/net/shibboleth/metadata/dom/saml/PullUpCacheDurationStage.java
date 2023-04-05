@@ -44,12 +44,14 @@ import net.shibboleth.shared.xml.ElementSupport;
 public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
 
     /** The minimum cache duration. Default value: <code>0</code> */
-    @Nonnull @GuardedBy("this")
-    private Duration minCacheDuration = Duration.ZERO;
+    @SuppressWarnings("null")
+    @GuardedBy("this")
+    private @Nonnull Duration minCacheDuration = Duration.ZERO;
 
     /** The maximum cache duration. Default value: {@value java.lang.Long#MAX_VALUE} */
-    @Nonnull @GuardedBy("this")
-    private Duration maxCacheDuration = Duration.ofMillis(Long.MAX_VALUE);
+    @SuppressWarnings("null")
+    @GuardedBy("this")
+    private @Nonnull Duration maxCacheDuration = Duration.ofMillis(Long.MAX_VALUE);
 
     /**
      * Gets the minimum cache duration.
@@ -66,10 +68,12 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
      * 
      * @param duration the minimum cache duration
      */
-    public synchronized void setMinimumCacheDuration(final Duration duration) {
+    public synchronized void setMinimumCacheDuration(final @Nonnull Duration duration) {
         checkSetterPreconditions();
         if (duration.isNegative()) {
-            minCacheDuration = Duration.ZERO;
+            final var dur = Duration.ZERO;
+            assert dur != null;
+            minCacheDuration = dur;
         } else {
             minCacheDuration = duration;
         }
@@ -122,6 +126,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
         final List<Element> entitiesDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         for (final Element entitiesDescriptor : entitiesDescriptors) {
+            assert entitiesDescriptor != null;
             cacheDuration = getShortestCacheDuration(entitiesDescriptor);
             if (cacheDuration != null &&
                     (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {
@@ -132,6 +137,7 @@ public class PullUpCacheDurationStage extends AbstractIteratingStage<Element> {
         final List<Element> entityDescriptors =
                 ElementSupport.getChildElements(descriptor, SAMLMetadataSupport.ENTITY_DESCRIPTOR_NAME);
         for (final Element entityDescriptor : entityDescriptors) {
+            assert entityDescriptor != null;
             cacheDuration = getShortestCacheDuration(entityDescriptor);
             if (cacheDuration != null &&
                     (shortestCacheDuration == null || (cacheDuration.compareTo(shortestCacheDuration) < 0))) {

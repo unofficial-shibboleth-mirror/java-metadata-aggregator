@@ -71,6 +71,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         Assert.assertEquals(entityDescriptors.size(), 3);
 
         for (Element entityDescriptor : entityDescriptors) {
+            assert entityDescriptor != null;
             Assert.assertFalse(AttributeSupport.hasAttribute(entityDescriptor,
                     SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME));
         }
@@ -87,6 +88,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         final var hundredYears = Duration.ofDays(365 * 100);
+        assert hundredYears != null;
         
         PullUpValidUntilStage stage = new PullUpValidUntilStage();
         stage.setId("test");
@@ -116,6 +118,7 @@ public class PullUpValidUntilStageTest extends BaseDOMTest {
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
         final var twoYears = Duration.ofDays(365 * 2);
+        assert twoYears != null;
         final var twoYearsFromNow = Instant.now().plus(twoYears);
         
         PullUpValidUntilStage stage = new PullUpValidUntilStage();

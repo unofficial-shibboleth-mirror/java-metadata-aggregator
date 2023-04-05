@@ -46,11 +46,23 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
 
     /** The RSA public exponent value below which an error should result. Default: 5. */
     @Nonnull @GuardedBy("this")
-    private BigInteger errorBoundary = BigInteger.valueOf(5);
+    private BigInteger errorBoundary = bigInteger(5);
     
     /** The RSA public exponent value below which a warning should result. Default: 0 (disabled). */
     @Nonnull @GuardedBy("this")
-    private BigInteger warningBoundary = BigInteger.ZERO;
+    private BigInteger warningBoundary = bigInteger(0);
+
+    /**
+     * Private method to wrap construction of {@link BigInteger} literals.
+     *
+     * @param value value to be converted to {@link BigInteger}
+     * @return the converted {@link BigInteger}
+     */
+    private static final @Nonnull BigInteger bigInteger(final long value) {
+        final var bi = BigInteger.valueOf(value);
+        assert bi != null;
+        return bi;
+    }
 
     /**
      * Get the RSA public exponent below which an error will result.
@@ -67,7 +79,7 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * @param length the RSA public exponent below which an error should result
      */
     public synchronized void setErrorBoundary(@Nonnull final BigInteger length) {
-        Constraint.isGreaterThanOrEqual(0, length.compareTo(BigInteger.ZERO), "boundary value must not be negative");
+        Constraint.isGreaterThanOrEqual(0, length.compareTo(bigInteger(0)), "boundary value must not be negative");
         errorBoundary = length;
     }
 
@@ -77,7 +89,7 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * @param length the RSA public exponent below which an error should result
      */
     public void setErrorBoundary(final long length) {
-        setErrorBoundary(BigInteger.valueOf(length));
+        setErrorBoundary(bigInteger(length));
     }
     
     /**
@@ -105,7 +117,7 @@ public class X509RSAExponentValidator extends AbstractX509Validator {
      * @param length the RSA public exponent below which a warning should result
      */
     public synchronized void setWarningBoundary(final long length) {
-        setWarningBoundary(BigInteger.valueOf(length));
+        setWarningBoundary(bigInteger(length));
     }
     
     @Override

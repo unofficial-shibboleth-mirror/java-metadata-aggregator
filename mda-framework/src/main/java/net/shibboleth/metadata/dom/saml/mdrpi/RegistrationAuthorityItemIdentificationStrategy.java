@@ -79,7 +79,7 @@ public class RegistrationAuthorityItemIdentificationStrategy<T> extends FirstIte
      */
     public synchronized void setIgnoredRegistrationAuthorities(
             @Nonnull @NonnullElements @Unmodifiable final Collection<String> registrars) {
-        ignoredRegistrationAuthorities = Set.copyOf(registrars);
+        ignoredRegistrationAuthorities = CollectionSupport.copyToSet(registrars);
     }
 
     /**
@@ -99,7 +99,7 @@ public class RegistrationAuthorityItemIdentificationStrategy<T> extends FirstIte
      */
     public synchronized void setRegistrationAuthorityDisplayNames(
             @Nonnull @NonnullElements @Unmodifiable final Map<String, String> names) {
-        registrationAuthorityDisplayNames = Map.copyOf(names);
+        registrationAuthorityDisplayNames = CollectionSupport.copyToMap(names);
     }
     
     /**

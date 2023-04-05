@@ -85,9 +85,12 @@ public class PullUpCacheDurationStageTest extends BaseDOMTest {
         final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
         metadataCollection.add(new DOMElementItem(readXMLData("in.xml")));
 
+        final var twoHours = Duration.ofHours(2);
+        assert twoHours != null;
+
         PullUpCacheDurationStage stage = new PullUpCacheDurationStage();
         stage.setId("test");
-        stage.setMinimumCacheDuration(Duration.ofHours(2));
+        stage.setMinimumCacheDuration(twoHours);
         stage.initialize();
         
         stage.execute(metadataCollection);

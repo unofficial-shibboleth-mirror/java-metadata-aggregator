@@ -17,10 +17,7 @@
 
 package net.shibboleth.metadata;
 
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-
-import net.shibboleth.shared.annotation.constraint.NotEmpty;
 
 /** A type of {@link StatusMetadata} that indicates something is definitely wrong with the Item. */
 @Immutable
@@ -28,11 +25,25 @@ public class ErrorStatus extends StatusMetadata {
 
     /**
      * Constructor.
+     *
+     * <p>
+     * Note that the parameters must not be either <code>null</code>
+     * or the empty string. However, as they are often set from
+     * theoretically nullable sources such as a a bean's identifier
+     * (which is not statically known to be non-null until after
+     * initialization) or a <code>toString</code> method result,
+     * this is not not included in the parameter annotations.
+     * </p>
+     * 
+     * <p>
+     * Instead, nullness is checked as a run-time
+     * constraint resulting in a <code>ConstraintViolation</code>.
+     * </p>
      * 
      * @param componentId ID of the component creating the status message, never null or empty
      * @param statusMessage the status message, never null or empty
      */
-    public ErrorStatus(@Nonnull @NotEmpty final String componentId, @Nonnull @NotEmpty final String statusMessage) {
+    public ErrorStatus(final String componentId, final String statusMessage) {
         super(componentId, statusMessage);
     }
 }

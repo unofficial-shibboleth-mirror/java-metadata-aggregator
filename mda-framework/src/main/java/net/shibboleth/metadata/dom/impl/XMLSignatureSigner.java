@@ -65,6 +65,7 @@ import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.annotation.constraint.Live;
 import net.shibboleth.shared.annotation.constraint.NonnullElements;
 import net.shibboleth.shared.annotation.constraint.Unmodifiable;
+import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.StringSupport;
 import net.shibboleth.shared.xml.ElementSupport;
 import net.shibboleth.shared.xml.QNameSupport;
@@ -225,7 +226,7 @@ public class XMLSignatureSigner {
                     break;
             }
 
-            privKey = stage.getPrivateKey();
+            privKey = Constraint.isNotNull(stage.getPrivateKey(), "privateKey may not be null");
             publicKey = stage.getPublicKey();
             inclusivePrefixList = stage.getInclusivePrefixList();
             idAttributeNames = stage.getIdAttributeNames();
@@ -324,7 +325,9 @@ public class XMLSignatureSigner {
 
         final List<Reference> refs = Collections.singletonList(buildSignatureReference(target));
 
-        return xmlSigFactory.newSignedInfo(c14nMethod, sigMethod, refs);
+        final var info = xmlSigFactory.newSignedInfo(c14nMethod, sigMethod, refs);
+        assert info != null;
+        return info;
     }
 
     /**
@@ -377,7 +380,9 @@ public class XMLSignatureSigner {
             throw new StageProcessingException(errMsg, e);
         }
 
-        return xmlSigFactory.newReference(refUri, digestMethod, transforms, null, null);
+        final var ref = xmlSigFactory.newReference(refUri, digestMethod, transforms, null, null);
+        assert ref != null;
+        return ref;
     }
 
     /**

@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
@@ -37,15 +39,17 @@ import org.w3c.dom.Element;
 /** Unit test for {@link XMLSchemaValidationStage}. */
 public class XMLSignatureValidationStageTest extends BaseDOMTest {
     
-    private final Certificate signingCert;
+    private final @Nonnull Certificate signingCert;
     
     public XMLSignatureValidationStageTest() throws IOException {
         super(XMLSignatureValidationStage.class);
-        signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
+        var cert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
+        assert cert != null;
+        signingCert = cert;
     }
     
-    private DOMElementItem makeItem(final String name) throws XMLParserException {
+    private DOMElementItem makeItem(final @Nonnull String name) throws XMLParserException {
         final Element input = readXMLData(name);
         return new DOMElementItem(input);
     }
@@ -125,8 +129,6 @@ public class XMLSignatureValidationStageTest extends BaseDOMTest {
         stage.execute(mdCol);
         stage.destroy();
         Assert.assertEquals(mdCol.size(), 1);
-
-        final Item<Element> result = mdCol.iterator().next();
 
         final DOMElementItem item2 = makeItem("entities2.xml");
         

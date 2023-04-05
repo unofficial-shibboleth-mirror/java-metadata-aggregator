@@ -160,7 +160,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
     public synchronized void setMergedPipelines(
             @Nonnull @NonnullElements @Unmodifiable final List<? extends Pipeline<T>> pipelines) {
         checkSetterPreconditions();
-        mergedPipelines = List.copyOf(pipelines);
+        mergedPipelines = CollectionSupport.copyToList(pipelines);
     }
 
     /**
@@ -207,8 +207,11 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
             throws StageProcessingException {
         final @Nonnull List<Future<List<Item<T>>>> pipelineResultFutures = new ArrayList<>();
 
-        for (final @Nonnull Pipeline<T> pipeline : getMergedPipelines()) {
-            final @Nonnull var callable = new PipelineCallable<T>(pipeline, getCollectionFactory().get());
+        for (final Pipeline<T> pipeline : getMergedPipelines()) {
+            assert pipeline != null;
+            final var collection = getCollectionFactory().get();
+            assert collection != null;
+            final @Nonnull var callable = new PipelineCallable<T>(pipeline, collection);
             final @Nonnull var future = new FutureTask<List<Item<T>>>(callable);
             getExecutor().execute(future);
             pipelineResultFutures.add(future);
@@ -216,6 +219,7 @@ public class PipelineMergeStage<T> extends AbstractStage<T> {
 
         final List<List<Item<T>>> pipelineResults = new ArrayList<>();
         for (final Future<List<Item<T>>> future : pipelineResultFutures) {
+            assert future != null;
             pipelineResults.add(FutureSupport.futureItems(future));
         }
 

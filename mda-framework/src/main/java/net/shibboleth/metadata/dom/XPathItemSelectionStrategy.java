@@ -20,6 +20,7 @@ package net.shibboleth.metadata.dom;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
@@ -61,7 +62,7 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
      * @throws XPathExpressionException if there is a problem compiling the expression
      */
     public XPathItemSelectionStrategy(@Nonnull @NotEmpty final String expression,
-            @Nonnull final NamespaceContext context) throws XPathExpressionException {
+            final @Nullable NamespaceContext context) throws XPathExpressionException {
         final NamespaceContext namespaceContext;
         if (context == null) {
             namespaceContext = new SimpleNamespaceContext();
@@ -73,11 +74,13 @@ public class XPathItemSelectionStrategy implements Predicate<Item<Element>> {
         final XPath xpath = factory.newXPath();
         xpath.setNamespaceContext(namespaceContext);
 
-        compiledExpression = xpath.compile(expression);
+        final var compiled = xpath.compile(expression);
+        assert compiled != null;
+        compiledExpression = compiled;
     }
 
     @Override
-    public synchronized boolean test(@Nonnull final Item<Element> item) {
+    public synchronized boolean test(final Item<Element> item) {
         try {
             return compiledExpression.evaluateExpression(item.unwrap(), Boolean.class);
         } catch (final XPathExpressionException e) {

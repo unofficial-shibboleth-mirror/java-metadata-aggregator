@@ -77,9 +77,11 @@ public class SetCacheDurationStage extends AbstractIteratingStage<Element> {
     protected void doExecute(@Nonnull final Item<Element> item) throws StageProcessingException {
         final Element descriptor = item.unwrap();
         if (SAMLMetadataSupport.isEntityOrEntitiesDescriptor(descriptor)) {
+            final var dur = getCacheDuration();
+            assert dur != null;
             AttributeSupport.removeAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME);
             AttributeSupport.appendDurationAttribute(descriptor, SAMLMetadataSupport.CACHE_DURATION_ATTRIB_NAME,
-                    getCacheDuration());
+                    dur);
         }
     }
 

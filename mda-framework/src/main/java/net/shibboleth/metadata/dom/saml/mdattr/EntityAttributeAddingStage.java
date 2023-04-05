@@ -126,7 +126,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
      * 
      * @return the attributeValue
      */
-    @Nonnull
+    @NonnullAfterInit
     public final synchronized String getAttributeValue() {
         return attributeValue;
     }
@@ -188,6 +188,7 @@ public class EntityAttributeAddingStage extends AbstractStage<Element> {
         final var attributeMaker = new AttributeElementMaker(name, format);
 
         final var value = getAttributeValue();
+        assert value != null;
         final var attributeValueMatcher = new AttributeValueElementMatcher(value);
         final var attributeValueMaker = new AttributeValueElementMaker(value);
 

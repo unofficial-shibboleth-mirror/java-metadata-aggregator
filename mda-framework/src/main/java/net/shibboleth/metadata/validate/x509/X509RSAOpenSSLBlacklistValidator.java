@@ -151,6 +151,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
             final char [] encodedDigest = Hex.encodeHex(bytes, true);
             final String strValue = String.valueOf(encodedDigest);
             final String trimmed = strValue.substring(20);
+            assert trimmed != null;
             //System.out.println("Digest: " + strValue + " trimmed " + trimmed);
             return trimmed;
         } catch (final NoSuchAlgorithmException e) {
@@ -167,6 +168,7 @@ public class X509RSAOpenSSLBlacklistValidator extends AbstractX509Validator {
         if ("RSA".equals(key.getAlgorithm())) {
             final RSAPublicKey rsaKey = (RSAPublicKey) key;
             final BigInteger modulus = rsaKey.getModulus();
+            assert modulus != null;
 
             final Set<String> values;
             final int keySz;

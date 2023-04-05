@@ -39,6 +39,7 @@ import org.xmlunit.input.NormalizedSource;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
+import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 import net.shibboleth.shared.xml.ElementSupport;
 import net.shibboleth.shared.xml.SerializeSupport;
@@ -59,7 +60,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
      * @return collection made from the resource
      * @throws XMLParserException if the resource can't be parsed
      */
-    private List<Item<Element>> getInput(@Nonnull final String fileName) throws XMLParserException {
+    private @Nonnull List<Item<Element>> getInput(@Nonnull final String fileName) throws XMLParserException {
         final Element testInput = readXMLData(fileName);
         final List<Item<Element>> list = new ArrayList<>();
         list.add(new DOMElementItem(testInput));
@@ -94,6 +95,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
         PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        assert signingKey != null;
         X509Certificate signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
@@ -131,6 +133,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
 
         final PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        assert signingKey != null;
         final X509Certificate signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
@@ -155,6 +158,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         assertXMLIdentical(expected, result.unwrap());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testSetIdAttributeNamesNull() throws Exception {
         final XMLSignatureSigningStage stage = new XMLSignatureSigningStage();
@@ -186,6 +190,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     public void setRemovingCRsFromSignature() throws Exception {
         PrivateKey signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        assert signingKey != null;
         X509Certificate signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
         final List<X509Certificate> certs = new ArrayList<>();
@@ -194,7 +199,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         /*
          * The first result uses the default value.
          */
-        final List<Item<Element>> mdCol1 = getInput("input.xml");
+        final @Nonnull List<Item<Element>> mdCol1 = getInput("input.xml");
 
         final XMLSignatureSigningStage stage1 = new XMLSignatureSigningStage();
         stage1.setId("test");
@@ -254,12 +259,14 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     public void mda224defaultingPublicKeyFromCertificate() throws Exception {
         final var signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        assert signingKey != null;
         final var md = getInput("input.xml");
         final var stage = new XMLSignatureSigningStage();
         
         final var signingCert = CertUtil.readCertificate(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingCert.pem")));
-        final var certs = List.of(signingCert);
+        assert signingCert != null;
+        final var certs = CollectionSupport.listOf(signingCert);
 
         stage.setId("test");
         stage.setIncludeKeyValue(true);
@@ -273,7 +280,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
         
         final var entitiesDescriptor = md.get(0).unwrap(); // document element
         final var keyInfo = extractKeyInfo(entitiesDescriptor);
-        Assert.assertNotNull(keyInfo);
+        assert keyInfo != null;
 
         // If we had a certificate, expect to see that as an X509Data, and expect to see
         // its public key as well as a KeyValue
@@ -285,6 +292,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     public void mda224defaultingPublicKeyFromAbsentCertificate() throws Exception {
         final var signingKey = KeyPairUtil.readPrivateKey(XMLSignatureSigningStageTest.class
                 .getResourceAsStream(classRelativeResource("signingKey.pem")));
+        assert signingKey != null;
         final var md = getInput("input.xml");
         final var stage = new XMLSignatureSigningStage();
         

@@ -189,7 +189,9 @@ public final class SAMLMetadataSupport {
             return extensions;
         }
         
-        return ElementSupport.getChildElements(extensions.get(0), extensionName);
+        final var exten = extensions.get(0);
+        assert exten != null;
+        return ElementSupport.getChildElements(exten, extensionName);
     }
 
     /**
@@ -229,17 +231,20 @@ public final class SAMLMetadataSupport {
             return;
         }
 
-        final Element extensionsElement;
+        final @Nonnull Element extensionsElement;
 
         final Map<QName, List<Element>> descriptorChildren = ElementSupport.getIndexedChildElements(descriptor);
         final List<Element> extensionsElements = descriptorChildren.get(EXTENSIONS_NAME);
         if (extensionsElements.isEmpty()) {
-            extensionsElement = ElementSupport.constructElement(descriptor.getOwnerDocument(), EXTENSIONS_NAME);
+            final var ownerDocument = descriptor.getOwnerDocument();
+            assert ownerDocument != null;
+            extensionsElement = ElementSupport.constructElement(ownerDocument, EXTENSIONS_NAME);
 
             Element insertExtensionsElementBefore = null;
             final List<Element> signatureElements = descriptorChildren.get(XMLDSIGSupport.SIGNATURE_NAME);
             if (!signatureElements.isEmpty()) {
                 final Element lastSignatureElement = signatureElements.get(signatureElements.size() - 1);
+                assert lastSignatureElement != null;
                 insertExtensionsElementBefore = ElementSupport.getNextSiblingElement(lastSignatureElement);
             } else {
                 insertExtensionsElementBefore = ElementSupport.getFirstChildElement(descriptor);
@@ -251,7 +256,9 @@ public final class SAMLMetadataSupport {
                 descriptor.insertBefore(extensionsElement, insertExtensionsElementBefore);
             }
         } else {
-            extensionsElement = extensionsElements.get(0);
+            final var exten = extensionsElements.get(0);
+            assert exten != null;
+            extensionsElement = exten;
         }
 
         ElementSupport.appendChildElement(extensionsElement, extension);

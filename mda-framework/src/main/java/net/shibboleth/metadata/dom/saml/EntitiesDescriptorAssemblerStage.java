@@ -150,7 +150,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
                 ElementSupport.constructElement(entitiesDescriptorDocument,
                         SAMLMetadataSupport.ENTITIES_DESCRIPTOR_NAME);
         NamespaceSupport.appendNamespaceDeclaration(entitiesDescriptor,
-                entitiesDescriptor.getNamespaceURI(), entitiesDescriptor.getPrefix());
+                SAMLMetadataSupport.MD_NS, SAMLMetadataSupport.MD_PREFIX);
         entitiesDescriptorDocument.appendChild(entitiesDescriptor);
         addDescriptorName(entitiesDescriptor);
 
