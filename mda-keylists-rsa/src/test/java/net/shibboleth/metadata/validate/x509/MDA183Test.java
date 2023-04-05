@@ -39,13 +39,17 @@ public class MDA183Test extends BaseTest {
     /**
      * Computes the OpenSSL digest value for the given modulus.
      *
+     * <p>
+     * Not used in the test, but left here for use in generating new tests.
+     * </p>
+     *
      * @param modulus RSA public modulus to be digested
      * @return value to be compared against the blacklist
      * @throws StageProcessingException if SHA1 digester can not be acquired, or for internal
      *      errors related to {@link ByteArrayOutputStream}
      */
-    @Nonnull
-    private String openSSLDigest(@Nonnull final BigInteger modulus) throws StageProcessingException {
+    @SuppressWarnings("unused")
+    private @Nonnull String openSSLDigest(@Nonnull final BigInteger modulus) throws StageProcessingException {
         try {
             // Acquire a representation of the modulus
             byte[] modulusBytes = modulus.toByteArray();
@@ -79,6 +83,7 @@ public class MDA183Test extends BaseTest {
             final char [] encodedDigest = Hex.encodeHex(bytes, true);
             final String strValue = String.valueOf(encodedDigest);
             final String trimmed = strValue.substring(20);
+            assert trimmed != null;
             //System.out.println("Digest: " + strValue + " trimmed " + trimmed);
             return trimmed;
         } catch (final NoSuchAlgorithmException e) {
@@ -105,7 +110,7 @@ public class MDA183Test extends BaseTest {
         return val;
     }
 
-    private void verifyKey(final KeyStore ks, final String alias,
+    private void verifyKey(final KeyStore ks, final @Nonnull String alias,
             final String password,
             final Validator<X509Certificate> val,
             int expectedKeySize) throws Exception {
@@ -118,6 +123,7 @@ public class MDA183Test extends BaseTest {
         //System.out.println("alias " + alias + " key size " + rKey.getModulus().bitLength());
         //System.out.println("hash " + openSSLDigest(rKey.getModulus()));
         final Certificate cert = ks.getCertificate(alias);
+        assert cert != null;
         final Item<String> item = new MockItem("mock");
         val.validate((X509Certificate)cert, item, alias);
         final List<ErrorStatus> errors = item.getItemMetadata().get(ErrorStatus.class);
