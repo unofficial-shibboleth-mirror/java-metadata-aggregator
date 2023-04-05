@@ -167,6 +167,15 @@ public class Container {
     }
 
     /**
+     * Get the container's parent, if any.
+     *
+     * @return the container's parent container, or <code>null</code>
+     */
+    public @Nullable Container getParent() {
+        return parentContainer;
+    }
+
+    /**
      * Return the wrapped {@link Element}.
      * 
      * @return the wrapped {@link Element}
