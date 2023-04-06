@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata;
+package net.shibboleth.metadata.testing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.shared.annotation.constraint.NotEmpty;
 import net.shibboleth.shared.logic.Constraint;
 import net.shibboleth.shared.primitive.StringSupport;

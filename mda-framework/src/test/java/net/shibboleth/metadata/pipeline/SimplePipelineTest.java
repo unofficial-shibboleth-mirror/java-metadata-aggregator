@@ -23,7 +23,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.testing.CountingStage;
+import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 

@@ -28,7 +28,8 @@ import javax.annotation.Nonnull;
 import net.shibboleth.metadata.DeduplicatingItemIdMergeStrategy;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.testing.MockItem;
+import net.shibboleth.metadata.testing.TerminatingStage;
 import net.shibboleth.shared.collection.CollectionSupport;
 
 import org.testng.Assert;

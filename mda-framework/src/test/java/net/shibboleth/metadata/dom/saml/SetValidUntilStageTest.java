@@ -22,8 +22,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 import net.shibboleth.shared.xml.AttributeSupport;
 import net.shibboleth.shared.xml.impl.BasicParserPool;

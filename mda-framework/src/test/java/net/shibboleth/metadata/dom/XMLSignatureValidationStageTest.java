@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.xml.XMLParserException;
 
 import org.cryptacular.util.CertUtil;

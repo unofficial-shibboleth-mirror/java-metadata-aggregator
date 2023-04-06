@@ -7,8 +7,8 @@ import java.util.List;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 
 import org.testng.Assert;

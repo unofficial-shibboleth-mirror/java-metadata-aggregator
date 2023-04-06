@@ -7,6 +7,7 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.shared.collection.CollectionSupport;
 
 public class DeduplicatingItemIdMergeStrategyTest {

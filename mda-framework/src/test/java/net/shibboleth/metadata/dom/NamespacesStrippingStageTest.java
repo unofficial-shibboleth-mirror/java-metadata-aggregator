@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 public class NamespacesStrippingStageTest extends BaseDOMTest {
 

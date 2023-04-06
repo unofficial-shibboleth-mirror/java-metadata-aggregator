@@ -18,8 +18,8 @@ import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemIdentificationStrategy;
-import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.shared.collection.CollectionSupport;
 
 

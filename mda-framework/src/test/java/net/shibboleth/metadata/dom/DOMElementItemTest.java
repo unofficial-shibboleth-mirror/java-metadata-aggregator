@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 
 public class DOMElementItemTest extends BaseDOMTest {

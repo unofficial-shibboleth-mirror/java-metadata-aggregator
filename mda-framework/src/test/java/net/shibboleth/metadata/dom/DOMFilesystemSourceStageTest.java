@@ -22,9 +22,9 @@ import java.io.FileFilter;
 import java.net.URL;
 import java.util.ArrayList;
 
-import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.metadata.testing.BaseTest;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 import net.shibboleth.shared.xml.impl.BasicParserPool;

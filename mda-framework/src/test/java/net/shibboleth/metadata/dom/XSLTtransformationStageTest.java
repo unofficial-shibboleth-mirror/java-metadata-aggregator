@@ -36,6 +36,7 @@ import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.xml.XMLParserException;
 

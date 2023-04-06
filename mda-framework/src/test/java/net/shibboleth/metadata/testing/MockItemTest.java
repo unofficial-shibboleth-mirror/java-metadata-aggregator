@@ -1,5 +1,5 @@
 
-package net.shibboleth.metadata;
+package net.shibboleth.metadata.testing;
 
 import org.testng.annotations.Test;
 

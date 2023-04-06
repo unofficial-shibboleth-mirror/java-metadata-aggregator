@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;

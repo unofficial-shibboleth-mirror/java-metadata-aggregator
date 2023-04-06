@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
-import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 

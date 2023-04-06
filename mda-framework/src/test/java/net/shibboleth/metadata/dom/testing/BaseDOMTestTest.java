@@ -1,4 +1,4 @@
-package net.shibboleth.metadata.dom;
+package net.shibboleth.metadata.dom.testing;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 

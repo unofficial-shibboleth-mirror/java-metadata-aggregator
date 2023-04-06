@@ -6,6 +6,8 @@ import javax.annotation.Nonnull;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import net.shibboleth.metadata.testing.MockItem;
+
 public class AbstractCompositeItemIdentificationStrategyTest {
 
     /**

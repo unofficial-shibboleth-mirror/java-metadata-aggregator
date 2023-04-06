@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.component.ComponentInitializationException;
 
 import org.testng.annotations.Test;

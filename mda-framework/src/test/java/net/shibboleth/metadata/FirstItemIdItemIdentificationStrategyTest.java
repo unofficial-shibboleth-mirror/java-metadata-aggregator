@@ -21,6 +21,8 @@ package net.shibboleth.metadata;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import net.shibboleth.metadata.testing.MockItem;
+
 public class FirstItemIdItemIdentificationStrategyTest {
 
     @Test

@@ -12,8 +12,9 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.TestMarker;
+import net.shibboleth.metadata.testing.MarkerStage;
+import net.shibboleth.metadata.testing.MockItem;
+import net.shibboleth.metadata.testing.TestMarker;
 import net.shibboleth.shared.collection.CollectionSupport;
 
 public class CompositeStageTest {

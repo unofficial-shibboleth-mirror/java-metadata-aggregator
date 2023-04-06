@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata.testing;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.pipeline.AbstractStage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
  * Stage that counts the number of times it was invoked and the number of items it has observed.

@@ -15,12 +15,15 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata;
+package net.shibboleth.metadata.testing;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+
+import net.shibboleth.metadata.AbstractItem;
+import net.shibboleth.metadata.Item;
 
 /** A mock implementation of {@link Item}. */
 @NotThreadSafe

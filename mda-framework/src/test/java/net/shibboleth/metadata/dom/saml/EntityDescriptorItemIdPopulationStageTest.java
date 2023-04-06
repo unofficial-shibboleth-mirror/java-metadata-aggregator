@@ -22,8 +22,8 @@ import java.util.List;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemId;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -39,6 +39,7 @@ import org.xmlunit.input.NormalizedSource;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.ds.XMLDSIGSupport;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 import net.shibboleth.shared.xml.ElementSupport;

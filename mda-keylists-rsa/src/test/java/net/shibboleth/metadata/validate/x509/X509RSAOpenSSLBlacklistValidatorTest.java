@@ -25,7 +25,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.metadata.validate.Validator;
 
 public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest {

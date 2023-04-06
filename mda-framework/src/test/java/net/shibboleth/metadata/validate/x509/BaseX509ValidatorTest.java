@@ -27,11 +27,11 @@ import javax.annotation.Nonnull;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 
-import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.testing.BaseTest;
+import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.metadata.validate.Validator;
 
 public abstract class BaseX509ValidatorTest extends BaseTest {

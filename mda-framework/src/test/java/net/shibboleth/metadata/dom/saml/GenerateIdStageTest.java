@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.metadata.util.FixedStringIdentifierGenerationStrategy;
 import net.shibboleth.shared.xml.impl.BasicParserPool;
 import net.shibboleth.shared.collection.CollectionSupport;

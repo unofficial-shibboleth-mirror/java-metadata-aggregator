@@ -14,29 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package net.shibboleth.metadata.pipeline;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import net.shibboleth.metadata.Item;
-
 /**
- * Stage that throws a {@link TerminationException} when it is called.
- * 
- * @param <T> type of {@link Item} being processed
+ * Testing utility classes for DOM-related processing.
  */
-class TerminatingStage<T> extends AbstractStage<T> {
-
-    /** Constructor. */
-    public TerminatingStage() {
-        setId("TerminatingStage");
-    }
-
-    @Override
-    protected void doExecute(@Nonnull List<Item<T>> items) throws StageProcessingException {
-        throw new TerminationException("from TerminatingStage");
-    }
-}
+package net.shibboleth.metadata.dom.testing;

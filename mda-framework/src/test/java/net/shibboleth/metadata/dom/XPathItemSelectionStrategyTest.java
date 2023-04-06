@@ -23,6 +23,8 @@ import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
+
 /** {@link XPathItemSelectionStrategy} unit test. */
 public class XPathItemSelectionStrategyTest extends BaseDOMTest {
 

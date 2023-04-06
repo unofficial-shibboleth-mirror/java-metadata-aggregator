@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 public class XMLSchemaValidationStageTest extends BaseDOMTest {
 

@@ -26,11 +26,11 @@ import javax.annotation.Nonnull;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.WarningStatus;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.ContextImpl;
 import net.shibboleth.metadata.dom.saml.mdattr.EntityAttributeFilteringStage.EntityAttributeContext;
 import net.shibboleth.metadata.dom.saml.mdrpi.RegistrationAuthorityPopulationStage;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

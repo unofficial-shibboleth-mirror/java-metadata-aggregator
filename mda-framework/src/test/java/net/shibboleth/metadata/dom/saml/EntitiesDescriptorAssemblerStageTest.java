@@ -28,8 +28,8 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
 
 /** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */

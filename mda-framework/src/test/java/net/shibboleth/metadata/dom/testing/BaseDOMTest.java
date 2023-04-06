@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata.dom;
+package net.shibboleth.metadata.dom.testing;
 
 import java.io.InputStream;
 import java.io.StringReader;
@@ -33,10 +33,11 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.input.NormalizedSource;
 
-import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
+import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.testing.BaseTest;
 import net.shibboleth.shared.collection.ClassToInstanceMultiMap;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;

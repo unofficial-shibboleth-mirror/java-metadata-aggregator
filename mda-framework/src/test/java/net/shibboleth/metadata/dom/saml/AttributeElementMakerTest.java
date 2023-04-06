@@ -8,8 +8,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.Container;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 public class AttributeElementMakerTest extends BaseDOMTest {
 

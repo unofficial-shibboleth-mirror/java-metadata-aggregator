@@ -31,6 +31,7 @@ import org.w3c.dom.Element;
 
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.xml.XMLParserException;
 

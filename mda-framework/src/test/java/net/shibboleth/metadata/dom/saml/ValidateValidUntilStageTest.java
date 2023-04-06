@@ -18,8 +18,8 @@
 package net.shibboleth.metadata.dom.saml;
 
 import net.shibboleth.metadata.ErrorStatus;
-import net.shibboleth.metadata.dom.BaseDOMTest;
 import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.shared.xml.AttributeSupport;
 
 import java.time.Duration;

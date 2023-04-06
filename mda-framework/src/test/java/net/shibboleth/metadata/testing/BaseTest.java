@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.metadata;
+package net.shibboleth.metadata.testing;
 
 import java.io.IOException;
 

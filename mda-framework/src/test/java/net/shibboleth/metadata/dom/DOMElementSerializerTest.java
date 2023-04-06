@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

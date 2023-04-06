@@ -1,11 +1,12 @@
-package net.shibboleth.metadata.pipeline;
+package net.shibboleth.metadata.testing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.TestMarker;
+import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
 /**
  * A stage which adds a sequentially numbered {link @TestMarker} to item metadata.

@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
+import net.shibboleth.metadata.testing.CountingStage;
+import net.shibboleth.metadata.testing.MockItem;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

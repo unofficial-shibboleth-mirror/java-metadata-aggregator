@@ -9,11 +9,13 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class ElementMatcherTest extends BaseDOMTest {
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
+
+public class SimpleElementMatcherTest extends BaseDOMTest {
 
     private final Document doc;
 
-    protected ElementMatcherTest() throws Exception {
+    protected SimpleElementMatcherTest() throws Exception {
         super(SimpleElementMatcher.class);
         setUp();
         doc = getParserPool().newDocument();

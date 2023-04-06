@@ -27,8 +27,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.SimpleItemCollectionFactory;
+import net.shibboleth.metadata.testing.CountingStage;
+import net.shibboleth.metadata.testing.MockItem;
+import net.shibboleth.metadata.testing.TerminatingStage;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 

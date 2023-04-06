@@ -8,10 +8,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import net.shibboleth.shared.spring.resource.ResourceHelper;
-import net.shibboleth.metadata.BaseTest;
 import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.MockItem;
-import net.shibboleth.metadata.TestMarker;
+import net.shibboleth.metadata.testing.BaseTest;
+import net.shibboleth.metadata.testing.MockItem;
+import net.shibboleth.metadata.testing.TestMarker;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.scripting.EvaluableScript;

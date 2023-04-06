@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
 import net.shibboleth.shared.component.ComponentInitializationException;
 

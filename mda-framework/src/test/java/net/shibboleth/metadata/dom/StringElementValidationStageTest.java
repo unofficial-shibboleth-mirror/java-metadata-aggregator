@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.ErrorStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.saml.SAMLMetadataSupport;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.metadata.validate.RejectAllValidator;
 import net.shibboleth.metadata.validate.Validator;
 import net.shibboleth.metadata.validate.string.AcceptStringRegexValidator;

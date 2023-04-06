@@ -25,9 +25,9 @@ import net.shibboleth.metadata.InfoStatus;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemMetadata;
 import net.shibboleth.metadata.ItemTag;
-import net.shibboleth.metadata.MockItem;
 import net.shibboleth.metadata.StatusMetadata;
 import net.shibboleth.metadata.WarningStatus;
+import net.shibboleth.metadata.testing.MockItem;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

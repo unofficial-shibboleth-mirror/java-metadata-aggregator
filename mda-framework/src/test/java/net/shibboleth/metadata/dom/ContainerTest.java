@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
+
 public class ContainerTest extends BaseDOMTest {
 
     private final Document doc;
