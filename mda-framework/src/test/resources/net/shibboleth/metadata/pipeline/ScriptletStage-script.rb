@@ -5,7 +5,7 @@ require 'java'
 count = 0
 
 $items.each do |item|
-    marker = Java::NetShibbolethMetadata::TestMarker.new("foo #{count}")
+    marker = Java::NetShibbolethMetadataTesting::TestMarker.new("foo #{count}")
     count += 1
     item.itemMetadata.put marker
 end

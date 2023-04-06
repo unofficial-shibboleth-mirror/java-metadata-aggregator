@@ -1,7 +1,7 @@
 # Add a TestMarker to each item's item metadata
 # "foo 0" for the first, "foo 1" for the second, etc.
 
-from net.shibboleth.metadata import TestMarker;
+from net.shibboleth.metadata.testing import TestMarker;
 
 count = 0
 for item in items:
