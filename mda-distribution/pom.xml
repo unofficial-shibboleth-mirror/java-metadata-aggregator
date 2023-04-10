@@ -16,7 +16,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <mda.finalName>mda-distribution-${project.version}</mda.finalName>
         <dependenciesDirectory>${project.build.directory}/dependencies</dependenciesDirectory>
     </properties>
 
@@ -110,7 +109,6 @@
                         <descriptor>src/main/assembly/assembly-tgz.xml</descriptor>
                         <descriptor>src/main/assembly/assembly-zip.xml</descriptor>
                     </descriptors>
-                    <finalName>${mda.finalName}</finalName>
                 </configuration>
             </plugin>
 
