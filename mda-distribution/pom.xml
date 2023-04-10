@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
+        <mda.finalName>mda-distribution-${project.version}</mda.finalName>
         <dependenciesDirectory>${project.build.directory}/dependencies</dependenciesDirectory>
     </properties>
 
