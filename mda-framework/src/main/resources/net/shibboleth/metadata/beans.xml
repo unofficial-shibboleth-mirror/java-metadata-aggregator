@@ -392,13 +392,13 @@
     <util:map id="mda.MigrationBeanMap">
 
         <!-- Beans adopted from ukf-mda project in MDA 0.10.0. -->
-        <entry key="ukf.AssuranceCertificationMatcher"         value="mda.AssuranceCertificationMatcher"/>
-        <entry key="ukf.DiscoFeedCollectionSerializer"        value="mda.DiscoFeedCollectionSerializer"/>
-        <entry key="ukf.IPHintValidationStage"                value="mda.IPHintValidationStage"/>
+        <entry key="ukf.AssuranceCertificationMatcher"      value="mda.AssuranceCertificationMatcher"/>
+        <entry key="ukf.DiscoFeedCollectionSerializer"      value="mda.DiscoFeedCollectionSerializer"/>
+        <entry key="ukf.IPHintValidationStage"              value="mda.IPHintValidationStage"/>
         <entry key="ukf.RegexFileFilter"                    value="mda.RegexFileFilter"/>
-        <entry key="ukf.SAMLStringElementCheckingStage"        value="mda.SAMLStringElementCheckingStage"/>
-        <entry key="ukf.StringElementValidationStage"        value="mda.StringElementValidationStage"/>
-        <entry key="ukf.X509ROCAValidator"                    value="mda.X509ROCAValidator"/>
+        <entry key="ukf.SAMLStringElementCheckingStage"     value="mda.SAMLStringElementCheckingStage"/>
+        <entry key="ukf.StringElementValidationStage"       value="mda.StringElementValidationStage"/>
+        <entry key="ukf.X509ROCAValidator"                  value="mda.X509ROCAValidator"/>
 
         <!-- Beans adopted from inc-mda project in MDA 0.10.0. -->
         <entry key="inc.AcceptAllValidator"                 value="mda.AcceptAllValidator"/>
