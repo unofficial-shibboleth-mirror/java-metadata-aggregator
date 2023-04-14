@@ -1,0 +1,9 @@
+<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+    <EntityDescriptor entityID="first"/>
+    <EntityDescriptor entityID="second"/>
+    <EntityDescriptor entityID="first"/>
+    <EntityDescriptor entityID="second"/>
+    <EntityDescriptor entityID="first"/>
+    <EntityDescriptor entityID="third"/>
+    <EntityDescriptor entityID="first"/>
+</EntitiesDescriptor>
