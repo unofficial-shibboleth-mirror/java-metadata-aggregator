@@ -17,6 +17,8 @@
 
 package net.shibboleth.metadata.dom;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
@@ -96,8 +98,7 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
      * @return true if and only if the Element has child elements.
      */
     private boolean hasChildElements(@Nonnull final Element element) {
-        final Node firstChild =
-                ElementSupport.getFirstChildElement(Constraint.isNotNull(element, "Element can not be null"));
+        final Node firstChild = ElementSupport.getFirstChildElement(element);
         return firstChild != null;
     }
 
@@ -108,13 +109,25 @@ public class EmptyContainerStrippingStage extends AbstractIteratingStage<Element
         // List all the relevant elements in this document in document order
         final NodeList extensionList = element.getElementsByTagNameNS(getElementNamespace(), getElementName());
 
-        // Process in reverse order so that, for example, Extensions inside Extensions are
-        // handled correctly.
+        /*
+         * Because NodeList is a live collection, we don't want to modify the document while
+         * we are traversing it, as the result is that the list is recomputed every time
+         * a change is made to the document. Instead, convert to a non-live list and
+         * traverse that. See MDA-278 for details.
+         *
+         * Process in reverse order so that, for example, Extensions inside Extensions are
+         * handled correctly.
+         */
+        final var containers = new ArrayList<Element>(extensionList.getLength());
         for (int eIndex = extensionList.getLength()-1; eIndex >= 0; eIndex--) {
-            final Element extensions = (Element) extensionList.item(eIndex);
-            assert extensions != null;
-            if (!hasChildElements(extensions)) {
-                extensions.getParentNode().removeChild(extensions);
+            containers.add((Element)extensionList.item(eIndex));
+        }
+
+        // Now, actually remove any empty container elements.
+        for (final var container : containers) {
+            assert container != null;
+            if (!hasChildElements(container)) {
+                container.getParentNode().removeChild(container);
             }
         }
     }
