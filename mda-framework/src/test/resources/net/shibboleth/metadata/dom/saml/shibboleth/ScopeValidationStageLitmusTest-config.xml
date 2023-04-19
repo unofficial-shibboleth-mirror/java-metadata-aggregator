@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath:net/shibboleth/metadata/beans.xml"/>
+
+    <bean class="net.shibboleth.shared.spring.config.IdentifiableBeanPostProcessor"/>
+
+    <bean id="litmusTest" parent="mda.ScopeValidationStage">
+        <property name="validators">
+            <list>
+                <bean parent="mda.RejectStringRegexValidator"
+                    p:regex="" p:message="scope element must not be empty"/>
+                <bean parent="mda.RejectStringRegexValidator"
+                    p:regex=".*\s.*" p:message="scope '%s' includes white space"/>
+                <bean parent="mda.AsDomainNameStringValidator"
+                    p:message="scope is not a valid domain name: %s">
+                    <property name="validators">
+                        <list>
+                            <!-- DNS name validators -->
+                            <bean parent="mda.RejectDomainNamePublicSuffixValidator"
+                                p:message="scope is a public suffix: '%s'"/>
+                            <bean parent="mda.RejectDomainNameNotUnderPublicSuffixValidator"
+                                p:message="scope is not under a public suffix: '%s'"/>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+        <property name="regexpValidators">
+            <list>
+                <bean parent="mda.RejectStringRegexValidator"
+                    p:regex="" p:message="scope element must not be empty"/>
+                <bean parent="mda.RejectStringRegexValidator"
+                    p:regex=".*\s.*" p:message="scope '%s' includes white space"/>
+                <bean parent="mda.RejectStringRegexValidator"
+                    p:regex="[^^].*" p:message="regex scope '%s' does not start with an anchor ('^')"/>
+                <bean parent="mda.RejectStringRegexValidator"
+                    p:regex=".*[^$]" p:message="regex scope '%s' does not end with an anchor ('$')"/>
+                <bean parent="mda.AsLiteralTailStringValidator"
+                    p:message="regular expression '%s' does not end with a literal tail">
+                    <property name="validators">
+                        <!-- validators to apply to the literal tail -->
+                        <list>
+                            <bean parent="mda.AsDomainNameStringValidator"
+                                p:message="literal tail is not a valid domain name: %s">
+                                <property name="validators">
+                                    <list>
+                                        <!-- DNS name validators for the literal tail -->
+                                        <bean parent="mda.RejectDomainNamePublicSuffixValidator"
+                                            p:message="literal tail is a public suffix: '%s'"/>
+                                        <bean parent="mda.RejectDomainNameNotUnderPublicSuffixValidator"
+                                            p:message="literal tail is not under a public suffix: '%s'"/>
+                                    </list>
+                                </property>
+                            </bean>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

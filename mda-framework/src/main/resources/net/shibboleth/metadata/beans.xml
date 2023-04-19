@@ -214,6 +214,13 @@
         class="net.shibboleth.metadata.dom.saml.mdui.IPHintValidationStage"/>
 
     <!--
+        net.shibboleth.metadata.dom.saml.shibboleth
+    -->
+
+    <bean id="mda.ScopeValidationStage" abstract="true" parent="mda.stage_parent"
+        class="net.shibboleth.metadata.dom.saml.shibboleth.ScopeValidationStage"/>
+
+    <!--
         net.shibboleth.metadata.pipeline
     -->
 
@@ -300,6 +307,16 @@
         class="net.shibboleth.metadata.validate.RejectAllValidator"/>
 
     <!--
+        net.shibboleth.metadata.validate.net
+    -->
+
+    <bean id="mda.RejectDomainNameNotUnderPublicSuffixValidator" abstract="true" parent="mda.component_parent"
+        class="net.shibboleth.metadata.validate.net.RejectDomainNameNotUnderPublicSuffixValidator"/>
+
+    <bean id="mda.RejectDomainNamePublicSuffixValidator" abstract="true" parent="mda.component_parent"
+        class="net.shibboleth.metadata.validate.net.RejectDomainNamePublicSuffixValidator"/>
+
+    <!--
         net.shibboleth.metadata.validate.string
     -->
 
@@ -308,6 +325,12 @@
 
     <bean id="mda.AcceptStringValueValidator" abstract="true" parent="mda.validator_parent"
         class="net.shibboleth.metadata.validate.string.AcceptStringValueValidator"/>
+
+    <bean id="mda.AsDomainNameStringValidator" abstract="true" parent="mda.component_parent"
+        class="net.shibboleth.metadata.validate.string.AsDomainNameStringValidator"/>
+
+    <bean id="mda.AsLiteralTailStringValidator" abstract="true" parent="mda.component_parent"
+        class="net.shibboleth.metadata.validate.string.AsLiteralTailStringValidator"/>
 
     <bean id="mda.RejectStringRegexValidator" abstract="true" parent="mda.validator_parent"
         class="net.shibboleth.metadata.validate.string.RejectStringRegexValidator"/>
@@ -405,11 +428,18 @@
 
         <!-- Beans adopted from inc-mda project in MDA 0.10.0. -->
         <entry key="inc.AcceptAllValidator"                 value="mda.AcceptAllValidator"/>
+        <entry key="inc.AsDomainNameStringValidator"        value="mda.AsDomainNameStringValidator"/>
+        <entry key="inc.AsLiteralTailStringValidator"       value="mda.AsLiteralTailStringValidator"/>
         <entry key="inc.RejectAllValidator"                 value="mda.RejectAllValidator"/>
         <entry key="inc.AcceptStringRegexValidator"         value="mda.AcceptStringRegexValidator"/>
         <entry key="inc.AcceptStringValueValidator"         value="mda.AcceptStringValueValidator"/>
+        <entry key="inc.RejectDomainNameNotUnderPublicSuffixValidator"
+                                                            value="mda.RejectDomainNameNotUnderPublicSuffixValidator"/>
+        <entry key="inc.RejectDomainNamePublicSuffixValidator"
+                                                            value="mda.RejectDomainNamePublicSuffixValidator"/>
         <entry key="inc.RejectStringRegexValidator"         value="mda.RejectStringRegexValidator"/>
         <entry key="inc.RejectStringValueValidator"         value="mda.RejectStringValueValidator"/>
+        <entry key="inc.ScopeValidationStage"               value="mda.ScopeValidationStage"/>
 
     </util:map>
 
