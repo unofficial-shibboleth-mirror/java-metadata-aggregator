@@ -151,4 +151,23 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
         addError(mess, item, stageId);
     }
 
+    /**
+     * Return the ID of this component, guaranteeing a non-<code>null</code>
+     * result.
+     *
+     * @return the ID of this component, never <code>null</code>
+     * @throws IllegalStateException if called before the ID has been set
+     *
+     * @see #getId()
+     *
+     * @since 0.10.0
+     */
+    protected final @Nonnull String ensureId() {
+        final var id = getId();
+        if (id == null) {
+            throw new IllegalStateException();
+        }
+        return id;
+    }
+
 }
