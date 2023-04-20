@@ -285,6 +285,9 @@
         net.shibboleth.metadata.util
     -->
 
+    <bean id="mda.FixedStringIdentifierGenerationStrategy" abstract="true"
+        class="net.shibboleth.metadata.util.FixedStringIdentifierGenerationStrategy"/>
+
     <bean id="mda.PathSegmentStringTransformer" abstract="true"
         class="net.shibboleth.metadata.util.PathSegmentStringTransformer"/>
 
@@ -420,6 +423,8 @@
         <!-- Beans adopted from ukf-mda project in MDA 0.10.0. -->
         <entry key="ukf.AssuranceCertificationMatcher"      value="mda.AssuranceCertificationMatcher"/>
         <entry key="ukf.DiscoFeedCollectionSerializer"      value="mda.DiscoFeedCollectionSerializer"/>
+        <entry key="ukf.FixedStringIdentifierGenerationStrategy"
+                                                            value="mda.FixedStringIdentifierGenerationStrategy"/>
         <entry key="ukf.IPHintValidationStage"              value="mda.IPHintValidationStage"/>
         <entry key="ukf.RegexFileFilter"                    value="mda.RegexFileFilter"/>
         <entry key="ukf.SAMLStringElementCheckingStage"     value="mda.SAMLStringElementCheckingStage"/>
