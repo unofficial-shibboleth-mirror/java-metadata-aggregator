@@ -26,12 +26,12 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.NamespaceContext;
 
-import net.shibboleth.shared.annotation.constraint.NullableElements;
-import net.shibboleth.shared.primitive.StringSupport;
-import net.shibboleth.shared.xml.XMLConstants;
-
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableBiMap.Builder;
+
+import net.shibboleth.shared.annotation.constraint.NonnullElements;
+import net.shibboleth.shared.primitive.StringSupport;
+import net.shibboleth.shared.xml.XMLConstants;
 
 /**
  * Simple implementation of {@link NamespaceContext} based on a map from prefix values to corresponding URIs. This
@@ -56,23 +56,16 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * 
      * @param prefixToUriMappings Maps prefix values to the corresponding namespace URIs.
      */
-    public SimpleNamespaceContext(@Nullable @NullableElements final Map<String, String> prefixToUriMappings) {
+    public SimpleNamespaceContext(final @Nonnull @NonnullElements Map<String, String> prefixToUriMappings) {
         final Builder<String,String> mappingBuilder = getMappingsBuilder();
 
-        if (prefixToUriMappings == null || prefixToUriMappings.isEmpty()) {
-            mappings = mappingBuilder.build();
-            return;
-        }
-
-        String trimmedPrefix;
-        String trimmedUri;
-        for (final String key : prefixToUriMappings.keySet()) {
-            trimmedPrefix = StringSupport.trimOrNull(key);
+        for (final var entry : prefixToUriMappings.entrySet()) {
+            final var trimmedPrefix = StringSupport.trimOrNull(entry.getKey());
             if (trimmedPrefix == null) {
                 continue;
             }
 
-            trimmedUri = StringSupport.trimOrNull(prefixToUriMappings.get(key));
+            final var trimmedUri = StringSupport.trimOrNull(entry.getValue());
             if (trimmedUri != null) {
                 mappingBuilder.put(trimmedPrefix, trimmedUri);
             }
@@ -81,8 +74,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
         mappings = mappingBuilder.build();
     }
 
-    /** {@inheritDoc} */
-    @Nullable public String getNamespaceURI(final String prefix) {
+    @Override
+    public @Nullable String getNamespaceURI(final String prefix) {
         if (prefix == null) {
             throw new IllegalArgumentException("Prefix can not be null");
         }
@@ -94,8 +87,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
         return uri;
     }
 
-    /** {@inheritDoc} */
-    @Nullable public String getPrefix(final String namespaceURI) {
+    @Override
+    public @Nullable String getPrefix(final String namespaceURI) {
         if (namespaceURI == null) {
             throw new IllegalArgumentException("Namespace URI can not be null");
         }
@@ -121,7 +114,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * 
      * @return initial set of mappings
      */
-    @Nonnull private Builder<String, String> getMappingsBuilder(){
+    private @Nonnull Builder<String, String> getMappingsBuilder() {
         final Builder<String,String> mappingBuilder = new Builder<>();
         
         mappingBuilder.put(XMLConstants.XML_PREFIX, XMLConstants.XML_NS);
