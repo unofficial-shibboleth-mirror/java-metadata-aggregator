@@ -52,16 +52,29 @@ public class BeansFileTest {
             if (className != null) {
                 try {
                     // Check that the class can be loaded
-                    Class.forName(className);
+                    final var clazz = Class.forName(className);
 
                     // The name of the class within its package should be included in the bean
                     // name's prefix; there may be more after that
                     final String classLastPart = className.replaceFirst("^.*\\.", "");
                     Assert.assertTrue(defName.startsWith("mda." + classLastPart), "does not start with correct prefix: " + defName);
 
-                    // If the class represents a stage, its parent should be the stage parent
+                    // Process a class representing a Stage
                     if (className.endsWith("Stage")) {
+                        // If the class represents a stage, its parent should be the stage parent
                         Assert.assertEquals(def.getParentName(), "mda.stage_parent");
+                        
+                        // Look at constructors. We should only have zero-arg ones (MDA-258)
+                        // Because we have only DEPRECATED the constructor on GenerateIdStage, skip that
+                        // class here.
+                        if (defName.equals("mda.GenerateIdStage")) {
+                            continue;
+                        }
+                        final var constructors = clazz.getDeclaredConstructors();
+                        for (final var constructor : constructors) {
+                            Assert.assertEquals(constructor.getParameterCount(), 0,
+                                    "non-zero-argument constructor in class implementing Stage: " + clazz.getName());
+                        }
                     }
                 } catch (ClassNotFoundException e) {
                     // Could not load class

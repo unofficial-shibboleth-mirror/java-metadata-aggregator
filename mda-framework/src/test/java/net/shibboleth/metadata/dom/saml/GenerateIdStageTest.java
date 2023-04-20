@@ -27,18 +27,18 @@ import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
-import net.shibboleth.metadata.Item;
-import net.shibboleth.metadata.dom.DOMElementItem;
-import net.shibboleth.metadata.dom.testing.BaseDOMTest;
-import net.shibboleth.metadata.util.FixedStringIdentifierGenerationStrategy;
-import net.shibboleth.shared.xml.impl.BasicParserPool;
-import net.shibboleth.shared.collection.CollectionSupport;
-import net.shibboleth.shared.xml.ElementSupport;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import net.shibboleth.metadata.Item;
+import net.shibboleth.metadata.dom.DOMElementItem;
+import net.shibboleth.metadata.dom.testing.BaseDOMTest;
+import net.shibboleth.metadata.util.FixedStringIdentifierGenerationStrategy;
+import net.shibboleth.shared.collection.CollectionSupport;
+import net.shibboleth.shared.xml.ElementSupport;
+import net.shibboleth.shared.xml.impl.BasicParserPool;
 
 public class GenerateIdStageTest extends BaseDOMTest {
 
@@ -104,6 +104,7 @@ public class GenerateIdStageTest extends BaseDOMTest {
     public void testExplicitConstructor() throws Exception {
         final var strat = new FixedStringIdentifierGenerationStrategy("hello");
 
+        @SuppressWarnings("removal")
         final var stage = new GenerateIdStage(strat);
         stage.setId("test");
         stage.initialize();
@@ -121,8 +122,9 @@ public class GenerateIdStageTest extends BaseDOMTest {
     public void testNotSAMLEntity() throws Exception {
         final var strat = new FixedStringIdentifierGenerationStrategy("hello");
 
-        final var stage = new GenerateIdStage(strat);
+        final var stage = new GenerateIdStage();
         stage.setId("test");
+        stage.setGenerator(strat);
         stage.initialize();
         
         final var item = readDOMItem("notentity.xml");

@@ -18,6 +18,7 @@
 package net.shibboleth.metadata.dom.saml;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.namespace.QName;
 
@@ -27,12 +28,24 @@ import org.w3c.dom.Element;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.pipeline.AbstractIteratingStage;
 import net.shibboleth.metadata.pipeline.StageProcessingException;
+import net.shibboleth.shared.annotation.constraint.NonnullAfterInit;
+import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.DeprecationSupport;
+import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 import net.shibboleth.shared.security.IdentifierGenerationStrategy;
 import net.shibboleth.shared.security.impl.Type4UUIDIdentifierGenerationStrategy;
 import net.shibboleth.shared.xml.AttributeSupport;
 
-/** A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor. */
+
+/**
+ * A stage that populates the ID attribute of an EntitiesDescriptor or EntityDescriptor.
+ *
+ * <p>
+ * By default, the stage will use a {@link Type4UUIDIdentifierGenerationStrategy}
+ * to generate identifiers.
+ * </p>
+ */
 @ThreadSafe
 public class GenerateIdStage extends AbstractIteratingStage<Element> {
 
@@ -40,21 +53,48 @@ public class GenerateIdStage extends AbstractIteratingStage<Element> {
     public static final @Nonnull QName ID_ATTRIB = new QName("ID");
 
     /** Strategy used to generate identifiers. */
-    @Nonnull
-    private final IdentifierGenerationStrategy idGenerator;
+    @GuardedBy("this")
+    private @NonnullAfterInit IdentifierGenerationStrategy generator;
 
-    /** Constructor. Initialize the {@link #idGenerator} to a {@link Type4UUIDIdentifierGenerationStrategy}. */
+    /** Constructor. */
     public GenerateIdStage() {
-        idGenerator = new Type4UUIDIdentifierGenerationStrategy();
     }
 
     /**
      * Constructor.
+     *
+     * <p>
+     * Note: BeansFileTest has an explicit exception to allow this deprecated
+     * constructor. It should be updated when this constructor is removed.
+     * </p>
      * 
-     * @param generator ID generation strategy used
+     * @param newGenerator ID generation strategy to use
+     * @deprecated Use the zero-argument constructor and the property instead.
      */
-    public GenerateIdStage(@Nonnull final IdentifierGenerationStrategy generator) {
-        idGenerator = Constraint.isNotNull(generator, "ID generation strategy can not be null");
+    @Deprecated(since="0.10.0", forRemoval=true)
+    public GenerateIdStage(@Nonnull final IdentifierGenerationStrategy newGenerator) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "single-argument constructor", "GenerateIdStage",
+                "zero-argument constructor and 'generator' property");
+        generator = Constraint.isNotNull(newGenerator, "ID generation strategy can not be null");
+    }
+
+    /**
+     * Gets the {@link IdentifierGenerationStrategy} being used.
+     *
+     * @return the {@link IdentifierGenerationStrategy} being used
+     */
+    public synchronized @NonnullAfterInit IdentifierGenerationStrategy getGenerator() {
+        return generator;
+    }
+
+    /**
+     * Sets the {@link IdentifierGenerationStrategy} to use.
+     *
+     * @param newGenerator the {@link IdentifierGenerationStrategy} to use
+     */
+    public synchronized void setGenerator(final @Nonnull IdentifierGenerationStrategy newGenerator) {
+        checkSetterPreconditions();
+        generator = Constraint.isNotNull(newGenerator, "ID generation strategy can not be null");
     }
 
     @Override
@@ -72,7 +112,14 @@ public class GenerateIdStage extends AbstractIteratingStage<Element> {
             element.setAttributeNode(idAttribute);
         }
 
-        // Don't need to synchronize; field initialized by constructor
-        idAttribute.setValue(idGenerator.generateIdentifier());
+        idAttribute.setValue(getGenerator().generateIdentifier());
+    }
+
+    @Override
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        if (generator == null) {
+            generator = new Type4UUIDIdentifierGenerationStrategy();
+        }
     }
 }
