@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="net.shibboleth.metadata.cli.SimpleCommandLine" level="INFO"/>
+    <logger name="net.shibboleth.metadata" level="INFO"/>
     
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
