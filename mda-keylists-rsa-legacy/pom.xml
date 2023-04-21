@@ -10,12 +10,12 @@
         <version>0.10.0-SNAPSHOT</version>
     </parent>
 
-    <name>RSA Key Lists</name>
-    <artifactId>mda-keylists-rsa</artifactId>
+    <name>Legacy RSA Key Lists</name>
+    <artifactId>mda-keylists-rsa-legacy</artifactId>
     <packaging>jar</packaging>
 
     <properties>
-        <automatic.module.name>net.shibboleth.metadata.keylists.rsa</automatic.module.name>
+        <automatic.module.name>net.shibboleth.metadata.keylists.rsa.legacy</automatic.module.name>
         <checkstyle.configLocation>${project.basedir}/../resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
     </properties>
 

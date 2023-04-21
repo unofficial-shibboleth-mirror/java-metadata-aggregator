@@ -24,6 +24,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>mda-keylists-rsa-legacy</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>mda-framework</artifactId>
                 <version>${project.version}</version>
             </dependency>

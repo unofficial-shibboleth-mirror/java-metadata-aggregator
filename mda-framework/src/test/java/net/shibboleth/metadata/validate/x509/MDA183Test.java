@@ -96,14 +96,23 @@ public class MDA183Test extends BaseTest {
     }
 
     private Validator<X509Certificate> getValidator(final int keySize) throws Exception {
-        // pick up the blacklist resource
-        final Resource blacklistResource =
-                new ClassPathResource("net/shibboleth/metadata/validate/x509/compromised-" + keySize + ".txt");
+        // pick up the appropriate keylist resource
+        final @Nonnull Resource keylistResource;
+        switch (keySize) {
+        case 1024:
+            keylistResource = new ClassPathResource("net/shibboleth/metadata/keylists/rsa/legacy/compromised-1024.txt");
+            break;
+        case 2048:
+            keylistResource = new ClassPathResource("net/shibboleth/metadata/keylists/rsa/compromised-2048.txt");
+            break;
+        default:
+            throw new IllegalArgumentException();
+        }
 
         // create a validator
         final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
         val.setId("validator-" + keySize);
-        val.setBlacklistResource(blacklistResource);
+        val.setBlacklistResource(keylistResource);
         val.setKeySize(keySize);
         val.initialize();
 

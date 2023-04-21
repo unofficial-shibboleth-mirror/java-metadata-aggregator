@@ -26,6 +26,7 @@
 
     <modules>
         <module>mda-keylists-rsa</module>
+        <module>mda-keylists-rsa-legacy</module>
         <module>mda-framework</module>
         <module>mda-cli</module>
         <module>mda-distribution</module>

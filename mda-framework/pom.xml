@@ -77,6 +77,18 @@
 
         <!-- Test Dependencies -->
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mda-keylists-rsa</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mda-keylists-rsa-legacy</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>net.shibboleth</groupId>
             <artifactId>shib-spring</artifactId>
             <scope>test</scope>

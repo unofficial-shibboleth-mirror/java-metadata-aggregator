@@ -21,6 +21,7 @@ package net.shibboleth.metadata.validate.x509;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -208,6 +209,21 @@ public class X509RSAOpenSSLBlacklistValidatorTest extends BaseX509ValidatorTest 
         final var val = new X509RSAOpenSSLBlacklistValidator();
         val.setId("test");
         val.initialize();
+    }
+
+
+    @Test
+    public void classPathResource() throws Exception {
+        final X509RSAOpenSSLBlacklistValidator val = new X509RSAOpenSSLBlacklistValidator();
+        val.setBlacklistResource(new ClassPathResource("net/shibboleth/metadata/keylists/rsa/debian-2048.txt"));
+        val.setKeySize(2048);
+        val.setId("test");
+        val.initialize();
+
+        final Item<String> item = new MockItem("foo");
+        final X509Certificate cert = getCertificate("2048.pem");
+        Assert.assertEquals(val.validate(cert, item, "stage"), Validator.Action.CONTINUE);
+        errorsAndWarnings(item, 1, 0);
     }
 
 }
