@@ -47,7 +47,7 @@ public class RegistrationAuthorityPopulationStage extends AbstractIteratingStage
 
        if (!SAMLMetadataSupport.isEntityDescriptor(entity)) {
            // all items must be EntityDescriptor elements
-           metadata.put(new ErrorStatus(getId(), "item was not an EntityDescriptor"));
+           metadata.put(new ErrorStatus(ensureId(), "item was not an EntityDescriptor"));
        } else {
            // Extract mdrpi:RegistrationInfo if present.
            final Element regInfo = SAMLMetadataSupport.getDescriptorExtension(entity,
@@ -57,7 +57,7 @@ public class RegistrationAuthorityPopulationStage extends AbstractIteratingStage
                final String attr = AttributeSupport.getAttributeValue(regInfo, null, "registrationAuthority");
                if (attr == null) {
                    final String eid = entity.getAttribute("entityID");
-                   metadata.put(new ErrorStatus(getId(), "RegistrationInfo for " + eid +
+                   metadata.put(new ErrorStatus(ensureId(), "RegistrationInfo for " + eid +
                            " did not have a registrationAuthority attribute"));
                } else {
                    metadata.put(new RegistrationAuthority(attr));

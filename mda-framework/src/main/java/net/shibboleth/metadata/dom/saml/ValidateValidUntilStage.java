@@ -121,7 +121,7 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
                 SAMLMetadataSupport.VALID_UNTIL_ATTRIB_NAME);
         if (attr == null) {
             if (isRequireValidUntil()) {
-                item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
+                item.getItemMetadata().put(new ErrorStatus(ensureId(), "Item does not include a validUntil attribute"));
             }
             return;
         }
@@ -129,19 +129,21 @@ public class ValidateValidUntilStage extends AbstractIteratingStage<Element> {
         final Instant validUntil = AttributeSupport.getDateTimeAttribute(attr);
         if (validUntil == null) {
             if (isRequireValidUntil()) {
-                item.getItemMetadata().put(new ErrorStatus(getId(), "Item does not include a validUntil attribute"));
+                item.getItemMetadata().put(new ErrorStatus(ensureId(), "Item does not include a validUntil attribute"));
             }
         } else {
             final var lowerBound = Instant.now();
             if (validUntil.isBefore(lowerBound)) {
-                item.getItemMetadata().put(new ErrorStatus(getId(), "Item has a validUntil prior to the current time"));
+                item.getItemMetadata().put(new ErrorStatus(ensureId(),
+                        "Item has a validUntil prior to the current time"));
             }
 
             if (!getMaxValidityInterval().isZero()) {
                 final var upperBound = lowerBound.plus(getMaxValidityInterval());
                 if (validUntil.isAfter(upperBound)) {
                     item.getItemMetadata().put(
-                            new ErrorStatus(getId(), "Item has validUntil larger than the maximum validity interval"));
+                            new ErrorStatus(ensureId(),
+                                    "Item has validUntil larger than the maximum validity interval"));
                 }
             }
         }

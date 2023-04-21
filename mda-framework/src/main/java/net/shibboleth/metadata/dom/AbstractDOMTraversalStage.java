@@ -146,7 +146,7 @@ public abstract class AbstractDOMTraversalStage<C extends DOMTraversalContext>
             @Nonnull final String error) {
         final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
         final String prefix = errorPrefix(element);
-        metadata.put(new ErrorStatus(getId(), prefix + error));
+        metadata.put(new ErrorStatus(ensureId(), prefix + error));
     }
 
 }

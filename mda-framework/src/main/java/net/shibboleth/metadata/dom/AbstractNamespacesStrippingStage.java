@@ -74,7 +74,7 @@ public abstract class AbstractNamespacesStrippingStage extends AbstractIterating
          */
         if (removingNamespace(element.getNamespaceURI())) {
             final ClassToInstanceMultiMap<ItemMetadata> metadata = item.getItemMetadata();
-            metadata.put(new ErrorStatus(getId(), "can't strip namespace from document element"));
+            metadata.put(new ErrorStatus(ensureId(), "can't strip namespace from document element"));
             return;
         }
     

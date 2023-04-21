@@ -338,7 +338,7 @@ public class EntityAttributeFilteringStage extends AbstractIteratingStage<Elemen
             if (matched ^ isWhitelisting()) {
                 LOG.debug("removing {}", ctx);
                 if (isRecordingRemovals()) {
-                    item.getItemMetadata().put(new WarningStatus(getId(),
+                    item.getItemMetadata().put(new WarningStatus(ensureId(),
                             "removing '" + ctx.getName() + "' = '" + ctx.getValue() + "'"));
                 }
                 attribute.removeChild(value);

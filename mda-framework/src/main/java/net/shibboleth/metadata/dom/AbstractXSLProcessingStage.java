@@ -380,13 +380,13 @@ public abstract class AbstractXSLProcessingStage extends AbstractStage<Element> 
             final String statusMessage;
             if (errorMessage.startsWith(ERROR_PREFIX)) {
                 statusMessage = StringSupport.trim(errorMessage.substring(ERROR_PREFIX.length()));
-                item.getItemMetadata().put(new ErrorStatus(getId(), statusMessage));
+                item.getItemMetadata().put(new ErrorStatus(ensureId(), statusMessage));
             } else if (errorMessage.startsWith(WARN_PREFIX)) {
                 statusMessage = StringSupport.trim(errorMessage.substring(WARN_PREFIX.length()));
-                item.getItemMetadata().put(new WarningStatus(getId(), statusMessage));
+                item.getItemMetadata().put(new WarningStatus(ensureId(), statusMessage));
             } else if (errorMessage.startsWith(INFO_PREFIX)) {
                 statusMessage = StringSupport.trim(errorMessage.substring(INFO_PREFIX.length()));
-                item.getItemMetadata().put(new InfoStatus(getId(), statusMessage));
+                item.getItemMetadata().put(new InfoStatus(ensureId(), statusMessage));
             } else {
                 throw e;
             }

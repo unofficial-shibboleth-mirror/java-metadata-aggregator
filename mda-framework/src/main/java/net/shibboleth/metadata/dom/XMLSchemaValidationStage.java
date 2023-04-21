@@ -139,9 +139,9 @@ public class XMLSchemaValidationStage extends AbstractIteratingStage<Element> {
                 LOG.debug("DOM Element was not valid:\n{}", SerializeSupport.prettyPrintXML(item.unwrap()), e);
             }
             if (isElementRequiredToBeSchemaValid()) {
-                item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
+                item.getItemMetadata().put(new ErrorStatus(ensureId(), e.getMessage()));
             } else {
-                item.getItemMetadata().put(new WarningStatus(getId(), e.getMessage()));
+                item.getItemMetadata().put(new WarningStatus(ensureId(), e.getMessage()));
             }
         }
     }

@@ -252,7 +252,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
                 if (isSignatureRequired()) {
                     LOG.debug("DOM Element was not signed and signature is required");
                     item.getItemMetadata().put(
-                            new ErrorStatus(getId(), "DOM Element was not signed but signatures are required"));
+                            new ErrorStatus(ensureId(), "DOM Element was not signed but signatures are required"));
                 } else {
                     LOG.debug("DOM Element is not signed, no verification performed");
                 }
@@ -261,7 +261,7 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
         } catch (final ValidationException e) {
             // pass on an error from signature location (e.g., multiple signatures)
             LOG.debug("setting status: ", e.getMessage());
-            item.getItemMetadata().put(new ErrorStatus(getId(), e.getMessage()));
+            item.getItemMetadata().put(new ErrorStatus(ensureId(), e.getMessage()));
             return;
         }
 
@@ -275,9 +275,9 @@ public class XMLSignatureValidationStage extends AbstractStage<Element> {
             final String message = "element signature is invalid: " + e.getMessage();
             LOG.debug("setting status: ", message);
             if (isValidSignatureRequired()) {
-                item.getItemMetadata().put(new ErrorStatus(getId(), message));
+                item.getItemMetadata().put(new ErrorStatus(ensureId(), message));
             } else {
-                item.getItemMetadata().put(new WarningStatus(getId(), message));
+                item.getItemMetadata().put(new WarningStatus(ensureId(), message));
             }
         }
     }

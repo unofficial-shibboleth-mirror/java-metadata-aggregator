@@ -68,7 +68,7 @@ public class DuplicateEntityInAggregateCheckingStage extends AbstractIteratingSt
                 if (ids.contains(id)) {
                     // Report duplicate, but only once.
                     if (!reported.contains(id)) {
-                        item.getItemMetadata().put(new ErrorStatus(getId(), "duplicate entityID: " + id));
+                        item.getItemMetadata().put(new ErrorStatus(ensureId(), "duplicate entityID: " + id));
                         reported.add(id);
                     }
                 } else {
