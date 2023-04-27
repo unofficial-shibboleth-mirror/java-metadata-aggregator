@@ -16,7 +16,7 @@
  */
 
 
-package net.shibboleth.metadata.validate.x509;
+package net.shibboleth.metadata.validate.x509.testing;
 
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;

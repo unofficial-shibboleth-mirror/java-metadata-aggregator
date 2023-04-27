@@ -23,6 +23,7 @@ import java.security.cert.X509Certificate;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.metadata.validate.Validator;
+import net.shibboleth.metadata.validate.x509.testing.BaseX509ValidatorTest;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

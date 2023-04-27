@@ -27,6 +27,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import net.shibboleth.metadata.validate.Validator;
+import net.shibboleth.metadata.validate.x509.testing.BaseX509ValidatorTest;
 import net.shibboleth.shared.logic.ConstraintViolationException;
 
 public class X509RSAExponentValidatorTest extends BaseX509ValidatorTest {

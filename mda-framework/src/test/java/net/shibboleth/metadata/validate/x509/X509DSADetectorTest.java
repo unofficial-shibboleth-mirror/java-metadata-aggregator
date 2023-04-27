@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.testing.MockItem;
 import net.shibboleth.metadata.validate.Validator.Action;
+import net.shibboleth.metadata.validate.x509.testing.BaseX509ValidatorTest;
 
 public class X509DSADetectorTest extends BaseX509ValidatorTest {
 

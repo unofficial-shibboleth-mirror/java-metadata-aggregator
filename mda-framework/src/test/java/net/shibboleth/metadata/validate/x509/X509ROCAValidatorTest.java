@@ -3,6 +3,8 @@ package net.shibboleth.metadata.validate.x509;
 
 import org.testng.annotations.Test;
 
+import net.shibboleth.metadata.validate.x509.testing.BaseX509ValidatorTest;
+
 public class X509ROCAValidatorTest extends BaseX509ValidatorTest {
 
     public X509ROCAValidatorTest() throws Exception {
