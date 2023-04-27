@@ -58,10 +58,19 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
     private static final @Nonnull Logger LOG = LoggerFactory.getLogger(EntitiesDescriptorAssemblerStage.class);
 
     /**
-     * Whether attempting to turn an empty item collection, which would result in a schema-invalid childless
-     * EntitiesDescriptor, should be treated as processing error. Default value: <code>false</code>
+     * Whether attempting to turn an empty item collection into an <code>EntitiesDescriptor</code>
+     * should be treated as a processing error.
+     * 
+     * <p>
+     * Note that regardless of this setting, a childless <code>EntitiesDescriptor</code>
+     * will <em>not</em> be produced. It would in any case be schema-invalid.
+     * </p>
+     *
+     * <p>
+     * Default value: <code>true</code>
+     * </p>
      */
-    @GuardedBy("this") private boolean noChildrenAProcessingError;
+    @GuardedBy("this") private boolean noChildrenAProcessingError = true;
 
     /** Strategy used to order a collection of Items. The default strategy performs no ordering. */
     @Nonnull @GuardedBy("this")
@@ -75,7 +84,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * Gets whether attempting to turn an empty item collection, which would result in a schema-invalid childless
      * EntitiesDescriptor, should be treated as processing error.
      * 
-     * @return whether attempting to turn an empty item collection should be treated as processing error
+     * @return whether attempting to process an empty item collection should be treated as processing error
      */
     public final synchronized boolean isNoChildrenAProcessingError() {
         return noChildrenAProcessingError;
@@ -85,7 +94,7 @@ public class EntitiesDescriptorAssemblerStage extends AbstractStage<Element> {
      * Sets whether attempting to turn an empty item collection, which would result in a schema-invalid childless
      * EntitiesDescriptor, should be treated as processing error.
      * 
-     * @param isError whether attempting to turn an empty item collection should be treated as processing error
+     * @param isError whether attempting to process an empty item collection should be treated as processing error
      */
     public synchronized void setNoChildrenAProcessingError(final boolean isError) {
         checkSetterPreconditions();

@@ -31,13 +31,28 @@ import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.dom.DOMElementItem;
 import net.shibboleth.metadata.dom.testing.BaseDOMTest;
 import net.shibboleth.metadata.pipeline.ItemOrderingStrategy;
+import net.shibboleth.metadata.pipeline.StageProcessingException;
 
-/** Unit test for the {@link EntitiesDescriptorAssemblerStage} class. */
 public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
     
-    /** Constructor sets class under test. */
     public EntitiesDescriptorAssemblerStageTest() {
         super(EntitiesDescriptorAssemblerStage.class);
+    }
+
+    protected @Nonnull List<Item<Element>> buildMetadataCollection() throws Exception {
+        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
+
+        Element descriptor = readXMLData("entity1.xml");
+        metadataCollection.add(new DOMElementItem(descriptor));
+
+        descriptor = readXMLData("entity2.xml");
+        metadataCollection.add(new DOMElementItem(descriptor));
+
+        Element fooElement = getParserPool().newDocument().createElement("foo");
+        assert fooElement != null;
+        metadataCollection.add(new DOMElementItem(fooElement));
+
+        return metadataCollection;
     }
 
     /**
@@ -137,19 +152,36 @@ public class EntitiesDescriptorAssemblerStageTest extends BaseDOMTest {
         Assert.assertEquals("urn:oasis:names:tc:SAML:2.0:metadata", nsattr);
     }
 
-    protected @Nonnull List<Item<Element>> buildMetadataCollection() throws Exception {
-        final ArrayList<Item<Element>> metadataCollection = new ArrayList<>();
+    @Test
+    public void noChildrenOK() throws Exception {
+        final var items = new ArrayList<Item<Element>>();
+        final var stage = new EntitiesDescriptorAssemblerStage();
+        stage.setId("test");
+        stage.setNoChildrenAProcessingError(false);
+        stage.initialize();
+        stage.execute(items);
+        stage.destroy();
+        Assert.assertEquals(items.size(), 0);
+    }
 
-        Element descriptor = readXMLData("entity1.xml");
-        metadataCollection.add(new DOMElementItem(descriptor));
-
-        descriptor = readXMLData("entity2.xml");
-        metadataCollection.add(new DOMElementItem(descriptor));
-
-        Element fooElement = getParserPool().newDocument().createElement("foo");
-        assert fooElement != null;
-        metadataCollection.add(new DOMElementItem(fooElement));
-
-        return metadataCollection;
+    @Test(expectedExceptions = {StageProcessingException.class})
+    public void noChildrenBad() throws Exception {
+        final var items = new ArrayList<Item<Element>>();
+        final var stage = new EntitiesDescriptorAssemblerStage();
+        stage.setId("test");
+        stage.setNoChildrenAProcessingError(true);
+        stage.initialize();
+        stage.execute(items);
+    }
+    
+    @Test(expectedExceptions = {StageProcessingException.class})
+    public void noChildrenDefault() throws Exception {
+        final var items = new ArrayList<Item<Element>>();
+        final var stage = new EntitiesDescriptorAssemblerStage();
+        stage.setId("test");
+        // Default changed in MDA-255
+        // stage.setNoChildrenAProcessingError(true);
+        stage.initialize();
+        stage.execute(items);
     }
 }
