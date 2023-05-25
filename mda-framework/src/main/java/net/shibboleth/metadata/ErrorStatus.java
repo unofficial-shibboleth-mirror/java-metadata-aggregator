@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
 
 /** A type of {@link StatusMetadata} that indicates something is definitely wrong with the Item. */
 @Immutable
-public class ErrorStatus extends StatusMetadata {
+public non-sealed class ErrorStatus extends StatusMetadata {
 
     /**
      * Constructor.

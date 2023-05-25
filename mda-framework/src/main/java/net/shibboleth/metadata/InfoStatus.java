@@ -25,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * status messages that would indicate an error or failing of the Item in some way.
  */
 @Immutable
-public class InfoStatus extends StatusMetadata {
+public non-sealed class InfoStatus extends StatusMetadata {
 
     /**
      * Constructor.

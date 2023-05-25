@@ -28,7 +28,7 @@ import javax.annotation.concurrent.Immutable;
  * information to verify it.
  */
 @Immutable
-public class WarningStatus extends StatusMetadata {
+public non-sealed class WarningStatus extends StatusMetadata {
 
     /**
      * Constructor.
