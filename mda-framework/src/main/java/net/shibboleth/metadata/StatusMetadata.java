@@ -26,7 +26,7 @@ import net.shibboleth.shared.primitive.StringSupport;
 
 /** A {@link ItemMetadata} implementation that carries status information about an {@link Item}. */
 @Immutable
-public sealed class StatusMetadata implements ItemMetadata
+public abstract sealed class StatusMetadata implements ItemMetadata
     permits ErrorStatus, WarningStatus, InfoStatus {
 
     /** The component that generated this status information. */
