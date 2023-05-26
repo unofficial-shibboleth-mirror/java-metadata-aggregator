@@ -203,7 +203,7 @@ public class XMLSignatureSigner {
                 }
             }
 
-            switch (stage.getShaVariant()) {
+            switch (stage.getSHAVariant()) {
                 case SHA1:
                     sigAlgo = SignatureMethod.RSA_SHA1;
                     digestAlgo = DigestMethod.SHA1;

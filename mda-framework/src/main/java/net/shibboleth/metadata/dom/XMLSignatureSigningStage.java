@@ -43,6 +43,8 @@ import net.shibboleth.shared.annotation.constraint.Unmodifiable;
 import net.shibboleth.shared.collection.CollectionSupport;
 import net.shibboleth.shared.component.ComponentInitializationException;
 import net.shibboleth.shared.logic.Constraint;
+import net.shibboleth.shared.primitive.DeprecationSupport;
+import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 import net.shibboleth.shared.primitive.LoggerFactory;
 
 /**
@@ -58,8 +60,12 @@ import net.shibboleth.shared.primitive.LoggerFactory;
 @ThreadSafe
 public class XMLSignatureSigningStage extends AbstractStage<Element> {
 
-    /** The variant of SHA to use in the various signature algorithms. */
-    public static enum ShaVariant {
+    /**
+     * The variant of SHA to use in the various signature algorithms.
+     * 
+     * @since 0.10.0
+     */
+    public static enum SHAVariant {
         /** 160-bit SHA-1. */
         SHA1,
         /** 256-bit SHA-2. */
@@ -73,9 +79,9 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
     /** Class logger. */
     private static final @Nonnull Logger LOG = LoggerFactory.getLogger(XMLSignatureSigningStage.class);
 
-    /** SHA algorithm variant used in signature and digest algorithms. Default value: <code>ShaVariant.SHA256</code> */
+    /** SHA algorithm variant used in signature and digest algorithms. Default value: <code>SHAVariant.SHA256</code> */
     @Nonnull @GuardedBy("this")
-    private ShaVariant shaVariant = ShaVariant.SHA256;
+    private SHAVariant shaVariant = SHAVariant.SHA256;
 
     /** Private key used to sign data. */
     @NonnullAfterInit @GuardedBy("this")
@@ -160,8 +166,10 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * Gets the SHA algorithm variant used when computing the signature and digest.
      * 
      * @return SHA algorithm variant used when computing the signature and digest
+     *
+     * @since 0.10.0
      */
-    @Nonnull public final synchronized ShaVariant getShaVariant() {
+    public final synchronized @Nonnull SHAVariant getSHAVariant() {
         return shaVariant;
     }
 
@@ -169,10 +177,38 @@ public class XMLSignatureSigningStage extends AbstractStage<Element> {
      * Sets the SHA algorithm variant used when computing the signature and digest.
      * 
      * @param variant SHA algorithm variant used when computing the signature and digest
+     *
+     * @since 0.10.0
      */
-    public synchronized void setShaVariant(@Nonnull final ShaVariant variant) {
+    public synchronized void setSHAVariant(@Nonnull final SHAVariant variant) {
         checkSetterPreconditions();
         shaVariant = Constraint.isNotNull(variant, "SHA variant can not be null");
+    }
+
+    /**
+     * Gets the SHA algorithm variant used when computing the signature and digest.
+     * 
+     * @return SHA algorithm variant used when computing the signature and digest
+     *
+     * @deprecated Use {@link #getSHAVariant}.
+     */
+    @Deprecated(forRemoval = true)
+    public final @Nonnull SHAVariant getShaVariant() {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "getShaVariant", "XMLSignatureSigningStage", "getSHAVariant");
+        return getSHAVariant();
+    }
+
+    /**
+     * Sets the SHA algorithm variant used when computing the signature and digest.
+     * 
+     * @param variant SHA algorithm variant used when computing the signature and digest
+     *
+     * @deprecated Use {@link #setSHAVariant}.
+     */
+    @Deprecated(forRemoval = true)
+    public synchronized void setShaVariant(@Nonnull final SHAVariant variant) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "setShaVariant", "XMLSignatureSigningStage", "setSHAVariant");
+        setSHAVariant(variant);
     }
 
     /**

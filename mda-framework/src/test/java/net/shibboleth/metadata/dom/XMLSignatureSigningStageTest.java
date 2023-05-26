@@ -318,7 +318,7 @@ public class XMLSignatureSigningStageTest extends BaseDOMTest {
     @Test
     public final void testDefaultHash() {
         final var stage = new XMLSignatureSigningStage();
-        Assert.assertEquals(stage.getShaVariant(), XMLSignatureSigningStage.ShaVariant.SHA256);
+        Assert.assertEquals(stage.getSHAVariant(), XMLSignatureSigningStage.SHAVariant.SHA256);
     }
 
     private boolean hasChildNamed(@Nonnull final Element element, @Nonnull final QName name) {
