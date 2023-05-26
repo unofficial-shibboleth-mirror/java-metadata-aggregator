@@ -5,11 +5,9 @@
     <publishDate position="navigation-bottom" />
 
     <body>
-        <menu ref="reports" />
-        <menu name="Parent">
-            <item name="Metadata Aggregator" href="${aggregator-parent.site.url}" />
-        </menu>
-        <menu ref="modules" />
+        <menu ref="parent" inherit="top"/>
+        <menu ref="modules"/>
+        <menu ref="reports" inherit="top"/>
     </body>
 
 </project>

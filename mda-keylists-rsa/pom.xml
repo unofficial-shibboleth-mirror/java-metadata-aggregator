@@ -11,6 +11,7 @@
     </parent>
 
     <name>RSA Key Lists</name>
+    <description>Lists of problematic RSA keys.</description>
     <artifactId>mda-keylists-rsa</artifactId>
     <packaging>jar</packaging>
 

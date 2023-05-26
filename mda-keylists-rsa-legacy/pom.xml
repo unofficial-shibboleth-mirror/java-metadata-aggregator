@@ -11,6 +11,7 @@
     </parent>
 
     <name>Legacy RSA Key Lists</name>
+    <description>Lists of problematic RSA keys with legacy key lengths.</description>
     <artifactId>mda-keylists-rsa-legacy</artifactId>
     <packaging>jar</packaging>
 

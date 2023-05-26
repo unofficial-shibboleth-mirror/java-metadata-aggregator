@@ -13,9 +13,6 @@
     <name>Shibboleth Metadata Aggregator</name>
     <description>
         A framework and tool for processing metadata, with an emphasis on SAML metadata.
-
-        For more information, including how to install and configure the command-line tool,
-        see https://shibboleth.atlassian.net/wiki/spaces/MA1
     </description>
 
 
@@ -158,15 +155,13 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <executions>
                     <execution>
+                        <!-- Attach descriptor to allow site configuration to be inherited. -->
                         <id>attach-descriptor</id>
                         <goals>
                             <goal>attach-descriptor</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <siteDirectory>../aggregator-parent/src/site</siteDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
