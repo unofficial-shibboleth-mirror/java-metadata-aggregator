@@ -16,7 +16,7 @@
 
     <bean id="stage" parent="mda.XMLSignatureSigningStage"
         p:id="stage"
-        p:ShaVariant="SHA384"
+        p:shaVariant="SHA384"
         init-method="initialize"
         destroy-method="destroy"/>
 
