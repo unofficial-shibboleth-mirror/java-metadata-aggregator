@@ -361,6 +361,17 @@
         class="net.shibboleth.metadata.validate.x509.X509RSAOpenSSLBlacklistValidator"/>
 
     <!--
+        ***********************************************************
+        ***                                                     ***
+        ***   O U T - O F - M O D U L E   C O M P O N E N T S   ***
+        ***                                                     ***
+        ***********************************************************
+    -->
+
+    <bean id="mda.IdentifiableBeanPostProcessor" abstract="true"
+        class="net.shibboleth.shared.spring.config.IdentifiableBeanPostProcessor"/>
+
+    <!--
         ***************************************************
         ***                                             ***
         ***   M I G R A T I O N   A S S I S T A N C E   ***

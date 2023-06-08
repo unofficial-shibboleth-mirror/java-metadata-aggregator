@@ -10,7 +10,7 @@
 
     <import resource="classpath:net/shibboleth/metadata/beans.xml"/>
 
-    <bean class="net.shibboleth.shared.spring.config.IdentifiableBeanPostProcessor"/>
+    <bean parent="mda.IdentifiableBeanPostProcessor"/>
 
     <bean id="litmusTest" parent="mda.ScopeValidationStage">
         <property name="validators">
