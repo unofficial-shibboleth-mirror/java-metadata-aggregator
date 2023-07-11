@@ -109,6 +109,8 @@
                     </execution>
                 </executions>
                 <configuration>
+		    <overrideUid>1000</overrideUid>
+		    <overrideGid>1000</overrideGid>
                     <tarLongFileMode>gnu</tarLongFileMode>
                     <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
                     <appendAssemblyId>false</appendAssemblyId>
