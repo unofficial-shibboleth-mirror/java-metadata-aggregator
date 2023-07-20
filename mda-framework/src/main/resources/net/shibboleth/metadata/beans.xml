@@ -440,6 +440,7 @@
         <entry key="ukf.RegexFileFilter"                    value="mda.RegexFileFilter"/>
         <entry key="ukf.SAMLStringElementCheckingStage"     value="mda.SAMLStringElementCheckingStage"/>
         <entry key="ukf.StringElementValidationStage"       value="mda.StringElementValidationStage"/>
+        <entry key="ukf.X509DSADetector"                    value="mda.X509DSADetector"/>
         <entry key="ukf.X509ROCAValidator"                  value="mda.X509ROCAValidator"/>
 
         <!-- Beans adopted from inc-mda project in MDA 0.10.0. -->
