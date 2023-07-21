@@ -427,6 +427,9 @@
         <entry key="net.shibboleth.utilities.java.support.xml.SimpleNamespaceContext"
              value="net.shibboleth.metadata.dom.SimpleNamespaceContext"/>
 
+        <!-- Migration from inc-mda in MDA 0.10.0; mostly handled by bean map. -->
+        <entry key="uk.org.iay.incommon.mda.dom.saml.shib.ScopeValidationStage"
+             value="net.shibboleth.metadata.dom.saml.shibboleth.ScopeValidationStage"/>
     </util:map>
 
     <util:map id="mda.MigrationBeanMap">
@@ -444,6 +447,7 @@
         <entry key="ukf.X509ROCAValidator"                  value="mda.X509ROCAValidator"/>
 
         <!-- Beans adopted from inc-mda project in MDA 0.10.0. -->
+        <entry key="inc.stage_parent"                       value="mda.stage_parent"/>
         <entry key="inc.AcceptAllValidator"                 value="mda.AcceptAllValidator"/>
         <entry key="inc.AsDomainNameStringValidator"        value="mda.AsDomainNameStringValidator"/>
         <entry key="inc.AsLiteralTailStringValidator"       value="mda.AsLiteralTailStringValidator"/>
