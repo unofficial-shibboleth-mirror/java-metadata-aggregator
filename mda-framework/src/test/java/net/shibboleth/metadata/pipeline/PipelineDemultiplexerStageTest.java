@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnull;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -65,12 +67,51 @@ public class PipelineDemultiplexerStageTest {
         Assert.assertEquals(stage.getExecutor(), executor);
     }
 
+    // Test deprecated property setter and getter. The internal representation is in
+    // terms of the new record type, and the code is converting on the way in and back out.
+    // Lets make sure that is, at least plausibly, working.
+    @SuppressWarnings("removal")
     @Test public void testPipelineAndSelectionStrategies() {
         PipelineDemultiplexerStage<Object> stage = new PipelineDemultiplexerStage<>();
 
+        // Test with an empty list. It should trivially compare equal to the generated empty list
         final List<Pair<Pipeline<Object>, Predicate<Item<Object>>>> pass = new ArrayList<>();
         stage.setPipelineAndSelectionStrategies(pass);
         Assert.assertEquals(stage.getPipelineAndSelectionStrategies(), pass);
+
+        // A little trickier: a singleton with a couple of empty pipelines and always-boolean strategy
+        // The implementation will reconstruct the original List, although
+        // it will not be identical it should compare equal with what we put in.
+        final Predicate<Item<Object>> truthy = x -> true;
+        final Predicate<Item<Object>> falsey = x -> false;
+        final List<Pair<Pipeline<Object>, Predicate<Item<Object>>>> pass2 = CollectionSupport.listOf(
+                new Pair<>(new SimplePipeline<Object>(), truthy),
+                new Pair<>(new SimplePipeline<Object>(), falsey)
+                );
+        stage.setPipelineAndSelectionStrategies(pass2);
+        Assert.assertEquals(stage.getPipelineAndSelectionStrategies(), pass2);
+    }
+
+    @Test public void testPipelinesAndStrategies() {
+        PipelineDemultiplexerStage<Object> stage = new PipelineDemultiplexerStage<>();
+
+        // Test with an empty list. It should trivially compare equal to the generated empty list
+        final List<PipelineAndStrategy<Object>> pass = new ArrayList<>();
+        stage.setPipelinesAndStrategies(pass);
+        Assert.assertEquals(stage.getPipelinesAndStrategies(), pass);
+
+        // A little trickier: a singleton with a couple of empty pipelines and always-boolean strategy
+        // The implementation will reconstruct the original List, although
+        // it will not be identical it should compare equal with what we put in.
+        final Predicate<Item<Object>> truthy = x -> true;
+        final Predicate<Item<Object>> falsey = x -> false;
+        final @Nonnull List<PipelineAndStrategy<Object>> pass2 = CollectionSupport.listOf(
+                new PipelineAndStrategy<>(new SimplePipeline<Object>(), truthy),
+                new PipelineAndStrategy<>(new SimplePipeline<Object>(), falsey)
+                );
+        System.out.println("..." + pass2.get(0).getClass().getCanonicalName());
+        stage.setPipelinesAndStrategies(pass2);
+        Assert.assertEquals(stage.getPipelinesAndStrategies(), pass2);
     }
 
     @Test public void testWaitingForPipelines() {
@@ -88,8 +129,8 @@ public class PipelineDemultiplexerStageTest {
 
         stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
-        stage.setPipelineAndSelectionStrategies(CollectionSupport.listOf(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
-                x -> true)));
+        stage.setPipelinesAndStrategies(CollectionSupport.listOf(
+                new PipelineAndStrategy<>(pipeline, x -> true)));
         stage.initialize();
         Assert.assertNotNull(stage.getCollectionFactory());
         Assert.assertNotNull(stage.getExecutor());
@@ -118,8 +159,8 @@ public class PipelineDemultiplexerStageTest {
         PipelineDemultiplexerStage<String> stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
         stage.setWaitingForPipelines(true);
-        stage.setPipelineAndSelectionStrategies(CollectionSupport.listOf(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
-                x -> true)));
+        stage.setPipelinesAndStrategies(CollectionSupport.listOf(
+                new PipelineAndStrategy<>(pipeline, x -> true)));
         stage.initialize();
 
         stage.execute(items);
@@ -127,7 +168,7 @@ public class PipelineDemultiplexerStageTest {
         Assert.assertEquals(countStage.getInvocationCount(), 1);
         stage.destroy();
     }
-    
+
     @Test public void testThrow() throws Exception {
         final SimplePipeline<String> pipeline = new SimplePipeline<>();
         pipeline.setId("selectedPipeline");
@@ -142,8 +183,8 @@ public class PipelineDemultiplexerStageTest {
         PipelineDemultiplexerStage<String> stage = new PipelineDemultiplexerStage<>();
         stage.setId("test");
         stage.setWaitingForPipelines(true);
-        stage.setPipelineAndSelectionStrategies(CollectionSupport.listOf(new Pair<Pipeline<String>, Predicate<Item<String>>>(pipeline,
-                x -> true)));
+        stage.setPipelinesAndStrategies(CollectionSupport.listOf(
+                new PipelineAndStrategy<>(pipeline, x -> true)));
         stage.initialize();
 
         try {

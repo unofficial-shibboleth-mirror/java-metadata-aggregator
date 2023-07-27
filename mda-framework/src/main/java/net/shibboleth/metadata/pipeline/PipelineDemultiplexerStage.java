@@ -45,7 +45,8 @@ import net.shibboleth.shared.primitive.DeprecationSupport;
 import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
 
 /**
- * A stage which, given an item collection and a list of {@link Pipeline} and {@link Predicate} pairs, sends the
+ * A stage which, given an item collection and a list of {@link PipelineAndStrategy} objects each
+ * representing a {@link Pipeline}s and associated selection strategy {@link Predicate}, sends the
  * collection of item copies selected by the predicate to the associated pipeline.
  *
  * <p>
@@ -57,7 +58,7 @@ import net.shibboleth.shared.primitive.DeprecationSupport.ObjectType;
  * <p>
  * This stage requires the following properties be set prior to initialization:
  * <ul>
- * <li><code>PipelineAndSelectionStrategies</code></li>
+ * <li><code>pipelinesAndStrategies</code></li>
  * </ul>
  * 
  * <p>
@@ -97,7 +98,7 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
 
     /** The pipelines through which items are sent and the selection strategy used for that pipeline. */
     @Nonnull @NonnullElements @Unmodifiable @GuardedBy("this")
-    private List<Pair<Pipeline<T>, Predicate<Item<T>>>> pipelineAndStrategies = CollectionSupport.emptyList();
+    private List<PipelineAndStrategy<T>> pipelinesAndStrategies = CollectionSupport.emptyList();
 
     /**
      * Gets the executor used to run the selected and non-selected item pipelines.
@@ -193,27 +194,73 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
      * Gets the pipeline and item selection strategies used to demultiplex item collections within this stage.
      * 
      * @return pipeline and item selection strategies used to demultiplex item collections within this stage
+     * @deprecated
      */
+    @Deprecated(since="0.10.0", forRemoval=true)
     @Nonnull @NonnullElements @Unmodifiable public final synchronized List<Pair<Pipeline<T>, Predicate<Item<T>>>>
             getPipelineAndSelectionStrategies() {
-        return pipelineAndStrategies;
+
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "getPipelineAndSelectionStrategies",
+                "PipelineDemultiplexerStage", "getPipelinesAndStrategies");
+
+        final List<Pair<Pipeline<T>, Predicate<Item<T>>>> pas = new ArrayList<>();
+        for (final var entry : pipelinesAndStrategies) {
+            pas.add(new Pair<>(entry.pipeline(), entry.strategy()));
+        }
+        return pas;
     }
 
     /**
      * Sets the pipeline and item selection strategies used to demultiplex item collections within this stage.
      * 
      * @param passes pipeline and item selection strategies used to demultiplex item collections within this stage
+     * @deprecated
      */
+    @Deprecated(since="0.10.0", forRemoval=true)
     public synchronized void setPipelineAndSelectionStrategies(
             @Nonnull @NonnullElements @Unmodifiable final List<Pair<Pipeline<T>, Predicate<Item<T>>>> passes) {
         checkSetterPreconditions();
 
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "setPipelineAndSelectionStrategies",
+                "PipelineDemultiplexerStage", "setPipelinesAndStrategies");
+
+        final List<PipelineAndStrategy<T>> pas = new ArrayList<>();
         for (final Pair<Pipeline<T>, Predicate<Item<T>>> pass : passes) {
-            Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
-            Constraint.isNotNull(pass.getSecond(), "Predicate can not be null");
+            final @Nonnull var pipeline = Constraint.isNotNull(pass.getFirst(), "Pipeline can not be null");
+            final @Nonnull var strategy = Constraint.isNotNull(pass.getSecond(), "strategy can not be null");
+            pas.add(new PipelineAndStrategy<T>(pipeline, strategy));
+        }
+        
+        pipelinesAndStrategies = CollectionSupport.copyToList(pas);
+    }
+
+    /**
+     * Gets the pipelines and item selection strategies used to demultiplex item collections within this stage.
+     * 
+     * @return pipeline and item selection strategies used to demultiplex item collections within this stage
+     * @since 0.10.0
+     */
+    public final synchronized @Nonnull @NonnullElements @Unmodifiable List<PipelineAndStrategy<T>>
+            getPipelinesAndStrategies() {
+        return pipelinesAndStrategies;
+    }
+
+    /**
+     * Sets the pipelines and item selection strategies used to demultiplex item collections within this stage.
+     * 
+     * @param passes pipeline and item selection strategies used to demultiplex item collections within this stage
+     * @since 0.10.0
+     */
+    public synchronized void setPipelinesAndStrategies(
+            final @Nonnull @NonnullElements @Unmodifiable List<PipelineAndStrategy<T>> passes) {
+        checkSetterPreconditions();
+
+        for (final var pass : passes) {
+            Constraint.isNotNull(pass.pipeline(), "Pipeline can not be null");
+            Constraint.isNotNull(pass.strategy(), "Predicate can not be null");
         }
 
-        pipelineAndStrategies = CollectionSupport.copyToList(passes);
+        pipelinesAndStrategies = CollectionSupport.copyToList(passes);
     }
 
     @Override
@@ -221,20 +268,18 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
             throws StageProcessingException {
         final @Nonnull @NonnullElements List<Future<List<Item<T>>>> pipelineFutures = new ArrayList<>();
 
-        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : getPipelineAndSelectionStrategies()) {
-            final @Nonnull Pipeline<T> pipeline =
-                    Constraint.isNotNull(pipelineAndStrategy.getFirst(), "pipeline may not be null");
-            final @Nonnull Predicate<Item<T>> selectionStrategy =
-                    Constraint.isNotNull(pipelineAndStrategy.getSecond(), "strategy may not be null");
+        for (final var pipelineAndStrategy : getPipelinesAndStrategies()) {
             final List<Item<T>> selectedItems = getCollectionFactory().get();
             assert selectedItems != null;
 
             for (final Item<T> item : items) {
-                if (selectionStrategy.test(item)) {
+                if (pipelineAndStrategy.strategy().test(item)) {
                     selectedItems.add(item.copy());
                 }
             }
 
+            final var pipeline = pipelineAndStrategy.pipeline();
+            assert pipeline != null;
             final @Nonnull var callable = new PipelineCallable<T>(pipeline, selectedItems);
             final @Nonnull var future = new FutureTask<List<Item<T>>>(callable);
             getExecutor().execute(future);
@@ -253,13 +298,14 @@ public class PipelineDemultiplexerStage<T> extends AbstractStage<T> {
     protected synchronized void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
-        if (pipelineAndStrategies.isEmpty()) {
+        if (pipelinesAndStrategies.isEmpty()) {
             throw new ComponentInitializationException(
                     "Pipeline and selection strategy collection can not be empty");
         }
 
-        for (final Pair<Pipeline<T>, Predicate<Item<T>>> pipelineAndStrategy : pipelineAndStrategies) {
-            final var pipeline = Constraint.isNotNull(pipelineAndStrategy.getFirst(), "pipeline may not be null");
+        for (final var pipelineAndStrategy : pipelinesAndStrategies) {
+            final var pipeline = pipelineAndStrategy.pipeline();
+            assert pipeline != null;
             if (!pipeline.isInitialized()) {
                 pipeline.initialize();
             }

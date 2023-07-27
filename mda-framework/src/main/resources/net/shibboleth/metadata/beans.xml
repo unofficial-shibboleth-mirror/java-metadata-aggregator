@@ -257,6 +257,9 @@
     <bean id="mda.MultiOutputSerializationStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.pipeline.MultiOutputSerializationStage"/>
 
+    <bean id="mda.PipelineAndStrategy" abstract="true"
+        class="net.shibboleth.metadata.pipeline.PipelineAndStrategy"/>
+
     <bean id="mda.PipelineDemultiplexerStage" abstract="true" parent="mda.stage_parent"
         class="net.shibboleth.metadata.pipeline.PipelineDemultiplexerStage"/>
 
