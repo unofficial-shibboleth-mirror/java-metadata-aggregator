@@ -24,12 +24,12 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import javax.json.Json;
-import javax.json.stream.JsonGenerator;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
+import jakarta.json.Json;
+import jakarta.json.stream.JsonGenerator;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.dom.saml.mdattr.MDAttrSupport;

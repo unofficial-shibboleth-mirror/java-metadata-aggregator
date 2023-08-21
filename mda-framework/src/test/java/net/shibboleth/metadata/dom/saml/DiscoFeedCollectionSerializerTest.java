@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
 import net.shibboleth.metadata.Item;
 import net.shibboleth.metadata.ItemCollectionSerializer;
 import net.shibboleth.metadata.dom.testing.BaseDOMTest;
