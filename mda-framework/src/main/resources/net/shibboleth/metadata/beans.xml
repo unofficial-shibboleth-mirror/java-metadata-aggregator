@@ -391,6 +391,8 @@
     <util:map id="mda.MigrationClassMap">
 
         <!-- MDA changes from 0.9 to 0.10 -->
+        <entry key="net.shibboleth.metadata.dom.CRDetectionStage"
+             value="net.shibboleth.metadata.dom.saml.CRDetectionStage"/>
         <entry key="net.shibboleth.metadata.util.PKCS11PrivateKeyFactoryBean"
              value="net.shibboleth.shared.spring.security.factory.PKCS11PrivateKeyFactoryBean"/>
 
