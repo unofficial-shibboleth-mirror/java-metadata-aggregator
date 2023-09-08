@@ -399,6 +399,8 @@
         <!-- Classes from spring-extensions in MDA 0.9, not in MDA 0.10. -->
         <entry key="net.shibboleth.ext.spring.config.BooleanToPredicateConverter"
              value="net.shibboleth.shared.spring.config.BooleanToPredicateConverter"/>
+        <entry key="net.shibboleth.ext.spring.config.DurationToLongConverter"
+             value="net.shibboleth.shared.spring.config.StringToDurationConverter"/>
         <entry key="net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessor"
              value="net.shibboleth.shared.spring.config.IdentifiableBeanPostProcessor"/>
         <entry key="net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter"
