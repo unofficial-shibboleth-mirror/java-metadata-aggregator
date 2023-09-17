@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.shibboleth</groupId>
         <artifactId>parent</artifactId>
-        <version>17.0.0-SNAPSHOT</version>
+        <version>17.0.1</version>
     </parent>
 
     <name>Shibboleth Metadata Aggregator</name>
@@ -32,7 +32,7 @@
 
     <properties>
         <shib-shared.groupId>net.shibboleth</shib-shared.groupId>
-        <shib-shared.version>9.0.0-SNAPSHOT</shib-shared.version>
+        <shib-shared.version>9.0.0</shib-shared.version>
         <checkstyle.configLocation>${project.basedir}/resources/checkstyle/checkstyle.xml</checkstyle.configLocation>
         <aggregator-parent.site.url>${shibboleth.site.deploy.url}java-metadata-aggregator/${project.version}/</aggregator-parent.site.url>
         <aggregator-module.site.url>${aggregator-parent.site.url}${project.artifactId}</aggregator-module.site.url>
