@@ -51,7 +51,8 @@
                 <exclude>**/.gitignore</exclude>
                 <exclude>**/.bash_history</exclude>
                 <!-- Do not ship example OUTPUT files. -->
-                <exclude>wiki/path/to/discofeed.json</exclude>
+                <exclude>wiki/path/to/output/*.json</exclude>
+                <exclude>wiki/path/to/output/*.xml</exclude>
             </excludes>
         </fileSet>
     </fileSets>

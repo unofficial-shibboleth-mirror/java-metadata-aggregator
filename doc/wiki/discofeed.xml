@@ -30,7 +30,7 @@
                     </property>
                     <property name="source">
                         <bean class="java.io.File">
-                            <constructor-arg value="path/to/metadata.xml"/>
+                            <constructor-arg value="path/to/input/discofeed-aggregate.xml"/>
                         </bean>
                     </property>
                 </bean>
@@ -57,7 +57,7 @@
                     </property>
                     <property name="outputFile">
                         <bean class="java.io.File">
-                            <constructor-arg value="path/to/discofeed.json"/>
+                            <constructor-arg value="path/to/output/discofeed.json"/>
                         </bean>
                     </property>
                 </bean>
