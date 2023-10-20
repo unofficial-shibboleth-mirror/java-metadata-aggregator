@@ -30,7 +30,7 @@
                     </property>
                     <property name="source">
                         <bean class="java.io.File">
-                            <constructor-arg value="path/to/input/discofeed-aggregate.xml"/>
+                            <constructor-arg value="path/to/input/aggregate.xml"/>
                         </bean>
                     </property>
                 </bean>
