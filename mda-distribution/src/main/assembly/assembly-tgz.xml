@@ -50,6 +50,8 @@
                 <!-- Allow development within the documentation tree. -->
                 <exclude>**/.gitignore</exclude>
                 <exclude>**/.bash_history</exclude>
+                <!-- Don't ship private keys. -->
+                <exclude>wiki/path/to/input/private-key.pem</exclude>
                 <!-- Do not ship example OUTPUT files. -->
                 <exclude>wiki/path/to/output/*.json</exclude>
                 <exclude>wiki/path/to/output/*.xml</exclude>
