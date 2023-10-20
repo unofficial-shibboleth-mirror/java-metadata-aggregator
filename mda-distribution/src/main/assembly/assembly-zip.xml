@@ -46,6 +46,13 @@
             <directory>${project.basedir}/../doc/</directory>
             <outputDirectory>doc</outputDirectory>
             <lineEnding>windows</lineEnding>
+            <excludes>
+                <!-- Allow development within the documentation tree. -->
+                <exclude>**/.gitignore</exclude>
+                <exclude>**/.bash_history</exclude>
+                <!-- Do not ship example OUTPUT files. -->
+                <exclude>wiki/path/to/discofeed.json</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 </assembly>
