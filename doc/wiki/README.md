@@ -6,6 +6,10 @@ with new releases by having test data available alongside them.
 
 [wiki:examples]: https://wiki.shibboleth.net/confluence/display/MA1/Configuration+Examples
 
+- [Aggregate and Sign](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1501823071/Aggregate+and+Sign)
+
+    `.../mda.sh aggregate-and-sign.xml main`
+
 - [Generate Discovery Feed](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1552614062/Generate+Discovery+Feed):
 
     `.../mda.sh discofeed.xml DiscoFeed`
