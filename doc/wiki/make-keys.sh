@@ -1,8 +1,8 @@
 #!/usr/bin/sh
 
-KEYFILE=path/to/input/private-key.pem
-CERTFILE=path/to/input/self-signed.pem
-P12FILE=path/to/input/self-signed.p12
+KEYFILE=path/to/secrets/private-key.pem
+CERTFILE=path/to/secrets/self-signed.pem
+P12FILE=path/to/secrets/self-signed.p12
 
 # Generate an RSA private key
 openssl genrsa >$KEYFILE

@@ -15,7 +15,7 @@ softhsm2-util --init-token --slot 0 --label "test" \
 
 # Load the credential
 keytool -importkeystore --addprovider SunPKCS11 -providerarg path/to/input/pkcs11-softhsm.cfg \
-    -srcstoretype pkcs12 -srckeystore path/to/input/self-signed.p12 -srcstorepass password \
+    -srcstoretype pkcs12 -srckeystore path/to/secrets/self-signed.p12 -srcstorepass password \
     -deststoretype PKCS11 -destkeystore NONE -deststorepass 12341234
 
 keytool -list --addprovider SunPKCS11 -providerarg path/to/input/pkcs11-softhsm.cfg \

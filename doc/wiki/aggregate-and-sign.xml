@@ -47,7 +47,7 @@
                     <bean class="org.springframework.core.io.FileSystemResource">
                         <constructor-arg>
                             <bean class="java.io.File">
-                                <constructor-arg value="path/to/input/private-key.pem"/>
+                                <constructor-arg value="path/to/secrets/private-key.pem"/>
                             </bean>
                         </constructor-arg>
                     </bean>

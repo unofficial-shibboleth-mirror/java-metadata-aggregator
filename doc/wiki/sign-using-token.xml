@@ -28,7 +28,7 @@
         <property name="id" value="signMetadata"/>
         <property name="certificates">
             <bean class="net.shibboleth.shared.spring.security.factory.X509CertificateFactoryBean">
-                <property name="resource" value="file:path/to/input/self-signed.pem"/>
+                <property name="resource" value="file:path/to/secrets/self-signed.pem"/>
             </bean>
         </property>
         <property name="privateKey">

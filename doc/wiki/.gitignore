@@ -1,8 +1,7 @@
 .bash_history
 .rnd
-path/to/input/private-key.pem
-path/to/input/self-signed.pem
-path/to/input/self-signed.p12
+path/to/secrets/*
+!path/to/secrets/.gitkeep
 path/to/output/*
 !path/to/output/.gitkeep
 softhsm
