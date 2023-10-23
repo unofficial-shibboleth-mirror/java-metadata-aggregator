@@ -18,6 +18,10 @@ with new releases by having test data available alongside them.
 
     `.../mda.sh aggregate-and-republish.xml main`
 
+- [Sign Using PKCS#11 Token](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1502216280/Sign+using+PKCS%2311+token)
+
+    `.../mda.sh sign-using-token.xml main`
+
 - [Generate Discovery Feed](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1552614062/Generate+Discovery+Feed):
 
     `.../mda.sh discofeed.xml main`
