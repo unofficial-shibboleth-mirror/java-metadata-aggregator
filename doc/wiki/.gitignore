@@ -2,5 +2,7 @@
 .rnd
 path/to/input/private-key.pem
 path/to/input/self-signed.pem
+path/to/input/self-signed.p12
 path/to/output/*
 !path/to/output/.gitkeep
+softhsm
