@@ -10,6 +10,14 @@ with new releases by having test data available alongside them.
 
     `.../mda.sh aggregate-and-sign.xml main`
 
+- [Filter Aggregate](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1501823090/Filter+Aggregate)
+
+    `.../mda.sh filter-aggregate.xml main`
+
+- [Aggregate and Republish](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1501823098/Aggregate+and+Republish)
+
+    `.../mda.sh aggregate-and-republish.xml main`
+
 - [Generate Discovery Feed](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1552614062/Generate+Discovery+Feed):
 
-    `.../mda.sh discofeed.xml DiscoFeed`
+    `.../mda.sh discofeed.xml main`
