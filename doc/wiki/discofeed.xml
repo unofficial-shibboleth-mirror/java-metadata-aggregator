@@ -18,7 +18,7 @@
     <!-- Default Shibboleth component bean id property from Spring bean id -->
     <bean parent="mda.IdentifiableBeanPostProcessor" lazy-init="false"/>
 
-    <bean id="DiscoFeed" parent="mda.SimplePipeline">
+    <bean id="main" parent="mda.SimplePipeline">
         <property name="stages">
             <list>
 
