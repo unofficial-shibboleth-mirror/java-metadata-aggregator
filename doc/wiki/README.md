@@ -22,6 +22,10 @@ with new releases by having test data available alongside them.
 
     `.../mda.sh sign-using-token.xml main`
 
+- [Per-entity Output](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1502216310/Per-entity+Output)
+
+    `.../mda.sh per-entity.xml main`
+
 - [Generate Discovery Feed](https://shibboleth.atlassian.net/wiki/spaces/MA1/pages/1552614062/Generate+Discovery+Feed):
 
     `.../mda.sh discofeed.xml main`
