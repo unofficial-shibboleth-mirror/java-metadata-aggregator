@@ -85,16 +85,38 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- Import Dependencies:  Shared -->
-            <dependency>
-            <groupId>${shib-shared.groupId}</groupId>
-                <artifactId>shib-shared-bom</artifactId>
-                <version>${shib-shared.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- Compile Dependencies -->
+
+            <dependency>
+                <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-networking</artifactId>
+                <version>${shib-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-networking-spring</artifactId>
+                <version>${shib-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-security</artifactId>
+                <version>${shib-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-security-spring</artifactId>
+                <version>${shib-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-spring</artifactId>
+                <version>${shib-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${shib-shared.groupId}</groupId>
+                <artifactId>shib-support</artifactId>
+                <version>${shib-shared.version}</version>
+            </dependency>
 
             <!-- Provided Dependencies -->
 
