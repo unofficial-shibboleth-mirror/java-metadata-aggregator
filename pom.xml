@@ -27,7 +27,6 @@
         <module>mda-framework</module>
         <module>mda-cli</module>
         <module>mda-distribution</module>
-        <module>mda-bom</module>
     </modules>
 
     <properties>
