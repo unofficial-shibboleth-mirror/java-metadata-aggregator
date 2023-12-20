@@ -15,6 +15,7 @@
 package net.shibboleth.metadata.validate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -130,10 +131,48 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
     }
 
     /**
+     * Formats the message with the given subject.
+     *
+     * @param subject subject of the validation, to be provided as an argument to the
+     *      formatting string.
+     * @return formatted message
+     */
+    protected @Nonnull String formatMessage(final @Nonnull Object subject) {
+        final String mess = String.format(getMessage(), subject);
+        assert mess != null;
+        return mess;
+    }
+
+    /**
+     * Formats the message with the given subject.
+     *
+     * <p>
+     * If the supplied {@link Throwable} has a non-<code>null</code> detail
+     * message, this is added to the resulting formatted string.
+     * </p>
+     *
+     * @param subject subject of the validation, to be provided as an argument to the
+     *      formatting string.
+     * @param cause a {@link Throwable} which is to be interpreted as the cause of the
+     *      validation failure.
+     * @return formatted message
+     */
+    protected @Nonnull String formatMessage(final @Nonnull Object subject, final @Nonnull Throwable cause) {
+        final @Nullable var cmsg = cause.getMessage();
+        if (cmsg == null) {
+            return formatMessage(subject);
+        } else {
+            return formatMessage(subject) + " (" + cmsg + ")";
+        }
+    }
+    
+    /**
      * Add an {@link ErrorStatus} to the given {@link Item}.
      *
+     * <p>
      * The status message included in the {@link ErrorStatus} is generated
      * by formatting the provided value with the {@link #message} field.
+     * </p>
      *
      * @param extra extra value to include in the status metadata
      * @param item {@link Item} to add the status metadata to
@@ -143,9 +182,26 @@ public abstract class BaseValidator extends AbstractIdentifiableInitializableCom
      */
     protected void addErrorMessage(@Nonnull final Object extra, @Nonnull final Item<?> item,
             @Nonnull final String stageId) {
-        final String mess = String.format(getMessage(), extra);
-        assert mess != null;
-        addError(mess, item, stageId);
+        addError(formatMessage(extra), item, stageId);
     }
 
+    /**
+     * Add an {@link ErrorStatus} to the given {@link Item}.
+     *
+     * <p>
+     * The status message included in the {@link ErrorStatus} is generated
+     * by formatting the provided value with the {@link #message} field.
+     * </p>
+     *
+     * @param extra extra value to include in the status metadata
+     * @param item {@link Item} to add the status metadata to
+     * @param stageId component identifier for the calling stage
+     * @param cause reason for the validation failure, as a {@link Throwable}
+     *
+     * @since 0.10.0
+     */
+    protected void addErrorMessage(@Nonnull final Object extra, @Nonnull final Item<?> item,
+            @Nonnull final String stageId, @Nonnull final Throwable cause) {
+        addError(formatMessage(extra, cause), item, stageId);
+    }
 }

@@ -338,6 +338,9 @@
     <bean id="mda.AsLiteralTailStringValidator" abstract="true" parent="mda.component_parent"
         class="net.shibboleth.metadata.validate.string.AsLiteralTailStringValidator"/>
 
+    <bean id="mda.AsURLStringValidator" abstract="true" parent="mda.component_parent"
+        class="net.shibboleth.metadata.validate.string.AsURLStringValidator"/>
+
     <bean id="mda.RejectStringRegexValidator" abstract="true" parent="mda.validator_parent"
         class="net.shibboleth.metadata.validate.string.RejectStringRegexValidator"/>
 

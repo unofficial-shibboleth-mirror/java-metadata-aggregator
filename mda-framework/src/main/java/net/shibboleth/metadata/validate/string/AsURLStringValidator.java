@@ -15,6 +15,8 @@
 package net.shibboleth.metadata.validate.string;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.annotation.Nonnull;
@@ -44,11 +46,16 @@ public class AsURLStringValidator extends BaseAsValidator<String, URL>
     @Override
     protected @Nonnull URL convert(@Nonnull final String value) throws IllegalArgumentException {
         try {
-            final var result = new URL(value);
+            final var uri = new URI(value);
+            final var result = uri.toURL();
             assert result != null;
             return result;
         } catch (final MalformedURLException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage(), e);
+        } catch (final URISyntaxException e) {
+            throw new IllegalArgumentException(e.getMessage(), e);
+        } catch (final IllegalArgumentException e) {
+            throw e;
         }
     }
 

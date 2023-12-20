@@ -130,7 +130,7 @@ public abstract class BaseAsValidator<V, A> extends BaseValidator implements Val
             return applyValidators(v, item);
         } catch (final IllegalArgumentException e) {
             if (isConversionRequired()) {
-                addErrorMessage(t, item, stageId);
+                addErrorMessage(t, item, stageId, e);
                 return Action.DONE;
             } else {
                 return Action.CONTINUE;
